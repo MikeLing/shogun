@@ -336,6 +336,22 @@ bool SGVector<T>::equals(SGVector<T>& other)
 	return true;
 }
 
+template <class T>
+bool SGVector<T>::equals(SGVector<T>& other, float accuracy, bool tolerant)
+{
+	if (other.vlen != vlen)
+		return false;
+
+	for (int i=0; i<other.vlen; i++)
+	{
+		if(!CMath::fequals<T>(vector[i], other.vector[i], accuracy, tolerant))
+		{
+			return false;
+		}
+	}
+	return true ;
+}
+
 template<class T>
 void SGVector<T>::display_vector(const char* name,
 		const char* prefix) const

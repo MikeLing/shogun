@@ -310,6 +310,7 @@ template<class T> class SGVector : public SGReferencedData
 		 * true otherwise
 		 */
 		bool equals(SGVector<T>& other);
+		bool equals(SGVector<T>& other, float accuracy, bool tolerant);
 
 		/// || x ||_2
 		static T twonorm(const T* x, int32_t len);
