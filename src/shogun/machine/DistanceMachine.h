@@ -113,13 +113,6 @@ class CDistanceMachine : public CMachine
 		 *
 		 * @param p thread parameter
 		 */
-		static void* run_distance_thread_lhs(void* p);
-
-		/**
-		 * thread function for computing distance values
-		 *
-		 * @param p thread parameter
-		 */
 		static void* run_distance_thread_rhs(void* p);
 
 	private:

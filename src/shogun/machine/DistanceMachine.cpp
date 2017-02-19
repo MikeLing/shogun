@@ -14,17 +14,9 @@
 
 using namespace shogun;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-struct D_THREAD_PARAM
-{
-    CDistance* d;
-    float64_t* r;
-    int32_t idx_r_start;
-    int32_t idx_start;
-    int32_t idx_stop;
-    int32_t idx_comp;
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
 
 CDistanceMachine::CDistanceMachine()
 : CMachine()
@@ -51,168 +43,54 @@ void CDistanceMachine::init()
 
 void CDistanceMachine::distances_lhs(float64_t* result,int32_t idx_a1,int32_t idx_a2,int32_t idx_b)
 {
-    // TODO: port to use OpenMP backend instead of pthread
-#ifdef HAVE_PTHREAD
-    int32_t num_threads=parallel->get_num_threads();
+	int32_t num_vec=idx_a2-idx_a1+1;
+	int32_t num_threads;
+	int64_t step;
+	#pragma omp parallel shared(num_threads, step)
+	{
+#ifdef HAVE_OPENMP
+		#pragma opm single
+		{
+			num_threads=omp_get_num_threads();
+			step=num_vec/num_threads;
+			num_threads--;
+		}
+		int32_t thread_num=omp_get_thread_num();
 #else
-    int32_t num_threads=1;
+		num_threads=0;
+		step=num_vec;
 #endif
-    ASSERT(num_threads>0)
-
-    ASSERT(result)
-
-    if (num_threads < 2)
-    {
-        D_THREAD_PARAM param;
-        param.d=distance;
-        param.r=result;
-        param.idx_r_start=idx_a1;
-        param.idx_start=idx_a1;
-        param.idx_stop=idx_a2+1;
-        param.idx_comp=idx_b;
-
-        run_distance_thread_lhs((void*) &param);
-    }
-#ifdef HAVE_PTHREAD
-    else
-    {
-        pthread_t* threads = SG_MALLOC(pthread_t, num_threads-1);
-        D_THREAD_PARAM* params = SG_MALLOC(D_THREAD_PARAM, num_threads);
-        int32_t num_vec=idx_a2-idx_a1+1;
-        int32_t step= num_vec/num_threads;
-        int32_t t;
-
-        pthread_attr_t attr;
-        pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-
-        for (t=0; t<num_threads-1; t++)
-        {
-            params[t].d = distance;
-            params[t].r = result;
-            params[t].idx_r_start=t*step;
-            params[t].idx_start = (t*step)+idx_a1;
-            params[t].idx_stop = ((t+1)*step)+idx_a1;
-            params[t].idx_comp=idx_b;
-
-            pthread_create(&threads[t], &attr, CDistanceMachine::run_distance_thread_lhs, (void*)&params[t]);
-        }
-        params[t].d = distance;
-        params[t].r = result;
-        params[t].idx_r_start=t*step;
-        params[t].idx_start = (t*step)+idx_a1;
-        params[t].idx_stop = idx_a2+1;
-        params[t].idx_comp=idx_b;
-
-        run_distance_thread_lhs(&params[t]);
-
-        for (t=0; t<num_threads-1; t++)
-            pthread_join(threads[t], NULL);
-
-        pthread_attr_destroy(&attr);
-        SG_FREE(params);
-        SG_FREE(threads);
-    }
-#endif
+		int32_t start = thread_num*step+idx_a1;
+		int32_t end = (thread_num==num_threads) ? idx_a2 : (thread_num+1)*step+idx_a1;
+		for (int32_t i=start; i<end; i++)
+			result[i] =distance->distance(i,idx_b);
+	}
 }
 
 void CDistanceMachine::distances_rhs(float64_t* result,int32_t idx_b1,int32_t idx_b2,int32_t idx_a)
 {
-    // TODO: port to use OpenMP backend instead of pthread
-#ifdef HAVE_PTHREAD
-    int32_t num_threads=parallel->get_num_threads();
+	int32_t num_vec=idx_b2-idx_b1+1;
+	int32_t num_threads;
+	int64_t step;
+	#pragma omp parallel shared(num_threads, step)
+	{
+#ifdef HAVE_OPENMP
+		#pragma opm single
+		{
+			num_threads=omp_get_num_threads();
+			step=num_vec/num_threads;
+			num_threads--;
+		}
+		int32_t thread_num=omp_get_thread_num();
 #else
-    int32_t num_threads=1;
+		num_threads=0;
+		step=num_vec;
 #endif
-    ASSERT(num_threads>0)
-
-    ASSERT(result)
-
-    if (num_threads < 2)
-    {
-        D_THREAD_PARAM param;
-        param.d=distance;
-        param.r=result;
-        param.idx_r_start=idx_b1;
-        param.idx_start=idx_b1;
-        param.idx_stop=idx_b2+1;
-        param.idx_comp=idx_a;
-
-        run_distance_thread_rhs((void*) &param);
-    }
-#ifdef HAVE_PTHREAD
-    else
-    {
-        pthread_t* threads = SG_MALLOC(pthread_t, num_threads-1);
-        D_THREAD_PARAM* params = SG_MALLOC(D_THREAD_PARAM, num_threads);
-        int32_t num_vec=idx_b2-idx_b1+1;
-        int32_t step= num_vec/num_threads;
-        int32_t t;
-
-        pthread_attr_t attr;
-        pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-
-        for (t=0; t<num_threads-1; t++)
-        {
-            params[t].d = distance;
-            params[t].r = result;
-            params[t].idx_r_start=t*step;
-            params[t].idx_start = (t*step)+idx_b1;
-            params[t].idx_stop = ((t+1)*step)+idx_b1;
-            params[t].idx_comp=idx_a;
-
-            pthread_create(&threads[t], &attr, CDistanceMachine::run_distance_thread_rhs, (void*)&params[t]);
-        }
-        params[t].d = distance;
-        params[t].r = result;
-        params[t].idx_r_start=t*step;
-        params[t].idx_start = (t*step)+idx_b1;
-        params[t].idx_stop = idx_b2+1;
-        params[t].idx_comp=idx_a;
-
-        run_distance_thread_rhs(&params[t]);
-
-        for (t=0; t<num_threads-1; t++)
-            pthread_join(threads[t], NULL);
-
-        pthread_attr_destroy(&attr);
-        SG_FREE(params);
-        SG_FREE(threads);
-    }
-#endif
-}
-
-void* CDistanceMachine::run_distance_thread_lhs(void* p)
-{
-    D_THREAD_PARAM* params= (D_THREAD_PARAM*) p;
-    CDistance* distance=params->d;
-    float64_t* res=params->r;
-    int32_t idx_res_start=params->idx_r_start;
-    int32_t idx_act=params->idx_start;
-    int32_t idx_stop=params->idx_stop;
-    int32_t idx_c=params->idx_comp;
-
-    for (int32_t i=idx_res_start; idx_act<idx_stop; i++,idx_act++)
-        res[i] =distance->distance(idx_act,idx_c);
-
-    return NULL;
-}
-
-void* CDistanceMachine::run_distance_thread_rhs(void* p)
-{
-    D_THREAD_PARAM* params= (D_THREAD_PARAM*) p;
-    CDistance* distance=params->d;
-    float64_t* res=params->r;
-    int32_t idx_res_start=params->idx_r_start;
-    int32_t idx_act=params->idx_start;
-    int32_t idx_stop=params->idx_stop;
-    int32_t idx_c=params->idx_comp;
-
-    for (int32_t i=idx_res_start; idx_act<idx_stop; i++,idx_act++)
-        res[i] =distance->distance(idx_c,idx_act);
-
-    return NULL;
+		int32_t start = thread_num*step+idx_b1;
+		int32_t end = (thread_num==num_threads) ? idx_b2 : (thread_num+1)*step+idx_b1;
+		for (int32_t i=start; i<end; i++)
+			result[i] =distance->distance(i,idx_a);
+	}
 }
 
 CMulticlassLabels* CDistanceMachine::apply_multiclass(CFeatures* data)
