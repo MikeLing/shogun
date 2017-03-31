@@ -47,6 +47,7 @@ void CLeastAngleRegression::find_max_abs(const std::vector<ST> &vec, const std::
 	vmax = -1;
 	for (size_t i=0; i < vec.size(); ++i)
 	{
+		SG_PROGRESS(i, 0, vec.size(), 1, "FINDING THE ABS: ");
 		if (ignore_mask[i])
 			continue;
 
