@@ -2,6 +2,8 @@
 #include <gmock/gmock.h>
 #include <shogun/base/init.h>
 #include <shogun/io/SGIO.h>
+#include <shogun/features/DataGenerator.h>
+#include "../utils/binaryLabelData.h"
 
 using namespace shogun;
 using ::testing::Test;
@@ -10,6 +12,7 @@ using ::testing::TestCase;
 using ::testing::TestInfo;
 using ::testing::TestPartResult;
 using ::testing::TestEventListener;
+using ::testing::Environment;
 
 class FailurePrinter : public TestEventListener {
 public:
@@ -64,7 +67,7 @@ int main(int argc, char** argv)
 			= listeners.Release(listeners.default_result_printer());
 		listeners.Append(new FailurePrinter(default_printer));
 	}
-
+	AddGlobalTestEnvironment(new CBinaryLabelData);
 	init_shogun_with_defaults();
 	sg_io->set_loglevel(MSG_WARN);
 	int ret = RUN_ALL_TESTS();

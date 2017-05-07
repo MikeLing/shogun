@@ -22,6 +22,10 @@
 #include <time.h>
 #include <ctype.h>
 
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
+
 #define VAL_MACRO log((default_value == 0) ? (CMath::random(MIN_RAND, MAX_RAND)) : default_value)
 #define ARRAY_SIZE 65336
 
@@ -401,30 +405,30 @@ CHMM::~CHMM()
 	SG_UNREF(p_observations);
 
 	if (trans_list_forward_cnt)
-	  SG_FREE(trans_list_forward_cnt);
+		SG_FREE(trans_list_forward_cnt);
 	if (trans_list_backward_cnt)
 		SG_FREE(trans_list_backward_cnt);
 	if (trans_list_forward)
 	{
-	    for (int32_t i=0; i<trans_list_len; i++)
+		for (int32_t i=0; i<trans_list_len; i++)
 			if (trans_list_forward[i])
 				SG_FREE(trans_list_forward[i]);
-	    SG_FREE(trans_list_forward);
+		SG_FREE(trans_list_forward);
 	}
 	if (trans_list_forward_val)
 	{
-	    for (int32_t i=0; i<trans_list_len; i++)
+		for (int32_t i=0; i<trans_list_len; i++)
 			if (trans_list_forward_val[i])
 				SG_FREE(trans_list_forward_val[i]);
-	    SG_FREE(trans_list_forward_val);
+		SG_FREE(trans_list_forward_val);
 	}
 	if (trans_list_backward)
-	  {
-	    for (int32_t i=0; i<trans_list_len; i++)
-	      if (trans_list_backward[i])
-		SG_FREE(trans_list_backward[i]);
-	    SG_FREE(trans_list_backward);
-	  } ;
+	{
+		for (int32_t i=0; i<trans_list_len; i++)
+			if (trans_list_backward[i])
+				SG_FREE(trans_list_backward[i]);
+		SG_FREE(trans_list_backward);
+	} ;
 
 	free_state_dependend_arrays();
 
