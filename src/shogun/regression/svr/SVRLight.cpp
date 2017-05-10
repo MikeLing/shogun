@@ -265,10 +265,12 @@ void CSVRLight::svr_learn()
 	model->xa_recall=-1;
 	model->xa_precision=-1;
 
-  for(i=0;i<totdoc;i++) {    /* various inits */
-    inconsistent[i]=0;
-    a[i]=0;
-    lin[i]=0;
+	/* various inits */
+	for(i=0;i<totdoc;i++) 
+	{
+		inconsistent[i]=0;
+		a[i]=0;
+		lin[i]=0;
 
 		if(label[i] > 0) {
 			learn_parm->svm_cost[i]=learn_parm->svm_c*learn_parm->svm_costratio*
@@ -286,12 +288,12 @@ void CSVRLight::svr_learn()
 	}
 
 	/* train the svm */
-		SG_DEBUG("num_train: %d\n", totdoc)
-  iterations=optimize_to_convergence(docs,label,totdoc,
-                     &shrink_state,inconsistent,a,lin,
-                     c,&timing_profile,
-                     &maxdiff,(int32_t)-1,
-                     (int32_t)1);
+	SG_DEBUG("num_train: %d\n", totdoc)
+	iterations=optimize_to_convergence(docs,label,totdoc,
+		&shrink_state,inconsistent,a,lin,
+		c,&timing_profile,
+		&maxdiff,(int32_t)-1,
+		(int32_t)1);
 
 
 	if(verbosity>=1) {
