@@ -33,23 +33,11 @@ extern "C" {
 
 #include <shogun/base/Parallel.h>
 
-#ifdef HAVE_PTHREAD
-#include <pthread.h>
+#ifdef HAVE_OPENMP
+#include <omp.h>
 #endif
 
 using namespace shogun;
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-struct S_THREAD_PARAM_SVRLIGHT
-{
-	float64_t* lin;
-	int32_t start, end;
-	int32_t* active2dnum;
-	int32_t* docs;
-	CKernel* kernel;
-    int32_t num_vectors;
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
 
 CSVRLight::CSVRLight(float64_t C, float64_t eps, CKernel* k, CLabels* lab)
 : CSVMLight(C, k, lab)
@@ -362,18 +350,6 @@ float64_t CSVRLight::compute_objective_function(
   return(criterion);
 }
 
-void* CSVRLight::update_linear_component_linadd_helper(void *params_)
-{
-	S_THREAD_PARAM_SVRLIGHT * params = (S_THREAD_PARAM_SVRLIGHT*) params_ ;
-
-	int32_t jj=0, j=0 ;
-
-	for(jj=params->start;(jj<params->end) && (j=params->active2dnum[jj])>=0;jj++)
-		params->lin[j]+=params->kernel->compute_optimized(CSVRLight::regression_fix_index2(params->docs[j], params->num_vectors));
-
-	return NULL ;
-}
-
 int32_t CSVRLight::regression_fix_index(int32_t i)
 {
 	if (i>=num_vectors)
@@ -402,10 +378,10 @@ void CSVRLight::update_linear_component(
 	int32_t* docs, int32_t* label, int32_t *active2dnum, float64_t *a,
 	float64_t *a_old, int32_t *working2dnum, int32_t totdoc, float64_t *lin,
 	float64_t *aicache, float64_t* c)
-     /* keep track of the linear component */
-     /* lin of the gradient etc. by updating */
-     /* based on the change of the variables */
-     /* in the current working set */
+	/* keep track of the linear component */
+	/* lin of the gradient etc. by updating */
+	/* based on the change of the variables */
+	/* in the current working set */
 {
 	register int32_t i=0,ii=0,j=0,jj=0;
 
@@ -430,56 +406,30 @@ void CSVRLight::update_linear_component(
 
 			if (num_working>0)
 			{
-			// TODO: port to use OpenMP backend instead of pthread
-#ifdef HAVE_PTHREAD
-				int32_t num_threads=parallel->get_num_threads();
-#else
-				int32_t num_threads=1;
-#endif
-				if (num_threads < 2)
+				int32_t num_threads;
+				int64_t step;
+				#pragma omp parallel shared(num_threads, step)
 				{
-					for(jj=0;(j=active2dnum[jj])>=0;jj++) {
-						lin[j]+=kernel->compute_optimized(regression_fix_index(docs[j]));
-					}
-				}
-#ifdef HAVE_PTHREAD
-				else
-				{
-					int32_t num_elem = 0 ;
-					for(jj=0;(j=active2dnum[jj])>=0;jj++) num_elem++ ;
-
-					pthread_t* threads = SG_MALLOC(pthread_t, num_threads-1);
-					S_THREAD_PARAM_SVRLIGHT* params = SG_MALLOC(S_THREAD_PARAM_SVRLIGHT, num_threads-1);
-					int32_t start = 0 ;
-					int32_t step = num_elem/num_threads ;
-					int32_t end = step ;
-
-					for (int32_t t=0; t<num_threads-1; t++)
+#ifdef HAVE_OPENMP
+					#pragma omp single
 					{
-						params[t].kernel = kernel ;
-						params[t].lin = lin ;
-						params[t].docs = docs ;
-						params[t].active2dnum=active2dnum ;
-						params[t].start = start ;
-						params[t].end = end ;
-						params[t].num_vectors=num_vectors ;
-
-						start=end ;
-						end+=step ;
-						pthread_create(&threads[t], NULL, update_linear_component_linadd_helper, (void*)&params[t]) ;
+						num_threads = omp_get_num_threads();
+						step = num_vectors/num_threads;
+						num_threads--;
 					}
-
-					for(jj=params[num_threads-2].end;(j=active2dnum[jj])>=0;jj++) {
+					int32_t thread_num = omp_get_thread_num();
+#else
+					num_threads = 0;
+					step = num_vectors;
+					int32_t thread_num = 0;
+#endif
+					int32_t start = thread_num * step;
+					int32_t end = (thread_num == num_threads) ? num_vectors : (thread_num+1)*step;
+					for(jj=start;(jj<end) && (j=active2dnum[jj])>=0;jj++) 
+					{
 						lin[j]+=kernel->compute_optimized(regression_fix_index(docs[j]));
 					}
-					void* ret;
-					for (int32_t t=0; t<num_threads-1; t++)
-						pthread_join(threads[t], &ret) ;
-
-					SG_FREE(params);
-					SG_FREE(threads);
 				}
-#endif
 			}
 		}
 	}
