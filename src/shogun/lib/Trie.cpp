@@ -256,7 +256,7 @@ void CTrie<POIMTrie>::POIMs_precalc_SLR( const float64_t* const distrib )
 	for( symLeft = 0; symLeft < NUM_SYMS; ++symLeft )
 		leftSubtrees[ symLeft ] = NO_CHILD;
 
-	for(int32_t i = 0; i < N; ++i )
+	for(index_t i = 0; i < N; ++i )
 	{
 		POIMs_calc_SLR_helper2( distrib, i, trees[i], leftSubtrees, 0, &dummy, &dummy, &dummy );
 

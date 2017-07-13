@@ -287,13 +287,13 @@ SGMatrix<float64_t> CKMeansBase::kmeanspp()
 	/* First center is chosen at random */
 	int32_t mu=CMath::random((int32_t) 0, lhs_size-1);
 	SGVector<float64_t> mu_first=lhs->get_feature_vector(mu);	
-	for(int32_t j=0; j<dimensions; j++)
+	for(index_t j=0; j<dimensions; j++)
 		centers(j, 0)=mu_first[j];
 
 	distance->precompute_lhs();
 	distance->precompute_rhs();
 #pragma omp parallel for shared(min_dist)
-	for(int32_t i=0; i<lhs_size; i++)
+	for(index_t i=0; i<lhs_size; i++)
 		min_dist[i]=CMath::sq(distance->distance(i, mu));
 #ifdef HAVE_LINALG
 	float64_t sum=linalg::vector_sum(min_dist);
@@ -304,14 +304,14 @@ SGMatrix<float64_t> CKMeansBase::kmeanspp()
 	int32_t n_rands=2 + int32_t(CMath::log(k));
 
 	/* Choose centers with weighted probability */
-	for(int32_t i=1; i<k; i++)
+	for(index_t i=1; i<k; i++)
 	{	
 		int32_t best_center=0;		
 		float64_t best_sum=-1.0;
 		SGVector<float64_t> best_min_dist=SGVector<float64_t>(lhs_size);
 
 		/* local tries for best center */
-		for(int32_t trial=0; trial<n_rands; trial++)
+		for(index_t trial=0; trial<n_rands; trial++)
 		{
 			float64_t temp_sum=0.0;		
 			float64_t temp_dist=0.0;
@@ -320,7 +320,7 @@ SGMatrix<float64_t> CKMeansBase::kmeanspp()
 			float64_t prob=CMath::random(0.0, 1.0);
 			prob=prob*sum;
 		
-			for(int32_t j=0; j<lhs_size; j++)
+			for(index_t j=0; j<lhs_size; j++)
 			{
 				temp_sum+=min_dist[j];
 				if (prob <= temp_sum)
@@ -332,7 +332,7 @@ SGMatrix<float64_t> CKMeansBase::kmeanspp()
 
 #pragma omp parallel for firstprivate(lhs_size) \
 			shared(temp_min_dist)		
-			for(int32_t j=0; j<lhs_size; j++)
+			for(index_t j=0; j<lhs_size; j++)
 			{
 				temp_dist=CMath::sq(distance->distance(j, new_center));
 				temp_min_dist[j]=CMath::min(temp_dist, min_dist[j]);
@@ -353,7 +353,7 @@ SGMatrix<float64_t> CKMeansBase::kmeanspp()
 		}
 		
 		SGVector<float64_t> vec=lhs->get_feature_vector(best_center);
-		for(int32_t j=0; j<dimensions; j++)
+		for(index_t j=0; j<dimensions; j++)
 			centers(j, i)=vec[j];
 		sum=best_sum;
 		min_dist=best_min_dist;

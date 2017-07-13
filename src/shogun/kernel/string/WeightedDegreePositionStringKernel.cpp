@@ -1430,11 +1430,11 @@ float64_t* CWeightedDegreePositionStringKernel::compute_scoring(
 		info.R_k = R[k];
 
 		// --- run over all trees
-		for(int32_t p = 0; p < num_feat; ++p )
+		for(index_t p = 0; p < num_feat; ++p )
 		{
 			init_optimization( num_suppvec, IDX, alphas, p );
 			int32_t tree = p ;
-			for(int32_t j = 0; j < degree+1; j++ ) {
+			for(index_t j = 0; j < degree+1; j++ ) {
 				x[j] = -1;
 			}
 			tries.traverse( tree, p, info, 0, x, k );
@@ -1445,7 +1445,7 @@ float64_t* CWeightedDegreePositionStringKernel::compute_scoring(
 		if( k > 0 ) {
 			const int32_t j = k - 1;
 			const int32_t nofJmers = (int32_t) CMath::pow( num_sym, j+1 );
-			for(int32_t p = 0; p < num_feat; ++p ) {
+			for(index_t p = 0; p < num_feat; ++p ) {
 				const int32_t offsetJ = nofJmers * p;
 				const int32_t offsetJ1 = nofJmers * (p+1);
 				const int32_t offsetK = nofKmers * p;

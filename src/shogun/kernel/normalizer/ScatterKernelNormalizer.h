@@ -81,7 +81,7 @@ public:
 	 *
 	 * @return testing class (-1 disabled, 0...class otherwise)
 	 */
-	int32_t get_testing_class()
+	int64_t get_testing_class()
 	{
 		return m_testing_class;
 	}
@@ -90,7 +90,7 @@ public:
 	 *
 	 * @param c set class to test for
 	 */
-	void set_testing_class(int32_t c)
+	void set_testing_class(int64_t c)
 	{
 		m_testing_class=c;
 	}
@@ -100,8 +100,8 @@ public:
 	 * @param idx_lhs index of left hand side vector
 	 * @param idx_rhs index of right hand side vector
 	 */
-	virtual float64_t normalize(float64_t value, int32_t idx_lhs,
-			int32_t idx_rhs)
+	virtual float64_t normalize(float64_t value, index_t idx_lhs,
+			index_t idx_rhs)
 	{
 		value=m_normalizer->normalize(value, idx_lhs, idx_rhs);
 		float64_t c=m_const_offdiag;
@@ -124,7 +124,7 @@ public:
 	 * @param value value of a component of the left hand side feature vector
 	 * @param idx_lhs index of left hand side vector
 	 */
-	virtual float64_t normalize_lhs(float64_t value, int32_t idx_lhs)
+	virtual float64_t normalize_lhs(float64_t value, index_t idx_lhs)
 	{
 		SG_ERROR("normalize_lhs not implemented")
 		return 0;
@@ -134,7 +134,7 @@ public:
 	 * @param value value of a component of the right hand side feature vector
 	 * @param idx_rhs index of right hand side vector
 	 */
-	virtual float64_t normalize_rhs(float64_t value, int32_t idx_rhs)
+	virtual float64_t normalize_rhs(float64_t value, index_t idx_rhs)
 	{
 		SG_ERROR("normalize_rhs not implemented")
 		return 0;
@@ -183,7 +183,7 @@ protected:
 	CKernelNormalizer* m_normalizer;
 
 	/** upon testing which class to test for */
-	int32_t m_testing_class;
+	int64_t m_testing_class;
 };
 }
 #endif

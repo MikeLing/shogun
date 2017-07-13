@@ -97,7 +97,7 @@
                     PDL->destroy(it);
                     return false;
                 }
-                for(int32_t i = 0; i < sg_num; i++) {
+                for(index_t i = 0; i < sg_num; i++) {
                     //PTZ121012 really to check this with unicode types also...
                     memcpy((type*) data_pdl + (i * sg_slen_max), sg_str[i].string, sizeof(type) * sg_str[i].slen);
                     //PTZ121012 shall have calloced also...
@@ -119,10 +119,10 @@
                 AV* idx_av = newAV();
                 int32_t ij = 0;
                 //PTZ120928 so slow....
-                for(int32_t i = 0; i < sg_matrix.num_vectors; i++) {
+                for(index_t i = 0; i < sg_matrix.num_vectors; i++) {
                     ind_i += sfm[i].num_feat_entries;
                     av_store(ind_av, i + 1, newSViv((IV) ind_i));
-                    for(int32_t j = 0; j < sfm[i].num_feat_entries; j++) {
+                    for(index_t j = 0; j < sfm[i].num_feat_entries; j++) {
                         av_store(idx_av,  ij, newSViv((IV) sfm[i].features[j].feat_index));
                         //PTZ120928 here typecode shall be used...
                         av_store(data_av, ij, newSVuv((NV) sfm[i].features[j].entry     ));
@@ -284,7 +284,7 @@ fail:
                         el_len = strnlen(el_str, l_len_max);
                         if(i + el_len > it->nvals) {
                             warn("string_from_pdl::offset error in string conversion::bayling out");
-                            for(int32_t j = 0; j < lind; j++)
+                            for(index_t j = 0; j < lind; j++)
                                 l_ss[j].~SGString< type >();
                             SG_FREE(l_ss);
                             //free(inds);
@@ -297,7 +297,7 @@ fail:
                             l_ss[lind].string = SG_MALLOC(type, el_len);
                             if(!l_ss[lind].string) {
 			      warn("string_from_pdl::out of memory");
-			      for(int32_t j = 0; j <= lind; j++)
+			      for(index_t j = 0; j <= lind; j++)
                                     l_ss[j].~SGString< type >();
                                 SG_FREE(l_ss);
                                 //free(inds);
@@ -392,12 +392,12 @@ fail:
                 PDL_Long num_vec = (int) av_len(shape_vec_av) + 1;
                 shogun::SGSparseVector<type>* sfm = SG_MALLOC(shogun::SGSparseVector<type>, num_vec);
 
-                for(int32_t i = 0; i < num_vec; i++) {
+                for(index_t i = 0; i < num_vec; i++) {
                     new (&sfm[i]) SGSparseVector<type>();
                 }
                 int32_t num_i_prev = 0;
                 int32_t ij = 0;
-                for(int32_t i = 1; i < len_indptr; i++) {
+                for(index_t i = 1; i < len_indptr; i++) {
                     //SV* ind_i_iv = *(av_fetch(ind_av, i, 0));
                     int32_t num_i = SvIV( *(av_fetch(ind_av, i, 0)) );
                     int32_t num = num_i - num_i_prev;

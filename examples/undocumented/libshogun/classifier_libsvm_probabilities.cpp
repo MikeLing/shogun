@@ -17,13 +17,13 @@ void gen_rand_data(SGMatrix<float64_t> features, SGVector<float64_t> labels, flo
         if (i<num_samples/2)
         {
             labels[i]=-1.0;
-            for(int32_t j=0; j<dimensions; j++)
+            for(index_t j=0; j<dimensions; j++)
                 features(j,i)=CMath::random(0.0,1.0)+distance;
         }
         else
         {
             labels[i]=1.0;
-            for(int32_t j=0; j<dimensions; j++)
+            for(index_t j=0; j<dimensions; j++)
                 features(j,i)=CMath::random(0.0,1.0)-distance;
         }
     }

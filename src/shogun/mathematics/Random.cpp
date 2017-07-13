@@ -109,7 +109,7 @@ void CRandom::init()
 	// Thus -m_xComp[0] is the probability that a sample point is within the box part of the segment.
 	m_xComp[0] = (uint32_t)(((m_R * m_y[0]) / m_A) * (float64_t)std::numeric_limits<uint32_t>::max());
 
-	for(int32_t i=1; i < m_blockCount-1; i++)
+	for(index_t i=1; i < m_blockCount-1; i++)
 	{
 		m_xComp[i] = (uint32_t)((m_x[i+1] / m_x[i]) * (float64_t)std::numeric_limits<uint32_t>::max());
 	}

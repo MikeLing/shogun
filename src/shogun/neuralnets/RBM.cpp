@@ -531,7 +531,7 @@ void CRBM::sample_visible(SGMatrix< float64_t > mean, SGMatrix< float64_t > resu
 	}
 }
 
-void CRBM::sample_visible(int32_t index,
+void CRBM::sample_visible(index_t index,
 	SGMatrix< float64_t > mean, SGMatrix< float64_t > result)
 {
 	int32_t offset = m_visible_state_offsets->element(index);

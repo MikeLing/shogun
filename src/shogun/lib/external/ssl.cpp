@@ -375,7 +375,7 @@ float64_t line_search(float64_t *w,
 	float64_t omegaL = 0.0;
 	float64_t omegaR = 0.0;
 	float64_t diff=0.0;
-	for(int32_t i=d; i--; )
+	for(index_t i=d; i--; )
 	{
 		diff=w_bar[i]-w[i];
 		omegaL+=w[i]*diff;
@@ -399,7 +399,7 @@ float64_t line_search(float64_t *w,
 	R+=omegaR;
 	Delta* deltas=SG_MALLOC(Delta, l);
 	int32_t p=0;
-	for(int32_t i=0;i<l;i++)
+	for(index_t i=0;i<l;i++)
 	{
 		diff=Y[i]*(o_bar[i]-o[i]);
 
@@ -595,7 +595,7 @@ int32_t DA_S3VM(
 	/* record which examples are unlabeled */
 	int32_t *JU = SG_MALLOC(int32_t, Data->u);
 	int32_t j=0;
-	for(int32_t i=0;i<Data->m;i++)
+	for(index_t i=0;i<Data->m;i++)
 	{
 		if(Data->Y[i]==0.0)
 		{JU[j]=i;j++;}
@@ -982,7 +982,7 @@ void optimize_p(
 			nu=nuHat;
 		Bnu=0.0;
 		BnuPrime=0.0;
-		for(int32_t i=0;i<u;i++)
+		for(index_t i=0;i<u;i++)
 		{
 			s=exp((g[i]-nu)/T);
 			if(!(CMath::is_infinity(s)))
@@ -1072,7 +1072,7 @@ float64_t KL(const float64_t *p, const float64_t *q, int32_t u)
 float64_t norm_square(const vector_double *A)
 {
 	float64_t x=0.0, t=0.0;
-	for(int32_t i=0;i<A->d;i++)
+	for(index_t i=0;i<A->d;i++)
 	{
 		t=A->vec[i];
 		x+=t*t;
@@ -1093,7 +1093,7 @@ void initialize_ssl(struct vector_double *A, int32_t k, float64_t a)
 void initialize_ssl(struct vector_int *A, int32_t k)
 {
 	int32_t *vec = SG_MALLOC(int32_t, k);
-	for(int32_t i=0;i<k;i++)
+	for(index_t i=0;i<k;i++)
 		vec[i]=i;
 	A->vec = vec;
 	A->d   = k;
@@ -1109,7 +1109,7 @@ void GetLabeledData(struct data *D, const struct data *Data)
 	int32_t nz=0;
 	int32_t k=0;
 	int32_t rowptrs_=Data->l;
-	for(int32_t i=0;i<Data->m;i++)
+	for(index_t i=0;i<Data->m;i++)
 	{
 		if(Data->Y[i]!=0.0)
 		{
@@ -1124,10 +1124,10 @@ void GetLabeledData(struct data *D, const struct data *Data)
 	D->colind = SG_MALLOC(int32_t, nz);
 	D->rowptr = new int32_trowptrs_+1];
 	nz=0;
-	for(int32_t i=0;i<Data->l;i++)
+	for(index_t i=0;i<Data->l;i++)
 	{
 		D->rowptr[i]=nz;
-		for(int32_t j=Data->rowptr[J[i]];j<Data->rowptr[J[i]+1];j++)
+		for(index_t j=Data->rowptr[J[i]];j<Data->rowptr[J[i]+1];j++)
 		{
 			D->val[nz] = Data->val[j];
 			D->colind[nz] = Data->colind[j];

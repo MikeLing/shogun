@@ -95,9 +95,9 @@ TEST(GaussianARDKernel_scalar,get_kernel_matrix)
 
 	SGMatrix<float64_t> mat=kernel->get_kernel_matrix();
 	SGMatrix<float64_t> mat2=kernel2->get_kernel_matrix();
-	for(int32_t i=0;i<mat.num_rows;i++)
+	for(index_t i=0;i<mat.num_rows;i++)
 	{
-		for(int32_t j=0;j<mat.num_cols;j++)
+		for(index_t j=0;j<mat.num_cols;j++)
 		{
 			abs_tolerance=CMath::get_abs_tolerance(mat2(i,j),rel_tolerance);
 			EXPECT_NEAR(mat(i,j),mat2(i,j),abs_tolerance);
@@ -110,9 +110,9 @@ TEST(GaussianARDKernel_scalar,get_kernel_matrix)
 
 	mat=kernel->get_kernel_matrix();
 	mat2=kernel2->get_kernel_matrix();
-	for(int32_t i=0;i<mat.num_rows;i++)
+	for(index_t i=0;i<mat.num_rows;i++)
 	{
-		for(int32_t j=0;j<mat.num_cols;j++)
+		for(index_t j=0;j<mat.num_cols;j++)
 		{
 			abs_tolerance=CMath::get_abs_tolerance(mat2(i,j),rel_tolerance);
 			EXPECT_NEAR(mat(i,j),mat2(i,j),abs_tolerance);
@@ -181,9 +181,9 @@ TEST(GaussianARDKernel_scalar,get_parameter_gradient)
 
 	SGMatrix<float64_t> mat=kernel->get_parameter_gradient(width_param);
 	SGMatrix<float64_t> mat2=kernel2->get_parameter_gradient(width_param2);
-	for(int32_t i=0;i<mat.num_rows;i++)
+	for(index_t i=0;i<mat.num_rows;i++)
 	{
-		for(int32_t j=0;j<mat.num_cols;j++)
+		for(index_t j=0;j<mat.num_cols;j++)
 		{
 			abs_tolerance=CMath::get_abs_tolerance(-mat2(i,j),rel_tolerance);
 			EXPECT_NEAR(mat(i,j),-mat2(i,j),abs_tolerance);
@@ -195,9 +195,9 @@ TEST(GaussianARDKernel_scalar,get_parameter_gradient)
 
 	mat=kernel->get_parameter_gradient(width_param);
 	mat2=kernel2->get_parameter_gradient(width_param2);
-	for(int32_t i=0;i<mat.num_rows;i++)
+	for(index_t i=0;i<mat.num_rows;i++)
 	{
-		for(int32_t j=0;j<mat.num_cols;j++)
+		for(index_t j=0;j<mat.num_cols;j++)
 		{
 			abs_tolerance=CMath::get_abs_tolerance(-mat2(i,j),rel_tolerance);
 			EXPECT_NEAR(mat(i,j),-mat2(i,j),abs_tolerance);
@@ -628,7 +628,7 @@ TEST(GaussianARDKernel,get_kernel_diagonal)
 	SGMatrix<float64_t> mat2=kernel->get_kernel_matrix();
 	SGVector<float64_t> vec2=mat2.get_diagonal_vector();
 
-	for(int32_t i=0;i<vec.vlen;i++)
+	for(index_t i=0;i<vec.vlen;i++)
 	{
 		abs_tolerance=CMath::get_abs_tolerance(vec2[i],rel_tolerance);
 		EXPECT_NEAR(vec[i],vec2[i],abs_tolerance);
@@ -640,7 +640,7 @@ TEST(GaussianARDKernel,get_kernel_diagonal)
 	mat2=kernel->get_kernel_matrix();
 	vec2=mat2.get_diagonal_vector();
 
-	for(int32_t i=0;i<vec.vlen;i++)
+	for(index_t i=0;i<vec.vlen;i++)
 	{
 		abs_tolerance=CMath::get_abs_tolerance(vec2[i],rel_tolerance);
 		EXPECT_NEAR(vec[i],vec2[i],abs_tolerance);
@@ -707,7 +707,7 @@ TEST(GaussianARDKernel,get_parameter_gradient_diagonal)
 
 	SGVector<float64_t> vec=kernel->get_parameter_gradient_diagonal(width_param);
 	SGVector<float64_t> vec2=kernel2->get_parameter_gradient_diagonal(width_param2);
-	for(int32_t j=0;j<vec.vlen;j++)
+	for(index_t j=0;j<vec.vlen;j++)
 	{
 		abs_tolerance=CMath::get_abs_tolerance(-vec2[j],rel_tolerance);
 		EXPECT_NEAR(vec[j],-vec2[j],abs_tolerance);
@@ -718,7 +718,7 @@ TEST(GaussianARDKernel,get_parameter_gradient_diagonal)
 
 	vec=kernel->get_parameter_gradient_diagonal(width_param);
 	vec2=kernel2->get_parameter_gradient_diagonal(width_param2);
-	for(int32_t j=0;j<vec.vlen;j++)
+	for(index_t j=0;j<vec.vlen;j++)
 	{
 		abs_tolerance=CMath::get_abs_tolerance(-vec2[j],rel_tolerance);
 		EXPECT_NEAR(vec[j],-vec2[j],abs_tolerance);

@@ -341,14 +341,14 @@ float64_t CSVRLight::compute_objective_function(
   /* calculate value of objective function */
   float64_t criterion=0;
 
-  for(int32_t i=0;i<totdoc;i++)
+  for(index_t i=0;i<totdoc;i++)
 	  criterion+=(eps[i]-(float64_t)label[i]*c[i])*a[i]+0.5*a[i]*label[i]*lin[i];
 
   /* float64_t check=0;
-  for(int32_t i=0;i<totdoc;i++)
+  for(index_t i=0;i<totdoc;i++)
   {
 	  check+=a[i]*eps-a[i]*label[i]*c[i];
-	  for(int32_t j=0;j<totdoc;j++)
+	  for(index_t j=0;j<totdoc;j++)
 		  check+= 0.5*a[i]*label[i]*a[j]*label[j]*compute_kernel(i,j);
 
   }
@@ -543,11 +543,11 @@ void CSVRLight::update_linear_component_mkl(
 			w1[n]=1.0 ;
 			kernel->set_subkernel_weights(SGVector<float64_t>(w1, num_weights)) ;
 
-			for(int32_t i=0;i<num;i++)
+			for(index_t i=0;i<num;i++)
 			{
 				if(a[i] != a_old[i])
 				{
-					for(int32_t j=0;j<num;j++)
+					for(index_t j=0;j<num;j++)
 						W[j*num_kernels+n]+=(a[i]-a_old[i])*compute_kernel(i,j)*(float64_t)label[i];
 				}
 			}
@@ -592,7 +592,7 @@ void CSVRLight::update_linear_component_mkl_linadd(
 
 	// create normal update (with changed alphas only)
 	kernel->clear_normal();
-	for(int32_t ii=0, i=0;(i=working2dnum[ii])>=0;ii++) {
+	for(index_t ii=0, i=0;(i=working2dnum[ii])>=0;ii++) {
 		if(a[i] != a_old[i]) {
 			kernel->add_to_normal(regression_fix_index(docs[i]), (a[i]-a_old[i])*(float64_t)label[i]);
 		}
@@ -635,7 +635,7 @@ void CSVRLight::call_mkl_callback(float64_t* a, int32_t* label, float64_t* lin, 
 	for (int32_t d=0; d<num_kernels; d++)
 	{
 		sumw[d]=0;
-		for(int32_t i=0; i<num; i++)
+		for(index_t i=0; i<num; i++)
 			sumw[d] += 0.5*a[i]*label[i]*W[i*num_kernels+d];
 	}
 #endif
@@ -650,11 +650,11 @@ void CSVRLight::call_mkl_callback(float64_t* a, int32_t* label, float64_t* lin, 
 	cblas_dgemv(CblasColMajor, CblasTrans, nk, (int) num, 1.0, (double*) W,
 		nk, (double*) new_beta, 1, 0.0, (double*) lin, 1);
 #else
-	for(int32_t i=0; i<num; i++)
+	for(index_t i=0; i<num; i++)
 		lin[i]=0 ;
 	for (int32_t d=0; d<num_kernels; d++)
 		if (new_beta[d]!=0)
-			for(int32_t i=0; i<num; i++)
+			for(index_t i=0; i<num; i++)
 				lin[i] += new_beta[d]*W[i*num_kernels+d] ;
 #endif
 

@@ -76,7 +76,7 @@ public:
             CNode *current_node = grey_nodes.front();
             grey_nodes.pop_front();
 
-            for(int32_t i = 0; i!=int32_t(current_node->children.size()); i++){
+            for(index_t i = 0; i!=int32_t(current_node->children.size()); i++){
                 grey_nodes.push_back(current_node->children[i]);
             }
 

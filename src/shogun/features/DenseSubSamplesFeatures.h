@@ -200,7 +200,7 @@ private:
 	/** check whether the index is out of bound
 	 * @param index index of m_idx
 	 */
-	void check_bound(int32_t index);
+	void check_bound(index_t index);
 
 	/* full samples  */
 	CDenseFeatures<ST> *m_fea;

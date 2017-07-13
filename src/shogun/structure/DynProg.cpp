@@ -288,16 +288,16 @@ void CDynProg::resize_lin_feat(const int32_t num_new_feat)
 	float64_t* arr = m_lin_feat.get_array();
 	float64_t* tmp = SG_MALLOC(float64_t, (dim1+num_new_feat)*dim2);
 	memset(tmp, 0, (dim1+num_new_feat)*dim2*sizeof(float64_t)) ;
-	for(int32_t j=0;j<m_seq_len;j++)
-                for(int32_t k=0;k<m_num_lin_feat_plifs_cum[m_num_raw_data-1];k++)
+	for(index_t j=0;j<m_seq_len;j++)
+                for(index_t k=0;k<m_num_lin_feat_plifs_cum[m_num_raw_data-1];k++)
 			tmp[j*(dim1+num_new_feat)+k] = arr[j*dim1+k];
 
 	m_lin_feat.set_array(tmp, dim1+num_new_feat,dim2, true, true);// copy array and free it later
 	SG_FREE(tmp);
 
-	/*for(int32_t j=0;j<5;j++)
+	/*for(index_t j=0;j<5;j++)
 	{
-		for(int32_t k=0;k<m_num_lin_feat_plifs_cum[m_num_raw_data];k++)
+		for(index_t k=0;k<m_num_lin_feat_plifs_cum[m_num_raw_data];k++)
 		{
 			SG_PRINT("(%i,%i)%f ",k,j,m_lin_feat.get_element(k,j))
 		}

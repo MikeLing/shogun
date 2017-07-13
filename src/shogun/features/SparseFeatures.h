@@ -113,7 +113,7 @@ template <class ST> class CSparseFeatures : public CDotFeatures
 		 *
 		 * @return sum of features that match dimension index and 0 if none is found
 		 */
-		ST get_feature(int32_t num, int32_t index);
+		ST get_feature(int32_t num, index_t index);
 
 		/** get the fully expanded dense feature vector num
 		  *
@@ -423,7 +423,7 @@ template <class ST> class CSparseFeatures : public CDotFeatures
 			int32_t vector_index;
 
 			/** feature index */
-			int32_t index;
+			index_t index;
 
 			/** print details of iterator (for debugging purposes)*/
 			void print_info()

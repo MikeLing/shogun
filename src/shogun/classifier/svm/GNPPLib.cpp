@@ -62,7 +62,7 @@ CGNPPLib::CGNPPLib(
   kernel_columns = SG_MALLOC(float64_t*, Cache_Size);
   cache_index = SG_MALLOC(float64_t, Cache_Size);
 
-  for(int32_t i = 0; i < Cache_Size; i++ ) 
+  for(index_t i = 0; i < Cache_Size; i++ ) 
   {
     kernel_columns[i] = SG_MALLOC(float64_t, num_data);
     cache_index[i] = -2;
@@ -73,7 +73,7 @@ CGNPPLib::CGNPPLib(
 
 CGNPPLib::~CGNPPLib()
 {
-  for(int32_t i = 0; i < Cache_Size; i++ ) 
+  for(index_t i = 0; i < Cache_Size; i++ ) 
       SG_FREE(kernel_columns[i]);
 
   SG_FREE(cache_index);

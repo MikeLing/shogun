@@ -115,7 +115,7 @@ protected:
 	*	@param index - index of constraint
 	*
 	*/
-	float64_t objectives(const ::std::vector<float64_t> & weights, const int32_t index);
+	float64_t objectives(const ::std::vector<float64_t> & weights, const index_t index);
 
 	/** helper routine for MKL optimization, performs linesearch
 	*
@@ -127,7 +127,7 @@ protected:
 
 protected:
 	/** stores the number of kernels which acts as a parameter for the LP */
-	int32_t numkernels;
+	int64_t numkernels;
 
 
 	/** stores normsofsubkernels which is a constraint, normsofsubkernels[i] belongs to the i-th constraint */

@@ -155,7 +155,7 @@ void CDeepBeliefNetwork::pre_train(CDenseFeatures< float64_t >* features)
 	}
 }
 
-void CDeepBeliefNetwork::pre_train(int32_t index,
+void CDeepBeliefNetwork::pre_train(index_t index,
 	CDenseFeatures< float64_t >* features)
 {
 	CRBM rbm(m_layer_sizes->element(index+1));
@@ -389,7 +389,7 @@ CNeuralNetwork* CDeepBeliefNetwork::convert_to_neural_network(
 	return network;
 }
 
-void CDeepBeliefNetwork::down_step(int32_t index, SGVector< float64_t > params,
+void CDeepBeliefNetwork::down_step(index_t index, SGVector< float64_t > params,
 	SGMatrix< float64_t > input, SGMatrix< float64_t > result, bool sample_states)
 {
 	typedef Eigen::Map<Eigen::MatrixXd> EMatrix;
@@ -439,7 +439,7 @@ void CDeepBeliefNetwork::down_step(int32_t index, SGVector< float64_t > params,
 	}
 }
 
-void CDeepBeliefNetwork::up_step(int32_t index, SGVector< float64_t > params,
+void CDeepBeliefNetwork::up_step(index_t index, SGVector< float64_t > params,
 	SGMatrix< float64_t > input, SGMatrix< float64_t > result, bool sample_states)
 {
 	typedef Eigen::Map<Eigen::MatrixXd> EMatrix;
@@ -543,7 +543,7 @@ void CDeepBeliefNetwork::wake_sleep(SGMatrix< float64_t > data, CRBM* top_rbm,
 	}
 }
 
-SGMatrix< float64_t > CDeepBeliefNetwork::get_weights(int32_t index,
+SGMatrix< float64_t > CDeepBeliefNetwork::get_weights(index_t index,
 	SGVector< float64_t > p)
 {
 	if (p.vlen==0)
@@ -554,7 +554,7 @@ SGMatrix< float64_t > CDeepBeliefNetwork::get_weights(int32_t index,
 			m_layer_sizes->element(index+1), m_layer_sizes->element(index), false);
 }
 
-SGVector< float64_t > CDeepBeliefNetwork::get_biases(int32_t index,
+SGVector< float64_t > CDeepBeliefNetwork::get_biases(index_t index,
 	SGVector< float64_t > p)
 {
 	if (p.vlen==0)

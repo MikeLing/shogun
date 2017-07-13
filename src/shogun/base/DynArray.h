@@ -109,7 +109,7 @@ template <class T> class DynArray
 		 */
 		inline index_t set_granularity(index_t g)
 		{
-			g=CMath::max(g,1);
+			g=CMath::max(g,index_t(1));
 			this->resize_granularity = g;
 			return g;
 		}

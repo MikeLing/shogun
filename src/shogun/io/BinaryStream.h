@@ -200,7 +200,7 @@ public:
 	 * @param index index
 	 * @return element at index
 	 */
-	inline T operator[](int32_t index) const
+	inline T operator[](index_t index) const
 	{
 
 		if (fseek(fd, ((long) sizeof(T)) * ((long) index), SEEK_SET) != 0)

@@ -290,7 +290,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	if (!m_nominal[feature_id_vector[best_feature_index]])
 	{
 		// convert continuous feature to nominal. Store cache for restoration
-		for(int32_t p=0;p<num_vecs;p++)
+		for(index_t p=0;p<num_vecs;p++)
 		{
 			feature_cache[p]=feats->get_feature_vector(p)[best_feature_index];
 			if (CMath::fequals(feature_cache[p],MISSING,0))
@@ -414,7 +414,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	if (!m_nominal[feature_id_vector[best_feature_index]])
 	{
 		// restore data matrix
-		for(int32_t p=0;p<num_vecs;p++)
+		for(index_t p=0;p<num_vecs;p++)
 			feats->get_feature_vector(p)[best_feature_index]=feature_cache[p];
 	}
 

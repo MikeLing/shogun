@@ -182,7 +182,7 @@ public:
 	 * @param index in the table
 	 * @return energy value
 	 */
-	float64_t get_energy(int32_t index) const;
+	float64_t get_energy(index_t index) const;
 
 	/** set energies with new values
 	 * @param ft_energies new energy table

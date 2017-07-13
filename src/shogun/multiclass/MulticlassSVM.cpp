@@ -282,7 +282,7 @@ bool CMulticlassSVM::save(FILE* modelfl)
 
 		fprintf(modelfl, "alphas%d=[\n", i);
 
-		for(int32_t j=0; j<svm->get_num_support_vectors(); j++)
+		for(index_t j=0; j<svm->get_num_support_vectors(); j++)
 		{
 			fprintf(modelfl,"\t[%+10.16e,%d];\n",
 					svm->get_alpha(j), svm->get_support_vector(j));

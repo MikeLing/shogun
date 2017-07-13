@@ -359,7 +359,7 @@ protected:
 	virtual void sample_visible(SGMatrix<float64_t> mean, SGMatrix<float64_t> result);
 
 	/** Samples one group of visible states according to the provided means */
-	virtual void sample_visible(int32_t index,
+	virtual void sample_visible(index_t index,
 			SGMatrix<float64_t> mean, SGMatrix<float64_t> result);
 
 private:

@@ -298,7 +298,7 @@ SGMatrix<float64_t> CGaussian::get_cov()
 		float64_t* temp_holder=SG_MALLOC(float64_t, m_d.vlen*m_d.vlen);
 		float64_t* diag_holder=SG_MALLOC(float64_t, m_d.vlen*m_d.vlen);
 		memset(diag_holder, 0, sizeof(float64_t)*m_d.vlen*m_d.vlen);
-		for(int32_t i=0; i<m_d.vlen; i++)
+		for(index_t i=0; i<m_d.vlen; i++)
 			diag_holder[i*m_d.vlen+i]=m_d.vector[i];
 
 		cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans,

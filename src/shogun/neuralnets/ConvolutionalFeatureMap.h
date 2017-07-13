@@ -82,7 +82,7 @@ public:
 	CConvolutionalFeatureMap(int32_t input_width, int32_t input_height,
 			int32_t radius_x, int32_t radius_y,
 			int32_t stride_x=1, int32_t stride_y=1,
-			int32_t index=0,
+			index_t index=0,
 			EConvMapActivationFunction function = CMAF_IDENTITY,
 			ENLAutoencoderPosition autoencoder_position = NLAP_NONE);
 

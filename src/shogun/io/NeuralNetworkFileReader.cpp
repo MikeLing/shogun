@@ -242,7 +242,7 @@ CNeuralLayer* CNeuralNetworkFileReader::parse_layer(json_object* json_layer)
 int32_t CNeuralNetworkFileReader::find_layer_index(json_object* json_layers,
 		const char* layer_key)
 {
-	int32_t index = 0;
+	index_t index = 0;
 
 	json_object_iter iter;
 	json_object_object_foreachC(json_layers, iter)

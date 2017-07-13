@@ -299,8 +299,8 @@ void CCARTree::pre_sort_features(CFeatures* data, SGMatrix<float64_t>& sorted_fe
 	SGMatrix<float64_t> mat=(dynamic_cast<CDenseFeatures<float64_t>*>(data))->get_feature_matrix();
 	sorted_feats = SGMatrix<float64_t>(mat.num_cols, mat.num_rows);
 	sorted_indices = SGMatrix<index_t>(mat.num_cols, mat.num_rows);
-	for(int32_t i=0; i<sorted_indices.num_cols; i++)
-		for(int32_t j=0; j<sorted_indices.num_rows; j++)
+	for(index_t i=0; i<sorted_indices.num_cols; i++)
+		for(index_t j=0; j<sorted_indices.num_rows; j++)
 			sorted_indices(j,i)=j;
 
 	Map<MatrixXd> map_sorted_feats(sorted_feats.matrix, mat.num_cols, mat.num_rows);
@@ -309,7 +309,7 @@ void CCARTree::pre_sort_features(CFeatures* data, SGMatrix<float64_t>& sorted_fe
 	map_sorted_feats=map_data.transpose();
 
 	#pragma omp parallel for
-	for(int32_t i=0; i<sorted_feats.num_cols; i++)
+	for(index_t i=0; i<sorted_feats.num_cols; i++)
 		CMath::qsort_index(sorted_feats.get_column_vector(i), sorted_indices.get_column_vector(i), sorted_feats.num_rows);
 
 }
@@ -589,7 +589,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 	{
 		indices_mask = SGVector<int64_t>(mat.num_rows);
 		indices_mask.set_const(-1);
-		for(int32_t j=0;j<active_indices.size();j++)
+		for(index_t j=0;j<active_indices.size();j++)
 		{
 			if (indices_mask[active_indices[j]]>=0)
 				dupes[indices_mask[active_indices[j]]]=j;
@@ -609,7 +609,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			SGVector<float64_t> temp_col(mat.get_column_vector(idx[i]), mat.num_rows, false);
 			SGVector<index_t> sorted_indices(m_sorted_indices.get_column_vector(idx[i]), mat.num_rows, false);
 			int32_t count=0;
-			for(int32_t j=0;j<mat.num_rows;j++)
+			for(index_t j=0;j<mat.num_rows;j++)
 			{
 				if (indices_mask[sorted_indices[j]]>=0)
 				{
@@ -809,7 +809,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			SGVector<float64_t> temp_vec(mat.get_column_vector(best_attribute), mat.num_rows, false);			
 			SGVector<index_t> sorted_indices(m_sorted_indices.get_column_vector(best_attribute), mat.num_rows, false);
 			int32_t count=0;
-			for(int32_t i=0;i<mat.num_rows;i++)
+			for(index_t i=0;i<mat.num_rows;i++)
 			{
 				if (indices_mask[sorted_indices[i]]>=0)
 				{

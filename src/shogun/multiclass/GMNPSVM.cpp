@@ -113,9 +113,9 @@ bool CGMNPSVM::train_machine(CFeatures* data)
 	memset(all_bs,0,num_classes*sizeof(float64_t));
 
 	/* compute alpha/b from virt_data */
-	for(int32_t i=0; i < num_classes; i++ )
+	for(index_t i=0; i < num_classes; i++ )
 	{
-		for(int32_t j=0; j < num_virtual_data; j++ )
+		for(index_t j=0; j < num_virtual_data; j++ )
 		{
 			int32_t inx1=0;
 			int32_t inx2=0;

@@ -246,7 +246,7 @@ public:
 	 * @param idx desired index
 	 * @return pointer to the TParameter with the specified index
 	 */
-	inline TParameter* get_parameter(int32_t idx)
+	inline TParameter* get_parameter(index_t idx)
 	{
 		return m_params.get_element(idx);
 	}

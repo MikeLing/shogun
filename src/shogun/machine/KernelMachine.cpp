@@ -217,7 +217,7 @@ bool CKernelMachine::init_kernel_optimization()
 		int32_t * sv_idx    = SG_MALLOC(int32_t, num_sv);
 		float64_t* sv_weight = SG_MALLOC(float64_t, num_sv);
 
-		for(int32_t i=0; i<num_sv; i++)
+		for(index_t i=0; i<num_sv; i++)
 		{
 			sv_idx[i]    = get_support_vector(i) ;
 			sv_weight[i] = get_alpha(i) ;
@@ -414,7 +414,7 @@ float64_t CKernelMachine::apply_one(int32_t num)
 	else
 	{
 		float64_t score=0;
-		for(int32_t i=0; i<get_num_support_vectors(); i++)
+		for(index_t i=0; i<get_num_support_vectors(); i++)
 			score+=kernel->kernel(get_support_vector(i), num)*get_alpha(i);
 
 		return score+get_bias();

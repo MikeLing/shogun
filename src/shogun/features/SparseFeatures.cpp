@@ -62,7 +62,7 @@ template<class ST> CFeatures* CSparseFeatures<ST>::duplicate() const
 	return new CSparseFeatures<ST>(*this);
 }
 
-template<class ST> ST CSparseFeatures<ST>::get_feature(int32_t num, int32_t index)
+template<class ST> ST CSparseFeatures<ST>::get_feature(int32_t num, index_t index)
 {
 	REQUIRE(index>=0 && index<get_num_features(),
 		"get_feature(num=%d,index=%d): index exceeds [0;%d]\n",

@@ -84,7 +84,7 @@ int main()
 	{
 		temp1=CV2SGFactory::get_sgmatrix<float64_t>(images[j]);
 		temp2=flatten(temp1);
-		for(int32_t i=0; i<length; ++i)
+		for(index_t i=0; i<length; ++i)
 			Stacked_mats(i,j)=temp2(0,i);
 	}
 

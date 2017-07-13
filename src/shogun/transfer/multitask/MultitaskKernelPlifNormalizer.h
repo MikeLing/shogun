@@ -38,7 +38,7 @@ public:
 
 	/** constructor
 	 */
-	CMultitaskKernelPlifNormalizer(std::vector<float64_t> support_, std::vector<int32_t> task_vector)
+	CMultitaskKernelPlifNormalizer(std::vector<float64_t> support_, std::vector<int64_t> task_vector)
 		: CMultitaskKernelMklNormalizer()
 	{
 
@@ -73,13 +73,13 @@ public:
 	 * @param idx_lhs index of left hand side vector
 	 * @param idx_rhs index of right hand side vector
 	 */
-	virtual float64_t normalize(float64_t value, int32_t idx_lhs,
-			int32_t idx_rhs)
+	virtual float64_t normalize(float64_t value, index_t idx_lhs,
+			index_t idx_rhs)
 	{
 
 		//lookup tasks
-		int32_t task_idx_lhs = task_vector_lhs[idx_lhs];
-		int32_t task_idx_rhs = task_vector_rhs[idx_rhs];
+		int64_t task_idx_lhs = task_vector_lhs[idx_lhs];
+		int64_t task_idx_rhs = task_vector_rhs[idx_rhs];
 
 		//lookup similarity
 		float64_t task_similarity = get_task_similarity(task_idx_lhs,
@@ -98,16 +98,16 @@ public:
 	 * @param vec vector with containing task_id for each example
 	 * @return number of unique task ids
 	 */
-	int32_t get_num_unique_tasks(std::vector<int32_t> vec) {
+	int64_t get_num_unique_tasks(std::vector<int64_t> vec) {
 
 		//sort
 		std::sort(vec.begin(), vec.end());
 
 		//reorder tasks with unique prefix
-		std::vector<int32_t>::iterator endLocation = std::unique(vec.begin(), vec.end());
+		std::vector<int64_t>::iterator endLocation = std::unique(vec.begin(), vec.end());
 
 		//count unique tasks
-		int32_t num_vec = std::distance(vec.begin(), endLocation);
+		int64_t num_vec = std::distance(vec.begin(), endLocation);
 
 		return num_vec;
 
@@ -125,9 +125,9 @@ public:
 	{
 
 
-		for (int32_t i=0; i!=num_tasks; i++)
+		for (index_t i=0; i!=num_tasks; i++)
 		{
-			for (int32_t j=0; j!=num_tasks; j++)
+			for (index_t j=0; j!=num_tasks; j++)
 			{
 
 				float64_t similarity = compute_task_similarity(i, j);
@@ -140,13 +140,13 @@ public:
 
 
 	/** derive similarity from distance with plif */
-	float64_t compute_task_similarity(int32_t task_a, int32_t task_b)
+	float64_t compute_task_similarity(int64_t task_a, int64_t task_b)
 	{
 
 		float64_t distance = get_task_distance(task_a, task_b);
 		float64_t similarity = -1;
 
-		int32_t upper_bound_idx = -1;
+		index_t upper_bound_idx = -1;
 
 
 		// determine interval
@@ -167,7 +167,7 @@ public:
 
 		} else {
 
-			int32_t lower_bound_idx = upper_bound_idx - 1;
+			index_t lower_bound_idx = upper_bound_idx - 1;
 			float64_t interval_size = support[upper_bound_idx] - support[lower_bound_idx];
 
 			float64_t factor_lower = 1 - (distance - support[lower_bound_idx]) / interval_size;
@@ -185,31 +185,31 @@ public:
 public:
 
 	/** @return vec task vector with containing task_id for each example on left hand side */
-	virtual std::vector<int32_t> get_task_vector_lhs() const
+	virtual std::vector<int64_t> get_task_vector_lhs() const
 	{
 		return task_vector_lhs;
 	}
 
 	/** @param vec task vector with containing task_id for each example */
-	virtual void set_task_vector_lhs(std::vector<int32_t> vec)
+	virtual void set_task_vector_lhs(std::vector<int64_t> vec)
 	{
 		task_vector_lhs = vec;
 	}
 
 	/** @return vec task vector with containing task_id for each example on right hand side */
-	virtual std::vector<int32_t> get_task_vector_rhs() const
+	virtual std::vector<int64_t> get_task_vector_rhs() const
 	{
 		return task_vector_rhs;
 	}
 
 	/** @param vec task vector with containing task_id for each example */
-	virtual void set_task_vector_rhs(std::vector<int32_t> vec)
+	virtual void set_task_vector_rhs(std::vector<int64_t> vec)
 	{
 		task_vector_rhs = vec;
 	}
 
 	/** @param vec task vector with containing task_id for each example */
-	virtual void set_task_vector(std::vector<int32_t> vec)
+	virtual void set_task_vector(std::vector<int64_t> vec)
 	{
 		task_vector_lhs = vec;
 		task_vector_rhs = vec;
@@ -220,7 +220,7 @@ public:
 	 * @param task_rhs task_id on right hand side
 	 * @return distance between tasks
 	 */
-	float64_t get_task_distance(int32_t task_lhs, int32_t task_rhs)
+	float64_t get_task_distance(int64_t task_lhs, int64_t task_rhs)
 	{
 
 		ASSERT(task_lhs < num_tasks && task_lhs >= 0)
@@ -235,7 +235,7 @@ public:
 	 * @param task_rhs task_id on right hand side
 	 * @param distance distance between tasks
 	 */
-	void set_task_distance(int32_t task_lhs, int32_t task_rhs,
+	void set_task_distance(int64_t task_lhs, int64_t task_rhs,
 			float64_t distance)
 	{
 
@@ -251,7 +251,7 @@ public:
 	 * @param task_rhs task_id on right hand side
 	 * @return similarity between tasks
 	 */
-	float64_t get_task_similarity(int32_t task_lhs, int32_t task_rhs)
+	float64_t get_task_similarity(int64_t task_lhs, int64_t task_rhs)
 	{
 
 		ASSERT(task_lhs < num_tasks && task_lhs >= 0)
@@ -266,7 +266,7 @@ public:
 	 * @param task_rhs task_id on right hand side
 	 * @param similarity similarity between tasks
 	 */
-	void set_task_similarity(int32_t task_lhs, int32_t task_rhs,
+	void set_task_similarity(int64_t task_lhs, int64_t task_rhs,
 			float64_t similarity)
 	{
 
@@ -280,7 +280,7 @@ public:
 	/**
 	 *  @param idx index of MKL weight to get
 	 */
-	float64_t get_beta(int32_t idx)
+	float64_t get_beta(index_t idx)
 	{
 
 		return betas[idx];
@@ -291,7 +291,7 @@ public:
 	 *  @param idx index of MKL weight to set
 	 *  @param weight MKL weight to set
 	 */
-	void set_beta(int32_t idx, float64_t weight)
+	void set_beta(index_t idx, float64_t weight)
 	{
 
 		betas[idx] = weight;
@@ -303,7 +303,7 @@ public:
 	/**
 	 *  @return number of kernel weights (support points)
 	 */
-	int32_t get_num_betas()
+	int64_t get_num_betas()
 	{
 
 		return num_betas;
@@ -339,15 +339,15 @@ protected:
 	}
 
 	/** number of tasks **/
-	int32_t num_tasks;
+	int64_t num_tasks;
 	/** square of num_tasks -- for registration purpose**/
-	int32_t num_tasksqr;
+	int64_t num_tasksqr;
 
 	/** task vector indicating to which task each example on the left hand side belongs **/
-	std::vector<int32_t> task_vector_lhs;
+	std::vector<int64_t> task_vector_lhs;
 
 	/** task vector indicating to which task each example on the right hand side belongs **/
-	std::vector<int32_t> task_vector_rhs;
+	std::vector<int64_t> task_vector_rhs;
 
 	/** MxM matrix encoding distance between tasks **/
 	std::vector<float64_t> distance_matrix;
@@ -356,7 +356,7 @@ protected:
 	std::vector<float64_t> similarity_matrix;
 
 	/** number of weights **/
-	int32_t num_betas;
+	int64_t num_betas;
 
 	/** weights **/
 	std::vector<float64_t> betas;

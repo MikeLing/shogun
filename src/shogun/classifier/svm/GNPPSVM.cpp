@@ -68,7 +68,7 @@ bool CGNPPSVM::train_machine(CFeatures* data)
 		reg_const=1/C;
 
 	float64_t* diagK=SG_MALLOC(float64_t, num_data);
-	for(int32_t i=0; i<num_data; i++) {
+	for(index_t i=0; i<num_data; i++) {
 		diagK[i]=2*kernel->kernel(i,i)+reg_const;
 	}
 
@@ -92,7 +92,7 @@ bool CGNPPSVM::train_machine(CFeatures* data)
 	float64_t nconst = History[INDEX(1,t,2)];
 	float64_t trnerr = 0; /* counter of training error */
 
-	for(int32_t i = 0; i < num_data; i++ )
+	for(index_t i = 0; i < num_data; i++ )
 	{
 		if( alpha[i] != 0 ) num_sv++;
 		if(vector_y[i] == 1) 

@@ -77,7 +77,7 @@ public:
 	{
 		if (array!=NULL)
 		{
-			for(int32_t i=0; i<array->get_num_elements(); i++)
+			for(index_t i=0; i<array->get_num_elements(); i++)
 			{
 				if (array->get_element(i)!=NULL)
 				{

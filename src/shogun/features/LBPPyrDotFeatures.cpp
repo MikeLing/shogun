@@ -108,7 +108,7 @@ float64_t CLBPPyrDotFeatures::dot(int32_t vec_idx1, CDotFeatures* df, int32_t ve
 	return CMath::dot(vec1.vector, vec2.vector, vec_nDim);
 }
 
-SGVector<char> CLBPPyrDotFeatures::get_transformed_image(int32_t index)
+SGVector<char> CLBPPyrDotFeatures::get_transformed_image(index_t index)
 {
 	SGVector<char> vec(vec_nDim);
 	SGVector<char>::fill_vector(vec, vec_nDim, 0);
@@ -155,7 +155,7 @@ SGVector<char> CLBPPyrDotFeatures::get_transformed_image(int32_t index)
 	return vec;
 }
 
-uint32_t* CLBPPyrDotFeatures::get_image(int32_t index, int32_t& width, int32_t& height)
+uint32_t* CLBPPyrDotFeatures::get_image(index_t index, int32_t& width, int32_t& height)
 {
 	int32_t len;
 	bool do_free;

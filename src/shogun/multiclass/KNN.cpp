@@ -302,7 +302,7 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 	{
 		CDenseFeatures<float64_t>* features = dynamic_cast<CDenseFeatures<float64_t>*>(distance->get_lhs());
 		std::vector<falconn::DenseVector<double>> feats;
-		for(int32_t i=0; i < features->get_num_vectors(); i++)
+		for(index_t i=0; i < features->get_num_vectors(); i++)
 		{
 			int32_t len;
 			bool free;
@@ -328,7 +328,7 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 		std::vector<falconn::DenseVector<double>> query_feats;
 
 		SGMatrix<index_t> NN (m_k, query_features->get_num_vectors());
-		for(int32_t i=0; i < query_features->get_num_vectors(); i++)
+		for(index_t i=0; i < query_features->get_num_vectors(); i++)
 		{
 			int32_t len;
 			bool free;

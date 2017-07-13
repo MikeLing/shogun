@@ -40,7 +40,7 @@ CStreamingSparseFeatures<T>::~CStreamingSparseFeatures()
 }
 
 template <class T>
-T CStreamingSparseFeatures<T>::get_feature(int32_t index)
+T CStreamingSparseFeatures<T>::get_feature(index_t index)
 {
 	ASSERT(index>=0 && index<current_num_features)
 	return current_sgvector.get_feature(index);

@@ -74,7 +74,7 @@ class CGUIStructure : public CSGObject
 		/** get feature matrix sparse
 		 * @param index
 		 */
-		inline CSparseFeatures<float64_t>* get_feature_matrix_sparse(int32_t index)
+		inline CSparseFeatures<float64_t>* get_feature_matrix_sparse(index_t index)
 		{
 			ASSERT(index>=0 && index<=1)
 			if (index==0)

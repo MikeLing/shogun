@@ -44,7 +44,7 @@ IGNORE_IN_CLASSLIST template <class T> class CGCArray : public CSGObject
 		  *
 		  * @param sz length of array
 		  */
-		CGCArray(int32_t sz) : CSGObject()
+		CGCArray(int64_t sz) : CSGObject()
 		{
 			ASSERT(sz>0)
 			array = SG_CALLOC(T, sz);
@@ -54,7 +54,7 @@ IGNORE_IN_CLASSLIST template <class T> class CGCArray : public CSGObject
 		/** Destructor */
 		virtual ~CGCArray()
 		{
-			for (int32_t i=0; i<size; i++)
+			for (index_t i=0; i<size; i++)
 				SG_UNREF(array[i]);
 			SG_FREE(array);
 		}
@@ -78,7 +78,7 @@ IGNORE_IN_CLASSLIST template <class T> class CGCArray : public CSGObject
 		 * @param index index to write to
 		 * @return element element
 		 */
-		inline T get(int32_t index)
+		inline T get(index_t index)
 		{
 			ASSERT(index>=0)
 			ASSERT(index<size)
@@ -97,7 +97,7 @@ IGNORE_IN_CLASSLIST template <class T> class CGCArray : public CSGObject
 		/// array
 		T* array;
 		/// size of array
-		int32_t size;
+		int64_t size;
 };
 }
 #endif //__GCARRAY_H__

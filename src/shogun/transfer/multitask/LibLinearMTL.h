@@ -240,7 +240,7 @@ class CLibLinearMTL : public CLinearMachine
             int32_t w_size = V.num_rows;
 
             SGMatrix<float64_t> W = SGMatrix<float64_t>(w_size, num_tasks);
-            for(int32_t k=0; k<w_size*num_tasks; k++)
+            for(index_t k=0; k<w_size*num_tasks; k++)
             {
                 W.matrix[k] = 0;
             }
@@ -251,7 +251,7 @@ class CLibLinearMTL : public CLinearMachine
                 for (int32_t t=0; t<num_tasks; t++)
                 {
                     float64_t sim_ts = task_similarity_matrix(s,t);
-                    for(int32_t i=0; i<w_size; i++)
+                    for(index_t i=0; i<w_size; i++)
                     {
                         W.matrix[t*w_size + i] += sim_ts * v_s[i];
                     }

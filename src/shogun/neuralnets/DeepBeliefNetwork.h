@@ -136,7 +136,7 @@ public:
 	 * @param features Input features. Should have as many features as the total
 	 * number of visible units in the DBN
 	 */
-	virtual void pre_train(int32_t index, CDenseFeatures<float64_t>* features);
+	virtual void pre_train(index_t index, CDenseFeatures<float64_t>* features);
 
 	/** Trains the DBN using the variant of the wake-sleep algorithm described
 	 * in [A Fast Learning Algorithm for Deep Belief Nets, Hinton, 2006].
@@ -198,7 +198,7 @@ public:
 	 * @param p If specified, the weight matrix is extracted from it instead of
 	 * m_params
 	 */
-	virtual SGMatrix<float64_t> get_weights(int32_t index,
+	virtual SGMatrix<float64_t> get_weights(index_t index,
 		SGVector<float64_t> p = SGVector<float64_t>());
 
 	/** Returns the bias vector of layer i
@@ -207,19 +207,19 @@ public:
 	 * @param p If specified, the bias vector is extracted from it instead of
 	 * m_params
 	 */
-	virtual SGVector<float64_t> get_biases(int32_t index,
+	virtual SGVector<float64_t> get_biases(index_t index,
 		SGVector<float64_t> p = SGVector<float64_t>());
 
 	virtual const char* get_name() const { return "DeepBeliefNetwork"; }
 
 protected:
 	/** Computes the states of some layer using the states of the layer above it */
-	virtual void down_step(int32_t index, SGVector<float64_t> params,
+	virtual void down_step(index_t index, SGVector<float64_t> params,
 		SGMatrix<float64_t> input, SGMatrix<float64_t> result,
 		bool sample_states = true);
 
 	/** Computes the states of some layer using the states of the layer below it */
-	virtual void up_step(int32_t index, SGVector<float64_t> params,
+	virtual void up_step(index_t index, SGVector<float64_t> params,
 		SGMatrix<float64_t> input, SGMatrix<float64_t> result,
 		bool sample_states = true);
 

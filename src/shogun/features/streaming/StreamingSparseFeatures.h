@@ -129,7 +129,7 @@ public:
 	 *
 	 * @return sum of features that match dimension index and 0 if none is found
 	 */
-	T get_feature(int32_t index);
+	T get_feature(index_t index);
 
 	/**
 	 * Return the current feature vector as an SGSparseVector<T>.

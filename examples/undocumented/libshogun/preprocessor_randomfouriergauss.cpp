@@ -169,7 +169,7 @@ int main()
 
 	std::vector<float64_t> scoreste1(numte);
 	float64_t err1=0;
-	for(int32_t i=0; i< numte ;++i)
+	for(index_t i=0; i< numte ;++i)
 	{
 		scoreste1[i]=svm1->classify_example(i);
 		if(scoreste1[i]*labte[i]<0)
@@ -310,7 +310,7 @@ int main()
 	std::vector<float64_t> scoreste2(numte);
 
 	float64_t err2=0;
-	for(int32_t i=0; i< numte ;++i)
+	for(index_t i=0; i< numte ;++i)
 	{
 		scoreste2[i]=svm2->classify_example(i);
 		if(scoreste2[i]*labte[i]<0)
@@ -329,7 +329,7 @@ int main()
 	// **************************************************************
 	int32_t num_labeldiffs=0;
 	float64_t avg_scorediff=0;
-	for(int32_t i=0; i< numte ;++i)
+	for(index_t i=0; i< numte ;++i)
 	{
 		if( (int32_t)CMath::sign(scoreste1[i]) != (int32_t)CMath::sign(scoreste2[i]))
 		{
@@ -438,7 +438,7 @@ std::cout << "effective kernel width for gaussian kernel and RFgauss "<< avgdist
 	std::vector<float64_t> scoreste3(numte);
 
 	float64_t err3=0;
-	for(int32_t i=0; i< numte ;++i)
+	for(index_t i=0; i< numte ;++i)
 	{
 		scoreste3[i]=svm2->classify_example(i);
 		if(scoreste3[i]*labte[i]<0)
@@ -457,7 +457,7 @@ std::cout << "effective kernel width for gaussian kernel and RFgauss "<< avgdist
 	// **************************************************************
 	num_labeldiffs=0;
 	avg_scorediff=0;
-	for(int32_t i=0; i< numte ;++i)
+	for(index_t i=0; i< numte ;++i)
 	{
 		if( (int32_t)CMath::sign(scoreste1[i]) != (int32_t)CMath::sign(scoreste3[i]))
 		{

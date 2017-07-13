@@ -16,7 +16,7 @@ inline int grid_to_index(int32_t x, int32_t y, int32_t w = 10)
 	return x + w*y;
 }
 
-inline void index_to_grid(int32_t index, int32_t& x, int32_t& y, int32_t w = 10)
+inline void index_to_grid(index_t index, int32_t& x, int32_t& y, int32_t w = 10)
 {
 	x = index % w;
 	y = index / w;

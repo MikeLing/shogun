@@ -119,7 +119,7 @@ CGMNPLib::CGMNPLib(
   kernel_columns = SG_MALLOC(float64_t*, Cache_Size);
   cache_index = SG_MALLOC(float64_t, Cache_Size);
 
-  for(int32_t i = 0; i < Cache_Size; i++ )
+  for(index_t i = 0; i < Cache_Size; i++ )
   {
     kernel_columns[i] = SG_MALLOC(float64_t, num_data);
     cache_index[i] = -2;
@@ -128,7 +128,7 @@ CGMNPLib::CGMNPLib(
 
 
 
-  for(int32_t i = 0; i < 3; i++ )
+  for(index_t i = 0; i < 3; i++ )
   {
     virt_columns[i] = SG_MALLOC(float64_t, num_virt_data);
   }
@@ -136,16 +136,16 @@ CGMNPLib::CGMNPLib(
 
   diag_H = SG_MALLOC(float64_t, num_virt_data);
 
-  for(int32_t i = 0; i < num_virt_data; i++ )
+  for(index_t i = 0; i < num_virt_data; i++ )
 	  diag_H[i] = kernel_fce(i,i);
 }
 
 CGMNPLib::~CGMNPLib()
 {
-	for(int32_t i = 0; i < Cache_Size; i++ )
+	for(index_t i = 0; i < Cache_Size; i++ )
 		SG_FREE(kernel_columns[i]);
 
-	for(int32_t i = 0; i < 3; i++ )
+	for(index_t i = 0; i < 3; i++ )
 		SG_FREE(virt_columns[i]);
 
 	SG_FREE(cache_index);

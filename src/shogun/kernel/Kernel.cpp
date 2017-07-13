@@ -381,7 +381,7 @@ void CKernel::cache_multiple_kernel_rows(int32_t* rows, int32_t num_rows)
 	if (nthreads<2)
 	{
 #endif
-		for(int32_t i=0;i<num_rows;i++)
+		for(index_t i=0;i<num_rows;i++)
 			cache_kernel_row(rows[i]);
 #ifdef HAVE_PTHREAD
 	}

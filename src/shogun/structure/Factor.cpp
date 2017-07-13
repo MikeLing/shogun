@@ -177,7 +177,7 @@ SGVector<float64_t> CFactor::get_energies() const
 	return m_energies;
 }
 
-float64_t CFactor::get_energy(int32_t index) const
+float64_t CFactor::get_energy(index_t index) const
 {
 	return get_energies()[index]; // note for data indep, we get m_w not m_energies
 }
@@ -203,7 +203,7 @@ void CFactor::set_energy(int32_t ei, float64_t value)
 
 float64_t CFactor::evaluate_energy(const SGVector<int32_t> state) const
 {
-	int32_t index = m_factor_type->index_from_universe_assignment(state, m_var_index);
+	index_t index = m_factor_type->index_from_universe_assignment(state, m_var_index);
 	return get_energy(index);
 }
 

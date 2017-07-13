@@ -163,13 +163,13 @@ class CLBPPyrDotFeatures : public CDotFeatures
 		 * @param height the height of the image (returned by reference)
 		 * @return the image at the given index
 		 */
-		uint32_t* get_image(int32_t index, int32_t& width, int32_t& height);
+		uint32_t* get_image(index_t index, int32_t& width, int32_t& height);
 
 		/** returns the transformed representation of the image
 		 *
 		 * @param index the index of the image
 		 */
-		SGVector<char> get_transformed_image(int32_t index);
+		SGVector<char> get_transformed_image(index_t index);
 	protected:
 
 		/** lib lbp pyr get dim

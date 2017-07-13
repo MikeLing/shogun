@@ -218,7 +218,7 @@ bool CSVM::save(FILE* modelfl)
 
 	fprintf(modelfl, "alphas=\[\n");
 
-	for(int32_t i=0; i<get_num_support_vectors(); i++)
+	for(index_t i=0; i<get_num_support_vectors(); i++)
 		fprintf(modelfl,"\t[%+10.16e,%d];\n",
 				CSVM::get_alpha(i), get_support_vector(i));
 

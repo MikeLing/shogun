@@ -62,7 +62,7 @@ public:
 	/** destructor */
 	virtual ~CTreeMachineNode()
 	{
-		for(int32_t i=0;i<m_children->get_num_elements();i++)
+		for(index_t i=0;i<m_children->get_num_elements();i++)
 		{
 			CTreeMachineNode* child=(CTreeMachineNode*) m_children->get_element(i);
 			child->parent(NULL);

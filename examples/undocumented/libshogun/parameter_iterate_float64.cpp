@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 	/* create some random data */
 	SGMatrix<float64_t> matrix(n,n);
 
-	for(int32_t i=0; i<n*n; ++i)
+	for(index_t i=0; i<n*n; ++i)
 		matrix.matrix[i]=CMath::random((float64_t)-n,(float64_t)n);
 
 	SGMatrix<float64_t>::display_matrix(matrix.matrix, n, n);

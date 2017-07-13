@@ -226,7 +226,7 @@ void CLibLinearMTL::solve_l2r_l1l2_svc(const liblinear_problem *prob, double eps
 		n--;
 
 	// set V to zero
-	for(int32_t k=0; k<w_size*num_tasks; k++)
+	for(index_t k=0; k<w_size*num_tasks; k++)
 	{
 		V.matrix[k] = 0;
 	}
@@ -445,7 +445,7 @@ return obj
 	{
 		float64_t* w_t = W.get_column_vector(t);
 
-		for(int32_t i=0; i<w_size; i++)
+		for(index_t i=0; i<w_size; i++)
 		{
 			obj += 0.5 * w_t[i]*w_t[i];
 		}
@@ -460,7 +460,7 @@ return obj
 			float64_t* w_t = W.get_column_vector(t);
 			float64_t l = graph_laplacian.matrix[s*num_tasks+t];
 
-			for(int32_t i=0; i<w_size; i++)
+			for(index_t i=0; i<w_size; i++)
 			{
 				obj += 0.5 * l * w_s[i]*w_t[i];
 			}
@@ -468,7 +468,7 @@ return obj
 	}
 
 	// loss
-	for(int32_t i=0; i<num_vec; i++)
+	for(index_t i=0; i<num_vec; i++)
 	{
 		int32_t ti = task_indicator_lhs[i];
 		float64_t* w_t = W.get_column_vector(ti);
@@ -508,7 +508,7 @@ return obj
 	float64_t obj = 0;
 
 	// compute linear term
-	for(int32_t i=0; i<num_vec; i++)
+	for(index_t i=0; i<num_vec; i++)
 	{
 		obj += alphas[i];
 	}
@@ -526,7 +526,7 @@ return obj
 			float64_t* v_t = V.get_column_vector(t);
 			const float64_t ts = task_similarity_matrix(s, t);
 
-			for(int32_t i=0; i<v_size; i++)
+			for(index_t i=0; i<v_size; i++)
 			{
 				obj -= 0.5 * ts * v_s[i]*v_t[i];
 			}
@@ -537,10 +537,10 @@ return obj
 	// naiive implementation
 	float64_t tmp_val2 = 0;
 
-	for(int32_t i=0; i<num_vec; i++)
+	for(index_t i=0; i<num_vec; i++)
 	{
 		int32_t ti_i = task_indicator_lhs[i];
-		for(int32_t j=0; j<num_vec; j++)
+		for(index_t j=0; j<num_vec; j++)
 		{
 			// look up task similarity
 			int32_t ti_j = task_indicator_lhs[j];

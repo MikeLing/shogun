@@ -61,7 +61,7 @@ float64_t CKDTree::min_dist_dual(bnode_t* nodeq, bnode_t* noder)
 	SGVector<float64_t> noder_lower=noder->data.bbox_lower;
 	SGVector<float64_t> noder_upper=noder->data.bbox_upper;
 	float64_t dist=0;
-	for(int32_t i=0;i<noder_lower.vlen;i++)
+	for(index_t i=0;i<noder_lower.vlen;i++)
 	{
 		float64_t d1=nodeq_lower[i]-noder_upper[i];
 		float64_t d2=noder_lower[i]-nodeq_upper[i];
@@ -78,7 +78,7 @@ float64_t CKDTree::max_dist_dual(bnode_t* nodeq, bnode_t* noder)
 	SGVector<float64_t> noder_lower=noder->data.bbox_lower;
 	SGVector<float64_t> noder_upper=noder->data.bbox_upper;
 	float64_t dist=0;
-	for(int32_t i=0;i<noder_lower.vlen;i++)
+	for(index_t i=0;i<noder_lower.vlen;i++)
 	{
 		float64_t d1=CMath::abs(nodeq_lower[i]-noder_upper[i]);
 		float64_t d2=CMath::abs(noder_lower[i]-nodeq_upper[i]);
@@ -92,7 +92,7 @@ void CKDTree::min_max_dist(float64_t* pt, bnode_t* node, float64_t &lower,float6
 {
 	lower=0;
 	upper=0;
-	for(int32_t i=0;i<dim;i++)
+	for(index_t i=0;i<dim;i++)
 	{
 		float64_t low_dist=node->data.bbox_lower[i]-pt[i];
 		float64_t high_dist=pt[i]-node->data.bbox_upper[i];

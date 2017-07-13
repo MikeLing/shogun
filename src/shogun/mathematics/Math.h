@@ -1619,7 +1619,7 @@ class CMath : public CSGObject
 				if (vector.size() < 2)
 					return true;
 
-				for(int32_t i=1; i<vector.size(); i++)
+				for(index_t i=1; i<vector.size(); i++)
 				{
 					if (vector[i-1] > vector[i])
 						return false;

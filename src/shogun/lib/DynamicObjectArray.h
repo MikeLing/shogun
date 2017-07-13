@@ -48,7 +48,7 @@ class CDynamicObjectArray : public CSGObject
 		 * @param dim2 dimension 2
 		 * @param dim3 dimension 3
 		 */
-		CDynamicObjectArray(int32_t dim1, int32_t dim2=1, int32_t dim3=1)
+		CDynamicObjectArray(int64_t dim1, int64_t dim2=1, int64_t dim3=1)
 		: CSGObject(), m_array(dim1*dim2*dim3), name("Array")
 		{
 			dim1_size=dim1;
@@ -65,7 +65,7 @@ class CDynamicObjectArray : public CSGObject
 		 * @param p_free_array if array must be freed
 		 * @param p_copy_array if array must be copied
 		 */
-		CDynamicObjectArray(CSGObject** p_array, int32_t p_dim1_size, bool p_free_array=true, bool p_copy_array=false)
+		CDynamicObjectArray(CSGObject** p_array, int64_t p_dim1_size, bool p_free_array=true, bool p_copy_array=false)
 		: CSGObject(), m_array(p_array, p_dim1_size, p_free_array, p_copy_array), name("Array")
 		{
 			dim1_size=p_dim1_size;
@@ -83,7 +83,7 @@ class CDynamicObjectArray : public CSGObject
 		 * @param p_free_array if array must be freed
 		 * @param p_copy_array if array must be copied
 		 */
-		CDynamicObjectArray(CSGObject** p_array, int32_t p_dim1_size, int32_t p_dim2_size,
+		CDynamicObjectArray(CSGObject** p_array, int64_t p_dim1_size, int64_t p_dim2_size,
 						bool p_free_array=true, bool p_copy_array=false)
 		: CSGObject(), m_array(p_array, p_dim1_size*p_dim2_size, p_free_array, p_copy_array), name("Array")
 		{
@@ -103,8 +103,8 @@ class CDynamicObjectArray : public CSGObject
 		 * @param p_free_array if array must be freed
 		 * @param p_copy_array if array must be copied
 		 */
-		CDynamicObjectArray(CSGObject** p_array, int32_t p_dim1_size, int32_t p_dim2_size,
-						int32_t p_dim3_size, bool p_free_array=true, bool p_copy_array=false)
+		CDynamicObjectArray(CSGObject** p_array, int64_t p_dim1_size, int64_t p_dim2_size,
+						int64_t p_dim3_size, bool p_free_array=true, bool p_copy_array=false)
 		: CSGObject(), m_array(p_array, p_dim1_size*p_dim2_size*p_dim3_size, p_free_array, p_copy_array), name("Array")
 		{
 			dim1_size=p_dim1_size;
@@ -121,14 +121,14 @@ class CDynamicObjectArray : public CSGObject
 		 * @param g new granularity
 		 * @return what has been set (minimum is 128)
 		 */
-		inline int32_t set_granularity(int32_t g)
+		inline int64_t set_granularity(int64_t g)
 		{ return m_array.set_granularity(g); }
 
 		/** get array size (including granularity buffer)
 		 *
 		 * @return total array size (including granularity buffer)
 		 */
-		inline int32_t get_array_size()
+		inline int64_t get_array_size()
 		{
 			return m_array.get_array_size();
 		}
@@ -138,7 +138,7 @@ class CDynamicObjectArray : public CSGObject
 		 * @param dim1 dimension 1 will be stored here
 		 * @param dim2 dimension 2 will be stored here
 		 */
-		inline void get_array_size(int32_t& dim1, int32_t& dim2)
+		inline void get_array_size(int64_t & dim1, int64_t & dim2)
 		{
 			dim1=dim1_size;
 			dim2=dim2_size;
@@ -150,7 +150,7 @@ class CDynamicObjectArray : public CSGObject
 		 * @param dim2 dimension 2 will be stored here
 		 * @param dim3 dimension 3 will be stored here
 		 */
-		inline void get_array_size(int32_t& dim1, int32_t& dim2, int32_t& dim3)
+		inline void get_array_size(int64_t & dim1, int64_t & dim2, int64_t & dim3)
 		{
 			dim1=dim1_size;
 			dim2=dim2_size;
@@ -161,25 +161,25 @@ class CDynamicObjectArray : public CSGObject
 		 *
 		 * @return dimension 1
 		 */
-		inline int32_t get_dim1() { return dim1_size; }
+		inline int64_t get_dim1() { return dim1_size; }
 
 		/** get dimension 2
 		 *
 		 * @return dimension 2
 		 */
-		inline int32_t get_dim2() { return dim2_size; }
+		inline int64_t get_dim2() { return dim2_size; }
 
 		/** get dimension 3
 		 *
 		 * @return dimension 3
 		 */
-		inline int32_t get_dim3() { return dim3_size; }
+		inline int64_t get_dim3() { return dim3_size; }
 
 		/** get number of elements
 		 *
 		 * @return number of elements
 		 */
-		inline int32_t get_num_elements() const
+		inline int64_t get_num_elements() const
 		{
 			return m_array.get_num_elements();
 		}
@@ -480,13 +480,13 @@ class CDynamicObjectArray : public CSGObject
 		DynArray<CSGObject*> m_array;
 
 		/** dimension 1 */
-		int32_t dim1_size;
+		int64_t dim1_size;
 
 		/** dimension 2 */
-		int32_t dim2_size;
+		int64_t dim2_size;
 
 		/** dimension 3 */
-		int32_t dim3_size;
+		int64_t dim3_size;
 
 		/** array's name */
 		const char* name;

@@ -255,12 +255,12 @@ public:
 
 		if (y) // two class
 		{
-			for(int32_t j=start;j<end;j++)
+			for(index_t j=start;j<end;j++)
 				data[j] = (Qfloat) y[i]*y[j]*q->kernel_function(i,j);
 		}
 		else // one class, eps svr
 		{
-			for(int32_t j=start;j<end;j++)
+			for(index_t j=start;j<end;j++)
 				data[j] = (Qfloat) q->kernel_function(i,j);
 		}
 
@@ -505,14 +505,14 @@ void Solver::Solve(
 	// initialize alpha_status
 	{
 		alpha_status = SG_MALLOC(char, l);
-		for(int32_t i=0;i<l;i++)
+		for(index_t i=0;i<l;i++)
 			update_alpha_status(i);
 	}
 
 	// initialize active set (for shrinking)
 	{
 		active_set = SG_MALLOC(int32_t, l);
-		for(int32_t i=0;i<l;i++)
+		for(index_t i=0;i<l;i++)
 			active_set[i] = i;
 		active_size = l;
 	}
@@ -710,7 +710,7 @@ void Solver::Solve(
 		float64_t delta_alpha_i = alpha[i] - old_alpha_i;
 		float64_t delta_alpha_j = alpha[j] - old_alpha_j;
 
-		for(int32_t k=0;k<active_size;k++)
+		for(index_t k=0;k<active_size;k++)
 		{
 			G[k] += Q_i[k]*delta_alpha_i + Q_j[k]*delta_alpha_j;
 		}
@@ -781,7 +781,7 @@ void Solver::Solve(
 
 	// put back the solution
 	{
-		for(int32_t i=0;i<l;i++)
+		for(index_t i=0;i<l;i++)
 			p_alpha[active_set[i]] = alpha[i];
 	}
 
@@ -815,7 +815,7 @@ int32_t Solver::select_working_set(
 	int32_t Gmin_idx = -1;
 	float64_t obj_diff_min = INF;
 
-	for(int32_t t=0;t<active_size;t++)
+	for(index_t t=0;t<active_size;t++)
 		if(y[t]==+1)
 		{
 			if(!is_upper_bound(t))
@@ -840,7 +840,7 @@ int32_t Solver::select_working_set(
 	if(i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
 		Q_i = Q->get_Q(i,active_size);
 
-	for(int32_t j=0;j<active_size;j++)
+	for(index_t j=0;j<active_size;j++)
 	{
 		if(y[j]==+1)
 		{
@@ -987,7 +987,7 @@ float64_t Solver::calculate_rho()
 	float64_t r;
 	int32_t nr_free = 0;
 	float64_t ub = INF, lb = -INF, sum_free = 0;
-	for(int32_t i=0;i<active_size;i++)
+	for(index_t i=0;i<active_size;i++)
 	{
 		float64_t yG = y[i]*G[i];
 
@@ -1098,7 +1098,7 @@ int32_t Solver_NU::select_working_set(
 	int32_t Gmin_idx = -1;
 	float64_t obj_diff_min = INF;
 
-	for(int32_t t=0;t<active_size;t++)
+	for(index_t t=0;t<active_size;t++)
 		if(y[t]==+1)
 		{
 			if(!is_upper_bound(t))
@@ -1127,7 +1127,7 @@ int32_t Solver_NU::select_working_set(
 	if(in != -1)
 		Q_in = Q->get_Q(in,active_size);
 
-	for(int32_t j=0;j<active_size;j++)
+	for(index_t j=0;j<active_size;j++)
 	{
 		if(y[j]==+1)
 		{
@@ -1273,7 +1273,7 @@ float64_t Solver_NU::calculate_rho()
 	float64_t lb1 = -INF, lb2 = -INF;
 	float64_t sum_free1 = 0, sum_free2 = 0;
 
-	for(int32_t i=0; i<active_size; i++)
+	for(index_t i=0; i<active_size; i++)
 	{
 		if(y[i]==+1)
 		{
@@ -1327,7 +1327,7 @@ public:
 		clone(y,y_,prob.l);
 		cache = new Cache(prob.l,(int64_t)(param.cache_size*(1l<<20)));
 		QD = SG_MALLOC(Qfloat, prob.l);
-		for(int32_t i=0;i<prob.l;i++)
+		for(index_t i=0;i<prob.l;i++)
 		{
 			QD[i]= factor*(nr_class-1)*kernel_function(i,i);
 		}
@@ -1341,7 +1341,7 @@ public:
 		{
 			compute_Q_parallel(data, NULL, i, start, len);
 
-			for(int32_t j=start;j<len;j++)
+			for(index_t j=start;j<len;j++)
 			{
 				if (y[i]==y[j])
 					data[j] *= (factor*(nr_class-1));
@@ -1431,7 +1431,7 @@ float64_t Solver_NUMC::compute_primal(const schar* p_y, float64_t* p_alpha, floa
 	clone(alpha,p_alpha,l);
 
 	alpha_status = SG_MALLOC(char, l);
-	for(int32_t i=0;i<l;i++)
+	for(index_t i=0;i<l;i++)
 		update_alpha_status(i);
 
 	float64_t* class_count = SG_MALLOC(float64_t, nr_class);
@@ -1603,7 +1603,7 @@ int32_t Solver_NUMC::select_working_set(
 		obj_diff_min[i]=INF;
 	}
 
-	for(int32_t t=0;t<active_size;t++)
+	for(index_t t=0;t<active_size;t++)
 	{
 		int32_t cidx=y[t];
 		if(!is_upper_bound(t))
@@ -1616,7 +1616,7 @@ int32_t Solver_NUMC::select_working_set(
 		}
 	}
 
-	for(int32_t j=0;j<active_size;j++)
+	for(index_t j=0;j<active_size;j++)
 	{
 		int32_t cidx=y[j];
 		int32_t ip = Gmaxp_idx[cidx];
@@ -1707,7 +1707,7 @@ public:
 		clone(y,y_,prob.l);
 		cache = new Cache(prob.l,(int64_t)(param.cache_size*(1l<<20)));
 		QD = SG_MALLOC(Qfloat, prob.l);
-		for(int32_t i=0;i<prob.l;i++)
+		for(index_t i=0;i<prob.l;i++)
 			QD[i]= (Qfloat)kernel_function(i,i);
 	}
 
@@ -1755,7 +1755,7 @@ public:
 	{
 		cache = new Cache(prob.l,(int64_t)(param.cache_size*(1l<<20)));
 		QD = SG_MALLOC(Qfloat, prob.l);
-		for(int32_t i=0;i<prob.l;i++)
+		for(index_t i=0;i<prob.l;i++)
 			QD[i]= (Qfloat)kernel_function(i,i);
 	}
 
@@ -1802,7 +1802,7 @@ public:
 		QD = SG_MALLOC(Qfloat, 2*l);
 		sign = SG_MALLOC(schar, 2*l);
 		index = SG_MALLOC(int32_t, 2*l);
-		for(int32_t k=0;k<l;k++)
+		for(index_t k=0;k<l;k++)
 		{
 			sign[k] = 1;
 			sign[k+l] = -1;
@@ -1834,7 +1834,7 @@ public:
 		Qfloat *buf = buffer[next_buffer];
 		next_buffer = 1 - next_buffer;
 		schar si = sign[i];
-		for(int32_t j=0;j<len;j++)
+		for(index_t j=0;j<len;j++)
 			buf[j] = si * sign[j] * data[index[j]];
 		return buf;
 	}
@@ -2000,7 +2000,7 @@ static void solve_nu_multiclass_svc(const svm_problem *prob,
 	float64_t *alpha = SG_MALLOC(float64_t, prob->l);
 	schar *y = SG_MALLOC(schar, l);
 
-	for(int32_t i=0;i<l;i++)
+	for(index_t i=0;i<l;i++)
 	{
 		alpha[i] = 0;
 		y[i]=prob->y[i];
@@ -2012,7 +2012,7 @@ static void solve_nu_multiclass_svc(const svm_problem *prob,
 	for (int32_t j=0; j<nr_class; j++)
 		sum_class[j] = nu*l/nr_class;
 
-	for(int32_t i=0;i<l;i++)
+	for(index_t i=0;i<l;i++)
 	{
 		alpha[i] = CMath::min(1.0,sum_class[int32_t(y[i])]);
 		sum_class[int32_t(y[i])] -= alpha[i];
@@ -2239,7 +2239,7 @@ decision_function svm_train_one(
 	{
 		int32_t nSV = 0;
 		int32_t nBSV = 0;
-		for(int32_t i=0;i<prob->l;i++)
+		for(index_t i=0;i<prob->l;i++)
 		{
 			if(fabs(alpha[i]) > 0)
 			{
@@ -2438,7 +2438,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 
 		int32_t p = 0;
 		for(i=0;i<nr_class;i++)
-			for(int32_t j=i+1;j<nr_class;j++)
+			for(index_t j=i+1;j<nr_class;j++)
 			{
 				svm_problem sub_prob;
 				int32_t si = start[i], sj = start[j];
@@ -2502,7 +2502,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		for(i=0;i<nr_class;i++)
 		{
 			int32_t nSV = 0;
-			for(int32_t j=0;j<count[i];j++)
+			for(index_t j=0;j<count[i];j++)
 				if(nonzero[start[i]+j])
 				{
 					++nSV;
@@ -2531,7 +2531,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 
 		p = 0;
 		for(i=0;i<nr_class;i++)
-			for(int32_t j=i+1;j<nr_class;j++)
+			for(index_t j=i+1;j<nr_class;j++)
 			{
 				// classifier (i,j): coefficients with
 				// i are in sv_coef[j-1][nz_start[i]...],
@@ -2576,7 +2576,7 @@ void svm_destroy_model(svm_model* model)
 {
 	if(model->free_sv && model->l > 0)
 		SG_FREE((void *)(model->SV[0]));
-	for(int32_t i=0;i<model->nr_class-1;i++)
+	for(index_t i=0;i<model->nr_class-1;i++)
 		SG_FREE(model->sv_coef[i]);
 	SG_FREE(model->SV);
 	SG_FREE(model->sv_coef);
@@ -2687,7 +2687,7 @@ const char *svm_check_parameter(
 		for(i=0;i<nr_class;i++)
 		{
 			int32_t n1 = count[i];
-			for(int32_t j=i+1;j<nr_class;j++)
+			for(index_t j=i+1;j<nr_class;j++)
 			{
 				int32_t n2 = count[j];
 				if(param->nu*(n1+n2)/2 > CMath::min(n1,n2))

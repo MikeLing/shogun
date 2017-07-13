@@ -170,7 +170,7 @@ SGVector<int32_t> CTableFactorType::assignment_from_index(int32_t ei) const
 int32_t CTableFactorType::index_from_assignment(const SGVector<int32_t> assig) const
 {
 	ASSERT(assig.size() == get_cardinalities().size());
-	int32_t index = 0;
+	index_t index = 0;
 	for (int32_t vi = 0; vi < get_cardinalities().size(); ++vi)
 		index += assig[vi] * m_cumprod_cards[vi];
 
@@ -192,7 +192,7 @@ int32_t CTableFactorType::index_from_universe_assignment(
 	const SGVector<int32_t> var_index) const
 {
 	ASSERT(var_index.size() == m_cards.size());
-	int32_t index = 0;
+	index_t index = 0;
 	for (int32_t vi = 0; vi < var_index.size(); vi++)
 	{
 		int32_t cur_var = var_index[vi];

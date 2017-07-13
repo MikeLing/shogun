@@ -103,7 +103,7 @@ class CSparsePolyFeatures : public CDotFeatures
 			bool vfree;
 
 			/** feature index */
-			int32_t index;
+			index_t index;
 		};
 		#endif
 
