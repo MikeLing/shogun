@@ -326,13 +326,13 @@ CStringFeatures<char>* CGUIFeatures::convert_simple_char_to_string_char(
 		SGString<char>* strings=SG_MALLOC(SGString<char>, num_vec);
 		int32_t max_len=-1;
 
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 		{
 			bool to_free=false;
 			int32_t len=0;
 			char* str=src->get_feature_vector(i, len, to_free);
 			strings[i].slen=len ;
-			for (int32_t j=0; j<len; j++)
+			for (index_t j=0; j<len; j++)
 				if (str[j]==0)
 				{
 					strings[i].slen=j ;
@@ -340,7 +340,7 @@ CStringFeatures<char>* CGUIFeatures::convert_simple_char_to_string_char(
 				} ;
 			strings[i].string=SG_MALLOC(char, strings[i].slen);
 
-			for (int32_t j=0; j<strings[i].slen; j++)
+			for (index_t j=0; j<strings[i].slen; j++)
 				strings[i].string[j]=str[j];
 
 			if (strings[i].slen> max_len)
@@ -376,14 +376,14 @@ CDenseFeatures<float64_t>* CGUIFeatures::convert_simple_word_to_simple_salzberg(
 
 		if (fm)
 		{
-			for (int32_t i=0; i<num_vec; i++)
+			for (index_t i=0; i<num_vec; i++)
 			{
 				int32_t len=0;
 				bool to_free=false;
 				uint16_t* vec = src->get_feature_vector(i, len, to_free);
 				ASSERT(num_feat==len)
 
-				for (int32_t j=0; j<num_feat; j++)
+				for (index_t j=0; j<num_feat; j++)
 					fm[i*num_feat+j]=
 						pie->get_parameterwise_log_odds(vec[j], j);
 

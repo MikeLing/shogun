@@ -111,7 +111,7 @@ class HashObjectQuery {
     int_fast32_t cur_table;
     HashType cur_probe;
 
-    for (int_fast64_t ii = 0; ii < num_probes; ++ii) {
+    for (index_t_fast64_t ii = 0; ii < num_probes; ++ii) {
       if (!multiprobe_.get_next_probe(&cur_probe, &cur_table)) {
         break;
       }

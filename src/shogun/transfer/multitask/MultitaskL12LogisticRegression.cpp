@@ -80,7 +80,7 @@ CMultitaskL12LogisticRegression::~CMultitaskL12LogisticRegression()
 bool CMultitaskL12LogisticRegression::train_locked_implementation(SGVector<index_t>* tasks)
 {
 	SGVector<float64_t> y(m_labels->get_num_labels());
-	for (int32_t i=0; i<y.vlen; i++)
+	for (index_t i=0; i<y.vlen; i++)
 		y[i] = ((CBinaryLabels*)m_labels)->get_label(i);
 
 	malsar_options options = malsar_options::default_options();
@@ -108,7 +108,7 @@ bool CMultitaskL12LogisticRegression::train_machine(CFeatures* data)
 	ASSERT(m_task_relation)
 
 	SGVector<float64_t> y(m_labels->get_num_labels());
-	for (int32_t i=0; i<y.vlen; i++)
+	for (index_t i=0; i<y.vlen; i++)
 		y[i] = ((CBinaryLabels*)m_labels)->get_label(i);
 
 	malsar_options options = malsar_options::default_options();

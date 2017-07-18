@@ -324,7 +324,7 @@ template<class T> class SGVector : public SGReferencedData
 		static inline void vector_multiply(
 				T* target, const T* v1, const T* v2,int32_t len)
 			{
-				for (int32_t i=0; i<len; i++)
+				for (index_t i=0; i<len; i++)
 					target[i]=v1[i]*v2[i];
 			}
 
@@ -334,14 +334,14 @@ template<class T> class SGVector : public SGReferencedData
 			T* target, T alpha, const T* v1, T beta, const T* v2,
 			int32_t len)
 		{
-			for (int32_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				target[i]=alpha*v1[i]+beta*v2[i];
 		}
 
 		/// Add scalar to vector inplace
 		static inline void add_scalar(T alpha, T* vec, int32_t len)
 		{
-			for (int32_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				vec[i]+=alpha;
 		}
 
@@ -352,7 +352,7 @@ template<class T> class SGVector : public SGReferencedData
 		static inline T sum(T* vec, int32_t len)
 		{
 			T result=0;
-			for (int32_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				result+=vec[i];
 
 			return result;
@@ -368,7 +368,7 @@ template<class T> class SGVector : public SGReferencedData
 		static inline T product(T* vec, int32_t len)
 		{
 			T result=1;
-			for (int32_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				result*=vec[i];
 
 			return result;

@@ -50,7 +50,7 @@ class CObjectDetector: public CLatentModel
 			int32_t num_examples = this->get_num_vectors();
 			int32_t dim = this->get_dim();
 			SGMatrix<float64_t> psi_m(dim, num_examples);
-			for (int32_t i = 0; i < num_examples; ++i)
+			for (index_t i = 0; i < num_examples; ++i)
 			{
 				CHOGFeatures* hf = (CHOGFeatures*) m_features->get_sample(i);
 				CBoundingBox* bb = (CBoundingBox*) m_labels->get_latent_label(i);
@@ -67,9 +67,9 @@ class CObjectDetector: public CLatentModel
 			float64_t max_score = -CMath::INFTY;
 
 			CHOGFeatures* hf = (CHOGFeatures*) m_features->get_sample(idx);
-			for (int i = 0; i < hf->width; ++i)
+			for (index_t i = 0; i < hf->width; ++i)
 			{
-				for (int j = 0; j < hf->height; ++j)
+				for (index_t j = 0; j < hf->height; ++j)
 				{
 					float64_t score = CMath::dot(w.vector, hf->hog[i][j], w.vlen);
 
@@ -114,7 +114,7 @@ static void read_dataset(char* fname, CLatentFeatures*& feats, CLatentLabels*& l
 	SG_REF(feats);
 
 	CMath::init_random();
-	for (int i = 0; (!feof(fd)) && (i < num_examples); ++i)
+	for (index_t i = 0; (!feof(fd)) && (i < num_examples); ++i)
 	{
 		fgets(line, MAX_LINE_LENGTH, fd);
 
@@ -153,10 +153,10 @@ static void read_dataset(char* fname, CLatentFeatures*& feats, CLatentLabels*& l
 		SG_SPROGRESS(i, 0, num_examples);
 		CHOGFeatures* hog = new CHOGFeatures(width, height);
 		hog->hog = SG_CALLOC(float64_t**, hog->width);
-		for (int j = 0; j < width; ++j)
+		for (index_t j = 0; j < width; ++j)
 		{
 			hog->hog[j] = SG_CALLOC(float64_t*, hog->height);
-			for (int k = 0; k < height; ++k)
+			for (index_t k = 0; k < height; ++k)
 			{
 				char filename[MAX_LINE_LENGTH];
 				hog->hog[j][k] = SG_CALLOC(float64_t, HOG_SIZE);
@@ -165,7 +165,7 @@ static void read_dataset(char* fname, CLatentFeatures*& feats, CLatentLabels*& l
 				FILE* f = fopen(filename, "r");
 				if (f == NULL)
 					SG_SERROR("Could not open file: %s\n", filename);
-				for (int l = 0; l < HOG_SIZE; ++l)
+				for (index_t l = 0; l < HOG_SIZE; ++l)
 					fscanf(f,"%lf",&hog->hog[j][k][l]);
 				fclose(f);
 			}

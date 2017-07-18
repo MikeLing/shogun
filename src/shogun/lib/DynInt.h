@@ -44,7 +44,7 @@ public:
 	 */
 	CDynInt()
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 			integer[i]=0;
 	}
 
@@ -56,7 +56,7 @@ public:
 	 */
 	CDynInt(uint8_t x)
 	{
-		for (int i=0; i<sz-1; i++)
+		for (index_t i=0; i<sz-1; i++)
 			integer[i]=0;
 		integer[sz-1]= (T) x;
 	}
@@ -69,7 +69,7 @@ public:
 	 */
 	CDynInt(uint16_t x)
 	{
-		for (int i=0; i<sz-1; i++)
+		for (index_t i=0; i<sz-1; i++)
 			integer[i]=0;
 		integer[sz-1]= (T) x;
 	}
@@ -82,7 +82,7 @@ public:
 	 */
 	CDynInt(uint32_t x)
 	{
-		for (int i=0; i<sz-1; i++)
+		for (index_t i=0; i<sz-1; i++)
 			integer[i]=0;
 		integer[sz-1]= (T) x;
 	}
@@ -95,7 +95,7 @@ public:
 	 */
 	CDynInt(int32_t x)
 	{
-		for (int i=0; i<sz-1; i++)
+		for (index_t i=0; i<sz-1; i++)
 			integer[i]=0;
 		integer[sz-1]= (T) x;
 	}
@@ -108,7 +108,7 @@ public:
 	 */
 	CDynInt(int64_t x)
 	{
-		for (int i=0; i<sz-1; i++)
+		for (index_t i=0; i<sz-1; i++)
 			integer[i]=0;
 		integer[sz-1]=(T) x;
 	}
@@ -121,7 +121,7 @@ public:
 	 */
 	CDynInt(uint64_t x)
 	{
-		for (int i=0; i<sz-1; i++)
+		for (index_t i=0; i<sz-1; i++)
 			integer[i]=0;
 		integer[sz-1]=(T) x;
 	}
@@ -134,14 +134,14 @@ public:
 	 */
 	CDynInt(const T x[sz])
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 			integer[i]=x[i];
 	}
 
 	/** copy constructor */
 	CDynInt(const CDynInt<T,sz> &x)
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 			integer[i]=x.integer[i];
 	}
 
@@ -155,7 +155,7 @@ public:
 	 */
 	CDynInt<T,sz>& operator=(const CDynInt<T,sz>& x)
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 			integer[i]=x.integer[i];
 		return *this;
 	}
@@ -168,7 +168,7 @@ public:
 	{
 		CDynInt<T,sz> r;
 
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			r.integer[i]=integer[i] | x.integer[i];
 
 		return r;
@@ -182,7 +182,7 @@ public:
 	{
 		CDynInt<T,sz> r;
 
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			r.integer[i]=integer[i] & x.integer[i];
 
 		return r;
@@ -202,7 +202,7 @@ public:
 		{
 			int s=CMath::min(shift, 8*((int) sizeof(T))-1);
 
-			for (int i=0; i<sz; i++)
+			for (index_t i=0; i<sz; i++)
 			{
 				T overflow=0;
 				if (i<sz-1)
@@ -230,7 +230,7 @@ public:
 		{
 			int s=CMath::min(shift, 8*((int) sizeof(T))-1);
 
-			for (int i=sz-1; i>=0; i--)
+			for (index_t i=sz-1; i>=0; i--)
 			{
 				T overflow=0;
 				if (i>0)
@@ -252,7 +252,7 @@ public:
 	{
 		CDynInt<T,sz> r;
 
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			r.integer[i]=integer[i] ^ x.integer[i];
 
 		return r;
@@ -267,7 +267,7 @@ public:
 		CDynInt<T,sz> r;
 
 		T overflow=0;
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 		{
 			r.integer[i]=integer[i]+x.integer[i]+overflow;
 			if (r.integer[i] < CMath::max(integer[i], x.integer[i]))
@@ -348,7 +348,7 @@ public:
 	 */
 	bool operator==(const CDynInt<T,sz> &x) const
 	{
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 		{
 			if (integer[i]!=x.integer[i])
 				return false;
@@ -363,7 +363,7 @@ public:
 	 */
 	bool operator>=(const CDynInt<T,sz> &x) const
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 		{
 			if (integer[i]>x.integer[i])
 				return true;
@@ -379,7 +379,7 @@ public:
 	 */
 	bool operator<=(const CDynInt<T,sz> &x) const
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 		{
 			if (integer[i]<x.integer[i])
 				return true;
@@ -395,7 +395,7 @@ public:
 	 */
 	bool operator>(const CDynInt<T,sz> &x) const
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 		{
 			if (integer[i]>x.integer[i])
 				return true;
@@ -411,7 +411,7 @@ public:
 	 */
 	bool operator<(const CDynInt<T,sz> &x) const
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 		{
 			if (integer[i]<x.integer[i])
 				return true;
@@ -427,7 +427,7 @@ public:
 	 */
 	bool operator!=(const CDynInt<T,sz> &x) const
 	{
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 		{
 			if (integer[i]!=x.integer[i])
 				return true;
@@ -443,7 +443,7 @@ public:
 	 */
 	CDynInt<T,sz>& operator|=(const CDynInt<T,sz>& x)
 	{
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			integer[i]|=x.integer[i];
 
 		return *this;
@@ -457,7 +457,7 @@ public:
 	 */
 	CDynInt<T,sz>& operator&=(const CDynInt<T,sz>& x)
 	{
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			integer[i]&=x.integer[i];
 
 		return *this;
@@ -471,7 +471,7 @@ public:
 	 */
 	CDynInt<T,sz>& operator^=(const CDynInt<T,sz>& x)
 	{
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			integer[i]^=x.integer[i];
 
 		return *this;
@@ -504,7 +504,7 @@ public:
 	/** negate DynInt */
 	CDynInt<T,sz>& operator~()
 	{
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 			integer[i]= ~integer[i];
 		return *this;
 	}
@@ -516,7 +516,7 @@ public:
 	CDynInt<T,sz>& operator--()
 	{
 		T overflow=0;
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 		{
 			T x = integer[i]-1-overflow;
 			overflow=0;
@@ -531,7 +531,7 @@ public:
 	CDynInt<T,sz>& operator++()
 	{
 		T overflow=0;
-		for (int i=sz-1; i>=0; i--)
+		for (index_t i=sz-1; i>=0; i--)
 		{
 			T x = integer[i]+1+overflow;
 			overflow=0;
@@ -545,7 +545,7 @@ public:
 	/** print the current long integer in hex (without carriage return */
 	void print_hex() const
 	{
-		for (int i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 			SG_SPRINT("%.16llx", (uint64_t) integer[i])
 	}
 

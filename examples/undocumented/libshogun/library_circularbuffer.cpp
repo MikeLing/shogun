@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 		buffer->skip_characters(start);
 		tmp_string=buffer->pop(num_read);
 		buffer->skip_characters(1);
-		for (int i=0; i<tmp_string.vlen; i++)
+		for (index_t i=0; i<tmp_string.vlen; i++)
 			SG_SPRINT("%c", tmp_string.vector[i]);
 		SG_SPRINT("\n");
 	}

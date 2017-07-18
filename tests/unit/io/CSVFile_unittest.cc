@@ -17,7 +17,7 @@ TEST(CSVFileTest, vector_int32)
 
 	int32_t len=512*512;
 	SGVector<int32_t> data(len);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		data[i]=(int32_t) rand->random(0, len);
 
 	CCSVFile* fin;
@@ -34,7 +34,7 @@ TEST(CSVFileTest, vector_int32)
 	fin->get_vector(data_from_file.vector, data_from_file.vlen);
 	EXPECT_EQ(data_from_file.vlen, len);
 
-	for (int32_t i=0; i<data_from_file.vlen; i++)
+	for (index_t i=0; i<data_from_file.vlen; i++)
 	{
 		EXPECT_EQ(data_from_file[i], data[i]);
 	}
@@ -49,7 +49,7 @@ TEST(CSVFileTest, vector_float64)
 
 	int32_t len=128*128;
 	SGVector<float64_t> data(len);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		data[i]=(float64_t) rand->random(0., 1.);
 
 	CCSVFile* fin;
@@ -66,7 +66,7 @@ TEST(CSVFileTest, vector_float64)
 	fin->get_vector(data_from_file.vector, data_from_file.vlen);
 	EXPECT_EQ(data_from_file.vlen, len);
 
-	for (int32_t i=0; i<data_from_file.vlen; i++)
+	for (index_t i=0; i<data_from_file.vlen; i++)
 	{
 		EXPECT_NEAR(data_from_file[i], data[i], 1E-14);
 	}
@@ -82,9 +82,9 @@ TEST(CSVFileTest, matrix_int32)
 	int32_t num_rows=512;
 	int32_t num_cols=512;
 	SGMatrix<int32_t> data(num_rows, num_cols);
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			data(i, j)=(int32_t) rand->random(0, num_rows);
 	}
 
@@ -103,9 +103,9 @@ TEST(CSVFileTest, matrix_int32)
 	EXPECT_EQ(data_from_file.num_rows, num_rows);
 	EXPECT_EQ(data_from_file.num_cols, num_cols);
 
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			EXPECT_EQ(data_from_file(i, j), data(i, j));
 	}
 
@@ -121,9 +121,9 @@ TEST(CSVFileTest, matrix_float64)
 	int32_t num_rows=128;
 	int32_t num_cols=128;
 	SGMatrix<float64_t> data(num_rows, num_cols);
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			data(i, j)=(float64_t) rand->random(0., 1.);
 	}
 
@@ -142,9 +142,9 @@ TEST(CSVFileTest, matrix_float64)
 	EXPECT_EQ(data_from_file.num_rows, num_rows);
 	EXPECT_EQ(data_from_file.num_cols, num_cols);
 
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			EXPECT_NEAR(data_from_file(i, j), data(i, j), 1E-14);
 	}
 
@@ -163,7 +163,7 @@ TEST(CSVFileTest, string_list_char)
 	SGString<char>* lines_to_read;
 
 	SGString<char>* lines_to_write=SG_MALLOC(SGString<char>, num_lines);
-	for (int32_t i=0; i<num_lines; i++)
+	for (index_t i=0; i<num_lines; i++)
 		lines_to_write[i] = SGString<char>((char*)text[i], strlen(text[i]), false);
 
 	CCSVFile* fin;
@@ -177,9 +177,9 @@ TEST(CSVFileTest, string_list_char)
 	fin->get_string_list(lines_to_read, num_str, max_line_len);
 	EXPECT_EQ(num_str, num_lines);
 
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
-		for (int32_t j=0; j<lines_to_read[i].slen; j++)
+		for (index_t j=0; j<lines_to_read[i].slen; j++)
 		{
 			EXPECT_EQ(lines_to_read[i].string[j], lines_to_write[i].string[j]);
 			lines_to_read[i].destroy_string();

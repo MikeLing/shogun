@@ -113,7 +113,7 @@ public:
 		clone_root->data=m_root->data;
 		clone_root->machine(m_root->machine());
 		CDynamicObjectArray* children=m_root->get_children();
-		for (int32_t i=0;i<children->get_num_elements();i++)
+		for (index_t i=0;i<children->get_num_elements();i++)
 		{
 			CSGObject* el=children->get_element(i);
 			node_t* child=NULL;

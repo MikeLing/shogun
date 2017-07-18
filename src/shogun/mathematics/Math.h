@@ -211,7 +211,7 @@ class CMath : public CSGObject
 				ASSERT(len>0)
 				T minv=vec[0];
 
-				for (int32_t i=1; i<len; i++)
+				for (index_t i=1; i<len; i++)
 					minv=min(vec[i], minv);
 
 				return minv;
@@ -228,7 +228,7 @@ class CMath : public CSGObject
 				ASSERT(len>0)
 				T maxv=vec[0];
 
-				for (int32_t i=1; i<len; i++)
+				for (index_t i=1; i<len; i++)
 					maxv=max(vec[i], maxv);
 
 				return maxv;
@@ -266,7 +266,7 @@ class CMath : public CSGObject
 				T maxv = vec[0];
 				int32_t maxIdx = 0;
 
-				for (int32_t i = 1, j = inc ; i < len ; i++, j += inc)
+				for (index_t i = 1, j = inc ; i < len ; i++, j += inc)
 				{
 					if (vec[j] > maxv)
 					maxv = vec[j], maxIdx = i;
@@ -293,7 +293,7 @@ class CMath : public CSGObject
 			T minv = vec[0];
 			int32_t minIdx = 0;
 
-			for (int32_t i = 1, j = inc ; i < len ; i++, j += inc)
+			for (index_t i = 1, j = inc ; i < len ; i++, j += inc)
 			{
 				if (vec[j] < minv)
 				minv = vec[j], minIdx = i;
@@ -532,7 +532,7 @@ class CMath : public CSGObject
 #endif
 		}
 
-		static inline int32_t pow(bool x, int32_t n)
+		static inline int64_t pow(bool x, int64_t n)
 		{
 			return 0;
 		}
@@ -552,10 +552,24 @@ class CMath : public CSGObject
 		}
 
 		/**
+		 * @param x base (integer)
+		 * @param n exponent (integer)
+		 */
+		static inline int64_t pow(int64_t x, int64_t n)
+		{
+			ASSERT(n>=0)
+			int64_t result=1;
+			while (n--)
+				result*=x;
+
+			return result;
+		}
+
+		/**
 		 * @param x base (decimal)
 		 * @param n exponent (integer)
 		 */
-		static inline float64_t pow(float64_t x, int32_t n)
+		static inline float64_t pow(float64_t x, int64_t n)
 		{
 			if (n>=0)
 			{
@@ -627,7 +641,7 @@ class CMath : public CSGObject
 		static inline float64_t dot(const bool* v1, const bool* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((v1[i]) ? 1 : 0) * ((v2[i]) ? 1 : 0);
 			return r;
 		}
@@ -636,7 +650,7 @@ class CMath : public CSGObject
 		static inline floatmax_t dot(const floatmax_t* v1, const floatmax_t* v2, int32_t n)
 		{
 			floatmax_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=v1[i]*v2[i];
 			return r;
 		}
@@ -653,7 +667,7 @@ class CMath : public CSGObject
 			const uint64_t* v1, const uint64_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -663,7 +677,7 @@ class CMath : public CSGObject
 			const int64_t* v1, const int64_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -674,7 +688,7 @@ class CMath : public CSGObject
 			const int32_t* v1, const int32_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -685,7 +699,7 @@ class CMath : public CSGObject
 			const uint32_t* v1, const uint32_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -696,7 +710,7 @@ class CMath : public CSGObject
 			const uint16_t* v1, const uint16_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -707,7 +721,7 @@ class CMath : public CSGObject
 			const int16_t* v1, const int16_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -718,7 +732,7 @@ class CMath : public CSGObject
 			const char* v1, const char* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -729,7 +743,7 @@ class CMath : public CSGObject
 			const uint8_t* v1, const uint8_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -740,7 +754,7 @@ class CMath : public CSGObject
 			const int8_t* v1, const int8_t* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -751,7 +765,7 @@ class CMath : public CSGObject
 			const float64_t* v1, const char* v2, int32_t n)
 		{
 			float64_t r=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 				r+=((float64_t) v1[i])*v2[i];
 
 			return r;
@@ -951,12 +965,12 @@ class CMath : public CSGObject
 
 			if (!reversed)
 			{
-				for (int i=1; i<len; i++)
+				for (index_t i=1; i<len; i++)
 					area += 0.5*(xy[2*i]-xy[2*(i-1)])*(xy[2*i+1]+xy[2*(i-1)+1]);
 			}
 			else
 			{
-				for (int i=1; i<len; i++)
+				for (index_t i=1; i<len; i++)
 					area += 0.5*(xy[2*i+1]-xy[2*(i-1)+1])*(xy[2*i]+xy[2*(i-1)]);
 			}
 
@@ -991,7 +1005,7 @@ class CMath : public CSGObject
 		static inline int64_t factorial(int32_t n)
 		{
 			int64_t res=1;
-			for (int i=2; i<=n; i++)
+			for (index_t i=2; i<=n; i++)
 				res*=i ;
 			return res ;
 		}
@@ -1192,7 +1206,7 @@ class CMath : public CSGObject
 		{
 			int64_t res=1;
 
-			for (int32_t i=n-k+1; i<=n; i++)
+			for (index_t i=n-k+1; i<=n; i++)
 				res*=i;
 
 			return res/factorial(k);
@@ -1357,7 +1371,7 @@ class CMath : public CSGObject
 		template <class T>
 			static void insertion_sort(T* output, int32_t size)
 			{
-				for (int32_t i=0; i<size-1; i++)
+				for (index_t i=0; i<size-1; i++)
 				{
 					int32_t j=i-1;
 					T value=output[i];
@@ -1619,7 +1633,7 @@ class CMath : public CSGObject
 				if (vector.size() < 2)
 					return true;
 
-				for(int32_t i=1; i<vector.size(); i++)
+				for(index_t i=1; i<vector.size(); i++)
 				{
 					if (vector[i-1] > vector[i])
 						return false;
@@ -1635,7 +1649,7 @@ class CMath : public CSGObject
 		template <class T> static void display_bits(T word, int32_t width=8*sizeof(T))
 		{
 			ASSERT(width>=0)
-			for (int i=0; i<width; i++)
+			for (index_t i=0; i<width; i++)
 			{
 				T mask = ((T) 1)<<(sizeof(T)*8-1);
 				while (mask)
@@ -2029,7 +2043,7 @@ class CMath : public CSGObject
 					{
 						float64_t *pp=p ;
 						if (len%2==1) pp++ ;
-						for (int32_t j=0; j < len>>1; j++)
+						for (index_t j=0; j < len>>1; j++)
 							pp[j]=logarithmic_sum(pp[j<<1], pp[1+(j<<1)]) ;
 					}
 					return logarithmic_sum_array(p,len%2 + (len>>1)) ;
@@ -2291,7 +2305,7 @@ void CMath::qsort_backward_index(T1* output, T2* index, int32_t size)
 void CMath::nmin(float64_t* output, T* index, int32_t size, int32_t n)
 {
 	if (6*n*size<13*size*CMath::log(size))
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 			min(&output[i], &index[i], size-i);
 	else
 		qsort_index(output, index, size);
@@ -2305,7 +2319,7 @@ void CMath::min(float64_t* output, T* index, int32_t size)
 		return;
 	float64_t min_elem=output[0];
 	int32_t min_index=0;
-	for (int32_t i=1; i<size; i++)
+	for (index_t i=1; i<size; i++)
 	{
 		if (output[i]<min_elem)
 		{

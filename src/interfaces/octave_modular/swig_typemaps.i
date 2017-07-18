@@ -82,7 +82,7 @@ TYPEMAP_IN_SGVECTOR(is_uint16_type, uint16NDArray, uint16_array_value, uint16_t,
     if (mat.cols() != len)
         SWIG_fail;
 
-    for (int32_t i=0; i<len; i++)
+    for (index_t i=0; i<len; i++)
         mat(i) = (if_type) vec[i];
 
     $result=mat;
@@ -156,9 +156,9 @@ TYPEMAP_IN_SGMATRIX(is_uint16_type, uint16NDArray, uint16_array_value, uint16_t,
     if (mat.rows() != num_feat || mat.cols() != num_vec)
         SWIG_fail;
 
-    for (int32_t i=0; i<num_vec; i++)
+    for (index_t i=0; i<num_vec; i++)
     {
-        for (int32_t j=0; j<num_feat; j++)
+        for (index_t j=0; j<num_feat; j++)
             mat(j,i) = (if_type) matrix[j+i*num_feat];
     }
 
@@ -198,7 +198,7 @@ TYPEMAP_OUT_SGMATRIX(uint16NDArray, uint16_t, uint16_t, "Word")
 
     int32_t n = 1;
     index_t * sdims = SG_MALLOC(index_t, m.ndims());
-    for (int32_t i = 0; i < m.ndims(); i++)
+    for (index_t i = 0; i < m.ndims(); i++)
     {
         sdims[i] = m.dims().elem(i);
         n *= m.dims().elem(i);
@@ -233,7 +233,7 @@ TYPEMAP_INND(is_uint16_type, uint16NDArray, uint16_array_value, uint16_t, uint16
     dim_vector vdims = dim_vector::alloc(num_dims);
 
     int32_t n = 1;
-    for (int32_t i = 0; i < num_dims; i++)
+    for (index_t i = 0; i < num_dims; i++)
     {
         n *= dims[i];
         vdims(i) = (int32_t)dims[i];
@@ -241,7 +241,7 @@ TYPEMAP_INND(is_uint16_type, uint16NDArray, uint16_array_value, uint16_t, uint16
 
     oct_type mat = oct_type(vdims);
 
-    for (int32_t i=0; i<n; i++)
+    for (index_t i=0; i<n; i++)
         mat(i) = (if_type) array[i];
 
     $result=mat;
@@ -285,7 +285,7 @@ TYPEMAP_OUTND(uint16NDArray, uint16_t, uint16_t, "Word")
         ASSERT(num_strings>=1);
         strings=SG_MALLOC(SGString<sg_type>, num_strings);
 
-        for (int32_t i=0; i<num_strings; i++)
+        for (index_t i=0; i<num_strings; i++)
         {
             if (!c.elem(i).oct_type_check() || !c.elem(i).rows()==1)
             {
@@ -322,7 +322,7 @@ TYPEMAP_OUTND(uint16NDArray, uint16_t, uint16_t, "Word")
         strings=SG_MALLOC(SGString<sg_type>, num_strings);
         ASSERT(strings);
 
-        for (int32_t i=0; i<num_strings; i++)
+        for (index_t i=0; i<num_strings; i++)
         {
             if (len>0)
             {
@@ -407,11 +407,11 @@ TYPEMAP_STRINGFEATURES_OUT(float64_t,     Matrix)
 	int64_t nnz=sm.nelem();
 
 	SGSparseVector<type>* matrix = SG_MALLOC(SGSparseVector<type>, num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		new (&matrix[i]) SGSparseVector<type>();
 
 	int64_t offset=0;
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		int32_t len=sm.cidx(i+1)-sm.cidx(i);
 		matrix[i].num_feat_entries=len;
@@ -420,7 +420,7 @@ TYPEMAP_STRINGFEATURES_OUT(float64_t,     Matrix)
 		{
 			matrix[i].features=SG_MALLOC(SGSparseVectorEntry<type>, len);
 
-			for (int32_t j=0; j<len; j++)
+			for (index_t j=0; j<len; j++)
 			{
 				matrix[i].features[j].entry=sm.data(offset);
 				matrix[i].features[j].feat_index=sm.ridx(offset);
@@ -449,10 +449,10 @@ TYPEMAP_SPARSEFEATURES_IN(float64_t,     Matrix)
 	int32_t num_feat = $1.num_features;
 
 	int64_t nnz = 0;
-	for (int32_t i = 0; i < num_vec; i++)
+	for (index_t i = 0; i < num_vec; i++)
 	{
 		int32_t len = $1.sparse_matrix[i].num_feat_entries;
-		for (int32_t j = 0; j < len; j++)
+		for (index_t j = 0; j < len; j++)
 		{
 			nnz++;
 		}
@@ -466,11 +466,11 @@ TYPEMAP_SPARSEFEATURES_IN(float64_t,     Matrix)
 	}
 
 	int64_t offset = 0;
-	for (int32_t i = 0; i < num_vec; i++)
+	for (index_t i = 0; i < num_vec; i++)
 	{
 		int32_t len = $1.sparse_matrix[i].num_feat_entries;
 		sm.cidx(i) = offset;
-		for (int32_t j = 0; j < len; j++)
+		for (index_t j = 0; j < len; j++)
 		{
 			sm.data(offset) = $1.sparse_matrix[i].features[j].entry;
 			sm.ridx(offset) = $1.sparse_matrix[i].features[j].feat_index;

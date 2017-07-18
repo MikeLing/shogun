@@ -25,7 +25,7 @@ float64_t CMulticlassAccuracy::evaluate(CLabels* predicted, CLabels* ground_trut
 	int32_t correct = 0;
 	if (m_ignore_rejects)
 	{
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 		{
 			if (((CMulticlassLabels*) predicted)->get_int_label(i)==((CMulticlassLabels*) ground_truth)->get_int_label(i))
 				correct++;
@@ -35,7 +35,7 @@ float64_t CMulticlassAccuracy::evaluate(CLabels* predicted, CLabels* ground_trut
 	else
 	{
 		int32_t total = length;
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 		{
 			int32_t predicted_label = ((CMulticlassLabels*) predicted)->get_int_label(i);
 
@@ -58,7 +58,7 @@ SGMatrix<int32_t> CMulticlassAccuracy::get_confusion_matrix(CLabels* predicted, 
 	int32_t num_classes = ((CMulticlassLabels*) ground_truth)->get_num_classes();
 	SGMatrix<int32_t> confusion_matrix(num_classes, num_classes);
 	memset(confusion_matrix.matrix,0,sizeof(int32_t)*num_classes*num_classes);
-	for (int32_t i=0; i<length; i++)
+	for (index_t i=0; i<length; i++)
 	{
 		int32_t predicted_label = ((CMulticlassLabels*) predicted)->get_int_label(i);
 		int32_t ground_truth_label = ((CMulticlassLabels*) ground_truth)->get_int_label(i);

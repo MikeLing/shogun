@@ -54,7 +54,7 @@ SGMatrix<float64_t> CFFDiag::diagonalize(SGNDArray<float64_t> C0, SGMatrix<float
 		d.diagonal() = VectorXd::Ones(EV.diagonalSize()).cwiseQuotient((EV * EV.transpose()).diagonal().cwiseSqrt());
 		EV = d * EV;
 
-		for (int i = 0; i < K; i++)
+		for (index_t i = 0; i < K; i++)
 		{
 			Map<MatrixXd> Ci(C.get_matrix(i), n, n);
 			Map<MatrixXd> C0i(C0.get_matrix(i), n, n);
@@ -62,7 +62,7 @@ SGMatrix<float64_t> CFFDiag::diagonalize(SGNDArray<float64_t> C0, SGMatrix<float
 		}
 
 		float64_t f = 0;
-		for (int i = 0; i < K; i++)
+		for (index_t i = 0; i < K; i++)
 		{
 			Map<MatrixXd> C0i(C0.get_matrix(i), n, n);
 			MatrixXd F = EV * C0i * EV.transpose();
@@ -92,20 +92,20 @@ void getW(float64_t *C, int *ptN, int *ptK, float64_t *W)
 	float64_t z[N][N];
 	float64_t y[N][N];
 
-	for (int i = 0; i < N; i++)
+	for (index_t i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (index_t j = 0; j < N; j++)
 		{
 			z[i][j] = 0;
 			y[i][j] = 0;
 		}
 	}
 
-	for (int i = 0; i < N; i++)
+	for (index_t i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (index_t j = 0; j < N; j++)
 		{
-			for (int k = 0; k < K; k++)
+			for (index_t k = 0; k < K; k++)
 			{
 				auxij = N*N*k+N*i+j;
 				auxji = N*N*k+N*j+i;
@@ -117,9 +117,9 @@ void getW(float64_t *C, int *ptN, int *ptK, float64_t *W)
 		}
 	}
 
-	for (int i = 0; i < N-1; i++)
+	for (index_t i = 0; i < N-1; i++)
 	{
-		for (int j = i+1; j < N; j++)
+		for (index_t j = i+1; j < N; j++)
 		{
 			auxij = N*i+j;
 			auxji = N*j+i;

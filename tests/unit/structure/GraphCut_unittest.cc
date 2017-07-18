@@ -40,7 +40,7 @@ TEST(GraphCut, graph_cut_st_graph)
 	expected_assignments.push_back(SINK);
 	expected_assignments.push_back(SOURCE);
 
-	for (int32_t i = 0; i < num_nodes; i++)
+	for (index_t i = 0; i < num_nodes; i++)
 	{
 		EXPECT_EQ(g->get_assignment(i), expected_assignments[i]);
 	}
@@ -94,7 +94,7 @@ TEST(GraphCut, graph_cut_random)
 
 	EXPECT_EQ(assignment.size(), assignment_expected.size());
 
-	for (int32_t i = 0; i < assignment.size(); i++)
+	for (index_t i = 0; i < assignment.size(); i++)
 		EXPECT_EQ(assignment[i], assignment_expected[i]);
 
 	EXPECT_NEAR(min_energy_expected, infer_met.get_energy(), 1E-10);

@@ -122,7 +122,7 @@ public:
 	 *
 	 * @return number of examples/vectors
 	 */
-	virtual int32_t get_num_vectors() const=0;
+	virtual index_t get_num_vectors() const=0;
 
 protected:
 	/** find the index of the attribute matching attribute name

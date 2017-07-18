@@ -42,7 +42,7 @@ SGMatrix<float64_t> CDataGenerator::generate_checkboard_data(int32_t num_classes
 
 	SGMatrix<float64_t> points(dim+1, num_points);
 	int32_t points_idx = 0;
-	for (int32_t class_idx=0; class_idx<num_classes; class_idx++)
+	for (index_t class_idx=0; class_idx<num_classes; class_idx++)
 	{
 		SGVector<float64_t> class_dim_centers(dim);
 		for (index_t i=0; i<dim; i++)

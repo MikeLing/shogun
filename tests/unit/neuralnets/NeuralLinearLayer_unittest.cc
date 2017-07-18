@@ -50,14 +50,14 @@ TEST(NeuralLinearLayer, compute_activations)
 	// initialize some random inputs
 	CMath::init_random(100);
 	SGMatrix<float64_t> x1(12,3);
-	for (int32_t i=0; i<x1.num_rows*x1.num_cols; i++)
+	for (index_t i=0; i<x1.num_rows*x1.num_cols; i++)
 		x1[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input1 = new CNeuralInputLayer (x1.num_rows);
 	input1->set_batch_size(x1.num_cols);
 
 	SGMatrix<float64_t> x2(7,3);
-	for (int32_t i=0; i<x2.num_rows*x2.num_cols; i++)
+	for (index_t i=0; i<x2.num_rows*x2.num_cols; i++)
 		x2[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input2 = new CNeuralInputLayer (x2.num_rows);
@@ -92,16 +92,16 @@ TEST(NeuralLinearLayer, compute_activations)
 	float64_t* weights2 = weights1 +
 		layer.get_num_neurons()*input1->get_num_neurons();
 
-	for (int32_t i=0; i<A_ref.num_rows; i++)
+	for (index_t i=0; i<A_ref.num_rows; i++)
 	{
-		for (int32_t j=0; j<A_ref.num_cols; j++)
+		for (index_t j=0; j<A_ref.num_cols; j++)
 		{
 			A_ref(i,j) = biases[i];
 
-			for (int32_t k=0; k<x1.num_rows; k++)
+			for (index_t k=0; k<x1.num_rows; k++)
 				A_ref(i,j) += weights1[i+k*A_ref.num_rows]*x1(k,j);
 
-			for (int32_t k=0; k<x2.num_rows; k++)
+			for (index_t k=0; k<x2.num_rows; k++)
 				A_ref(i,j) += weights2[i+k*A_ref.num_rows]*x2(k,j);
 		}
 	}
@@ -109,7 +109,7 @@ TEST(NeuralLinearLayer, compute_activations)
 	// compare
 	EXPECT_EQ(A_ref.num_rows, A.num_rows);
 	EXPECT_EQ(A_ref.num_cols, A.num_cols);
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 		EXPECT_NEAR(A_ref[i], A[i], 1e-12);
 
 	SG_UNREF(layers);
@@ -122,14 +122,14 @@ TEST(NeuralLinearLayer, compute_error)
 {
 	CMath::init_random(100);
 	SGMatrix<float64_t> x1(12,3);
-	for (int32_t i=0; i<x1.num_rows*x1.num_cols; i++)
+	for (index_t i=0; i<x1.num_rows*x1.num_cols; i++)
 		x1[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input1 = new CNeuralInputLayer (x1.num_rows);
 	input1->set_batch_size(x1.num_cols);
 
 	SGMatrix<float64_t> x2(7,3);
-	for (int32_t i=0; i<x2.num_rows*x2.num_cols; i++)
+	for (index_t i=0; i<x2.num_rows*x2.num_cols; i++)
 		x2[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input2 = new CNeuralInputLayer (x2.num_rows);
@@ -144,7 +144,7 @@ TEST(NeuralLinearLayer, compute_error)
 	input_indices[1] = 1;
 
 	SGMatrix<float64_t> y(9,3);
-	for (int32_t i=0; i<y.num_rows*y.num_cols; i++)
+	for (index_t i=0; i<y.num_rows*y.num_cols; i++)
 		y[i] = CMath::random(0.0,1.0);
 
 	// initialize the layer
@@ -164,7 +164,7 @@ TEST(NeuralLinearLayer, compute_error)
 
 	// manually compute error
 	float64_t error_ref = 0;
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 		error_ref += 0.5*CMath::pow(y[i]-A[i],2)/y.num_cols;
 
 	// compare
@@ -180,7 +180,7 @@ TEST(NeuralLinearLayer, compute_local_gradients)
 {
 	CMath::init_random(100);
 	SGMatrix<float64_t> x(12,3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input1 = new CNeuralInputLayer (x.num_rows);
@@ -193,7 +193,7 @@ TEST(NeuralLinearLayer, compute_local_gradients)
 	input_indices[0] = 0;
 
 	SGMatrix<float64_t> y(9,3);
-	for (int32_t i=0; i<y.num_rows*y.num_cols; i++)
+	for (index_t i=0; i<y.num_rows*y.num_cols; i++)
 		y[i] = CMath::random(0.0,1.0);
 
 	// initialize the layer
@@ -214,7 +214,7 @@ TEST(NeuralLinearLayer, compute_local_gradients)
 	SGMatrix<float64_t> A = layer.get_activations();
 	SGMatrix<float64_t> LG_numerical(A.num_rows, A.num_cols);
 	float64_t epsilon = 1e-9;
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 	{
 		A[i] += epsilon;
 		float64_t error_plus = layer.compute_error(y);
@@ -228,7 +228,7 @@ TEST(NeuralLinearLayer, compute_local_gradients)
 	// compare
 	EXPECT_EQ(LG_numerical.num_rows, LG.num_rows);
 	EXPECT_EQ(LG_numerical.num_cols, LG.num_cols);
-	for (int32_t i=0; i<LG.num_rows*LG.num_cols; i++)
+	for (index_t i=0; i<LG.num_rows*LG.num_cols; i++)
 		EXPECT_NEAR(LG_numerical[i], LG[i], 1e-6);
 
 	SG_UNREF(layers);
@@ -241,14 +241,14 @@ TEST(NeuralLinearLayer, compute_local_gradients)
 TEST(NeuralLinearLayer, compute_parameter_gradients_output)
 {
 	SGMatrix<float64_t> x1(12,3);
-	for (int32_t i=0; i<x1.num_rows*x1.num_cols; i++)
+	for (index_t i=0; i<x1.num_rows*x1.num_cols; i++)
 		x1[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input1 = new CNeuralInputLayer (x1.num_rows);
 	input1->set_batch_size(x1.num_cols);
 
 	SGMatrix<float64_t> x2(7,3);
-	for (int32_t i=0; i<x2.num_rows*x2.num_cols; i++)
+	for (index_t i=0; i<x2.num_rows*x2.num_cols; i++)
 		x2[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input2 = new CNeuralInputLayer (x2.num_rows);
@@ -263,7 +263,7 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_output)
 	input_indices[1] = 1;
 
 	SGMatrix<float64_t> y(9,3);
-	for (int32_t i=0; i<y.num_rows*y.num_cols; i++)
+	for (index_t i=0; i<y.num_rows*y.num_cols; i++)
 		y[i] = CMath::random(0.0,1.0);
 
 	// initialize the layer
@@ -286,7 +286,7 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_output)
 	// manually compute parameter gradients
 	SGVector<float64_t> gradients_numerical(layer.get_num_parameters());
 	float64_t epsilon = 1e-9;
-	for (int32_t i=0; i<layer.get_num_parameters(); i++)
+	for (index_t i=0; i<layer.get_num_parameters(); i++)
 	{
 		params[i] += epsilon;
 		input1->compute_activations(x1);
@@ -305,7 +305,7 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_output)
 	}
 
 	// compare
-	for (int32_t i=0; i<gradients.vlen; i++)
+	for (index_t i=0; i<gradients.vlen; i++)
 		EXPECT_NEAR(gradients_numerical[i], gradients[i], 1e-6);
 
 	SG_UNREF(layers);
@@ -318,14 +318,14 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_output)
 TEST(NeuralLinearLayer, compute_parameter_gradients_hidden)
 {
 	SGMatrix<float64_t> x1(12,3);
-	for (int32_t i=0; i<x1.num_rows*x1.num_cols; i++)
+	for (index_t i=0; i<x1.num_rows*x1.num_cols; i++)
 		x1[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input1 = new CNeuralInputLayer (x1.num_rows);
 	input1->set_batch_size(x1.num_cols);
 
 	SGMatrix<float64_t> x2(7,3);
-	for (int32_t i=0; i<x2.num_rows*x2.num_cols; i++)
+	for (index_t i=0; i<x2.num_rows*x2.num_cols; i++)
 		x2[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input2 = new CNeuralInputLayer (x2.num_rows);
@@ -347,7 +347,7 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_hidden)
 	input_indices_out[0] = 2;
 
 	SGMatrix<float64_t> y(9,3);
-	for (int32_t i=0; i<y.num_rows*y.num_cols; i++)
+	for (index_t i=0; i<y.num_rows*y.num_cols; i++)
 		y[i] = CMath::random(0.0,1.0);
 
 	// initialize the hidden layer
@@ -383,7 +383,7 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_hidden)
 	// manually compute parameter gradients
 	SGVector<float64_t> gradients_hid_numerical(layer_hid->get_num_parameters());
 	float64_t epsilon = 1e-9;
-	for (int32_t i=0; i<layer_hid->get_num_parameters(); i++)
+	for (index_t i=0; i<layer_hid->get_num_parameters(); i++)
 	{
 		param_hid[i] += epsilon;
 		input1->compute_activations(x1);
@@ -404,7 +404,7 @@ TEST(NeuralLinearLayer, compute_parameter_gradients_hidden)
 	}
 
 	// compare
-	for (int32_t i=0; i<gradients_hid_numerical.vlen; i++)
+	for (index_t i=0; i<gradients_hid_numerical.vlen; i++)
 		EXPECT_NEAR(gradients_hid_numerical[i], gradients_hid[i], 1e-6);
 
 	SG_UNREF(layers);

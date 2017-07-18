@@ -74,7 +74,7 @@ class CCombinedFeatures : public CFeatures
 		 *
 		 * @return number of feature vectors
 		 */
-		virtual int32_t get_num_vectors() const
+		virtual index_t get_num_vectors() const
 		{
 			return m_subset_stack->has_subsets()
 					? m_subset_stack->get_size() : num_vec;

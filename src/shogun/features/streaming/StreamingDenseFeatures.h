@@ -152,7 +152,7 @@ public:
 	 *
 	 * @return dimensionality
 	 */
-	virtual int32_t get_dim_feature_space() const;
+	virtual index_t get_dim_feature_space() const;
 
 	/**
 	 * Dot product using the current vector and another vector, passed as arg.
@@ -266,7 +266,7 @@ public:
 	 *
 	 * @return 1 if current_vector exists, else 0.
 	 */
-	virtual int32_t get_num_vectors() const;
+	virtual index_t get_num_vectors() const;
 
 	/** Returns a new CDebseFeatures instance which contains num_elements elements
 	 * from the underlying stream. The object is not SG_REF'ed.

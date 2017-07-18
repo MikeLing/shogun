@@ -33,7 +33,7 @@ TEST(SOSVM, sgd_check_w_helper)
 	CFactorGraphLabels* labels = new CFactorGraphLabels(num_samples);
 	SG_REF(labels);
 
-	for (int32_t n = 0; n < num_samples; ++n)
+	for (index_t n = 0; n < num_samples; ++n)
 	{
 		// factor graph
 		SGVector<int32_t> vc(1);
@@ -81,7 +81,7 @@ TEST(SOSVM, sgd_check_w_helper)
 	sgd->train();
 	w = sgd->get_w();
 
-	for (int32_t i = 0; i < w.vlen; i++)
+	for (index_t i = 0; i < w.vlen; i++)
 		EXPECT_NEAR(w_truth[i], w[i], 1E-10);
 
 	EXPECT_NEAR(1.0, CSOSVMHelper::primal_objective(w, model, 1.0), 1E-10);
@@ -114,7 +114,7 @@ TEST(SOSVM, fw_check_w_helper)
 	CFactorGraphLabels* labels = new CFactorGraphLabels(num_samples);
 	SG_REF(labels);
 
-	for (int32_t n = 0; n < num_samples; ++n)
+	for (index_t n = 0; n < num_samples; ++n)
 	{
 		// factor graph
 		SGVector<int32_t> vc(1);
@@ -164,7 +164,7 @@ TEST(SOSVM, fw_check_w_helper)
 	fw->train();
 	w = fw->get_w();
 
-	for (int32_t i = 0; i < w.vlen; i++)
+	for (index_t i = 0; i < w.vlen; i++)
 		EXPECT_NEAR(w_truth[i], w[i], 1E-10);
 
 	EXPECT_NEAR(0.5, CSOSVMHelper::primal_objective(w, model, 1.0), 1E-10);

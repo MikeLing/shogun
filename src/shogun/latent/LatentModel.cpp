@@ -73,7 +73,7 @@ void CLatentModel::argmax_h(const SGVector<float64_t>& w)
 	ASSERT(num == m_labels->get_num_labels())
 
 	// argmax_h only for positive examples
-	for (int32_t i = 0; i < num; ++i)
+	for (index_t i = 0; i < num; ++i)
 	{
 		if (y->get_label(i) == 1)
 		{

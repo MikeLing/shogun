@@ -21,7 +21,7 @@ int32_t CECOCSimpleDecoder::decide_label(const SGVector<float64_t> outputs, cons
         query = binarize(outputs);
 
     SGVector<float64_t> distances(codebook.num_cols);
-    for (int32_t i=0; i < distances.vlen; ++i)
+    for (index_t i=0; i < distances.vlen; ++i)
         distances[i] = compute_distance(query, codebook.get_column_vector(i));
 
     int32_t result = CMath::arg_min(distances.vector, 1, distances.vlen);

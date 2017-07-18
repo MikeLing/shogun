@@ -97,7 +97,7 @@ bool CMulticlassSVM::init_machines_for_apply(CFeatures* data)
 		m_kernel->init(lhs, data);
 	SG_UNREF(lhs);
 
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 	{
 		CSVM *the_svm = (CSVM *)m_machines->get_element(i);
 		ASSERT(the_svm)
@@ -158,7 +158,7 @@ bool CMulticlassSVM::load(FILE* modelfl)
 	if (!feof(modelfl))
 		line_number++;
 
-	for (int32_t n=0; n<m_machines->get_num_elements(); n++)
+	for (index_t n=0; n<m_machines->get_num_elements(); n++)
 	{
 		svm_idx=-1;
 		if (fscanf(modelfl,"\n%4s %d of %d\n", char_buffer, &svm_idx, &int_buffer)==EOF)
@@ -216,7 +216,7 @@ bool CMulticlassSVM::load(FILE* modelfl)
 		if (!feof(modelfl))
 			line_number++;
 
-		for (int32_t i=0; i<svm->get_num_support_vectors(); i++)
+		for (index_t i=0; i<svm->get_num_support_vectors(); i++)
 		{
 			double_buffer=0;
 			int_buffer=0;
@@ -272,7 +272,7 @@ bool CMulticlassSVM::save(FILE* modelfl)
 	fprintf(modelfl,"num_svms=%d;\n", m_machines->get_num_elements());
 	fprintf(modelfl,"kernel='%s';\n", m_kernel->get_name());
 
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 	{
 		CSVM* svm=get_svm(i);
 		ASSERT(svm)
@@ -282,7 +282,7 @@ bool CMulticlassSVM::save(FILE* modelfl)
 
 		fprintf(modelfl, "alphas%d=[\n", i);
 
-		for(int32_t j=0; j<svm->get_num_support_vectors(); j++)
+		for(index_t j=0; j<svm->get_num_support_vectors(); j++)
 		{
 			fprintf(modelfl,"\t[%+10.16e,%d];\n",
 					svm->get_alpha(j), svm->get_support_vector(j));

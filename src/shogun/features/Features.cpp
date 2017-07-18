@@ -104,7 +104,7 @@ int32_t CFeatures::get_num_preprocessed() const
 {
 	int32_t num=0;
 
-	for (int32_t i=0; i<preproc->get_num_elements(); i++)
+	for (index_t i=0; i<preproc->get_num_elements(); i++)
 	{
 	  if ((*preprocessed)[i])
 			num++;
@@ -132,7 +132,7 @@ void CFeatures::list_preprocessors()
 {
 	int32_t num_preproc = preproc->get_num_elements();
 
-	for (int32_t i=0; i<num_preproc; i++)
+	for (index_t i=0; i<num_preproc; i++)
 	{
 		SG_INFO("preproc[%d]=%s applied=%s\n",i,
 				preproc->get_element(i)->get_name(),
@@ -162,7 +162,7 @@ int32_t CFeatures::get_cache_size() const
 	return cache_size;
 }
 
-bool CFeatures::reshape(int32_t num_features, int32_t num_vectors)
+bool CFeatures::reshape(index_t num_features, index_t num_vectors)
 {
 	SG_NOTIMPLEMENTED
 	return false;

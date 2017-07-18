@@ -35,7 +35,7 @@ bool SGString<T>::operator==(const SGString & other) const
 	if (other.slen != slen)
 		return false;
 
-	for (int i = 0; i < slen; i++)
+	for (index_t i = 0; i < slen; i++)
 	{
 		if (other.string[i] != string[i])
 			return false;

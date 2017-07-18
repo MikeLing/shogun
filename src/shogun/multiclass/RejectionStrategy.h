@@ -59,7 +59,7 @@ class CThresholdRejectionStrategy : public CRejectionStrategy
 		/** returns true if given output set leads to rejection */
 		virtual bool reject(SGVector<float64_t> outputs) const
 		{
-			for (int32_t i=0; i<outputs.vlen; i++)
+			for (index_t i=0; i<outputs.vlen; i++)
 			{
 				if (outputs[i]>m_threshold)
 					return false;

@@ -129,8 +129,8 @@ CFactorGraph* CFactorGraphDataGenerator::random_chain_graph(SGVector<int> &assig
 	SG_REF(fg);
 
 	// Add factors
-	for (int32_t y = 0; y < N; ++y)
-		for (int32_t x = 0; x < N; ++x)
+	for (index_t y = 0; y < N; ++y)
+		for (index_t x = 0; x < N; ++x)
 		{
 			SGVector<float64_t> data(2);
 			data[0] = CMath::random(0.0, 1.0);
@@ -143,9 +143,9 @@ CFactorGraph* CFactorGraphDataGenerator::random_chain_graph(SGVector<int> &assig
 			fg->add_factor(fac1);
 		}
 
-	for (int32_t x = 0; x < N; x++)
+	for (index_t x = 0; x < N; x++)
 	{
-		for (int32_t y = 0; y < N; y++)
+		for (index_t y = 0; y < N; y++)
 		{
 			if (x > 0)
 			{
@@ -207,16 +207,16 @@ CFactorGraph* CFactorGraphDataGenerator::random_chain_graph(SGVector<int> &assig
 	SGVector<int> test_var(N * N);
 	assignment_expect = SGVector<int>(N * N);
 	min_energy_expect = std::numeric_limits<double>::infinity();
-	for (int v0 = 0; v0 < 2; ++v0)
+	for (index_t v0 = 0; v0 < 2; ++v0)
 	{
 		test_var[0] = v0;
-		for (int v1 = 0; v1 < 2; ++v1)
+		for (index_t v1 = 0; v1 < 2; ++v1)
 		{
 			test_var[1] = v1;
-			for (int v2 = 0; v2 < 2; ++v2)
+			for (index_t v2 = 0; v2 < 2; ++v2)
 			{
 				test_var[2] = v2;
-				for (int v3 = 0; v3 < 2; ++v3)
+				for (index_t v3 = 0; v3 < 2; ++v3)
 				{
 					test_var[3] = v3;
 
@@ -344,7 +344,7 @@ void CFactorGraphDataGenerator::generate_data(int32_t len_label, int32_t len_fea
 	feats = SGMatrix<float64_t>(len_feat, size_data);
 	labels = SGMatrix<int32_t>(len_label, size_data);
 
-	for (int32_t k = 0; k < size_data; k++)
+	for (index_t k = 0; k < size_data; k++)
 	{
 		// generate a label vector
 		SGVector<int32_t> v_label(len_label);
@@ -359,16 +359,16 @@ void CFactorGraphDataGenerator::generate_data(int32_t len_label, int32_t len_fea
 		SGVector<float64_t> v_feat(len_feat);
 		v_feat.zero();
 
-		for (int32_t j = 0; j < 3 * (i + 1); j++)
+		for (index_t j = 0; j < 3 * (i + 1); j++)
 		{
 			int32_t r = random_indices[j];
 			v_feat[r] = 1;
 		}
 
-		for (int32_t f = 0; f < len_feat; f++)
+		for (index_t f = 0; f < len_feat; f++)
 			feats(f, k) = v_feat[f];
 
-		for (int32_t l = 0; l < len_label; l++)
+		for (index_t l = 0; l < len_label; l++)
 			labels(l, k) = v_label[l];
 	}
 }
@@ -383,9 +383,9 @@ SGMatrix< int32_t > CFactorGraphDataGenerator::get_edges_full(const int32_t num_
 	SGMatrix< int32_t > mat(num_rows, 2);
 	int32_t k = 0;
 
-	for (int32_t i = 0; i < num_classes - 1; i++)
+	for (index_t i = 0; i < num_classes - 1; i++)
 	{
-		for (int32_t j = i + 1; j < num_classes; j++)
+		for (index_t j = i + 1; j < num_classes; j++)
 		{
 			mat[num_rows + k] = j;
 			mat[k++] = i;
@@ -405,7 +405,7 @@ void CFactorGraphDataGenerator::build_factor_graph(SGMatrix<float64_t> feats, SG
 	int32_t num_edges         = edge_list.num_rows;
 
 	// prepare features and labels in factor graph
-	for (int32_t n = 0; n < num_sample; n++)
+	for (index_t n = 0; n < num_sample; n++)
 	{
 		SGVector<int32_t> vc(num_classes);
 		SGVector<int32_t>::fill_vector(vc.vector, vc.vlen, 2);
@@ -417,7 +417,7 @@ void CFactorGraphDataGenerator::build_factor_graph(SGMatrix<float64_t> feats, SG
 		memcpy(feat_i.vector, pfeat, dim * sizeof(float64_t));
 
 		// add unary factors
-		for (int32_t u = 0; u < num_classes; u++)
+		for (index_t u = 0; u < num_classes; u++)
 		{
 			SGVector<int32_t> var_index_u(1);
 			var_index_u[0] = u;
@@ -426,7 +426,7 @@ void CFactorGraphDataGenerator::build_factor_graph(SGMatrix<float64_t> feats, SG
 		}
 
 		// add pairwised factors
-		for (int32_t t = 0; t < num_edges; t++)
+		for (index_t t = 0; t < num_edges; t++)
 		{
 			SGVector<float64_t> data_t(1);
 			data_t[0] = 1.0;
@@ -462,7 +462,7 @@ void CFactorGraphDataGenerator::define_factor_types(int32_t num_classes, int32_t
 	int32_t tid;
 	// we have l = num_classes different weights: w_1, w_2, ..., w_l
 	// so we create num_classes different unary factor types
-	for (int32_t u = 0; u < num_classes; u++)
+	for (index_t u = 0; u < num_classes; u++)
 	{
 		tid = u;
 		SGVector<int32_t> card_u(1);
@@ -475,7 +475,7 @@ void CFactorGraphDataGenerator::define_factor_types(int32_t num_classes, int32_t
 
 	// define factor type: tree edge factor
 	// note that each edge is a new type
-	for (int32_t t = 0; t < num_edges; t++)
+	for (index_t t = 0; t < num_edges; t++)
 	{
 		tid = t + num_classes;
 		SGVector<int32_t> card_t(2);
@@ -522,10 +522,10 @@ float64_t CFactorGraphDataGenerator::test_sosvm(EMAPInferType infer_type)
 	SG_REF(model);
 
 	// Initialize model parameters
-	for (int32_t u = 0; u < num_classes; u++)
+	for (index_t u = 0; u < num_classes; u++)
 		model->add_factor_type(v_factor_type[u]);
 
-	for (int32_t t = 0; t < num_edges; t++)
+	for (index_t t = 0; t < num_edges; t++)
 		model->add_factor_type(v_factor_type[t + num_classes]);
 
 	// 2.1 Create SGD solver
@@ -543,7 +543,7 @@ float64_t CFactorGraphDataGenerator::test_sosvm(EMAPInferType infer_type)
 	float64_t ave_loss_sgd = 0.0;
 	float64_t acc_loss_sgd = 0.0;
 
-	for (int32_t i = 0; i < num_sample_train; ++i)
+	for (index_t i = 0; i < num_sample_train; ++i)
 	{
 		CStructuredData* y_pred  = labels_sgd->get_label(i);
 		CStructuredData* y_truth = fg_labels_train->get_label(i);

@@ -121,19 +121,19 @@ struct convolve<Backend::EIGEN3, Matrix>
 		int32_t rx = (kx-1)/2;
 		int32_t ry = (ky-1)/2;
 
-		for (int32_t x=0; x<width; x+=stride_x)
+		for (index_t x=0; x<width; x+=stride_x)
 		{
 			int32_t xout = x/stride_x;
 
-			for (int32_t y=0; y<height; y+=stride_y)
+			for (index_t y=0; y<height; y+=stride_y)
 			{
 				int32_t yout = y/stride_y;
 
 				T sum = overwrite ? 0 : Y(yout,xout);
-				for (int32_t x1=x-rx; x1<=x+rx; x1++)
+				for (index_t x1=x-rx; x1<=x+rx; x1++)
 				{
 					int32_t wx = flip ? x1-x+rx : rx-x1+x;
-					for (int32_t y1=y-ry; y1<=y+ry; y1++)
+					for (index_t y1=y-ry; y1<=y+ry; y1++)
 					{
 						if (x1>=0 && y1>=0 && x1<width && y1<height)
 						{
@@ -214,18 +214,18 @@ struct convolve<Backend::VIENNACL, Matrix>
 
 					if (xl==WORK_GROUP_SIZE_2D-1 && yl == WORK_GROUP_SIZE_2D-1)
 					{
-						for (int rx=0; rx<=2*RADIUS_X; rx++)
-							for (int ry=0; ry<=2*RADIUS_Y; ry++)
+						for (index_t rx=0; rx<=2*RADIUS_X; rx++)
+							for (index_t ry=0; ry<=2*RADIUS_Y; ry++)
 								X_local[xl+rx][yl+ry] = readX(X, x-RADIUS_X+rx, y-RADIUS_Y+ry, X_width, X_height, X_offset);
 					}
 					else if (xl==WORK_GROUP_SIZE_2D-1)
 					{
-						for (int rx=0; rx<=2*RADIUS_X; rx++)
+						for (index_t rx=0; rx<=2*RADIUS_X; rx++)
 							X_local[xl+rx][yl] = readX(X, x-RADIUS_X+rx, y-RADIUS_Y, X_width, X_height, X_offset);
 					}
 					else if (yl == WORK_GROUP_SIZE_2D-1)
 					{
-						for (int ry=0; ry<=2*RADIUS_Y; ry++)
+						for (index_t ry=0; ry<=2*RADIUS_Y; ry++)
 							X_local[xl][yl+ry] = readX(X, x-RADIUS_X, y-RADIUS_Y+ry, X_width, X_height, X_offset);
 					}
 					else
@@ -237,7 +237,7 @@ struct convolve<Backend::VIENNACL, Matrix>
 						return;
 
 					DATATYPE sum = 0;
-					for (int x1=0; x1<W_WIDTH; x1++)
+					for (index_t x1=0; x1<W_WIDTH; x1++)
 					{
 					#ifdef FLIP
 						int wx = x1*W_HEIGHT+W_offset;
@@ -245,7 +245,7 @@ struct convolve<Backend::VIENNACL, Matrix>
 						int wx = (2*RADIUS_X-x1)*W_HEIGHT+W_offset;
 					#endif
 						int inx = x1+xl;
-						for (int y1=0; y1<W_HEIGHT; y1++)
+						for (index_t y1=0; y1<W_HEIGHT; y1++)
 						{
 							int iny = y1+yl;
 							#ifdef FLIP
@@ -321,7 +321,7 @@ struct convolve<Backend::VIENNACL, Matrix>
 						return;
 
 					DATATYPE sum = 0;
-					for (int x1=0; x1<W_WIDTH; x1++)
+					for (index_t x1=0; x1<W_WIDTH; x1++)
 					{
 					#ifdef FLIP
 						int wx = x1*W_HEIGHT+W_offset;
@@ -329,7 +329,7 @@ struct convolve<Backend::VIENNACL, Matrix>
 						int wx = (2*RADIUS_X-x1)*W_HEIGHT+W_offset;
 					#endif
 						int inx = x1+x-RADIUS_X;
-						for (int y1=0; y1<W_HEIGHT; y1++)
+						for (index_t y1=0; y1<W_HEIGHT; y1++)
 						{
 							int iny = y1+y-RADIUS_Y;
 							if (inx>=0 && iny>=0 && inx<X_width && iny<X_height)

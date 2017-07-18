@@ -343,7 +343,7 @@ void* CKernel::cache_multiple_kernel_row_helper(void* p)
 	int32_t j,k,l;
 	S_KTHREAD_PARAM* params = (S_KTHREAD_PARAM*) p;
 
-	for (int32_t i=params->start; i<params->end; i++)
+	for (index_t i=params->start; i<params->end; i++)
 	{
 		KERNELCACHE_ELEM* cache=params->cache[i];
 		int32_t m = params->uncached_rows[i];
@@ -381,7 +381,7 @@ void CKernel::cache_multiple_kernel_rows(int32_t* rows, int32_t num_rows)
 	if (nthreads<2)
 	{
 #endif
-		for(int32_t i=0;i<num_rows;i++)
+		for(index_t i=0;i<num_rows;i++)
 			cache_kernel_row(rows[i]);
 #ifdef HAVE_PTHREAD
 	}
@@ -402,7 +402,7 @@ void CKernel::cache_multiple_kernel_rows(int32_t* rows, int32_t num_rows)
 		int32_t end=0;
 
 		// allocate cachelines if necessary
-		for (int32_t i=0; i<num_rows; i++)
+		for (index_t i=0; i<num_rows; i++)
 		{
 			int32_t idx=rows[i];
 			if (idx>=num_vec)
@@ -431,7 +431,7 @@ void CKernel::cache_multiple_kernel_rows(int32_t* rows, int32_t num_rows)
 				step=1;
 			}
 
-			for (int32_t t=0; t<num_threads; t++)
+			for (index_t t=0; t<num_threads; t++)
 			{
 				params[t].kernel = this;
 				params[t].kernel_cache = &kernel_cache;
@@ -475,7 +475,7 @@ void CKernel::cache_multiple_kernel_rows(int32_t* rows, int32_t num_rows)
 		cache_multiple_kernel_row_helper(&last_param);
 
 
-		for (int32_t t=0; t<num_threads; t++)
+		for (index_t t=0; t<num_threads; t++)
 		{
 			if (pthread_join(threads[t], NULL) != 0)
 				SG_WARNING("pthread_join of thread %d/%d failed\n", t, num_threads)
@@ -914,7 +914,7 @@ bool CKernel::init_optimization_svm(CSVM * svm)
 	int32_t* sv_idx=SG_MALLOC(int32_t, num_suppvec);
 	float64_t* sv_weight=SG_MALLOC(float64_t, num_suppvec);
 
-	for (int32_t i=0; i<num_suppvec; i++)
+	for (index_t i=0; i<num_suppvec; i++)
 	{
 		sv_idx[i]    = svm->get_support_vector(i);
 		sv_weight[i] = svm->get_alpha(i);
@@ -1305,14 +1305,14 @@ template <class T> void* CKernel::get_kernel_matrix_helper(void* p)
 	int64_t total_end=params->total_end;
 	int64_t total=total_start;
 
-	for (int32_t i=i_start; i<i_end; i++)
+	for (index_t i=i_start; i<i_end; i++)
 	{
 		int32_t j_start=0;
 
 		if (symmetric)
 			j_start=i;
 
-		for (int32_t j=j_start; j<n; j++)
+		for (index_t j=j_start; j<n; j++)
 		{
 			float64_t v=k->kernel(i,j);
 			result[i+j*m]=v;

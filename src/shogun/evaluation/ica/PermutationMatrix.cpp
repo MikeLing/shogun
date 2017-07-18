@@ -16,9 +16,9 @@ bool is_permutation_matrix(SGMatrix<float64_t> m)
 		mat.col(t) /= mat.col(t).cwiseAbs().maxCoeff();
 
 	// round
-	for (int i = 0; i < mat.rows(); i++)
+	for (index_t i = 0; i < mat.rows(); i++)
 	{
-		for (int j = 0; j < mat.cols(); j++)
+		for (index_t j = 0; j < mat.cols(); j++)
 		{
 			if (CMath::abs(CMath::round(mat(i,j))) >= 1.0)
 				mat(i,j) = 1.0;
@@ -28,10 +28,10 @@ bool is_permutation_matrix(SGMatrix<float64_t> m)
 	}
 
 	// check only a single 1 per row
-	for (int i = 0; i < mat.rows(); i++)
+	for (index_t i = 0; i < mat.rows(); i++)
 	{
 		int num_ones = 0;
-		for (int j = 0; j < mat.cols(); j++)
+		for (index_t j = 0; j < mat.cols(); j++)
 		{
 			if (mat(i,j) >= 1.0)
 				num_ones++;
@@ -42,10 +42,10 @@ bool is_permutation_matrix(SGMatrix<float64_t> m)
 	}
 
 	// check only a single 1 per col
-	for (int j = 0; j < mat.cols(); j++)
+	for (index_t j = 0; j < mat.cols(); j++)
 	{
 		int num_ones = 0;
-		for (int i = 0; i < mat.rows(); i++)
+		for (index_t i = 0; i < mat.rows(); i++)
 		{
 			if (mat(i,j) >= 1.0)
 				num_ones++;

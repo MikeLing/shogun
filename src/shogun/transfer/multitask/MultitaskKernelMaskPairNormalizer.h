@@ -151,7 +151,7 @@ public:
 
 		task_vector_lhs.clear();
 
-		for (int32_t i = 0; i != (int32_t)(vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(vec.size()); ++i)
 		{
 			task_vector_lhs.push_back(vec[i]);
 		}
@@ -172,7 +172,7 @@ public:
 
 		task_vector_rhs.clear();
 
-		for (int32_t i = 0; i != (int32_t)(vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(vec.size()); ++i)
 		{
 			task_vector_rhs.push_back(vec[i]);
 		}
@@ -197,7 +197,7 @@ public:
 
 		float64_t similarity = 0.0;
 
-		for (int32_t i=0; i!=static_cast<int>(active_pairs.size()); i++)
+		for (index_t i=0; i!=static_cast<int>(active_pairs.size()); i++)
 		{
 			std::pair<int32_t, int32_t> block = active_pairs[i];
 

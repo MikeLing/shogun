@@ -49,9 +49,9 @@ void CSplineKernel::cleanup()
 	CKernel::cleanup();
 }
 
-float64_t CSplineKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CSplineKernel::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool afree, bfree;
 
 	float64_t* avec = ((CDenseFeatures<float64_t>*) lhs)->get_feature_vector(idx_a, alen, afree);
@@ -59,7 +59,7 @@ float64_t CSplineKernel::compute(int32_t idx_a, int32_t idx_b)
 	ASSERT(alen == blen)
 
 	float64_t result = 0;
-	for (int32_t i = 0; i < alen; i++) {
+	for (index_t i = 0; i < alen; i++) {
 		const float64_t x = avec[i], y = bvec[i];
 		const float64_t min = CMath::min(avec[i], bvec[i]);
 		result += 1 + x*y + x*y*min - ((x+y)/2)*min*min + min*min*min/3;

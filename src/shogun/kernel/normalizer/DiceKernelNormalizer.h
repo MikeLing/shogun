@@ -129,7 +129,7 @@ class CDiceKernelNormalizer : public CKernelNormalizer
 			SG_FREE(v);
 			v=SG_MALLOC(float64_t, num);
 
-			for (int32_t i=0; i<num; i++)
+			for (index_t i=0; i<num; i++)
 			{
 				if (k->get_kernel_type() == K_COMMWORDSTRING)
 				{
@@ -152,12 +152,12 @@ class CDiceKernelNormalizer : public CKernelNormalizer
 		/** diagonal left-hand side */
 		float64_t* diag_lhs;
 		/** num diag lhs */
-		int32_t num_diag_lhs;
+		index_t num_diag_lhs;
 
 		/** diagonal right-hand side */
 		float64_t* diag_rhs;
 		/** num diag rhs */
-		int32_t num_diag_rhs;
+		index_t num_diag_rhs;
 
 		/** flat if optimized diagonal computation is used */
 		bool use_optimized_diagonal_computation;

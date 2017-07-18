@@ -181,7 +181,7 @@ bool CCHAIDTree::train_machine(CFeatures* data)
 	{
 		// change m_feature_types momentarily
 		feature_types_cache=m_feature_types.clone();
-		for (int32_t i=0;i<m_feature_types.vlen;i++)
+		for (index_t i=0;i<m_feature_types.vlen;i++)
 		{
 			if (m_feature_types[i]==2)
 				m_feature_types[i]=1;
@@ -224,7 +224,7 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 		// stores one of the indices having max total weight
 		int32_t maxi=0;
 		int32_t c=weights[0];
-		for (int32_t i=1;i<lab.vlen;i++)
+		for (index_t i=1;i<lab.vlen;i++)
 		{
 			if (lab[i]==lab[i-1])
 			{
@@ -267,9 +267,9 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 
 	// case 2 : all non-dependent attributes (not MISSING) are same
 	bool flag=true;
-	for (int32_t v=1;v<num_vecs;v++)
+	for (index_t v=1;v<num_vecs;v++)
 	{
-		for (int32_t f=0;f<num_feats;f++)
+		for (index_t f=0;f<num_feats;f++)
 		{
 			if ((mat(f,v)!=MISSING) && (mat(f,v-1)!=MISSING))
 			{
@@ -306,10 +306,10 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 	float64_t min_pv=CMath::MAX_REAL_NUMBER;
 	SGVector<int32_t> cat_min;
 	int32_t attr_min=-1;
-	for (int32_t i=0;i<num_feats;i++)
+	for (index_t i=0;i<num_feats;i++)
 	{
 		SGVector<float64_t> feats(num_vecs);
-		for (int32_t j=0;j<num_vecs;j++)
+		for (index_t j=0;j<num_vecs;j++)
 			feats[j]=mat(i,j);
 
 		float64_t pv=0;
@@ -334,19 +334,19 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 
 	// split
 	SGVector<float64_t> ufeats_best(num_vecs);
-	for (int32_t i=0;i<num_vecs;i++)
+	for (index_t i=0;i<num_vecs;i++)
 		ufeats_best[i]=mat(attr_min,i);
 
 	int32_t unum=ufeats_best.unique(ufeats_best.vector,ufeats_best.vlen);
-	for (int32_t i=0;i<cat_min.vlen;i++)
+	for (index_t i=0;i<cat_min.vlen;i++)
 	{
 		if (cat_min[i]!=i)
 			continue;
 
 		CDynamicArray<int32_t>* feat_index=new CDynamicArray<int32_t>();
-		for (int32_t j=0;j<num_vecs;j++)
+		for (index_t j=0;j<num_vecs;j++)
 		{
-			for (int32_t k=0;k<unum;k++)
+			for (index_t k=0;k<unum;k++)
 			{
 				if (mat(attr_min,j)==ufeats_best[k])
 				{
@@ -358,7 +358,7 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 
 		SGVector<int32_t> subset(feat_index->get_num_elements());
 		SGVector<float64_t> subweights(feat_index->get_num_elements());
-		for (int32_t j=0;j<feat_index->get_num_elements();j++)
+		for (index_t j=0;j<feat_index->get_num_elements();j++)
 		{
 			subset[j]=feat_index->get_element(j);
 			subweights[j]=weights[feat_index->get_element(j)];
@@ -372,7 +372,7 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 		node->data.attribute_id=attr_min;
 		int32_t c=0;
 		SGVector<int32_t> feat_class=cat_min.clone();
-		for (int32_t j=0;j<feat_class.vlen;j++)
+		for (index_t j=0;j<feat_class.vlen;j++)
 		{
 			if (feat_class[j]!=j)
 			{
@@ -384,7 +384,7 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 				continue;
 			}
 
-			for (int32_t k=j;k<feat_class.vlen;k++)
+			for (index_t k=j;k<feat_class.vlen;k++)
 			{
 				if (feat_class[k]==j)
 					feat_class[k]=c;
@@ -395,7 +395,7 @@ CTreeMachineNode<CHAIDTreeNodeData>* CCHAIDTree::CHAIDtrain(CFeatures* data, SGV
 
 		node->data.feature_class=feat_class;
 		node->data.distinct_features=SGVector<float64_t>(unum);
-		for (int32_t j=0;j<unum;j++)
+		for (index_t j=0;j<unum;j++)
 			node->data.distinct_features[j]=ufeats_best[j];
 
 		SG_UNREF(feat_index);
@@ -444,7 +444,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_ordinal(SGVector<float64_t> feats
 		// scan all allowable pairs of categories to find most similar one
 		int32_t cat_index_max=-1;
 		float64_t max_merge_pv=CMath::MIN_REAL_NUMBER;
-		for (int32_t i=0;i<inum_cat-1;i++)
+		for (index_t i=0;i<inum_cat-1;i++)
 		{
 			if (cat[i]==cat[i+1])
 				continue;
@@ -454,9 +454,9 @@ SGVector<int32_t> CCHAIDTree::merge_categories_ordinal(SGVector<float64_t> feats
 			// compute p-value
 			CDynamicArray<int32_t>* feat_index=new CDynamicArray<int32_t>();
 			CDynamicArray<int32_t>* feat_cat=new CDynamicArray<int32_t>();
-			for (int32_t j=0;j<feats.vlen;j++)
+			for (index_t j=0;j<feats.vlen;j++)
 			{
-				for (int32_t k=0;k<inum_cat;k++)
+				for (index_t k=0;k<inum_cat;k++)
 				{
 					if (feats[j]==ufeats[k])
 					{
@@ -477,7 +477,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_ordinal(SGVector<float64_t> feats
 			SGVector<float64_t> subfeats(feat_index->get_num_elements());
 			SGVector<float64_t> sublabels(feat_index->get_num_elements());
 			SGVector<float64_t> subweights(feat_index->get_num_elements());
-			for (int32_t j=0;j<feat_index->get_num_elements();j++)
+			for (index_t j=0;j<feat_index->get_num_elements();j++)
 			{
 				subfeats[j]=feat_cat->get_element(j);
 				sublabels[j]=labels[feat_index->get_element(j)];
@@ -499,7 +499,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_ordinal(SGVector<float64_t> feats
 		{
 			// merge
 			int32_t cat2=cat[cat_index_max+1];
-			for (int32_t i=cat_index_max+1;i<inum_cat;i++)
+			for (index_t i=cat_index_max+1;i<inum_cat;i++)
 			{
 				if (cat2==cat[i])
 					cat[i]=cat[cat_index_max];
@@ -516,7 +516,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_ordinal(SGVector<float64_t> feats
 	}
 
 	SGVector<float64_t> feats_cat(feats.vlen);
-	for (int32_t i=0;i<feats.vlen;i++)
+	for (index_t i=0;i<feats.vlen;i++)
 	{
 		if (feats[i]==MISSING)
 		{
@@ -524,7 +524,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_ordinal(SGVector<float64_t> feats
 			continue;
 		}
 
-		for (int32_t j=0;j<inum_cat;j++)
+		for (index_t j=0;j<inum_cat;j++)
 		{
 			if (feats[i]==ufeats[j])
 				feats_cat[i]=cat[j];
@@ -571,7 +571,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_nominal(SGVector<float64_t> feats
 
 		// assimilate all category labels left
 		CDynamicArray<int32_t>* leftcat=new CDynamicArray<int32_t>();
-		for (int32_t i=0;i<cat.vlen;i++)
+		for (index_t i=0;i<cat.vlen;i++)
 		{
 			if (cat[i]==i)
 				leftcat->push_back(i);
@@ -581,15 +581,15 @@ SGVector<int32_t> CCHAIDTree::merge_categories_nominal(SGVector<float64_t> feats
 		float64_t max_merge_pv=CMath::MIN_REAL_NUMBER;
 		int32_t cat1_max=-1;
 		int32_t cat2_max=-1;
-		for (int32_t i=0;i<leftcat->get_num_elements()-1;i++)
+		for (index_t i=0;i<leftcat->get_num_elements()-1;i++)
 		{
-			for (int32_t j=i+1;j<leftcat->get_num_elements();j++)
+			for (index_t j=i+1;j<leftcat->get_num_elements();j++)
 			{
 				CDynamicArray<int32_t>* feat_index=new CDynamicArray<int32_t>();
 				CDynamicArray<int32_t>* feat_cat=new CDynamicArray<int32_t>();
-				for (int32_t k=0;k<feats.vlen;k++)
+				for (index_t k=0;k<feats.vlen;k++)
 				{
-					for (int32_t l=0;l<inum_cat;l++)
+					for (index_t l=0;l<inum_cat;l++)
 					{
 						if (feats[k]==ufeats[l])
 						{
@@ -610,7 +610,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_nominal(SGVector<float64_t> feats
 				SGVector<float64_t> subfeats(feat_index->get_num_elements());
 				SGVector<float64_t> sublabels(feat_index->get_num_elements());
 				SGVector<float64_t> subweights(feat_index->get_num_elements());
-				for (int32_t k=0;k<feat_index->get_num_elements();k++)
+				for (index_t k=0;k<feat_index->get_num_elements();k++)
 				{
 					subfeats[k]=feat_cat->get_element(k);
 					sublabels[k]=labels[feat_index->get_element(k)];
@@ -635,7 +635,7 @@ SGVector<int32_t> CCHAIDTree::merge_categories_nominal(SGVector<float64_t> feats
 		if (max_merge_pv>m_alpha_merge)
 		{
 			// merge
-			for (int32_t i=0;i<cat.vlen;i++)
+			for (index_t i=0;i<cat.vlen;i++)
 			{
 				if (cat2_max==cat[i])
 					cat[i]=cat1_max;
@@ -650,9 +650,9 @@ SGVector<int32_t> CCHAIDTree::merge_categories_nominal(SGVector<float64_t> feats
 	}
 
 	SGVector<float64_t> feats_cat(feats.vlen);
-	for (int32_t i=0;i<feats.vlen;i++)
+	for (index_t i=0;i<feats.vlen;i++)
 	{
-		for (int32_t j=0;j<inum_cat;j++)
+		for (index_t j=0;j<inum_cat;j++)
 		{
 			if (feats[i]==ufeats[j])
 				feats_cat[i]=cat[j];
@@ -681,7 +681,7 @@ CLabels* CCHAIDTree::apply_from_current_node(SGMatrix<float64_t> fmat, node_t* c
 	int32_t num_vecs=fmat.num_cols;
 
 	SGVector<float64_t> labels(num_vecs);
-	for (int32_t i=0;i<num_vecs;i++)
+	for (index_t i=0;i<num_vecs;i++)
 	{
 		node_t* node=current;
 		SG_REF(node);
@@ -691,7 +691,7 @@ CLabels* CCHAIDTree::apply_from_current_node(SGMatrix<float64_t> fmat, node_t* c
 		{
 			// find feature class (or index of child node) of chosen vector in current node
 			int32_t index=-1;
-			for (int32_t j=0;j<(node->data.distinct_features).vlen;j++)
+			for (index_t j=0;j<(node->data.distinct_features).vlen;j++)
 			{
 				if (fmat(node->data.attribute_id,i)==node->data.distinct_features[j])
 				{
@@ -741,7 +741,7 @@ bool CCHAIDTree::handle_missing_ordinal(SGVector<int32_t> cat, SGVector<float64_
 	// sanity check
 	REQUIRE(cat[cat.vlen-1]==cat.vlen-1,"last category is expected to be stored for MISSING. Hence it is expected to be un-merged\n")
 	CDynamicArray<int32_t>* cat_ind=new CDynamicArray<int32_t>();
-	for (int32_t i=0;i<cat.vlen-1;i++)
+	for (index_t i=0;i<cat.vlen-1;i++)
 	{
 		if (cat[i]==i)
 			cat_ind->push_back(i);
@@ -750,10 +750,10 @@ bool CCHAIDTree::handle_missing_ordinal(SGVector<int32_t> cat, SGVector<float64_
 	// find most similar category to MISSING
 	float64_t max_pv_pair=CMath::MIN_REAL_NUMBER;
 	int32_t cindex_max=-1;
-	for (int32_t i=0;i<cat_ind->get_num_elements();i++)
+	for (index_t i=0;i<cat_ind->get_num_elements();i++)
 	{
 		CDynamicArray<int32_t>* feat_index=new CDynamicArray<int32_t>();
-		for (int32_t j=0;j<feats.vlen;j++)
+		for (index_t j=0;j<feats.vlen;j++)
 		{
 			if ((feats[j]==cat_ind->get_element(i)) || feats[j]==MISSING)
 				feat_index->push_back(j);
@@ -762,7 +762,7 @@ bool CCHAIDTree::handle_missing_ordinal(SGVector<int32_t> cat, SGVector<float64_
 		SGVector<float64_t> subfeats(feat_index->get_num_elements());
 		SGVector<float64_t> sublabels(feat_index->get_num_elements());
 		SGVector<float64_t> subweights(feat_index->get_num_elements());
-		for (int32_t j=0;j<feat_index->get_num_elements();j++)
+		for (index_t j=0;j<feat_index->get_num_elements();j++)
 		{
 			subfeats[j]=feats[feat_index->get_element(j)];
 			sublabels[j]=labels[feat_index->get_element(j)];
@@ -781,7 +781,7 @@ bool CCHAIDTree::handle_missing_ordinal(SGVector<int32_t> cat, SGVector<float64_
 
 	// compare if MISSING being merged is better than not being merged
 	SGVector<float64_t> feats_copy(feats.vlen);
-	for (int32_t i=0;i<feats.vlen;i++)
+	for (index_t i=0;i<feats.vlen;i++)
 	{
 		if (feats[i]==MISSING)
 			feats_copy[i]=cindex_max;
@@ -794,7 +794,7 @@ bool CCHAIDTree::handle_missing_ordinal(SGVector<int32_t> cat, SGVector<float64_
 	if (pv_merged>pv_unmerged)
 	{
 		cat[cat.vlen-1]=cindex_max;
-		for (int32_t i=0;i<feats.vlen;i++)
+		for (index_t i=0;i<feats.vlen;i++)
 		{
 			if (feats[i]==MISSING)
 				feats[i]=cindex_max;
@@ -817,13 +817,13 @@ float64_t CCHAIDTree::adjusted_p_value(float64_t up_value, int32_t inum_cat, int
 		case 0:
 		{
 			float64_t sum=0.;
-			for (int32_t v=0;v<fnum_cat;v++)
+			for (index_t v=0;v<fnum_cat;v++)
 			{
 				float64_t lterm=inum_cat*CMath::log(fnum_cat-v);
-				for (int32_t j=1;j<=v;j++)
+				for (index_t j=1;j<=v;j++)
 					lterm-=CMath::log(j);
 
-				for (int32_t j=1;j<=fnum_cat-v;j++)
+				for (index_t j=1;j<=fnum_cat-v;j++)
 					lterm-=CMath::log(j);
 
 				if (v%2==0)
@@ -894,7 +894,7 @@ float64_t CCHAIDTree::anova_f_statistic(SGVector<float64_t> feat, SGVector<float
 {
 	// compute y_bar
 	float64_t y_bar=0.;
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 		y_bar+=labels[i]*weights[i];
 
 	y_bar/=weights.sum(weights);
@@ -907,9 +907,9 @@ float64_t CCHAIDTree::anova_f_statistic(SGVector<float64_t> feat, SGVector<float
 	SGVector<float64_t> denom(r);
 	numer.zero();
 	denom.zero();
-	for (int32_t n=0;n<feat.vlen;n++)
+	for (index_t n=0;n<feat.vlen;n++)
 	{
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
 			if (feat[n]==ufeat[i])
 			{
@@ -923,9 +923,9 @@ float64_t CCHAIDTree::anova_f_statistic(SGVector<float64_t> feat, SGVector<float
 	// compute f statistic
 	float64_t nu=0.;
 	float64_t de=0.;
-	for (int32_t i=0;i<r;i++)
+	for (index_t i=0;i<r;i++)
 	{
-		for (int32_t n=0;n<feat.vlen;n++)
+		for (index_t n=0;n<feat.vlen;n++)
 		{
 			if (feat[n]==ufeat[i])
 			{
@@ -956,11 +956,11 @@ float64_t CCHAIDTree::likelihood_ratio_statistic(SGVector<float64_t> feat, SGVec
 	ct.zero();
 	SGMatrix<float64_t> wt(r,c);
 	wt.zero();
-	for (int32_t i=0;i<feat.vlen;i++)
+	for (index_t i=0;i<feat.vlen;i++)
 	{
 		// calculate row
 		int32_t row=-1;
-		for (int32_t j=0;j<r;j++)
+		for (index_t j=0;j<r;j++)
 		{
 			if (feat[i]==ufeat[j])
 			{
@@ -971,7 +971,7 @@ float64_t CCHAIDTree::likelihood_ratio_statistic(SGVector<float64_t> feat, SGVec
 
 		// calculate col
 		int32_t col=-1;
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 		{
 			if (labels[i]==ulabels[j])
 			{
@@ -991,9 +991,9 @@ float64_t CCHAIDTree::likelihood_ratio_statistic(SGVector<float64_t> feat, SGVec
 	SGMatrix<float64_t> expmat_row_effects=expected_cf_row_effects_model(ct,wt,score);
 
 	float64_t ret=0.;
-	for (int32_t i=0;i<r;i++)
+	for (index_t i=0;i<r;i++)
 	{
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 			ret+=expmat_row_effects(i,j)*CMath::log(expmat_row_effects(i,j)/expmat_indep(i,j));
 	}
 
@@ -1013,11 +1013,11 @@ float64_t CCHAIDTree::pchi2_statistic(SGVector<float64_t> feat, SGVector<float64
 	ct.zero();
 	SGMatrix<float64_t> wt(r,c);
 	wt.zero();
-	for (int32_t i=0;i<feat.vlen;i++)
+	for (index_t i=0;i<feat.vlen;i++)
 	{
 		// calculate row
 		int32_t row=-1;
-		for (int32_t j=0;j<r;j++)
+		for (index_t j=0;j<r;j++)
 		{
 			if (feat[i]==ufeat[j])
 			{
@@ -1028,7 +1028,7 @@ float64_t CCHAIDTree::pchi2_statistic(SGVector<float64_t> feat, SGVector<float64
 
 		// calculate col
 		int32_t col=-1;
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 		{
 			if (labels[i]==ulabels[j])
 			{
@@ -1044,9 +1044,9 @@ float64_t CCHAIDTree::pchi2_statistic(SGVector<float64_t> feat, SGVector<float64
 	SGMatrix<float64_t> expected_cf=expected_cf_indep_model(ct,wt);
 
 	float64_t ret=0.;
-	for (int32_t i=0;i<r;i++)
+	for (index_t i=0;i<r;i++)
 	{
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 			ret+=CMath::pow((ct(i,j)-expected_cf(i,j)),2)/expected_cf(i,j);
 	}
 
@@ -1061,18 +1061,18 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_row_effects_model(SGMatrix<int32_t> 
 	// compute row sum(n_i.'s) and column sum(n_.j's)
 	SGVector<int32_t> row_sum(r);
 	SGVector<int32_t> col_sum(c);
-	for (int32_t i=0;i<r;i++)
+	for (index_t i=0;i<r;i++)
 	{
 		int32_t sum=0;
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 			sum+=ct(i,j);
 
 		row_sum[i]=sum;
 	}
-	for (int32_t i=0;i<c;i++)
+	for (index_t i=0;i<c;i++)
 	{
 		int32_t sum=0;
-		for (int32_t j=0;j<r;j++)
+		for (index_t j=0;j<r;j++)
 			sum+=ct(j,i);
 
 		col_sum[i]=sum;
@@ -1081,10 +1081,10 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_row_effects_model(SGMatrix<int32_t> 
 	// compute s_bar
 	float64_t numer=0.;
 	float64_t denom=0.;
-	for (int32_t j=0;j<c;j++)
+	for (index_t j=0;j<c;j++)
 	{
 		float64_t w_j=0.;
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 			w_j+=wt(i,j);
 
 		denom+=w_j;
@@ -1094,9 +1094,9 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_row_effects_model(SGMatrix<int32_t> 
 	float64_t s_bar=numer/denom;
 
 	// element-wise normalize and invert weight matrix w_ij(new)=n_ij/w_ij(old)
-	for (int32_t i=0;i<r;i++)
+	for (index_t i=0;i<r;i++)
 	{
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 			wt(i,j)=(ct(i,j)-0.f)/wt(i,j);
 	}
 
@@ -1111,20 +1111,20 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_row_effects_model(SGMatrix<int32_t> 
 	while(true)
 	{
 		// update alpha
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
 			float64_t sum=0.;
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 				sum+=m_k(i,j);
 
 			alpha[i]*=(row_sum[i]-0.f)/sum;
 		}
 
 		// update beta
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 		{
 			float64_t sum=0.;
-			for (int32_t i=0;i<r;i++)
+			for (index_t i=0;i<r;i++)
 				sum+=wt(i,j)*alpha[i]*CMath::pow(gamma[i],(score[j]-s_bar));
 
 			beta[j]=(col_sum[j]-0.f)/sum;
@@ -1133,17 +1133,17 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_row_effects_model(SGMatrix<int32_t> 
 		// compute g_i for updating gamma
 		SGVector<float64_t> g(r);
 		SGMatrix<float64_t> m_star(r,c);
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 				m_star(i,j)=wt(i,j)*alpha[i]*beta[j]*CMath::pow(gamma[i],score[j]-s_bar);
 		}
 
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
 			numer=0.;
 			denom=0.;
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 			{
 				numer+=(score[j]-s_bar)*(ct(i,j)-m_star(i,j));
 				denom+=CMath::pow((score[j]-s_bar),2)*m_star(i,j);
@@ -1153,15 +1153,15 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_row_effects_model(SGMatrix<int32_t> 
 		}
 
 		// update gamma
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 			gamma[i]=(g[i]>0)?gamma[i]*g[i]:gamma[i];
 
 		// update m_k
 		SGMatrix<float64_t> m_kplus(r,c);
 		float64_t max_diff=0.;
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 			{
 				m_kplus(i,j)=wt(i,j)*alpha[i]*beta[j]*CMath::pow(gamma[i],(score[j]-s_bar));
 				float64_t abs_diff=CMath::abs(m_kplus(i,j)-m_k(i,j));
@@ -1186,18 +1186,18 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_indep_model(SGMatrix<int32_t> ct, SG
 	// compute row sum(n_i.'s) and column sum(n_.j's)
 	SGVector<int32_t> row_sum(r);
 	SGVector<int32_t> col_sum(c);
-	for (int32_t i=0;i<r;i++)
+	for (index_t i=0;i<r;i++)
 	{
 		int32_t sum=0;
-		for (int32_t j=0;j<c;j++)
+		for (index_t j=0;j<c;j++)
 			sum+=ct(i,j);
 
 		row_sum[i]=sum;
 	}
-	for (int32_t i=0;i<c;i++)
+	for (index_t i=0;i<c;i++)
 	{
 		int32_t sum=0;
-		for (int32_t j=0;j<r;j++)
+		for (index_t j=0;j<r;j++)
 			sum+=ct(j,i);
 
 		col_sum[i]=sum;
@@ -1210,18 +1210,18 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_indep_model(SGMatrix<int32_t> ct, SG
 	{
 		int32_t total_sum=(r<=c)?row_sum.sum(row_sum):col_sum.sum(col_sum);
 
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 				ret(i,j)=(row_sum[i]*col_sum[j]-0.f)/(total_sum-0.f);
 		}
 	}
 	else
 	{
 		// element-wise normalize and invert weight matrix w_ij(new)=n_ij/w_ij(old)
-		for (int32_t i=0;i<r;i++)
+		for (index_t i=0;i<r;i++)
 		{
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 				wt(i,j)=(ct(i,j)-0.f)/wt(i,j);
 		}
 
@@ -1235,20 +1235,20 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_indep_model(SGMatrix<int32_t> ct, SG
 		while (true)
 		{
 			// update alpha
-			for (int32_t i=0;i<r;i++)
+			for (index_t i=0;i<r;i++)
 			{
 				float64_t sum=0.;
-				for (int32_t j=0;j<c;j++)
+				for (index_t j=0;j<c;j++)
 					sum+=m_k(i,j);
 
 				alpha[i]*=(row_sum[i]-0.f)/sum;
 			}
 
 			// update beta
-			for (int32_t j=0;j<c;j++)
+			for (index_t j=0;j<c;j++)
 			{
 				float64_t sum=0.;
-				for (int32_t i=0;i<r;i++)
+				for (index_t i=0;i<r;i++)
 					sum+=wt(i,j)*alpha[i];
 
 				beta[j]=(col_sum[j]-0.f)/sum;
@@ -1257,9 +1257,9 @@ SGMatrix<float64_t> CCHAIDTree::expected_cf_indep_model(SGMatrix<int32_t> ct, SG
 			// update m_k
 			SGMatrix<float64_t> m_kplus(r,c);
 			float64_t max_diff=0.0;
-			for (int32_t i=0;i<r;i++)
+			for (index_t i=0;i<r;i++)
 			{
-				for (int32_t j=0;j<c;j++)
+				for (index_t j=0;j<c;j++)
 				{
 					m_kplus(i,j)=wt(i,j)*alpha[i]*beta[j];
 					float64_t abs_diff=CMath::abs(m_kplus(i,j)-m_k(i,j));
@@ -1284,7 +1284,7 @@ float64_t CCHAIDTree::sum_of_squared_deviation(SGVector<float64_t> lab, SGVector
 {
 	mean=0;
 	float64_t total_weight=0;
-	for (int32_t i=0;i<lab.vlen;i++)
+	for (index_t i=0;i<lab.vlen;i++)
 	{
 		mean+=lab[i]*weights[i];
 		total_weight+=weights[i];
@@ -1292,7 +1292,7 @@ float64_t CCHAIDTree::sum_of_squared_deviation(SGVector<float64_t> lab, SGVector
 
 	mean/=total_weight;
 	float64_t dev=0;
-	for (int32_t i=0;i<lab.vlen;i++)
+	for (index_t i=0;i<lab.vlen;i++)
 		dev+=weights[i]*(lab[i]-mean)*(lab[i]-mean);
 
 	return dev;
@@ -1302,7 +1302,7 @@ bool CCHAIDTree::continuous_to_ordinal(CDenseFeatures<float64_t>* feats)
 {
 	// assimilate continuous breakpoints
 	int32_t count_cont=0;
-	for (int32_t i=0;i<feats->get_num_features();i++)
+	for (index_t i=0;i<feats->get_num_features();i++)
 	{
 		if (m_feature_types[i]==2)
 			count_cont++;
@@ -1315,7 +1315,7 @@ bool CCHAIDTree::continuous_to_ordinal(CDenseFeatures<float64_t>* feats)
 
 	SGVector<int32_t> cont_ind(count_cont);
 	int32_t ci=0;
-	for (int32_t i=0;i<feats->get_num_features();i++)
+	for (index_t i=0;i<feats->get_num_features();i++)
 	{
 		if (m_feature_types[i]==2)
 			cont_ind[ci++]=i;
@@ -1324,18 +1324,18 @@ bool CCHAIDTree::continuous_to_ordinal(CDenseFeatures<float64_t>* feats)
 	// form breakpoints matrix
 	m_cont_breakpoints=SGMatrix<float64_t>(m_num_breakpoints,count_cont);
 	int32_t bin_size=feats->get_num_vectors()/m_num_breakpoints;
-	for (int32_t i=0;i<count_cont;i++)
+	for (index_t i=0;i<count_cont;i++)
 	{
 		int32_t left=feats->get_num_vectors()%m_num_breakpoints;
 		int32_t end_pt=-1;
 
 		SGVector<float64_t> values(feats->get_num_vectors());
-		for (int32_t j=0;j<values.vlen;j++)
+		for (index_t j=0;j<values.vlen;j++)
 			values[j]=feats->get_feature_vector(j)[cont_ind[i]];
 
 		CMath::qsort(values);
 
-		for (int32_t j=0;j<m_num_breakpoints;j++)
+		for (index_t j=0;j<m_num_breakpoints;j++)
 		{
 			if (left>0)
 			{
@@ -1360,15 +1360,15 @@ bool CCHAIDTree::continuous_to_ordinal(CDenseFeatures<float64_t>* feats)
 void CCHAIDTree::modify_data_matrix(CDenseFeatures<float64_t>* feats)
 {
 	int32_t c=0;
-	for (int32_t i=0;i<feats->get_num_features();i++)
+	for (index_t i=0;i<feats->get_num_features();i++)
 	{
 		if (m_feature_types[i]!=2)
 			continue;
 
 		// continuous to ordinal conversion
-		for (int32_t j=0;j<feats->get_num_vectors();j++)
+		for (index_t j=0;j<feats->get_num_vectors();j++)
 		{
-			for (int32_t k=0;k<m_num_breakpoints;k++)
+			for (index_t k=0;k<m_num_breakpoints;k++)
 			{
 				if (feats->get_feature_vector(j)[i]<=m_cont_breakpoints(k,c))
 				{

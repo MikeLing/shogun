@@ -203,7 +203,7 @@ static int is_pystring_list(PyObject* obj, int typecode)
     {
         result=1;
         int32_t size=PyList_Size(list);
-        for (int32_t i=0; i<size; i++)
+        for (index_t i=0; i<size; i++)
         {
             PyObject *o = PyList_GetItem(list,i);
 
@@ -337,7 +337,7 @@ static bool array_from_numpy(SGNDArray<type>& sg_array, PyObject* obj, int typec
 
     npy_intp* py_dims = PyArray_DIMS(array);
 
-    for (int32_t i=0; i<ndim; i++)
+    for (index_t i=0; i<ndim; i++)
       temp_dims[i] = py_dims[i];
 
     sg_array = SGNDArray<type>((type*) PyArray_BYTES(array), temp_dims, ndim);
@@ -353,7 +353,7 @@ static bool array_to_numpy(PyObject* &obj, SGNDArray<type> sg_array, int typecod
 {
 	int n = 1;
 	npy_intp dims[sg_array.num_dims];
-	for (int i = 0; i < sg_array.num_dims; i++)
+	for (index_t i = 0; i < sg_array.num_dims; i++)
 	{
 		dims[i] = (npy_intp)sg_array.dims[i];
 		n *= sg_array.dims[i];
@@ -384,7 +384,7 @@ static bool string_from_strpy(SGStringList<type>& sg_strings, PyObject* obj, int
         shogun::SGString<type>* strings=SG_MALLOC(shogun::SGString<type>, size);
 
         int32_t max_len=0;
-        for (int32_t i=0; i<size; i++)
+        for (index_t i=0; i<size; i++)
         {
             PyObject *o = PyList_GetItem(list,i);
             if (typecode == NPY_STRING || typecode == NPY_UNICODE)
@@ -418,7 +418,7 @@ static bool string_from_strpy(SGStringList<type>& sg_strings, PyObject* obj, int
                 {
                     PyErr_SetString(PyExc_TypeError, "all elements in list must be strings");
 
-                    for (int32_t j=0; j<i; j++)
+                    for (index_t j=0; j<i; j++)
                         SG_FREE(strings[i].string);
                     SG_FREE(strings);
                     return false;
@@ -453,7 +453,7 @@ static bool string_from_strpy(SGStringList<type>& sg_strings, PyObject* obj, int
                 {
                     PyErr_SetString(PyExc_TypeError, "all elements in list must be of same array type");
 
-                    for (int32_t j=0; j<i; j++)
+                    for (index_t j=0; j<i; j++)
                         SG_FREE(strings[i].string);
                     SG_FREE(strings);
                     return false;
@@ -485,7 +485,7 @@ static bool string_to_strpy(PyObject* &obj, SGStringList<type> sg_strings, int t
 
     if (list && str)
     {
-        for (int32_t i=0; i<num; i++)
+        for (index_t i=0; i<num; i++)
         {
             PyObject* s=NULL;
 
@@ -622,7 +622,7 @@ static bool spmatrix_from_numpy(SGSparseMatrix<type>& sg_matrix, PyObject* obj, 
 
     shogun::SGSparseVector<type>* sfm = SG_MALLOC(shogun::SGSparseVector<type>, num_vec);
 
-    for (int32_t i=1; i<len_indptr; i++)
+    for (index_t i=1; i<len_indptr; i++)
     {
         int32_t num = bytes_indptr[i]-bytes_indptr[i-1];
 
@@ -630,7 +630,7 @@ static bool spmatrix_from_numpy(SGSparseMatrix<type>& sg_matrix, PyObject* obj, 
         {
             sfm[i-1]=SGSparseVector<type>(num);
 
-            for (int32_t j=0; j<num; j++)
+            for (index_t j=0; j<num; j++)
             {
                 sfm[i-1].features[j].feat_index=*bytes_indices;
                 sfm[i-1].features[j].entry=*bytes_data;
@@ -670,7 +670,7 @@ static bool spmatrix_to_numpy(PyObject* &obj, SGSparseMatrix<type> sg_matrix, in
     int32_t num_vec=sg_matrix.num_vectors;
 
     int64_t nnz=0;
-    for (int32_t i=0; i<num_vec; i++)
+    for (index_t i=0; i<num_vec; i++)
         nnz+=sfm[i].num_feat_entries;
 
     PyObject* tuple = PyTuple_New(3);
@@ -695,12 +695,12 @@ static bool spmatrix_to_numpy(PyObject* &obj, SGSparseMatrix<type> sg_matrix, in
             int32_t* i_ptr=indices;
             type* d_ptr=data;
 
-            for (int32_t i=0; i<num_vec; i++)
+            for (index_t i=0; i<num_vec; i++)
             {
                 indptr[i+1]=indptr[i];
                 indptr[i+1]+=sfm[i].num_feat_entries;
 
-                for (int32_t j=0; j<sfm[i].num_feat_entries; j++)
+                for (index_t j=0; j<sfm[i].num_feat_entries; j++)
                 {
                     *i_ptr=sfm[i].features[j].feat_index;
                     *d_ptr=sfm[i].features[j].entry;
@@ -761,7 +761,7 @@ static bool spvector_to_numpy(PyObject* &obj, SGSparseVector<type> sg_vector, in
     int32_t* i_ptr=indices;
     type* d_ptr=data;
 
-    for (int32_t j=0; j<sg_vector.num_feat_entries; j++)
+    for (index_t j=0; j<sg_vector.num_feat_entries; j++)
     {
         *i_ptr=sg_vector.features[j].feat_index;
         *d_ptr=sg_vector.features[j].entry;

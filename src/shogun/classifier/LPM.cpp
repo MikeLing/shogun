@@ -62,7 +62,7 @@ bool CLPM::train_machine(CFeatures* data)
 	solver.cleanup();
 
 	set_bias(params[0]);
-	for (int32_t i=0; i<num_feat; i++)
+	for (index_t i=0; i<num_feat; i++)
 		w[i]=params[1+i]-params[1+num_feat+i];
 
 //#define LPM_DEBUG

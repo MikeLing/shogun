@@ -40,7 +40,7 @@ template<class ST> CDenseSubSamplesFeatures<ST>::CDenseSubSamplesFeatures()
 }
 
 template<class ST> CDenseSubSamplesFeatures<ST>::CDenseSubSamplesFeatures(
-	CDenseFeatures<ST> *fea, SGVector<int32_t> idx)
+	CDenseFeatures<ST> *fea, SGVector<index_t> idx)
 	:CDotFeatures()
 {
 	init();
@@ -67,7 +67,7 @@ template<class ST> void CDenseSubSamplesFeatures<ST>::init()
 {
 	set_generic<ST>();
 	m_fea=NULL;
-	m_idx=SGVector<int32_t>();
+	m_idx=SGVector<index_t>();
 	SG_ADD(&m_idx, "idx", "idx",  MS_NOT_AVAILABLE);
 	SG_ADD((CSGObject **)&m_fea, "fea", "fea",  MS_NOT_AVAILABLE);
 }
@@ -95,21 +95,21 @@ template<class ST> EFeatureClass CDenseSubSamplesFeatures<ST>::get_feature_class
 	return C_SUB_SAMPLES_DENSE;
 }
 
-template<class ST> int32_t CDenseSubSamplesFeatures<ST>::get_dim_feature_space() const
+template<class ST> index_t CDenseSubSamplesFeatures<ST>::get_dim_feature_space() const
 {
 	return m_fea->get_dim_feature_space();
 }
 
-template<class ST> int32_t CDenseSubSamplesFeatures<ST>::get_num_vectors() const
+template<class ST> index_t CDenseSubSamplesFeatures<ST>::get_num_vectors() const
 {
 	return m_idx.vlen;
 }
 
-template<class ST> void CDenseSubSamplesFeatures<ST>::set_subset_idx(SGVector<int32_t> idx)
+template<class ST> void CDenseSubSamplesFeatures<ST>::set_subset_idx(SGVector<index_t> idx)
 {
 	REQUIRE(m_fea, "Please set the features first\n");
-	int32_t total_vlen=m_fea->get_num_vectors();
-	for (int32_t i=0; i<idx.vlen; i++)
+	index_t total_vlen=m_fea->get_num_vectors();
+	for (index_t i=0; i<idx.vlen; i++)
 	{
 		int32_t index=idx[i];
 		REQUIRE(index>=0 && index<total_vlen,
@@ -120,7 +120,7 @@ template<class ST> void CDenseSubSamplesFeatures<ST>::set_subset_idx(SGVector<in
 }
 
 template<class ST> float64_t CDenseSubSamplesFeatures<ST>::dot(
-	int32_t vec_idx1, CDotFeatures* df, int32_t vec_idx2)
+	index_t vec_idx1, CDotFeatures* df, index_t vec_idx2)
 {
 	check_bound(vec_idx1);
 	CDenseSubSamplesFeatures<ST>* df_f= dynamic_cast<CDenseSubSamplesFeatures<ST>* >(df);
@@ -138,40 +138,40 @@ template<class ST> float64_t CDenseSubSamplesFeatures<ST>::dot(
 }
 
 template<class ST> float64_t CDenseSubSamplesFeatures<ST>::dense_dot(
-	int32_t vec_idx1, const float64_t* vec2, int32_t vec2_len)
+	index_t vec_idx1, const float64_t* vec2, index_t vec2_len)
 {
 	check_bound(vec_idx1);
 	return m_fea->dense_dot(m_idx[vec_idx1], vec2, vec2_len);
 }
 
-template<class ST> void CDenseSubSamplesFeatures<ST>::check_bound(int32_t index)
+template<class ST> void CDenseSubSamplesFeatures<ST>::check_bound(index_t index)
 {
 	REQUIRE(index<m_idx.vlen && index>=0,
 		"Index (%d) is out of bound (%d)\n", index, m_idx.vlen);
 }
 
 template<class ST> void CDenseSubSamplesFeatures<ST>::add_to_dense_vec(
-	float64_t alpha, int32_t vec_idx1, float64_t* vec2, int32_t vec2_len, bool abs_val)
+	float64_t alpha, index_t vec_idx1, float64_t* vec2, index_t vec2_len, bool abs_val)
 {
 	check_bound(vec_idx1);
 	m_fea->add_to_dense_vec(alpha, m_idx[vec_idx1], vec2, vec2_len, abs_val);
 }
 
-template<class ST> int32_t CDenseSubSamplesFeatures<ST>::get_nnz_features_for_vector(
-	int32_t num)
+template<class ST> index_t CDenseSubSamplesFeatures<ST>::get_nnz_features_for_vector(
+	index_t num)
 {
 	return m_fea->get_nnz_features_for_vector(num);
 }
 
 template<class ST> void* CDenseSubSamplesFeatures<ST>::get_feature_iterator(
-	int32_t vector_index)
+	index_t vector_index)
 {
 	SG_NOTIMPLEMENTED;
 	return NULL;
 }
 
 template<class ST> bool CDenseSubSamplesFeatures<ST>::get_next_feature(
-	int32_t& index, float64_t& value, void* iterator)
+	index_t& index, float64_t& value, void* iterator)
 {
 	SG_NOTIMPLEMENTED;
 	return false;

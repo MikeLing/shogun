@@ -62,7 +62,7 @@ void CFactorGraphModel::add_factor_type(CFactorType* ftype)
 
 	// check whether this ftype has been added
 	int32_t id = ftype->get_type_id();
-	for (int32_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
 	{
 		CFactorType* ft= dynamic_cast<CFactorType*>(m_factor_types->get_element(fi));
 		if (id == ft->get_type_id())
@@ -80,12 +80,12 @@ void CFactorGraphModel::add_factor_type(CFactorType* ftype)
 	SGVector<int32_t> w_map_cp = m_w_map.clone();
 	m_w_map.resize_vector(w_map_cp.size() + ftype->get_w_dim());
 
-	for (int32_t mi = 0; mi < w_map_cp.size(); mi++)
+	for (index_t mi = 0; mi < w_map_cp.size(); mi++)
 	{
 		m_w_map[mi] = w_map_cp[mi];
 	}
 	// add new mapping in the end
-	for (int32_t mi = w_map_cp.size(); mi < m_w_map.size(); mi++)
+	for (index_t mi = w_map_cp.size(); mi < m_w_map.size(); mi++)
 	{
 		m_w_map[mi] = id;
 	}
@@ -106,7 +106,7 @@ void CFactorGraphModel::del_factor_type(const int32_t ftype_id)
 {
 	int w_dim = 0;
 	// delete from m_factor_types
-	for (int32_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
 	{
 		CFactorType* ftype = dynamic_cast<CFactorType*>(m_factor_types->get_element(fi));
 		if (ftype_id == ftype->get_type_id())
@@ -126,7 +126,7 @@ void CFactorGraphModel::del_factor_type(const int32_t ftype_id)
 	m_w_map.resize_vector(w_map_cp.size() - w_dim);
 
 	int ind = 0;
-	for (int32_t mi = 0; mi < w_map_cp.size(); mi++)
+	for (index_t mi = 0; mi < w_map_cp.size(); mi++)
 	{
 		if (w_map_cp[mi] == ftype_id)
 			continue;
@@ -145,7 +145,7 @@ CDynamicObjectArray* CFactorGraphModel::get_factor_types() const
 
 CFactorType* CFactorGraphModel::get_factor_type(const int32_t ftype_id) const
 {
-	for (int32_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
 	{
 		CFactorType* ftype = dynamic_cast<CFactorType*>(m_factor_types->get_element(fi));
 		if (ftype_id == ftype->get_type_id())
@@ -180,7 +180,7 @@ SGVector<float64_t> CFactorGraphModel::fparams_to_w()
 		m_w_cache.resize_vector(get_dim());
 
 	int32_t offset = 0;
-	for (int32_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
 	{
 		CFactorType* ftype = dynamic_cast<CFactorType*>(m_factor_types->get_element(fi));
 		int32_t w_dim = ftype->get_w_dim();
@@ -190,7 +190,7 @@ SGVector<float64_t> CFactorGraphModel::fparams_to_w()
 
 		ASSERT(fw_map.size() == fw.size());
 
-		for (int32_t wi = 0; wi < w_dim; wi++)
+		for (index_t wi = 0; wi < w_dim; wi++)
 			m_w_cache[fw_map[wi]] = fw[wi];
 
 		SG_UNREF(ftype);
@@ -214,7 +214,7 @@ void CFactorGraphModel::w_to_fparams(SGVector<float64_t> w)
 	m_w_cache = w.clone();
 
 	int32_t offset = 0;
-	for (int32_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
 	{
 		CFactorType* ftype = dynamic_cast<CFactorType*>(m_factor_types->get_element(fi));
 		int32_t w_dim = ftype->get_w_dim();
@@ -222,7 +222,7 @@ void CFactorGraphModel::w_to_fparams(SGVector<float64_t> w)
 		SGVector<float64_t> fw(w_dim);
 		SGVector<int32_t> fw_map = get_params_mapping(ftype->get_type_id());
 
-		for (int32_t wi = 0; wi < w_dim; wi++)
+		for (index_t wi = 0; wi < w_dim; wi++)
 			fw[wi] = m_w_cache[fw_map[wi]];
 
 		ftype->set_w(fw);
@@ -248,7 +248,7 @@ SGVector< float64_t > CFactorGraphModel::get_joint_feature_vector(int32_t feat_i
 
 	// construct unnormalized psi
 	CDynamicObjectArray* facs = fg->get_factors();
-	for (int32_t fi = 0; fi < facs->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < facs->get_num_elements(); ++fi)
 	{
 		CFactor* fac = dynamic_cast<CFactor*>(facs->get_element(fi));
 		CTableFactorType* ftype = fac->get_factor_type();
@@ -263,7 +263,7 @@ SGVector< float64_t > CFactorGraphModel::get_joint_feature_vector(int32_t feat_i
 		ASSERT(w_map.size() == dat_size * ftype->get_num_assignments());
 
 		int32_t ei = ftype->index_from_universe_assignment(states, fac->get_variables());
-		for (int32_t di = 0; di < dat_size; di++)
+		for (index_t di = 0; di < dat_size; di++)
 			psi[w_map[ei*dat_size + di]] += dat[di];
 
 		SG_UNREF(ftype);
@@ -390,7 +390,7 @@ float64_t CFactorGraphModel::delta_loss(CStructuredData* y1, CStructuredData* y2
 	ASSERT(s_pred.size() == s_truth.size());
 
 	float64_t loss = 0.0;
-	for (int32_t si = 0; si < s_pred.size(); si++)
+	for (index_t si = 0; si < s_pred.size(); si++)
 	{
 		if (s_pred[si] != s_truth[si])
 			loss += y_truth->get_loss_weights()[si];
@@ -426,7 +426,7 @@ void CFactorGraphModel::init_primal_opt(
 			SGVector< float64_t >::fill_vector(lb.vector, lb.vlen, -CMath::INFTY);
 			SGVector< float64_t >::fill_vector(ub.vector, ub.vlen, CMath::INFTY);
 
-			for (int32_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
+			for (index_t fi = 0; fi < m_factor_types->get_num_elements(); ++fi)
 			{
 				CFactorType* ftype = dynamic_cast<CFactorType*>(m_factor_types->get_element(fi));
 				int32_t w_dim = ftype->get_w_dim();

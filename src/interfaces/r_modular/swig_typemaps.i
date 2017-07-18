@@ -71,7 +71,7 @@ TYPEMAP_IN_SGVECTOR(REALSXP, REAL, float64_t, "Double Precision")
 
     Rf_protect( $result = Rf_allocVector(r_type, len) );
 
-    for (int32_t i=0; i<len; i++)
+    for (index_t i=0; i<len; i++)
         r_cast($result)[i]=(if_type) vec[i];
 
     Rf_unprotect(1);
@@ -129,9 +129,9 @@ TYPEMAP_IN_SGMATRIX(REALSXP, REAL, float64_t, "Double Precision")
 
     Rf_protect( $result = Rf_allocMatrix(r_type, num_feat, num_vec) );
 
-    for (int32_t i=0; i<num_vec; i++)
+    for (index_t i=0; i<num_vec; i++)
     {
-        for (int32_t j=0; j<num_feat; j++)
+        for (index_t j=0; j<num_feat; j++)
             r_cast($result)[i*num_feat+j]=(if_type) matrix[i*num_feat+j];
     }
 
@@ -173,7 +173,7 @@ TYPEMAP_OUT_SGMATRIX(INTSXP, INTEGER, uint16_t, int, "Word")
     ASSERT(num_strings>=1);
     strs=SG_MALLOC(shogun::SGString<sg_type>, num_strings);
 
-    for (int32_t i=0; i<num_strings; i++)
+    for (index_t i=0; i<num_strings; i++)
     {
         SEXPREC* s= STRING_ELT($input,i);
         sg_type* c= (sg_type*) if_type(s);

@@ -26,7 +26,7 @@ int32_t CECOCIHDDecoder::decide_label(const SGVector<float64_t> outputs, const S
 
     SGVector<float64_t> query = binarize(outputs);
     SGVector<float64_t> L(codebook.num_cols);
-    for (int32_t i=0; i < codebook.num_cols; ++i)
+    for (index_t i=0; i < codebook.num_cols; ++i)
         L[i] = CECOCUtil::hamming_distance(query.vector, codebook.get_column_vector(i), query.vlen);
 
     SGVector<float64_t> res(codebook.num_cols);
@@ -45,8 +45,8 @@ void CECOCIHDDecoder::update_delta_cache(const SGMatrix<int32_t> codebook)
     if (codebook.num_cols == m_codebook.num_cols && codebook.num_rows == m_codebook.num_rows)
     {
         bool the_same = true;
-        for (int32_t i=0; i < codebook.num_rows && the_same; ++i)
-            for (int32_t j=0; j < codebook.num_cols && the_same; ++j)
+        for (index_t i=0; i < codebook.num_rows && the_same; ++i)
+            for (index_t j=0; j < codebook.num_cols && the_same; ++j)
                 if (codebook(i,j) != m_codebook(i,j))
                     the_same = false;
         if (the_same)
@@ -56,9 +56,9 @@ void CECOCIHDDecoder::update_delta_cache(const SGMatrix<int32_t> codebook)
     m_codebook = codebook; // operator=
     m_delta = SGMatrix<float64_t>(codebook.num_cols, codebook.num_cols);
     m_delta.zero();
-    for (int32_t i=0; i < codebook.num_cols; ++i)
+    for (index_t i=0; i < codebook.num_cols; ++i)
     {
-        for (int32_t j=i+1; j < codebook.num_cols; ++j)
+        for (index_t j=i+1; j < codebook.num_cols; ++j)
         {
             m_delta(i, j) = m_delta(j, i) =
                 CECOCUtil::hamming_distance(codebook.get_column_vector(i), codebook.get_column_vector(j), codebook.num_rows);

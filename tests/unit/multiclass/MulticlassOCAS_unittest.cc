@@ -45,7 +45,7 @@ TEST(MulticlassOCASTest,train)
   mocas->train();
 
   CLabels* pred = mocas->apply(test_feats);
-  for (int i = 0; i < set_size; ++i)
+  for (index_t i = 0; i < set_size; ++i)
     EXPECT_EQ(ground_truth->get_label(i), ((CMulticlassLabels*)pred)->get_label(i));
 
   SG_UNREF(mocas);

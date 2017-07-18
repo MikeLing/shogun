@@ -131,7 +131,7 @@ int32_t CMath::determine_logaccuracy(int32_t range)
 //init log table of form log(1+exp(x))
 void CMath::init_log_table()
 {
-  for (int32_t i=0; i< LOGACCURACY*LOGRANGE; i++)
+  for (index_t i=0; i< LOGACCURACY*LOGRANGE; i++)
     logtable[i]=log(1+exp(float64_t(-i)/float64_t(LOGACCURACY)));
 }
 #endif
@@ -147,7 +147,7 @@ void CMath::sort(int32_t *a, int32_t cols, int32_t sort_col)
 	  {
 		  if (a[i*cols+sort_col]>a[(i+1)*cols+sort_col])
 		  {
-			  for (int32_t j=0; j<cols; j++)
+			  for (index_t j=0; j<cols; j++)
 				  CMath::swap(a[i*cols+j],a[(i+1)*cols+j]);
 			  changed=1;
 		  };
@@ -162,7 +162,7 @@ void CMath::sort(float64_t *a, int32_t* idx, int32_t N)
 	while (changed)
 	{
 		changed=0;
-		for (int32_t i=0; i<N-1; i++)
+		for (index_t i=0; i<N-1; i++)
 		{
 			if (a[i]>a[i+1])
 			{

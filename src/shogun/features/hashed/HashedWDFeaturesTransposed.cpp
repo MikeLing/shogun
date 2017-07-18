@@ -114,7 +114,7 @@ CHashedWDFeaturesTransposed::CHashedWDFeaturesTransposed(const CHashedWDFeatures
 
 CHashedWDFeaturesTransposed::~CHashedWDFeaturesTransposed()
 {
-	for (int32_t i=0; i<string_length; i++)
+	for (index_t i=0; i<string_length; i++)
 		SG_FREE(transposed_strings[i].string);
 	SG_FREE(transposed_strings);
 
@@ -122,14 +122,14 @@ CHashedWDFeaturesTransposed::~CHashedWDFeaturesTransposed()
 	SG_FREE(wd_weights);
 }
 
-float64_t CHashedWDFeaturesTransposed::dot(int32_t vec_idx1, CDotFeatures* df, int32_t vec_idx2)
+float64_t CHashedWDFeaturesTransposed::dot(index_t vec_idx1, CDotFeatures* df, index_t vec_idx2)
 {
 	ASSERT(df)
 	ASSERT(df->get_feature_type() == get_feature_type())
 	ASSERT(df->get_feature_class() == get_feature_class())
 	CHashedWDFeaturesTransposed* wdf = (CHashedWDFeaturesTransposed*) df;
 
-	int32_t len1, len2;
+	index_t len1, len2;
 	bool free_vec1, free_vec2;
 
 	uint8_t* vec1=strings->get_feature_vector(vec_idx1, len1, free_vec1);
@@ -139,9 +139,9 @@ float64_t CHashedWDFeaturesTransposed::dot(int32_t vec_idx1, CDotFeatures* df, i
 
 	float64_t sum=0.0;
 
-	for (int32_t i=0; i<len1; i++)
+	for (index_t i=0; i<len1; i++)
 	{
-		for (int32_t j=0; (i+j<len1) && (j<degree); j++)
+		for (index_t j=0; (i+j<len1) && (j<degree); j++)
 		{
 			if (vec1[i+j]!=vec2[i+j])
 				break;
@@ -154,13 +154,13 @@ float64_t CHashedWDFeaturesTransposed::dot(int32_t vec_idx1, CDotFeatures* df, i
 	return sum/CMath::sq(normalization_const);
 }
 
-float64_t CHashedWDFeaturesTransposed::dense_dot(int32_t vec_idx1, const float64_t* vec2, int32_t vec2_len)
+float64_t CHashedWDFeaturesTransposed::dense_dot(index_t vec_idx1, const float64_t* vec2, index_t vec2_len)
 {
 	if (vec2_len != w_dim)
 		SG_ERROR("Dimensions don't match, vec2_dim=%d, w_dim=%d\n", vec2_len, w_dim)
 
 	float64_t sum=0;
-	int32_t len;
+	index_t len;
 	bool free_vec1;
 	uint8_t* vec = strings->get_feature_vector(vec_idx1, len, free_vec1);
 	uint32_t* val=SG_MALLOC(uint32_t, len);
@@ -169,13 +169,13 @@ float64_t CHashedWDFeaturesTransposed::dense_dot(int32_t vec_idx1, const float64
 
 	SGVector<uint32_t>::fill_vector(val, len, 0xDEADBEAF);
 
-	for (int32_t i=0; i < len; i++)
+	for (index_t i=0; i < len; i++)
 	{
 		uint32_t o=offs;
 		uint32_t carry = 0;
 		uint32_t chunk = 0;
 
-		for (int32_t k=0; k<degree && i+k<len; k++)
+		for (index_t k=0; k<degree && i+k<len; k++)
 		{
 			const float64_t wd = wd_weights[k];
 			chunk++;
@@ -395,20 +395,20 @@ void* CHashedWDFeaturesTransposed::dense_dot_range_helper(void* p)
 
 	if (sub_index)
 	{
-		for (int32_t j=start; j<stop; j++)
+		for (index_t j=start; j<stop; j++)
 			output[j]=0.0;
 
 		uint32_t offs=0;
-		for (int32_t i=0; i<string_length; i++)
+		for (index_t i=0; i<string_length; i++)
 		{
 			uint32_t o=offs;
-			for (int32_t k=0; k<degree && i+k<string_length; k++)
+			for (index_t k=0; k<degree && i+k<string_length; k++)
 			{
 				const float64_t wd = wd_weights[k];
 				uint8_t* dim=transposed_strings[i+k].string;
 				uint32_t carry = 0;
 				uint32_t chunk = 0;
-				for (int32_t j=start; j<stop; j++)
+				for (index_t j=start; j<stop; j++)
 				{
 					uint8_t bval=dim[sub_index[j]];
 					if (k==0)
@@ -437,7 +437,7 @@ void* CHashedWDFeaturesTransposed::dense_dot_range_helper(void* p)
 				hf->io->progress(i, 0,string_length, i);
 		}
 
-		for (int32_t j=start; j<stop; j++)
+		for (index_t j=start; j<stop; j++)
 		{
 			if (alphas)
 				output[j]=output[j]*alphas[sub_index[j]]/normalization_const+bias;
@@ -450,17 +450,17 @@ void* CHashedWDFeaturesTransposed::dense_dot_range_helper(void* p)
 		SGVector<float64_t>::fill_vector(&output[start], stop-start, 0.0);
 
 		uint32_t offs=0;
-		for (int32_t i=0; i<string_length; i++)
+		for (index_t i=0; i<string_length; i++)
 		{
 			uint32_t o=offs;
-			for (int32_t k=0; k<degree && i+k<string_length; k++)
+			for (index_t k=0; k<degree && i+k<string_length; k++)
 			{
 				const float64_t wd = wd_weights[k];
 				uint8_t* dim=transposed_strings[i+k].string;
 				uint32_t carry = 0;
 				uint32_t chunk = 0;
 
-				for (int32_t j=start; j<stop; j++)
+				for (index_t j=start; j<stop; j++)
 				{
 					uint8_t bval=dim[sub_index[j]];
 					if (k==0)
@@ -488,7 +488,7 @@ void* CHashedWDFeaturesTransposed::dense_dot_range_helper(void* p)
 				hf->io->progress(i, 0,string_length, i);
 		}
 
-		for (int32_t j=start; j<stop; j++)
+		for (index_t j=start; j<stop; j++)
 		{
 			if (alphas)
 				output[j]=output[j]*alphas[j]/normalization_const+bias;
@@ -500,12 +500,12 @@ void* CHashedWDFeaturesTransposed::dense_dot_range_helper(void* p)
 	return NULL;
 }
 
-void CHashedWDFeaturesTransposed::add_to_dense_vec(float64_t alpha, int32_t vec_idx1, float64_t* vec2, int32_t vec2_len, bool abs_val)
+void CHashedWDFeaturesTransposed::add_to_dense_vec(float64_t alpha, index_t vec_idx1, float64_t* vec2, index_t vec2_len, bool abs_val)
 {
 	if (vec2_len != w_dim)
 		SG_ERROR("Dimensions don't match, vec2_dim=%d, w_dim=%d\n", vec2_len, w_dim)
 
-	int32_t len;
+	index_t len;
 	bool free_vec1;
 	uint8_t* vec = strings->get_feature_vector(vec_idx1, len, free_vec1);
 	uint32_t* val=SG_MALLOC(uint32_t, len);
@@ -517,13 +517,13 @@ void CHashedWDFeaturesTransposed::add_to_dense_vec(float64_t alpha, int32_t vec_
 
 	SGVector<uint32_t>::fill_vector(val, len, 0xDEADBEAF);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		uint32_t o=offs;
 		uint32_t carry = 0;
 		uint32_t chunk = 0;
 
-		for (int32_t k=0; k<degree && i+k<len; k++)
+		for (index_t k=0; k<degree && i+k<len; k++)
 		{
 			float64_t wd = wd_weights[k]*factor;
 			chunk++;
@@ -557,7 +557,7 @@ void CHashedWDFeaturesTransposed::set_wd_weights()
 
 	wd_weights=SG_MALLOC(float64_t, degree);
 
-	for (int32_t i=0; i<degree; i++)
+	for (index_t i=0; i<degree; i++)
 		wd_weights[i]=sqrt(2.0*(from_degree-i)/(from_degree*(from_degree+1)));
 
 	SG_DEBUG("created HashedWDFeaturesTransposed with d=%d (%d), alphabetsize=%d, "
@@ -572,7 +572,7 @@ void CHashedWDFeaturesTransposed::set_normalization_const(float64_t n)
 	if (n==0)
 	{
 		normalization_const=0;
-		for (int32_t i=0; i<degree; i++)
+		for (index_t i=0; i<degree; i++)
 			normalization_const+=(string_length-i)*wd_weights[i]*wd_weights[i];
 
 		normalization_const=CMath::sqrt(normalization_const);
@@ -588,13 +588,13 @@ CFeatures* CHashedWDFeaturesTransposed::duplicate() const
 	return new CHashedWDFeaturesTransposed(*this);
 }
 
-void* CHashedWDFeaturesTransposed::get_feature_iterator(int32_t vector_index)
+void* CHashedWDFeaturesTransposed::get_feature_iterator(index_t vector_index)
 {
 	SG_NOTIMPLEMENTED
 	return NULL;
 }
 
-bool CHashedWDFeaturesTransposed::get_next_feature(int32_t& index, float64_t& value, void* iterator)
+bool CHashedWDFeaturesTransposed::get_next_feature(index_t& index, float64_t& value, void* iterator)
 {
 	SG_NOTIMPLEMENTED
 	return false;

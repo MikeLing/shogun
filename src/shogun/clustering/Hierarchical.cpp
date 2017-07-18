@@ -87,9 +87,9 @@ bool CHierarchical::train_machine(CFeatures* data)
 	float64_t* distances=SG_MALLOC(float64_t, num_pairs);
 
 	int32_t offs=0;
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 	{
-		for (int32_t j=i+1; j<num; j++)
+		for (index_t j=i+1; j<num; j++)
 		{
 			distances[offs]=distance->distance(i,j);
 			index[offs].idx1=i;
@@ -133,7 +133,7 @@ bool CHierarchical::train_machine(CFeatures* data)
 			merge_distance[l]=distances[k];
 
 			int32_t c=num+l;
-			for (int32_t m=0; m<num; m++)
+			for (index_t m=0; m<num; m++)
 			{
 				if (assignment[m] == c1 || assignment[m] == c2)
 					assignment[m] = c;

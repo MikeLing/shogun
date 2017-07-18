@@ -64,12 +64,12 @@ bool CScatterSVM::train_machine(CFeatures* data)
 	int32_t* numc=SG_MALLOC(int32_t, m_num_classes);
 	SGVector<int32_t>::fill_vector(numc, m_num_classes, 0);
 
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 		numc[(int32_t) ((CMulticlassLabels*) m_labels)->get_int_label(i)]++;
 
 	int32_t Nc=0;
 	int32_t Nmin=num_vectors;
-	for (int32_t i=0; i<m_num_classes; i++)
+	for (index_t i=0; i<m_num_classes; i++)
 	{
 		if (numc[i]>0)
 		{
@@ -122,7 +122,7 @@ bool CScatterSVM::train_no_bias_libsvm()
 	problem.x=SG_MALLOC(struct svm_node*, problem.l);
 	x_space=SG_MALLOC(struct svm_node, 2*problem.l);
 
-	for (int32_t i=0; i<problem.l; i++)
+	for (index_t i=0; i<problem.l; i++)
 	{
 		problem.y[i]=+1;
 		problem.x[i]=&x_space[2*i];
@@ -178,7 +178,7 @@ bool CScatterSVM::train_no_bias_libsvm()
 		SG_FREE(norm_wcw);
 		norm_wcw = SG_MALLOC(float64_t, m_machines->get_num_elements());
 
-		for (int32_t i=0; i<m_num_classes; i++)
+		for (index_t i=0; i<m_num_classes; i++)
 		{
 			int32_t num_sv=model->nSV[i];
 
@@ -187,7 +187,7 @@ bool CScatterSVM::train_no_bias_libsvm()
 			norm_wcw[i]=model->normwcw[i];
 
 
-			for (int32_t j=0; j<num_sv; j++)
+			for (index_t j=0; j<num_sv; j++)
 			{
 				svm->set_alpha(j, model->sv_coef[i][j]);
 				svm->set_support_vector(j, model->SV[i][j].index);
@@ -199,7 +199,7 @@ bool CScatterSVM::train_no_bias_libsvm()
 		SG_FREE(problem.x);
 		SG_FREE(problem.y);
 		SG_FREE(x_space);
-		for (int32_t i=0; i<m_num_classes; i++)
+		for (index_t i=0; i<m_num_classes; i++)
 		{
 			SG_FREE(model->SV[i]);
 			model->SV[i]=NULL;
@@ -235,7 +235,7 @@ bool CScatterSVM::train_no_bias_svmlight()
 	int32_t num_sv=light->get_num_support_vectors();
 	svm_proto()->create_new_model(num_sv);
 
-	for (int32_t i=0; i<num_sv; i++)
+	for (index_t i=0; i<num_sv; i++)
 	{
 		svm_proto()->set_alpha(i, light->get_alpha(i));
 		svm_proto()->set_support_vector(i, light->get_support_vector(i));
@@ -256,7 +256,7 @@ bool CScatterSVM::train_testrule12()
 	problem.x=SG_MALLOC(struct svm_node*, problem.l);
 	x_space=SG_MALLOC(struct svm_node, 2*problem.l);
 
-	for (int32_t i=0; i<problem.l; i++)
+	for (index_t i=0; i<problem.l; i++)
 	{
 		problem.y[i]=((CMulticlassLabels*) m_labels)->get_label(i);
 		problem.x[i]=&x_space[2*i];
@@ -307,7 +307,7 @@ bool CScatterSVM::train_testrule12()
 		SG_FREE(norm_wcw);
 		norm_wcw = SG_MALLOC(float64_t, m_machines->get_num_elements());
 
-		for (int32_t i=0; i<m_num_classes; i++)
+		for (index_t i=0; i<m_num_classes; i++)
 		{
 			int32_t num_sv=model->nSV[i];
 
@@ -316,7 +316,7 @@ bool CScatterSVM::train_testrule12()
 			norm_wcw[i]=model->normwcw[i];
 
 
-			for (int32_t j=0; j<num_sv; j++)
+			for (index_t j=0; j<num_sv; j++)
 			{
 				svm->set_alpha(j, model->sv_coef[i][j]);
 				svm->set_support_vector(j, model->SV[i][j].index);
@@ -328,7 +328,7 @@ bool CScatterSVM::train_testrule12()
 		SG_FREE(problem.x);
 		SG_FREE(problem.y);
 		SG_FREE(x_space);
-		for (int32_t i=0; i<m_num_classes; i++)
+		for (index_t i=0; i<m_num_classes; i++)
 		{
 			SG_FREE(model->SV[i]);
 			model->SV[i]=NULL;
@@ -349,19 +349,19 @@ void CScatterSVM::compute_norm_wc()
 {
 	SG_FREE(norm_wc);
 	norm_wc = SG_MALLOC(float64_t, m_machines->get_num_elements());
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 		norm_wc[i]=0;
 
 
-	for (int c=0; c<m_machines->get_num_elements(); c++)
+	for (index_t c=0; c<m_machines->get_num_elements(); c++)
 	{
 		CSVM* svm=get_svm(c);
 		int32_t num_sv = svm->get_num_support_vectors();
 
-		for (int32_t i=0; i<num_sv; i++)
+		for (index_t i=0; i<num_sv; i++)
 		{
 			int32_t ii=svm->get_support_vector(i);
-			for (int32_t j=0; j<num_sv; j++)
+			for (index_t j=0; j<num_sv; j++)
 			{
 				int32_t jj=svm->get_support_vector(j);
 				norm_wc[c]+=svm->get_alpha(i)*m_kernel->kernel(ii,jj)*svm->get_alpha(j);
@@ -369,7 +369,7 @@ void CScatterSVM::compute_norm_wc()
 		}
 	}
 
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 		norm_wc[i]=CMath::sqrt(norm_wc[i]);
 
 	SGVector<float64_t>::display_vector(norm_wc, m_machines->get_num_elements(), "norm_wc");
@@ -395,7 +395,7 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 	if (scatter_type == TEST_RULE1)
 	{
 		ASSERT(m_machines->get_num_elements()>0)
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 			output->set_label(i, apply_one(i));
 	}
 #ifdef USE_SVMLIGHT
@@ -404,13 +404,13 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 		float64_t* outputs=SG_MALLOC(float64_t, num_vectors*m_num_classes);
 		SGVector<float64_t>::fill_vector(outputs,num_vectors*m_num_classes,0.0);
 
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
-			for (int32_t j=0; j<svm_proto()->get_num_support_vectors(); j++)
+			for (index_t j=0; j<svm_proto()->get_num_support_vectors(); j++)
 			{
 				float64_t score=m_kernel->kernel(svm_proto()->get_support_vector(j), i)*svm_proto()->get_alpha(j);
 				int32_t label=((CMulticlassLabels*) m_labels)->get_int_label(svm_proto()->get_support_vector(j));
-				for (int32_t c=0; c<m_num_classes; c++)
+				for (index_t c=0; c<m_num_classes; c++)
 				{
 					float64_t s= (label==c) ? (m_num_classes-1) : (-1);
 					outputs[c+i*m_num_classes]+=s*score;
@@ -418,12 +418,12 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 			}
 		}
 
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
 			int32_t winner=0;
 			float64_t max_out=outputs[i*m_num_classes+0];
 
-			for (int32_t j=1; j<m_num_classes; j++)
+			for (index_t j=1; j<m_num_classes; j++)
 			{
 				float64_t out=outputs[i*m_num_classes+j];
 
@@ -446,7 +446,7 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 		ASSERT(num_vectors==output->get_num_labels())
 		CLabels** outputs=SG_MALLOC(CLabels*, m_machines->get_num_elements());
 
-		for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+		for (index_t i=0; i<m_machines->get_num_elements(); i++)
 		{
 			//SG_PRINT("svm %d\n", i)
 			CSVM *svm = get_svm(i);
@@ -457,12 +457,12 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 			SG_UNREF(svm);
 		}
 
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
 			int32_t winner=0;
 			float64_t max_out=((CRegressionLabels*) outputs[0])->get_label(i)/norm_wc[0];
 
-			for (int32_t j=1; j<m_machines->get_num_elements(); j++)
+			for (index_t j=1; j<m_machines->get_num_elements(); j++)
 			{
 				float64_t out=((CRegressionLabels*) outputs[j])->get_label(i)/norm_wc[j];
 
@@ -476,7 +476,7 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 			output->set_label(i, winner);
 		}
 
-		for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+		for (index_t i=0; i<m_machines->get_num_elements(); i++)
 			SG_UNREF(outputs[i]);
 
 		SG_FREE(outputs);
@@ -485,7 +485,7 @@ CLabels* CScatterSVM::classify_one_vs_rest()
 	return output;
 }
 
-float64_t CScatterSVM::apply_one(int32_t num)
+float64_t CScatterSVM::apply_one(index_t num)
 {
 	ASSERT(m_machines->get_num_elements()>0)
 	float64_t* outputs=SG_MALLOC(float64_t, m_machines->get_num_elements());
@@ -493,14 +493,14 @@ float64_t CScatterSVM::apply_one(int32_t num)
 
 	if (scatter_type == TEST_RULE1)
 	{
-		for (int32_t c=0; c<m_machines->get_num_elements(); c++)
+		for (index_t c=0; c<m_machines->get_num_elements(); c++)
 			outputs[c]=get_svm(c)->get_bias()-rho;
 
-		for (int32_t c=0; c<m_machines->get_num_elements(); c++)
+		for (index_t c=0; c<m_machines->get_num_elements(); c++)
 		{
 			float64_t v=0;
 
-			for (int32_t i=0; i<get_svm(c)->get_num_support_vectors(); i++)
+			for (index_t i=0; i<get_svm(c)->get_num_support_vectors(); i++)
 			{
 				float64_t alpha=get_svm(c)->get_alpha(i);
 				int32_t svidx=get_svm(c)->get_support_vector(i);
@@ -508,15 +508,15 @@ float64_t CScatterSVM::apply_one(int32_t num)
 			}
 
 			outputs[c] += v;
-			for (int32_t j=0; j<m_machines->get_num_elements(); j++)
+			for (index_t j=0; j<m_machines->get_num_elements(); j++)
 				outputs[j] -= v/m_machines->get_num_elements();
 		}
 
-		for (int32_t j=0; j<m_machines->get_num_elements(); j++)
+		for (index_t j=0; j<m_machines->get_num_elements(); j++)
 			outputs[j]/=norm_wcw[j];
 
 		float64_t max_out=outputs[0];
-		for (int32_t j=0; j<m_machines->get_num_elements(); j++)
+		for (index_t j=0; j<m_machines->get_num_elements(); j++)
 		{
 			if (outputs[j]>max_out)
 			{
@@ -535,7 +535,7 @@ float64_t CScatterSVM::apply_one(int32_t num)
 	{
 		float64_t max_out=get_svm(0)->apply_one(num)/norm_wc[0];
 
-		for (int32_t i=1; i<m_machines->get_num_elements(); i++)
+		for (index_t i=1; i<m_machines->get_num_elements(); i++)
 		{
 			outputs[i]=get_svm(i)->apply_one(num)/norm_wc[i];
 			if (outputs[i]>max_out)

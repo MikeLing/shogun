@@ -242,7 +242,7 @@ void CMKLMulticlass::addingweightsstep( const std::vector<float64_t> &
 
 
 	normweightssquared.resize(numkernels);
-	for (int32_t ind=0; ind < numkernels; ++ind )
+	for (index_t ind=0; ind < numkernels; ++ind )
 	{
 		normweightssquared[ind]=getsquarenormofprimalcoefficients( ind );
 	}
@@ -260,7 +260,7 @@ float64_t CMKLMulticlass::getsumofsignfreealphas()
 	ASSERT (trainlabels2.size()>0)
 	float64_t sum=0;
 
-   for (int32_t nc=0; nc< ((CMulticlassLabels*) m_labels)->get_num_classes();++nc)
+   for (index_t nc=0; nc< ((CMulticlassLabels*) m_labels)->get_num_classes();++nc)
 	{
 		CSVM * sm=svm->get_svm(nc);
 
@@ -276,7 +276,7 @@ float64_t CMKLMulticlass::getsumofsignfreealphas()
 
 	for (size_t lb=0; lb< trainlabels2.size();++lb)
 	{
-      for (int32_t nc=0; nc< ((CMulticlassLabels*) m_labels)->get_num_classes();++nc)
+      for (index_t nc=0; nc< ((CMulticlassLabels*) m_labels)->get_num_classes();++nc)
 		{
 			CSVM * sm=svm->get_svm(nc);
 
@@ -304,17 +304,17 @@ float64_t CMKLMulticlass::getsquarenormofprimalcoefficients(
 
 	float64_t tmp=0;
 
-   for (int32_t classindex=0; classindex< ((CMulticlassLabels*) m_labels)->get_num_classes();
+   for (index_t classindex=0; classindex< ((CMulticlassLabels*) m_labels)->get_num_classes();
 			++classindex)
 	{
 		CSVM * sm=svm->get_svm(classindex);
 
-		for (int32_t i=0; i < sm->get_num_support_vectors(); ++i)
+		for (index_t i=0; i < sm->get_num_support_vectors(); ++i)
 		{
 			float64_t alphai=sm->get_alpha(i);
 			int32_t svindi= sm->get_support_vector(i);
 
-			for (int32_t k=0; k < sm->get_num_support_vectors(); ++k)
+			for (index_t k=0; k < sm->get_num_support_vectors(); ++k)
 			{
 				float64_t alphak=sm->get_alpha(k);
 				int32_t svindk=sm->get_support_vector(k);
@@ -395,12 +395,12 @@ bool CMKLMulticlass::train_machine(CFeatures* data)
 	ASSERT(numcl>=1)
    create_multiclass_svm(numcl);
 
-	for (int32_t i=0; i<numcl; i++)
+	for (index_t i=0; i<numcl; i++)
 	{
 		CSVM* osvm=svm->get_svm(i);
 		CSVM* nsvm=new CSVM(osvm->get_num_support_vectors());
 
-		for (int32_t k=0; k<osvm->get_num_support_vectors() ; k++)
+		for (index_t k=0; k<osvm->get_num_support_vectors() ; k++)
 		{
 			nsvm->set_alpha(k, osvm->get_alpha(k) );
 			nsvm->set_support_vector(k,osvm->get_support_vector(k) );

@@ -86,7 +86,7 @@ bool CSVMLin::train_machine(CFeatures* data)
 	else
 		Options.bias=0.0;
 
-	for (int32_t i=0;i<num_vec;i++)
+	for (index_t i=0;i<num_vec;i++)
 	{
 		if(train_labels.vector[i]>0)
 			Data.C[i]=Options.Cp;
@@ -97,7 +97,7 @@ bool CSVMLin::train_machine(CFeatures* data)
 	ASSERT(Weights.vec && Weights.d==num_feat+1)
 
 	float64_t sgn=train_labels.vector[0];
-	for (int32_t i=0; i<num_feat+1; i++)
+	for (index_t i=0; i<num_feat+1; i++)
 		Weights.vec[i]*=sgn;
 
 	set_w(SGVector<float64_t>(Weights.vec, num_feat));

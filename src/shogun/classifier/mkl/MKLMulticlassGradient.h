@@ -107,7 +107,7 @@ protected:
 	*	@param dim - the coordinate for which thegradient is to be computed
 	*
 	*/
-	void gengammagradient( ::std::vector<float64_t> & gammagradient ,const ::std::vector<float64_t> & gammas,const int32_t dim);
+	void gengammagradient( ::std::vector<float64_t> & gammagradient ,const ::std::vector<float64_t> & gammas,const index_t dim);
 
 	/** helper routine for MKL optimization, computes optimization objective for one contraint
 	*

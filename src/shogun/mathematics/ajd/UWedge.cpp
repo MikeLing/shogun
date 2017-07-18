@@ -34,7 +34,7 @@ SGMatrix<float64_t> CUWedge::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 		do
 		{
 			swap = false;
-			for (int j = 1; j < d; j++)
+			for (index_t j = 1; j < d; j++)
 			{
 				if ( eigenvalues(j,j) > eigenvalues(j-1,j-1) )
 				{
@@ -62,7 +62,7 @@ SGMatrix<float64_t> CUWedge::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 	MatrixXd Rs(d,L);
 	std::vector<float64_t> crit;
 	crit.push_back(0.0);
-	for (int l = 0; l < L; l++)
+	for (index_t l = 0; l < L; l++)
 	{
 		Map<MatrixXd> Ci(C.get_matrix(l),d,d);
 		Map<MatrixXd> Csi(Cs.get_matrix(l),d,d);
@@ -79,10 +79,10 @@ SGMatrix<float64_t> CUWedge::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 		MatrixXd B = Rs * Rs.transpose();
 
 		MatrixXd C1 = MatrixXd::Zero(d,d);
-		for (int id = 0; id < d; id++)
+		for (index_t id = 0; id < d; id++)
 		{
 			// rowSums
-			for (int l = 0; l < L; l++)
+			for (index_t l = 0; l < L; l++)
 			{
 				Map<MatrixXd> Csi(Cs.get_matrix(l),d,d);
 				C1.row(id) += Csi.row(id) * Rs(id,l);
@@ -99,7 +99,7 @@ SGMatrix<float64_t> CUWedge::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 		EV = aux * EV;
 
 		crit.push_back(0.0);
-		for (int l = 0; l < L; l++)
+		for (index_t l = 0; l < L; l++)
 		{
 			Map<MatrixXd> Ci(C.get_matrix(l),d,d);
 			Map<MatrixXd> Csi(Cs.get_matrix(l),d,d);

@@ -200,7 +200,7 @@ extern "C" {
             {
                 result=1;
                 int32_t size=PyList_Size(list);
-                for (int32_t i=0; i<size; i++)
+                for (index_t i=0; i<size; i++)
                 {
                     SV *o = PyList_GetItem(list,i);
                     if (typecode == NPY_STRING || typecode == NPY_UNICODE)

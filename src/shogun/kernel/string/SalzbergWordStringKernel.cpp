@@ -140,7 +140,7 @@ bool CSalzbergWordStringKernel::init(CFeatures* p_l, CFeatures* p_r)
 			bool free_vec;
 			uint16_t* vec=l->get_feature_vector(i, len, free_vec);
 
-			for (int32_t j=0; j<len; j++)
+			for (index_t j=0; j<len; j++)
 			{
 				int32_t idx=compute_index(j, vec[j]);
 				float64_t theta_p = 1/estimate->log_derivative_pos_obsolete(vec[j], j) ;
@@ -159,9 +159,9 @@ bool CSalzbergWordStringKernel::init(CFeatures* p_l, CFeatures* p_r)
 			bool free_vec;
 			uint16_t* vec=l->get_feature_vector(i, len, free_vec);
 
-			for (int32_t j=0; j<len; j++)
+			for (index_t j=0; j<len; j++)
 			{
-				for (int32_t k=0; k<4; k++)
+				for (index_t k=0; k<4; k++)
 				{
 					int32_t idx=compute_index(j, k);
 					if (k!=vec[j])
@@ -201,7 +201,7 @@ bool CSalzbergWordStringKernel::init(CFeatures* p_l, CFeatures* p_r)
 		bool free_avec;
 		uint16_t* avec=l->get_feature_vector(i, alen, free_avec);
 		float64_t  result=0 ;
-		for (int32_t j=0; j<alen; j++)
+		for (index_t j=0; j<alen; j++)
 		{
 			int32_t a_idx = compute_index(j, avec[j]) ;
 			float64_t theta_p = 1/estimate->log_derivative_pos_obsolete(avec[j], j) ;
@@ -227,7 +227,7 @@ bool CSalzbergWordStringKernel::init(CFeatures* p_l, CFeatures* p_r)
 			uint16_t* avec=r->get_feature_vector(i, alen, free_avec);
 			float64_t  result=0;
 
-			for (int32_t j=0; j<alen; j++)
+			for (index_t j=0; j<alen; j++)
 			{
 				int32_t a_idx = compute_index(j, avec[j]) ;
 				float64_t theta_p=1/estimate->log_derivative_pos_obsolete(
@@ -315,9 +315,9 @@ void CSalzbergWordStringKernel::cleanup()
 	CKernel::cleanup();
 }
 
-float64_t CSalzbergWordStringKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CSalzbergWordStringKernel::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_avec, free_bvec;
 	uint16_t* avec=((CStringFeatures<uint16_t>*) lhs)->get_feature_vector(idx_a, alen, free_avec);
 	uint16_t* bvec=((CStringFeatures<uint16_t>*) rhs)->get_feature_vector(idx_b, blen, free_bvec);
@@ -326,11 +326,11 @@ float64_t CSalzbergWordStringKernel::compute(int32_t idx_a, int32_t idx_b)
 
 	float64_t result = sum_m2_s2 ; // does not contain 0-th element
 
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
 		if (avec[i]==bvec[i])
 		{
-			int32_t a_idx = compute_index(i, avec[i]) ;
+			index_t a_idx = compute_index(i, avec[i]) ;
 
 			float64_t theta_p = 1/estimate->log_derivative_pos_obsolete(avec[i], i) ;
 			float64_t theta_n = 1/estimate->log_derivative_neg_obsolete(avec[i], i) ;
@@ -357,7 +357,7 @@ void CSalzbergWordStringKernel::set_prior_probs_from_labels(CLabels* labels)
 	labels->ensure_valid();
 
 	int32_t num_pos=0, num_neg=0;
-	for (int32_t i=0; i<labels->get_num_labels(); i++)
+	for (index_t i=0; i<labels->get_num_labels(); i++)
 	{
 		if (((CBinaryLabels*) labels)->get_int_label(i)==1)
 			num_pos++;

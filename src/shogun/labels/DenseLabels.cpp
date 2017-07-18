@@ -64,7 +64,7 @@ void CDenseLabels::set_to_const(float64_t c)
 {
 	ASSERT(m_labels.vector)
 	index_t subset_size=get_num_labels();
-	for (int32_t i=0; i<subset_size; i++)
+	for (index_t i=0; i<subset_size; i++)
 	{
 		m_labels.vector[m_subset_stack->subset_idx_conversion(i)]=c;
 		m_current_values.vector[m_subset_stack->subset_idx_conversion(i)]=c;
@@ -106,7 +106,7 @@ SGVector<int32_t> CDenseLabels::get_int_labels()
 {
 	SGVector<int32_t> intlab(get_num_labels());
 
-	for (int32_t i=0; i<get_num_labels(); i++)
+	for (index_t i=0; i<get_num_labels(); i++)
 		intlab.vector[i] = get_int_label(i);
 
 	return intlab;
@@ -119,7 +119,7 @@ void CDenseLabels::set_int_labels(SGVector<int32_t> lab)
 
 	m_labels = SGVector<float64_t>(lab.vlen);
 
-	for (int32_t i=0; i<lab.vlen; i++)
+	for (index_t i=0; i<lab.vlen; i++)
 		set_int_label(i, lab.vector[i]);
 }
 
@@ -131,7 +131,7 @@ void CDenseLabels::set_int_labels(SGVector<int64_t> lab)
 
 	m_labels = SGVector<float64_t>(lab.vlen);
 
-	for (int32_t i=0; i<lab.vlen; i++)
+	for (index_t i=0; i<lab.vlen; i++)
 		set_int_label(i, lab.vector[i]);
 }
 #endif

@@ -192,7 +192,7 @@ class CCustomDistance: public CDistance
 			num_rows=cols;
 			num_cols=cols;
 
-			for (int64_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				dmatrix[i]=dm[i];
 
 			dummy_init(num_rows, num_cols);
@@ -254,9 +254,9 @@ class CCustomDistance: public CDistance
 			num_rows=cols;
 			num_cols=cols;
 
-			for (int64_t row=0; row<num_rows; row++)
+			for (index_t row=0; row<num_rows; row++)
 			{
-				for (int64_t col=row; col<num_cols; col++)
+				for (index_t col=row; col<num_cols; col++)
 				{
 					int64_t idx=row * num_cols - row*(row+1)/2 + col;
 					dmatrix[idx]= (float32_t) dm[col*num_rows+row];
@@ -315,9 +315,9 @@ class CCustomDistance: public CDistance
 			num_rows=rows;
 			num_cols=cols;
 
-			for (int32_t row=0; row<num_rows; row++)
+			for (index_t row=0; row<num_rows; row++)
 			{
-				for (int32_t col=0; col<num_cols; col++)
+				for (index_t col=0; col<num_cols; col++)
 				{
 					dmatrix[row * num_cols + col]=dm[col*num_rows+row];
 				}
@@ -361,7 +361,7 @@ class CCustomDistance: public CDistance
 		 * @param col col
 		 * @return computed distance function
 		 */
-		virtual float64_t compute(int32_t row, int32_t col);
+		virtual float64_t  compute(index_t row, index_t col);
 
 	private:
 		void init();
@@ -373,9 +373,9 @@ class CCustomDistance: public CDistance
 		/** distance matrix */
 		float32_t* dmatrix;
 		/** number of rows */
-		int32_t num_rows;
+		index_t num_rows;
 		/** number of columns */
-		int32_t num_cols;
+		index_t num_cols;
 		/** upper diagonal */
 		bool upper_diagonal;
 };

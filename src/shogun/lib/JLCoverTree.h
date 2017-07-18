@@ -116,7 +116,7 @@ template<class P>
 float max_set(v_array<ds_node<P> > &v)
 {
   float max = 0.;
-  for (int i = 0; i < v.index; i++)
+  for (index_t i = 0; i < v.index; i++)
     if ( max < v[i].dist.last())
       max = v[i].dist.last();
   return max;
@@ -124,7 +124,7 @@ float max_set(v_array<ds_node<P> > &v)
 
 void print_space(int s)
 {
-  for (int i = 0; i < s; i++)
+  for (index_t i = 0; i < s; i++)
     SG_SPRINT(" ")
 }
 
@@ -141,7 +141,7 @@ void print(int depth, node<P> &top_node)
     SG_SPRINT("max_dist = %f\n",top_node.max_dist)
     print_space(depth);
     SG_SPRINT("num children = %i\n",top_node.num_children)
-    for (int i = 0; i < top_node.num_children;i++)
+    for (index_t i = 0; i < top_node.num_children;i++)
       print(depth+1, top_node.children[i]);
   }
 }
@@ -151,7 +151,7 @@ void split(v_array<ds_node<P> >& point_set, v_array<ds_node<P> >& far_set, int m
 {
   unsigned int new_index = 0;
   float fmax = dist_of_scale(max_scale);
-  for (int i = 0; i < point_set.index; i++)
+  for (index_t i = 0; i < point_set.index; i++)
   {
     if (point_set[i].dist.last() <= fmax)
     {
@@ -298,7 +298,7 @@ node<P> batch_create(v_array<P> points)
   v_array<ds_node<P> > point_set;
   v_array<v_array<ds_node<P> > > stack;
 
-  for (int i = 1; i < points.index; i++) {
+  for (index_t i = 1; i < points.index; i++) {
     ds_node<P> temp;
     push(temp.dist, distance(points[0], points[i], FLT_MAX));
     temp.p = points[i];
@@ -315,10 +315,10 @@ node<P> batch_create(v_array<P> points)
 			    point_set,
 			    consumed_set,
 			    stack);
-  for (int i = 0; i<consumed_set.index;i++)
+  for (index_t i = 0; i<consumed_set.index;i++)
     free(consumed_set[i].dist.elements);
   free(consumed_set.elements);
-  for (int i = 0; i<stack.index;i++)
+  for (index_t i = 0; i<stack.index;i++)
     free(stack[i].elements);
   free(stack.elements);
   free(point_set.elements);
@@ -344,7 +344,7 @@ int height_dist(const node<P> top_node,v_array<int> &heights)
   else
     {
       int max_v=0;
-      for (int i = 0; i<top_node.num_children ;i++)
+      for (index_t i = 0; i<top_node.num_children ;i++)
 	{
 	  int d = height_dist(top_node.children[i], heights);
 	  if (d > max_v)
@@ -359,7 +359,7 @@ template <class P>
 void depth_dist(int top_scale, const node<P> top_node,v_array<int> &depths)
 {
   if (top_node.num_children > 0)
-      for (int i = 0; i<top_node.num_children ;i++)
+      for (index_t i = 0; i<top_node.num_children ;i++)
 	{
 	  add_height(top_node.scale, depths);
 	  depth_dist(top_scale, top_node.children[i], depths);
@@ -373,7 +373,7 @@ void breadth_dist(const node<P> top_node,v_array<int> &breadths)
     add_height(0,breadths);
   else
     {
-      for (int i = 0; i<top_node.num_children ;i++)
+      for (index_t i = 0; i<top_node.num_children ;i++)
 	breadth_dist(top_node.children[i], breadths);
       add_height(top_node.num_children, breadths);
     }
@@ -808,10 +808,10 @@ void batch_nearest_neighbor(const node<P> &top_node, const node<P> &query,
   free(upper_bound);
   push(spare_cover_sets, cover_sets);
 
-  for (int i = 0; i < spare_cover_sets.index; i++)
+  for (index_t i = 0; i < spare_cover_sets.index; i++)
     {
       v_array<v_array<d_node<P> > > cover_sets2 = spare_cover_sets[i];
-      for (int j = 0; j < cover_sets2.index; j++)
+      for (index_t j = 0; j < cover_sets2.index; j++)
 	free (cover_sets2[j].elements);
       free(cover_sets2.elements);
     }
@@ -819,7 +819,7 @@ void batch_nearest_neighbor(const node<P> &top_node, const node<P> &query,
 
   push(spare_zero_sets, zero_set);
 
-  for (int i = 0; i < spare_zero_sets.index; i++)
+  for (index_t i = 0; i < spare_zero_sets.index; i++)
     free(spare_zero_sets[i].elements);
   free(spare_zero_sets.elements);
 }

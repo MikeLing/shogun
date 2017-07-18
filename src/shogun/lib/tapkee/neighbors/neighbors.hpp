@@ -94,7 +94,7 @@ Neighbors find_neighbors_covertree_impl(RandomAccessIterator begin, RandomAccess
 	Neighbors neighbors;
 	neighbors.resize(end-begin);
 	assert(end-begin==res.index);
-	for (int i=0; i<res.index; ++i)
+	for (index_t i=0; i<res.index; ++i)
 	{
 		LocalNeighbors local_neighbors;
 		local_neighbors.reserve(k);

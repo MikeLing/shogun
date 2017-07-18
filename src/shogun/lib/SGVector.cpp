@@ -220,14 +220,14 @@ T* SGVector<T>::clone_vector(const T* vec, int32_t len)
 template<class T>
 void SGVector<T>::fill_vector(T* vec, int32_t len, T value)
 {
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]=value;
 }
 
 template<class T>
 void SGVector<T>::range_fill_vector(T* vec, int32_t len, T start)
 {
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]=i+start;
 }
 
@@ -281,7 +281,7 @@ void SGVector<T>::add(const SGVector<T> x)
 	REQUIRE(x.vector && vector, "Addition possible for only non-null vectors.\n");
 	REQUIRE(x.vlen == vlen, "Length of the two vectors to be added should be same. [V(%d) + V(%d)]\n", vlen, x.vlen);
 
-	for (int32_t i=0; i<vlen; i++)
+	for (index_t i=0; i<vlen; i++)
 		vector[i]+=x.vector[i];
 }
 
@@ -289,7 +289,7 @@ template<class T>
 void SGVector<T>::add(const T x)
 {
 	REQUIRE(vector, "Addition possible for only non-null vectors.\n");
-	for (int32_t i=0; i<vlen; i++)
+	for (index_t i=0; i<vlen; i++)
 		vector[i]+=x;
 }
 
@@ -298,7 +298,7 @@ void SGVector<T>::add(const SGSparseVector<T>& x)
 {
 	if (x.features)
 	{
-		for (int32_t i=0; i < x.num_feat_entries; i++)
+		for (index_t i=0; i < x.num_feat_entries; i++)
 		{
 			index_t idx = x.features[i].feat_index;
 			REQUIRE(idx < vlen, "Feature index should be less than %d.\n", vlen);
@@ -370,7 +370,7 @@ void SGVector<bool>::display_vector(const bool* vector, int32_t n, const char* n
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%d%s", prefix, vector[i] ? 1 : 0, i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -381,7 +381,7 @@ void SGVector<char>::display_vector(const char* vector, int32_t n, const char* n
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%c%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -392,7 +392,7 @@ void SGVector<uint8_t>::display_vector(const uint8_t* vector, int32_t n, const c
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%u%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -403,7 +403,7 @@ void SGVector<int8_t>::display_vector(const int8_t* vector, int32_t n, const cha
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%d%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -414,7 +414,7 @@ void SGVector<uint16_t>::display_vector(const uint16_t* vector, int32_t n, const
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%u%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -425,7 +425,7 @@ void SGVector<int16_t>::display_vector(const int16_t* vector, int32_t n, const c
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%d%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -436,7 +436,7 @@ void SGVector<int32_t>::display_vector(const int32_t* vector, int32_t n, const c
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%d%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -447,7 +447,7 @@ void SGVector<uint32_t>::display_vector(const uint32_t* vector, int32_t n, const
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%u%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -459,7 +459,7 @@ void SGVector<int64_t>::display_vector(const int64_t* vector, int32_t n, const c
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%lld%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -470,7 +470,7 @@ void SGVector<uint64_t>::display_vector(const uint64_t* vector, int32_t n, const
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%llu%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -481,7 +481,7 @@ void SGVector<float32_t>::display_vector(const float32_t* vector, int32_t n, con
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%g%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -492,7 +492,7 @@ void SGVector<float64_t>::display_vector(const float64_t* vector, int32_t n, con
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_SPRINT("%s%.18g%s", prefix, vector[i], i==n-1? "" : ",")
 	SG_SPRINT("%s]\n", prefix)
 }
@@ -503,7 +503,7 @@ void SGVector<floatmax_t>::display_vector(const floatmax_t* vector, int32_t n,
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
 		SG_SPRINT("%s%.36Lg%s", prefix, (long double) vector[i],
 				i==n-1? "" : ",");
@@ -517,7 +517,7 @@ void SGVector<complex128_t>::display_vector(const complex128_t* vector, int32_t 
 {
 	REQUIRE(n>=0, "Vector size can not be negative.\n");
 	SG_SPRINT("%s%s=[", prefix, name)
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
 		SG_SPRINT("%s(%.36lg+i%.36lg)%s", prefix, vector[i].real(),
 				vector[i].imag(), i==n-1? "" : ",");
@@ -529,7 +529,7 @@ template <class T>
 void SGVector<T>::vec1_plus_scalar_times_vec2(T* vec1,
 		const T scalar, const T* vec2, int32_t n)
 {
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		vec1[i]+=scalar*vec2[i];
 }
 
@@ -541,7 +541,7 @@ void SGVector<float64_t>::vec1_plus_scalar_times_vec2(float64_t* vec1,
 	int32_t skip=1;
 	cblas_daxpy(n, scalar, vec2, skip, vec1, skip);
 #else
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		vec1[i]+=scalar*vec2[i];
 #endif
 }
@@ -554,7 +554,7 @@ void SGVector<float32_t>::vec1_plus_scalar_times_vec2(float32_t* vec1,
 	int32_t skip=1;
 	cblas_saxpy(n, scalar, vec2, skip, vec1, skip);
 #else
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		vec1[i]+=scalar*vec2[i];
 #endif
 }
@@ -562,7 +562,7 @@ void SGVector<float32_t>::vec1_plus_scalar_times_vec2(float32_t* vec1,
 template <class T>
 	void SGVector<T>::random_vector(T* vec, int32_t len, T min_value, T max_value)
 	{
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			vec[i]=CMath::random(min_value, max_value);
 	}
 
@@ -591,7 +591,7 @@ template <>
 int8_t SGVector<int8_t>::twonorm(const int8_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -601,7 +601,7 @@ template <>
 uint8_t SGVector<uint8_t>::twonorm(const uint8_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -611,7 +611,7 @@ template <>
 int16_t SGVector<int16_t>::twonorm(const int16_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -621,7 +621,7 @@ template <>
 uint16_t SGVector<uint16_t>::twonorm(const uint16_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -631,7 +631,7 @@ template <>
 int32_t SGVector<int32_t>::twonorm(const int32_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -641,7 +641,7 @@ template <>
 uint32_t SGVector<uint32_t>::twonorm(const uint32_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -651,7 +651,7 @@ template <>
 int64_t SGVector<int64_t>::twonorm(const int64_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -661,7 +661,7 @@ template <>
 uint64_t SGVector<uint64_t>::twonorm(const uint64_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -671,7 +671,7 @@ template <>
 float32_t SGVector<float32_t>::twonorm(const float32_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -693,7 +693,7 @@ template <>
 floatmax_t SGVector<floatmax_t>::twonorm(const floatmax_t* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -703,7 +703,7 @@ template <>
 complex128_t SGVector<complex128_t>::twonorm(const complex128_t* x, int32_t len)
 {
 	complex128_t result(0.0);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=x[i]*x[i];
 
 	return CMath::sqrt(result);
@@ -713,7 +713,7 @@ template <class T>
 float64_t SGVector<T>::onenorm(T* x, int32_t len)
 {
 	float64_t result=0;
-	for (int32_t i=0;i<len; ++i)
+	for (index_t i=0;i<len; ++i)
 		result+=CMath::abs(x[i]);
 
 	return result;
@@ -724,7 +724,7 @@ template <class T>
 T SGVector<T>::qsq(T* x, int32_t len, float64_t q)
 {
 	float64_t result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=CMath::pow(fabs(x[i]), q);
 
 	return result;
@@ -757,7 +757,7 @@ template <class T>
 T SGVector<T>::sum_abs(T* vec, int32_t len)
 {
 	T result=0;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result+=CMath::abs(vec[i]);
 
 	return result;
@@ -787,7 +787,7 @@ int32_t SGVector<T>::unique(T* output, int32_t size)
 	CMath::qsort<T>(output, size);
 	int32_t j=0;
 
-	for (int32_t i=0; i<size; i++)
+	for (index_t i=0; i<size; i++)
 	{
 		if (i==0 || output[i]!=output[i-1])
 			output[j++]=output[i];
@@ -819,7 +819,7 @@ SGVector<index_t> SGVector<T>::find(T elem)
 template<class T>
 void SGVector<T>::scale_vector(T alpha, T* vec, int32_t len)
 {
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]*=alpha;
 }
 
@@ -881,7 +881,7 @@ void SGVector<complex128_t>::save(CFile* saver)
 template <class T> SGVector<float64_t> SGVector<T>::get_real()
 {
 	SGVector<float64_t> real(vlen);
-	for (int32_t i=0; i<vlen; i++)
+	for (index_t i=0; i<vlen; i++)
 		real[i]=CMath::real(vector[i]);
 	return real;
 }
@@ -889,7 +889,7 @@ template <class T> SGVector<float64_t> SGVector<T>::get_real()
 template <class T> SGVector<float64_t> SGVector<T>::get_imag()
 {
 	SGVector<float64_t> imag(vlen);
-	for (int32_t i=0; i<vlen; i++)
+	for (index_t i=0; i<vlen; i++)
 		imag[i]=CMath::imag(vector[i]);
 	return imag;
 }

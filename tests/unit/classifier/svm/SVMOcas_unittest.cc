@@ -41,7 +41,7 @@ TEST(SVMOcasTest,train)
 	EXPECT_NEAR(objective, 0.022321841487323236, 1e-2);
 
 	CLabels* pred = ocas->apply(test_feats);
-	for (int i = 0; i < num_samples; ++i)
+	for (index_t i = 0; i < num_samples; ++i)
 		EXPECT_EQ(ground_truth->get_int_label(i), ((CBinaryLabels*)pred)->get_int_label(i));
 
 	SG_UNREF(ocas);

@@ -46,9 +46,9 @@ void CCanberraWordDistance::cleanup()
 {
 }
 
-float64_t CCanberraWordDistance::compute(int32_t idx_a, int32_t idx_b)
+float64_t CCanberraWordDistance::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_avec, free_bvec;
 
 	uint16_t* avec=((CStringFeatures<uint16_t>*) lhs)->
@@ -58,16 +58,16 @@ float64_t CCanberraWordDistance::compute(int32_t idx_a, int32_t idx_b)
 
 	float64_t result=0;
 
-	int32_t left_idx=0;
-	int32_t right_idx=0;
+	index_t left_idx=0;
+	index_t right_idx=0;
 
 	while (left_idx < alen && right_idx < blen)
 	{
 		uint16_t sym=avec[left_idx];
 		if (avec[left_idx]==bvec[right_idx])
 		{
-			int32_t old_left_idx=left_idx;
-			int32_t old_right_idx=right_idx;
+			index_t old_left_idx=left_idx;
+			index_t old_right_idx=right_idx;
 
 			while (left_idx< alen && avec[left_idx]==sym)
 				left_idx++;

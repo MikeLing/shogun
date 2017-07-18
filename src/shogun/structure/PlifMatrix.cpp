@@ -12,11 +12,11 @@ CPlifMatrix::CPlifMatrix() : m_PEN(NULL), m_num_plifs(0), m_num_limits(0),
 
 CPlifMatrix::~CPlifMatrix()
 {
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 		delete m_PEN[i];
 	SG_FREE(m_PEN);
 
-	for (int32_t i=0; i<m_num_states*m_num_states; i++)
+	for (index_t i=0; i<m_num_states*m_num_states; i++)
 		delete m_plif_matrix[i];
 
 	SG_FREE(m_plif_matrix);
@@ -26,7 +26,7 @@ CPlifMatrix::~CPlifMatrix()
 
 void CPlifMatrix::create_plifs(int32_t num_plifs, int32_t num_limits)
 {
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 		delete m_PEN[i];
 	SG_FREE(m_PEN);
 	m_PEN=NULL;
@@ -34,7 +34,7 @@ void CPlifMatrix::create_plifs(int32_t num_plifs, int32_t num_limits)
 	m_num_plifs=num_plifs;
 	m_num_limits=num_limits;
 	m_PEN = SG_MALLOC(CPlif*, num_plifs);
-	for (int32_t i=0; i<num_plifs; i++)
+	for (index_t i=0; i<num_plifs; i++)
 		m_PEN[i]=new CPlif(num_limits) ;
 }
 
@@ -46,7 +46,7 @@ void CPlifMatrix::set_plif_ids(SGVector<int32_t> plif_ids)
 	m_ids.resize_array(m_num_plifs);
 	m_ids.set_array(plif_ids.vector, plif_ids.vlen, true, true);
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		m_PEN[id]->set_id(id);
@@ -58,7 +58,7 @@ void CPlifMatrix::set_plif_min_values(SGVector<float64_t> min_values)
 	if (min_values.vlen!=m_num_plifs)
 		SG_ERROR("plif_values size mismatch (num_values=%d vs.num_plifs=%d)\n", min_values.vlen, m_num_plifs)
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		m_PEN[id]->set_min_value(min_values.vector[i]);
@@ -70,7 +70,7 @@ void CPlifMatrix::set_plif_max_values(SGVector<float64_t> max_values)
 	if (max_values.vlen!=m_num_plifs)
 		SG_ERROR("plif_values size mismatch (num_values=%d vs.num_plifs=%d)\n", max_values.vlen, m_num_plifs)
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		m_PEN[id]->set_max_value(max_values.vector[i]);
@@ -82,7 +82,7 @@ void CPlifMatrix::set_plif_use_cache(SGVector<bool> use_cache)
 	if (use_cache.vlen!=m_num_plifs)
 		SG_ERROR("plif_values size mismatch (num_values=%d vs.num_plifs=%d)\n", use_cache.vlen, m_num_plifs)
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		m_PEN[id]->set_use_cache(use_cache.vector[i]);
@@ -94,7 +94,7 @@ void CPlifMatrix::set_plif_use_svm(SGVector<int32_t> use_svm)
 	if (use_svm.vlen!=m_num_plifs)
 		SG_ERROR("plif_values size mismatch (num_values=%d vs.num_plifs=%d)\n", use_svm.vlen, m_num_plifs)
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		m_PEN[id]->set_use_svm(use_svm.vector[i]);
@@ -109,10 +109,10 @@ void CPlifMatrix::set_plif_limits(SGMatrix<float64_t> limits)
 				m_num_plifs, m_num_limits, limits.num_rows, limits.num_cols);
 	}
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		SGVector<float64_t> lim(m_num_limits);
-		for (int32_t k=0; k<m_num_limits; k++)
+		for (index_t k=0; k<m_num_limits; k++)
 			lim[k] = limits.matrix[i*m_num_limits+k];
 
 		int32_t id=get_plif_id(i);
@@ -128,11 +128,11 @@ void CPlifMatrix::set_plif_penalties(SGMatrix<float64_t> penalties)
 				m_num_plifs, m_num_limits, penalties.num_rows, penalties.num_cols);
 	}
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		SGVector<float64_t> pen(m_num_limits);
 
-		for (int32_t k=0; k<m_num_limits; k++)
+		for (index_t k=0; k<m_num_limits; k++)
 			pen[k] = penalties.matrix[i*m_num_limits+k];
 
 		int32_t id=get_plif_id(i);
@@ -145,7 +145,7 @@ void CPlifMatrix::set_plif_names(SGString<char>* names, int32_t num_values, int3
 	if (num_values!=m_num_plifs)
 		SG_ERROR("names size mismatch (num_values=%d vs.num_plifs=%d)\n", num_values, m_num_plifs)
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		char* name = CStringFeatures<char>::get_zero_terminated_string_copy(names[i]);
@@ -159,7 +159,7 @@ void CPlifMatrix::set_plif_transform_type(SGString<char>* transform_type, int32_
 	if (num_values!=m_num_plifs)
 		SG_ERROR("transform_type size mismatch (num_values=%d vs.num_plifs=%d)\n", num_values, m_num_plifs)
 
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
 		int32_t id=get_plif_id(i);
 		char* transform_str=CStringFeatures<char>::get_zero_terminated_string_copy(transform_type[i]);
@@ -183,7 +183,7 @@ bool CPlifMatrix::compute_plif_matrix(SGNDArray<float64_t> penalties_array)
 	int32_t num_states = penalties_array.dims[0];
 	int32_t num_plifs = get_num_plifs();
 
-	for (int32_t i=0; i<m_num_states*m_num_states; i++)
+	for (index_t i=0; i<m_num_states*m_num_states; i++)
 		delete  m_plif_matrix[i];
 	SG_FREE(m_plif_matrix);
 
@@ -192,13 +192,13 @@ bool CPlifMatrix::compute_plif_matrix(SGNDArray<float64_t> penalties_array)
 
 	CDynamicArray<float64_t> penalties(penalties_array.array, num_states, num_states, penalties_array.dims[2], true, true) ;
 
-	for (int32_t i=0; i<num_states; i++)
+	for (index_t i=0; i<num_states; i++)
 	{
-		for (int32_t j=0; j<num_states; j++)
+		for (index_t j=0; j<num_states; j++)
 		{
 			CPlifArray * plif_array = NULL;
 			CPlif * plif = NULL ;
-			for (int32_t k=0; k<penalties_array.dims[2]; k++)
+			for (index_t k=0; k<penalties_array.dims[2]; k++)
 			{
 				if (penalties.element(i,j,k)==0)
 					continue ;
@@ -249,7 +249,7 @@ bool  CPlifMatrix::compute_signal_plifs(SGMatrix<int32_t> state_signals)
 	m_feat_dim3 = state_signals.num_rows;
 
 	CPlifBase **PEN_state_signal = SG_MALLOC(CPlifBase*, state_signals.num_rows*state_signals.num_cols);
-	for (int32_t i=0; i<state_signals.num_cols*state_signals.num_rows; i++)
+	for (index_t i=0; i<state_signals.num_cols*state_signals.num_rows; i++)
 	{
 		int32_t id = (int32_t) state_signals.matrix[i]-1 ;
 		if ((id<0 || id>=Nplif) && (id!=-1))
@@ -278,9 +278,9 @@ void CPlifMatrix::set_plif_state_signal_matrix(
 
 	CArray2<int32_t> id_matrix(plif_id_matrix, m_num_plifs, max_num_signals, false, false) ;
 	m_PEN_state_signals.resize_array(m_num_plifs, max_num_signals) ;
-	for (int32_t i=0; i<m_num_plifs; i++)
+	for (index_t i=0; i<m_num_plifs; i++)
 	{
-		for (int32_t j=0; j<max_num_signals; j++)
+		for (index_t j=0; j<max_num_signals; j++)
 		{
 			if (id_matrix.element(i,j)>=0)
 				m_PEN_state_signals.element(i,j)=m_plif_list[id_matrix.element(i,j)] ;

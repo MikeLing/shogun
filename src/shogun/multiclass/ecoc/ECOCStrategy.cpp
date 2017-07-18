@@ -60,7 +60,7 @@ SGVector<int32_t> CECOCStrategy::train_prepare_next()
 {
     SGVector<int32_t> subset(m_orig_labels->get_num_labels(), false);
     int32_t tot=0;
-    for (int32_t i=0; i < m_orig_labels->get_num_labels(); ++i)
+    for (index_t i=0; i < m_orig_labels->get_num_labels(); ++i)
     {
         int32_t label = ((CMulticlassLabels*) m_orig_labels)->get_int_label(i);
         switch (m_codebook(m_train_iter, label))

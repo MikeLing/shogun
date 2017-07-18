@@ -189,7 +189,7 @@ TEST(KernelDensity,dual_tree_single_tree_equivalence)
 	k->train(feats);
 	SGVector<float64_t> res_single=k->get_log_density(testfeats);
 
-	for (int32_t i=0;i<res_dual.vlen;i++)
+	for (index_t i=0;i<res_dual.vlen;i++)
 		EXPECT_NEAR(res_dual[i],res_single[i],1e-8);
 
 	SG_UNREF(testfeats);

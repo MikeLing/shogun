@@ -40,7 +40,7 @@ TEST(NeuralInputLayer, compute_activations)
 {
 	CMath::init_random(100);
 	SGMatrix<float64_t> x(12,3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer layer(5, 4);
@@ -49,7 +49,7 @@ TEST(NeuralInputLayer, compute_activations)
 	layer.compute_activations(x);
 	SGMatrix<float64_t> A = layer.get_activations();
 
-	for (int32_t i=0; i<A.num_rows; i++)
-		for (int32_t j=0; j<A.num_cols; j++)
+	for (index_t i=0; i<A.num_rows; i++)
+		for (index_t j=0; j<A.num_cols; j++)
 			EXPECT_EQ(x(i+layer.get_start_index(), j), A(i,j));
 }

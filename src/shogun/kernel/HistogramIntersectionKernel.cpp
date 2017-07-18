@@ -48,9 +48,9 @@ bool CHistogramIntersectionKernel::init(CFeatures* l, CFeatures* r)
 	return result;
 }
 
-float64_t CHistogramIntersectionKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CHistogramIntersectionKernel::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool afree, bfree;
 
 	float64_t* avec=
@@ -65,13 +65,13 @@ float64_t CHistogramIntersectionKernel::compute(int32_t idx_a, int32_t idx_b)
 	if (m_beta == 1.0)
 	{
 		// compute standard histogram intersection kernel
-		for (int32_t i=0; i<alen; i++)
+		for (index_t i=0; i<alen; i++)
 			result += (avec[i] < bvec[i]) ? avec[i] : bvec[i];
 	}
 	else
 	{
 		//compute generalized histogram intersection kernel
-		for (int32_t i=0; i<alen; i++)
+		for (index_t i=0; i<alen; i++)
 			result += CMath::min(CMath::pow(avec[i],m_beta), CMath::pow(bvec[i],m_beta));
 	}
 	((CDenseFeatures<float64_t>*) lhs)->free_feature_vector(avec, idx_a, afree);

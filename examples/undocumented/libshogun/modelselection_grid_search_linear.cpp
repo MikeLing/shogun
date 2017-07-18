@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
 	/* create some data */
 	SGMatrix<float64_t> matrix(2, num_vectors);
-	for (int32_t i=0; i<num_vectors*2; i++)
+	for (index_t i=0; i<num_vectors*2; i++)
 		matrix.matrix[i]=i;
 
 	/* create num_feautres 2-dimensional vectors */

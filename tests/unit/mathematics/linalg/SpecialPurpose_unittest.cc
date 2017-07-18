@@ -49,12 +49,12 @@ TEST(SpecialPurpose, logistic_eigen3_backend)
 	SGMatrix<float64_t> A(3,3);
 	SGMatrix<float64_t> B(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = i;
 
 	linalg::special_purpose::logistic<linalg::Backend::EIGEN3>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(1.0/(1+CMath::exp(-1*A[i])), B[i], 1e-15);
 }
 
@@ -64,12 +64,12 @@ TEST(SpecialPurpose, logistic_viennacl_backend)
 	CGPUMatrix<float64_t> A(3,3);
 	CGPUMatrix<float64_t> B(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = i;
 
 	linalg::special_purpose::logistic<linalg::Backend::VIENNACL>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(1.0/(1+CMath::exp(-1*A[i])), B[i], 1e-15);
 }
 #endif // HAVE_VIENNACL
@@ -87,7 +87,7 @@ TEST(SpecialPurpose, multiply_by_logistic_derivative_eigen3_backend)
 
 	linalg::special_purpose::multiply_by_logistic_derivative<linalg::Backend::EIGEN3>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(i*A[i]*(1.0-A[i]), B[i], 1e-15);
 }
 
@@ -105,7 +105,7 @@ TEST(SpecialPurpose, multiply_by_logistic_derivative_viennacl_backend)
 
 	linalg::special_purpose::multiply_by_logistic_derivative<linalg::Backend::VIENNACL>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(i*A[i]*(1.0-A[i]), B[i], 1e-15);
 }
 #endif // HAVE_VIENNACL
@@ -115,12 +115,12 @@ TEST(SpecialPurpose, rectified_linear_eigen3_backend)
 	SGMatrix<float64_t> A(3,3);
 	SGMatrix<float64_t> B(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = i-5;
 
 	linalg::special_purpose::rectified_linear<linalg::Backend::EIGEN3>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(CMath::max(0.0,A[i]), B[i], 1e-15);
 }
 
@@ -130,12 +130,12 @@ TEST(SpecialPurpose, rectified_linear_viennacl_backend)
 	CGPUMatrix<float64_t> A(3,3);
 	CGPUMatrix<float64_t> B(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = i-5;
 
 	linalg::special_purpose::rectified_linear<linalg::Backend::VIENNACL>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(CMath::max(0.0, (float64_t)A[i]), B[i], 1e-15);
 }
 #endif // HAVE_VIENNACL
@@ -153,7 +153,7 @@ TEST(SpecialPurpose, multiply_by_rectified_linear_derivative_eigen3_backend)
 
 	linalg::special_purpose::multiply_by_rectified_linear_derivative<linalg::Backend::EIGEN3>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(i*(A[i]!=0), B[i], 1e-15);
 }
 
@@ -171,7 +171,7 @@ TEST(SpecialPurpose, multiply_by_rectified_linear_derivative_viennacl_backend)
 
 	linalg::special_purpose::multiply_by_rectified_linear_derivative<linalg::Backend::VIENNACL>(A, B);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(i*(A[i]!=0), B[i], 1e-15);
 }
 #endif // HAVE_VIENNACL
@@ -185,22 +185,22 @@ TEST(SpecialPurpose, softmax_eigen3_backend)
 	for (float64_t i=0; i<12; i++)
 		A[i] = i/12;
 
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 		ref[i] = CMath::exp(A[i]);
 
-	for (int32_t j=0; j<ref.num_cols; j++)
+	for (index_t j=0; j<ref.num_cols; j++)
 	{
 		float64_t sum = 0;
-		for (int32_t i=0; i<ref.num_rows; i++)
+		for (index_t i=0; i<ref.num_rows; i++)
 			sum += ref(i,j);
 
-		for (int32_t i=0; i<ref.num_rows; i++)
+		for (index_t i=0; i<ref.num_rows; i++)
 			ref(i,j) /= sum;
 	}
 
 	linalg::special_purpose::softmax<linalg::Backend::EIGEN3>(A);
 
-	for (int32_t i=0; i<12; i++)
+	for (index_t i=0; i<12; i++)
 		EXPECT_NEAR(ref[i], A[i], 1e-15);
 }
 
@@ -214,22 +214,22 @@ TEST(SpecialPurpose, softmax_viennacl_backend)
 	for (float64_t i=0; i<12; i++)
 		A[i] = i/12;
 
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 		ref[i] = CMath::exp(A[i]);
 
-	for (int32_t j=0; j<ref.num_cols; j++)
+	for (index_t j=0; j<ref.num_cols; j++)
 	{
 		float64_t sum = 0;
-		for (int32_t i=0; i<ref.num_rows; i++)
+		for (index_t i=0; i<ref.num_rows; i++)
 			sum += ref(i,j);
 
-		for (int32_t i=0; i<ref.num_rows; i++)
+		for (index_t i=0; i<ref.num_rows; i++)
 			ref(i,j) /= sum;
 	}
 
 	linalg::special_purpose::softmax<linalg::Backend::VIENNACL>(A);
 
-	for (int32_t i=0; i<12; i++)
+	for (index_t i=0; i<12; i++)
 		EXPECT_NEAR(ref[i], A[i], 1e-15);
 }
 #endif // HAVE_VIENNACL
@@ -247,7 +247,7 @@ TEST(SpecialPurpose, cross_entropy_eigen3_backend)
 	}
 
 	float64_t ce = 0;
-	for (int32_t i=0; i< size; i++)
+	for (index_t i=0; i< size; i++)
 		ce += A[i]*CMath::log(B[i]+1e-30);
 	ce *= -1;
 
@@ -268,7 +268,7 @@ TEST(SpecialPurpose, cross_entropy_viennacl_backend)
 	}
 
 	float64_t ce = 0;
-	for (int32_t i=0; i< size; i++)
+	for (index_t i=0; i< size; i++)
 		ce += A[i]*CMath::log(B[i]+1e-30);
 	ce *= -1;
 
@@ -289,7 +289,7 @@ TEST(SpecialPurpose, squared_error_eigen3_backend)
 	}
 
 	float64_t se = 0;
-	for (int32_t i=0; i< size; i++)
+	for (index_t i=0; i< size; i++)
 		se += CMath::pow(A[i]-B[i],2);
 	se *= 0.5;
 
@@ -310,7 +310,7 @@ TEST(SpecialPurpose, squared_error_viennacl_backend)
 	}
 
 	float64_t se = 0;
-	for (int32_t i=0; i< size; i++)
+	for (index_t i=0; i< size; i++)
 		se += CMath::pow(A[i]-B[i],2);
 	se *= 0.5;
 

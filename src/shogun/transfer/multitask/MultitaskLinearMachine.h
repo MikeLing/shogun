@@ -109,7 +109,7 @@ class CMultitaskLinearMachine : public CLinearMachine
 		virtual CBinaryLabels* apply_locked_binary(SGVector<index_t> indices);
 
 		/** applies to one vector */
-		virtual float64_t apply_one(int32_t i);
+		virtual float64_t apply_one(index_t i);
 
 	protected:
 

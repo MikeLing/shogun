@@ -77,12 +77,12 @@ bool CDecompressString<ST>::apply_to_string_features(CFeatures* f)
 }
 
 template <class ST>
-ST* CDecompressString<ST>::apply_to_string(ST* f, int32_t &len)
+ST* CDecompressString<ST>::apply_to_string(ST* f, index_t &len)
 {
 	uint64_t compressed_size=((int32_t*) f)[0];
 	uint64_t uncompressed_size=((int32_t*) f)[1];
 
-	int32_t offs=CMath::ceil(2.0*sizeof(int32_t)/sizeof(ST));
+	index_t offs=CMath::ceil(2.0*sizeof(int32_t)/sizeof(ST));
 	ASSERT(uint64_t(len)==uint64_t(offs)+compressed_size)
 
 	len=uncompressed_size;

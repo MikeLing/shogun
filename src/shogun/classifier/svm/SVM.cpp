@@ -164,7 +164,7 @@ bool CSVM::load(FILE* modelfl)
 		line_number++;
 	}
 
-	for (int32_t i=0; i<get_num_support_vectors(); i++)
+	for (index_t i=0; i<get_num_support_vectors(); i++)
 	{
 		double_buffer=0;
 		int_buffer=0;
@@ -218,7 +218,7 @@ bool CSVM::save(FILE* modelfl)
 
 	fprintf(modelfl, "alphas=\[\n");
 
-	for(int32_t i=0; i<get_num_support_vectors(); i++)
+	for(index_t i=0; i<get_num_support_vectors(); i++)
 		fprintf(modelfl,"\t[%+10.16e,%d];\n",
 				CSVM::get_alpha(i), get_support_vector(i));
 
@@ -246,12 +246,12 @@ float64_t CSVM::compute_svm_dual_objective()
 	if (m_labels && kernel)
 	{
 		objective=0;
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
 			int32_t ii=get_support_vector(i);
 			objective-=get_alpha(i)*((CBinaryLabels*) m_labels)->get_label(ii);
 
-			for (int32_t j=0; j<n; j++)
+			for (index_t j=0; j<n; j++)
 			{
 				int32_t jj=get_support_vector(j);
 				objective+=0.5*get_alpha(i)*get_alpha(j)*kernel->kernel(ii,jj);
@@ -280,10 +280,10 @@ float64_t CSVM::compute_svm_primal_objective()
 			C2_tmp=C2;
 		}
 
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
 			int32_t ii=get_support_vector(i);
-			for (int32_t j=0; j<n; j++)
+			for (index_t j=0; j<n; j++)
 			{
 				int32_t jj=get_support_vector(j);
 				regularizer-=0.5*get_alpha(i)*get_alpha(j)*kernel->kernel(ii,jj);

@@ -19,7 +19,7 @@ CIntronList::CIntronList()
 }
 CIntronList::~CIntronList()
 {
-	for (int i=0; i<m_length; i++)
+	for (index_t i=0; i<m_length; i++)
 	{
 		SG_FREE(m_intron_list[i]);
 		SG_FREE(m_quality_list[i]);
@@ -38,7 +38,7 @@ void CIntronList::init_list(int32_t* all_pos, int32_t len)
 
 	//initialize all elements with an array of length one
 	int32_t* one;
-	for (int i=0;i<m_length;i++)
+	for (index_t i=0;i<m_length;i++)
 	{
 		one = SG_MALLOC(int32_t, 1);//use malloc here because mem can be increased efficiently with realloc later
 		m_intron_list[i] = one;
@@ -112,7 +112,7 @@ void CIntronList::get_intron_support(int32_t* values, int32_t from_pos, int32_t 
 
 	int32_t coverage = 0;
 	int32_t quality = 0;
-	for (int i=1;i<from_list[0]; i++)
+	for (index_t i=1;i<from_list[0]; i++)
 	{
 		//SG_PRINT("from_list[%i]: %i, m_all_pos[from_pos]:%i\n", i,  from_list[i], m_all_pos[from_pos])
 		if (from_list[i]==m_all_pos[from_pos])

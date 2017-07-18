@@ -33,9 +33,9 @@ SGMatrix<float64_t> CJADiagOrth::diagonalize(SGNDArray<float64_t> C, SGMatrix<fl
 	{
 		more = false;
 
-		for (int p = 0; p < m; p++)
+		for (index_t p = 0; p < m; p++)
 		{
-			for (int q = p+1; q < m; q++)
+			for (index_t q = p+1; q < m; q++)
 			{
 				// computation of Givens angle
 				float64_t theta = givens_stack(C.array, m, L, p, q);
@@ -143,7 +143,7 @@ void left_rot_simple(float64_t *A, int m, int n, int p, int q, float64_t c, floa
 	int iy = q;
 	float64_t nx, ny;
 
-	for (int j = 0; j < n; j++, ix+=m, iy+=m)
+	for (index_t j = 0; j < n; j++, ix+=m, iy+=m)
 	{
 		nx = A[ix];
 		ny = A[iy];

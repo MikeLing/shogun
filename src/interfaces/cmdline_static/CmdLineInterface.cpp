@@ -123,13 +123,13 @@ void CCmdLineInterface::reset(const char* line)
 	SG_PRINT("nlhs=%d nrhs=%d\n", m_nlhs, m_nrhs);
 	if (m_lhs)
 	{
-		for (int32_t i=0; i<m_lhs->get_num_elements(); i++)
+		for (index_t i=0; i<m_lhs->get_num_elements(); i++)
 			SG_PRINT("element lhs %i %s\n", i, m_lhs->get_element(i));
 	}
 
 	if (m_rhs)
 	{
-		for (int32_t i=0; i<m_rhs->get_num_elements(); i++)
+		for (index_t i=0; i<m_rhs->get_num_elements(); i++)
 			SG_PRINT("element rhs %i %s\n", i, m_rhs->get_element(i));
 	}
 #endif

@@ -56,12 +56,12 @@ void CSegmentLoss::compute_loss(int32_t* all_pos, int32_t len)
 
 	m_segment_loss_matrix.resize_array(m_num_segment_types,len);
 
-	for (int seg_type=0; seg_type<m_num_segment_types; seg_type++)
+	for (index_t seg_type=0; seg_type<m_num_segment_types; seg_type++)
 	{
 		float32_t value = 0;
 		int32_t last_id = -1;
 		int32_t last_pos = all_pos[len-1];
-		for (int pos=len-1;pos>=0; pos--)
+		for (index_t pos=len-1;pos>=0; pos--)
 		{
 			int32_t cur_id = m_segment_ids->element(pos);
 			if (cur_id!=last_id)

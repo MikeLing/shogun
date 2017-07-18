@@ -141,9 +141,9 @@ void test_lapack()
 	int status;
 
 	// DSYGVX
-	for (int i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 	{
-		for (int j=0; j<N; j++)
+		for (index_t j=0; j<N; j++)
 			double_matrix[i*N+j] = ((double)(i-j))/(i+j+1);
 
 		double_matrix[i*N+i] += 100;
@@ -166,9 +166,9 @@ void test_lapack()
 	delete[] double_tau;
 
 	// DGESVD
-	for (int i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 	{
-		for (int j=0; j<N; j++)
+		for (index_t j=0; j<N; j++)
 			double_matrix[i*N+j] = i*i+j*j;
 	}
 	status = 0;

@@ -172,7 +172,7 @@ SGVector<float64_t> CStatistics::fishers_exact_test_for_multiple_2x3_tables(
 	int32_t len=tables.num_cols/3;
 
 	SGVector<float64_t> v(len);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		table.matrix=&tables.matrix[2*3*i];
 		v.vector[i]=fishers_exact_test_for_2x3_table(table);
@@ -200,14 +200,14 @@ float64_t CStatistics::fishers_exact_test_for_2x3_table(
 	SGVector<float64_t>::fill_vector(x, x_len, 0.0);
 
 	float64_t log_nom=0.0;
-	for (int32_t i=0; i<3+2; i++)
+	for (index_t i=0; i<3+2; i++)
 		log_nom+=lgamma(m[i]+1);
 	log_nom-=lgamma(n+1.0);
 
 	float64_t log_denomf=0;
 	floatmax_t log_denom=0;
 
-	for (int32_t i=0; i<3*2; i++)
+	for (index_t i=0; i<3*2; i++)
 	{
 		log_denom+=lgammal((floatmax_t)table.matrix[i]+1);
 		log_denomf+=lgammal((floatmax_t)table.matrix[i]+1);
@@ -219,9 +219,9 @@ float64_t CStatistics::fishers_exact_test_for_2x3_table(
 
 	//traverse all possible tables with given m
 	int32_t counter=0;
-	for (int32_t k=0; k<=dim1; k++)
+	for (index_t k=0; k<=dim1; k++)
 	{
-		for (int32_t l=CMath::max(0.0, m[0]-m[4]-k);
+		for (index_t l=CMath::max(0.0, m[0]-m[4]-k);
 				l<=CMath::min(m[0]-k, m[3]); l++)
 		{
 			x[0+0*2+counter*2*3]=k;
@@ -252,16 +252,16 @@ float64_t CStatistics::fishers_exact_test_for_2x3_table(
 	floatmax_t* log_denom_vec=SG_MALLOC(floatmax_t, counter);
 	SGVector<floatmax_t>::fill_vector(log_denom_vec, counter, (floatmax_t)0.0);
 
-	for (int32_t k=0; k<counter; k++)
+	for (index_t k=0; k<counter; k++)
 	{
-		for (int32_t j=0; j<3; j++)
+		for (index_t j=0; j<3; j++)
 		{
-			for (int32_t i=0; i<2; i++)
+			for (index_t i=0; i<2; i++)
 				log_denom_vec[k]+=lgammal(x[i+j*2+k*2*3]+1.0);
 		}
 	}
 
-	for (int32_t i=0; i<counter; i++)
+	for (index_t i=0; i<counter; i++)
 		log_denom_vec[i]=log_nom-log_denom_vec[i];
 
 #ifdef DEBUG_FISHER_TABLE
@@ -269,7 +269,7 @@ float64_t CStatistics::fishers_exact_test_for_2x3_table(
 #endif // DEBUG_FISHER_TABLE
 
 	float64_t nonrand_p=-CMath::INFTY;
-	for (int32_t i=0; i<counter; i++)
+	for (index_t i=0; i<counter; i++)
 	{
 		if (log_denom_vec[i]<=prob_table_log)
 			nonrand_p=CMath::logarithmic_sum(nonrand_p, log_denom_vec[i]);
@@ -292,8 +292,8 @@ float64_t CStatistics::mutual_info(float64_t* p1, float64_t* p2, int32_t len)
 {
 	double e=0;
 
-	for (int32_t i=0; i<len; i++)
-		for (int32_t j=0; j<len; j++)
+	for (index_t i=0; i<len; i++)
+		for (index_t j=0; j<len; j++)
 			e+=exp(p2[j*len+i])*(p2[j*len+i]-p1[i]-p1[j]);
 
 	return (float64_t)e;
@@ -303,7 +303,7 @@ float64_t CStatistics::relative_entropy(float64_t* p, float64_t* q, int32_t len)
 {
 	double e=0;
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		e+=exp(p[i])*(p[i]-q[i]);
 
 	return (float64_t)e;
@@ -313,7 +313,7 @@ float64_t CStatistics::entropy(float64_t* p, int32_t len)
 {
 	double e=0;
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		e-=exp(p[i])*p[i];
 
 	return (float64_t)e;

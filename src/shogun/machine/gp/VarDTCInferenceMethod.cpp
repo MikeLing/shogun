@@ -346,7 +346,7 @@ SGVector<float64_t> CVarDTCInferenceMethod::get_derivative_wrt_inducing_features
 	CFeatures *inducing_features=get_inducing_features();
 	//asymtric part (related to xu and x)
 	m_kernel->init(inducing_features, m_features);
-	for(int32_t lat_idx=0; lat_idx<eigen_Tnm.cols(); lat_idx++)
+	for(index_t lat_idx=0; lat_idx<eigen_Tnm.cols(); lat_idx++)
 	{
 		Map<VectorXd> deriv_lat_col_vec(deriv_lat.vector+lat_idx*dim,dim);
 		//p by n
@@ -358,7 +358,7 @@ SGVector<float64_t> CVarDTCInferenceMethod::get_derivative_wrt_inducing_features
 
 	//symtric part (related to xu and xu)
 	m_kernel->init(inducing_features, inducing_features);
-	for(int32_t lat_lidx=0; lat_lidx<eigen_Tmm.cols(); lat_lidx++)
+	for(index_t lat_lidx=0; lat_lidx<eigen_Tmm.cols(); lat_lidx++)
 	{
 		Map<VectorXd> deriv_lat_col_vec(deriv_lat.vector+lat_lidx*dim,dim);
 		//p by n

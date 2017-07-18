@@ -106,7 +106,7 @@ bool CCplex::setup_subgradientlpm_QP(
 	int* cmatind=SG_MALLOC(int, cmatsize);
 	double* cmatval=SG_MALLOC(double, cmatsize);
 
-	for (int32_t i=0; i<num_variables; i++)
+	for (index_t i=0; i<num_variables; i++)
 	{
 		obj[i]=0;
 
@@ -123,7 +123,7 @@ bool CCplex::setup_subgradientlpm_QP(
 	}
 
 	int32_t offs=0;
-	for (int32_t i=0; i<num_variables; i++)
+	for (index_t i=0; i<num_variables; i++)
 	{
 		if (i<num_dim) //sum_xi
 		{
@@ -160,7 +160,7 @@ bool CCplex::setup_subgradientlpm_QP(
 
 			if (vlen>0)
 			{
-				for (int32_t j=0; j<vlen; j++)
+				for (index_t j=0; j<vlen; j++)
 				{
 					cmatind[offs]=vec.features[j].feat_index;
 					cmatval[offs]=-val*vec.features[j].entry;
@@ -221,7 +221,7 @@ bool CCplex::setup_subgradientlpm_QP(
 
 	float64_t diag=2.0;
 
-	for (int32_t i=0; i<num_variables; i++)
+	for (index_t i=0; i<num_variables; i++)
 	{
 		if (i<num_dim) //|| (!use_bias && i<num_dim)) //xi
 		//if ((i<num_dim-1) || (!use_bias && i<num_dim)) //xi
@@ -269,7 +269,7 @@ bool CCplex::setup_lpboost(float64_t C, int32_t num_cols)
 	double* lb=SG_MALLOC(double, num_cols);
 	double* ub=SG_MALLOC(double, num_cols);
 
-	for (int32_t i=0; i<num_cols; i++)
+	for (index_t i=0; i<num_cols; i++)
 	{
 		obj[i]=-1;
 		lb[i]=0;
@@ -303,7 +303,7 @@ bool CCplex::add_lpboost_constraint(
 	rhs[0]=1;
 	sense[0]='L';
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		int32_t idx=h[i].feat_index;
 		float64_t val=factor*h[i].entry;
@@ -345,7 +345,7 @@ bool CCplex::setup_lpm(
 	int* amatind=SG_MALLOC(int, amatsize); /* for calling external lib */
 	double* amatval= SG_MALLOC(double, amatsize); /* for calling external lib */
 
-	for (int32_t i=0; i<num_dims; i++)
+	for (index_t i=0; i<num_dims; i++)
 	{
 		if (i==0) //b
 		{
@@ -375,7 +375,7 @@ bool CCplex::setup_lpm(
 		}
 	}
 
-	for (int32_t i=0; i<num_constraints; i++)
+	for (index_t i=0; i<num_constraints; i++)
 		b[i]=-1;
 
 	char* sense=SG_MALLOC(char, num_constraints);
@@ -388,7 +388,7 @@ bool CCplex::setup_lpm(
 	amatbeg[0]=offs;
 	amatcnt[0]=num_vec;
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		amatind[offs]=i;
 		amatval[offs]=-y->get_confidence(i);
@@ -401,12 +401,12 @@ bool CCplex::setup_lpm(
 	SGSparseVector<float64_t>* sfeat= x->get_transposed(num_sfeat, num_svec);
 	ASSERT(sfeat)
 
-	for (int32_t i=0; i<num_svec; i++)
+	for (index_t i=0; i<num_svec; i++)
 	{
 		amatbeg[i+1]=offs;
 		amatcnt[i+1]=sfeat[i].num_feat_entries;
 
-		for (int32_t j=0; j<sfeat[i].num_feat_entries; j++)
+		for (index_t j=0; j<sfeat[i].num_feat_entries; j++)
 		{
 			int32_t row=sfeat[i].features[j].feat_index;
 			float64_t val=sfeat[i].features[j].entry;
@@ -417,12 +417,12 @@ bool CCplex::setup_lpm(
 		}
 	}
 
-	for (int32_t i=0; i<num_svec; i++)
+	for (index_t i=0; i<num_svec; i++)
 	{
 		amatbeg[num_svec+i+1]=offs;
 		amatcnt[num_svec+i+1]=sfeat[i].num_feat_entries;
 
-		for (int32_t j=0; j<sfeat[i].num_feat_entries; j++)
+		for (index_t j=0; j<sfeat[i].num_feat_entries; j++)
 		{
 			int32_t row=sfeat[i].features[j].feat_index;
 			float64_t val=sfeat[i].features[j].entry;
@@ -436,7 +436,7 @@ bool CCplex::setup_lpm(
 	x->clean_tsparse(sfeat, num_svec);
 
 	//xi part of A
-	for (int32_t k=0; k<num_vec; k++)
+	for (index_t k=0; k<num_vec; k++)
 	{
 		amatbeg[1+2*num_feat+k]=offs;
 		amatcnt[1+2*num_feat+k]=1;
@@ -517,11 +517,11 @@ bool CCplex::dense_to_cplex_sparse(
 		return false;
 	}
 
-	for (int32_t i=0; i<cols; i++)
+	for (index_t i=0; i<cols; i++)
 	{
 		qmatcnt[i]=rows;
 		qmatbeg[i]=i*rows;
-		for (int32_t j=0; j<rows; j++)
+		for (index_t j=0; j<rows; j++)
 			qmatind[i*rows+j]=j;
 	}
 

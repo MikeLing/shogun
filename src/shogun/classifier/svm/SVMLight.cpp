@@ -271,7 +271,7 @@ bool CSVMLight::train_machine(CFeatures* data)
 	// brain damaged svm light work around
 	create_new_model(model->sv_num-1);
 	set_bias(-model->b);
-	for (int32_t i=0; i<model->sv_num-1; i++)
+	for (index_t i=0; i<model->sv_num-1; i++)
 	{
 		set_alpha(i, model->alpha[i+1]);
 		set_support_vector(i, model->supvec[i+1]);
@@ -962,7 +962,7 @@ float64_t CSVMLight::compute_objective_function(
   /* calculate value of objective function */
   float64_t criterion=0;
 
-  for (int32_t i=0;i<totdoc;i++)
+  for (index_t i=0;i<totdoc;i++)
 	  criterion=criterion+(eps[i]-(float64_t)label[i]*c[i])*a[i]+0.5*a[i]*label[i]*lin[i];
 
   return(criterion);
@@ -1101,7 +1101,7 @@ void CSVMLight::compute_matrices_for_optimization_parallel(
 		S_THREAD_PARAM_KERNEL* params = SG_MALLOC(S_THREAD_PARAM_KERNEL, parallel->get_num_threads()-1);
 		int32_t step= Knum/parallel->get_num_threads();
 		//SG_DEBUG("\nkernel-step size: %i\n", step)
-		for (int32_t t=0; t<parallel->get_num_threads()-1; t++)
+		for (index_t t=0; t<parallel->get_num_threads()-1; t++)
 		{
 			params[t].svmlight = this;
 			params[t].start = t*step;
@@ -1114,7 +1114,7 @@ void CSVMLight::compute_matrices_for_optimization_parallel(
 		for (i=params[parallel->get_num_threads()-2].end; i<Knum; i++)
 			Kval[i]=compute_kernel(KI[i],KJ[i]) ;
 
-		for (int32_t t=0; t<parallel->get_num_threads()-1; t++)
+		for (index_t t=0; t<parallel->get_num_threads()-1; t++)
 			pthread_join(threads[t], NULL);
 
 		SG_FREE(params);
@@ -1474,7 +1474,7 @@ void CSVMLight::update_linear_component(
 					int32_t step = num_elem/parallel->get_num_threads();
 					int32_t end = step ;
 
-					for (int32_t t=0; t<parallel->get_num_threads()-1; t++)
+					for (index_t t=0; t<parallel->get_num_threads()-1; t++)
 					{
 						params[t].kernel = kernel ;
 						params[t].lin = lin ;
@@ -1491,7 +1491,7 @@ void CSVMLight::update_linear_component(
 						lin[j]+=kernel->compute_optimized(docs[j]);
 					}
 					void* ret;
-					for (int32_t t=0; t<parallel->get_num_threads()-1; t++)
+					for (index_t t=0; t<parallel->get_num_threads()-1; t++)
 						pthread_join(threads[t], &ret) ;
 
 					SG_FREE(params);
@@ -1563,21 +1563,21 @@ void CSVMLight::update_linear_component_mkl(
 		float64_t* w1 = SG_MALLOC(float64_t, num_kernels);
 
 		// backup and set to zero
-		for (int32_t i=0; i<num_kernels; i++)
+		for (index_t i=0; i<num_kernels; i++)
 		{
 			w_backup[i] = old_beta[i] ;
 			w1[i]=0.0 ;
 		}
-		for (int32_t n=0; n<num_kernels; n++)
+		for (index_t n=0; n<num_kernels; n++)
 		{
 			w1[n]=1.0 ;
 			kernel->set_subkernel_weights(SGVector<float64_t>(w1, num_weights));
 
-			for (int32_t i=0;i<num;i++)
+			for (index_t i=0;i<num;i++)
 			{
 				if(a[i] != a_old[i])
 				{
-					for (int32_t j=0;j<num;j++)
+					for (index_t j=0;j<num;j++)
 						W[j*num_kernels+n]+=(a[i]-a_old[i])*compute_kernel(i,j)*(float64_t)label[i];
 				}
 			}
@@ -1614,7 +1614,7 @@ void CSVMLight::update_linear_component_mkl_linadd(
 	float64_t* w1 = SG_MALLOC(float64_t, num_kernels);
 
 	// backup and set to one
-	for (int32_t i=0; i<num_kernels; i++)
+	for (index_t i=0; i<num_kernels; i++)
 	{
 		w_backup[i] = old_beta[i] ;
 		w1[i]=1.0 ;
@@ -1624,7 +1624,7 @@ void CSVMLight::update_linear_component_mkl_linadd(
 
 	// create normal update (with changed alphas only)
 	kernel->clear_normal();
-	for (int32_t ii=0, i=0;(i=working2dnum[ii])>=0;ii++) {
+	for (index_t ii=0, i=0;(i=working2dnum[ii])>=0;ii++) {
 		if(a[i] != a_old[i]) {
 			kernel->add_to_normal(docs[i], (a[i]-a_old[i])*(float64_t)label[i]);
 		}
@@ -1633,7 +1633,7 @@ void CSVMLight::update_linear_component_mkl_linadd(
 	if (parallel->get_num_threads() < 2)
 	{
 		// determine contributions of different kernels
-		for (int32_t i=0; i<num; i++)
+		for (index_t i=0; i<num; i++)
 			kernel->compute_by_subkernel(i,&W[i*num_kernels]);
 	}
 #ifdef HAVE_PTHREAD
@@ -1643,7 +1643,7 @@ void CSVMLight::update_linear_component_mkl_linadd(
 		S_THREAD_PARAM_SVMLIGHT* params = SG_MALLOC(S_THREAD_PARAM_SVMLIGHT, parallel->get_num_threads()-1);
 		int32_t step= num/parallel->get_num_threads();
 
-		for (int32_t t=0; t<parallel->get_num_threads()-1; t++)
+		for (index_t t=0; t<parallel->get_num_threads()-1; t++)
 		{
 			params[t].kernel = kernel;
 			params[t].W = W;
@@ -1652,10 +1652,10 @@ void CSVMLight::update_linear_component_mkl_linadd(
 			pthread_create(&threads[t], NULL, CSVMLight::update_linear_component_mkl_linadd_helper, (void*)&params[t]);
 		}
 
-		for (int32_t i=params[parallel->get_num_threads()-2].end; i<num; i++)
+		for (index_t i=params[parallel->get_num_threads()-2].end; i<num; i++)
 			kernel->compute_by_subkernel(i,&W[i*num_kernels]);
 
-		for (int32_t t=0; t<parallel->get_num_threads()-1; t++)
+		for (index_t t=0; t<parallel->get_num_threads()-1; t++)
 			pthread_join(threads[t], NULL);
 
 		SG_FREE(params);
@@ -1676,7 +1676,7 @@ void* CSVMLight::update_linear_component_mkl_linadd_helper(void* p)
 	int32_t num_kernels=params->kernel->get_num_subkernels();
 
 	// determine contributions of different kernels
-	for (int32_t i=params->start; i<params->end; i++)
+	for (index_t i=params->start; i<params->end; i++)
 		params->kernel->compute_by_subkernel(i,&(params->W[i*num_kernels]));
 
 	return NULL ;
@@ -1693,13 +1693,13 @@ void CSVMLight::call_mkl_callback(float64_t* a, int32_t* label, float64_t* lin)
     int nk = (int) num_kernels; /* calling external lib */
 	double* alphay  = SG_MALLOC(double, num);
 
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 	{
 		alphay[i]=a[i]*label[i];
 		suma+=a[i];
 	}
 
-	for (int32_t i=0; i<num_kernels; i++)
+	for (index_t i=0; i<num_kernels; i++)
 		sumw[i]=0;
 
 	cblas_dgemv(CblasColMajor, CblasNoTrans, num_kernels, (int) num, 0.5, (double*) W,
@@ -1707,13 +1707,13 @@ void CSVMLight::call_mkl_callback(float64_t* a, int32_t* label, float64_t* lin)
 
 	SG_FREE(alphay);
 #else
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		suma += a[i];
 
-	for (int32_t d=0; d<num_kernels; d++)
+	for (index_t d=0; d<num_kernels; d++)
 	{
 		sumw[d]=0;
-		for (int32_t i=0; i<num; i++)
+		for (index_t i=0; i<num; i++)
 			sumw[d] += a[i]*(0.5*label[i]*W[i*num_kernels+d]);
 	}
 #endif
@@ -1729,11 +1729,11 @@ void CSVMLight::call_mkl_callback(float64_t* a, int32_t* label, float64_t* lin)
     cblas_dgemv(CblasColMajor, CblasTrans, nk, (int) num, 1.0, (double*) W,
         nk, (double*) new_beta, 1, 0.0, (double*) lin, 1);
 #else
-    for (int32_t i=0; i<num; i++)
+    for (index_t i=0; i<num; i++)
         lin[i]=0 ;
-    for (int32_t d=0; d<num_kernels; d++)
+    for (index_t d=0; d<num_kernels; d++)
         if (new_beta[d]!=0)
-            for (int32_t i=0; i<num; i++)
+            for (index_t i=0; i<num; i++)
                 lin[i] += new_beta[d]*W[i*num_kernels+d] ;
 #endif
 
@@ -2046,7 +2046,7 @@ void* CSVMLight::reactivate_inactive_examples_linadd_helper(void* p)
 	int32_t start = params->start;
 	int32_t end = params->end;
 
-	for (int32_t i=start;i<end;i++)
+	for (index_t i=start;i<end;i++)
 	{
 		if (!active[i])
 			lin[i] = last_lin[i]+k->compute_optimized(docs[i]);
@@ -2081,14 +2081,14 @@ void* CSVMLight::reactivate_inactive_examples_vanilla_helper(void* p)
 	int32_t start = params->start;
 	int32_t end = params->end;
 
-	for (int32_t ii=start;ii<end;ii++)
+	for (index_t ii=start;ii<end;ii++)
 	{
 		int32_t i=changed2dnum[ii];
 		int32_t j=0;
 		ASSERT(i>=0)
 
 		k->get_kernel_row(i,inactive2dnum,aicache);
-		for (int32_t jj=0;(j=inactive2dnum[jj])>=0;jj++)
+		for (index_t jj=0;(j=inactive2dnum[jj])>=0;jj++)
 			lin[j]+=(a[i]-a_old[i])*aicache[j]*(float64_t)label[i];
 	}
 	return NULL;

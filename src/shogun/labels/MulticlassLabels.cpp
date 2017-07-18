@@ -54,7 +54,7 @@ SGVector<float64_t> CMulticlassLabels::get_multiclass_confidences(int32_t i)
 	return confs;
 }
 
-void CMulticlassLabels::allocate_confidences_for(int32_t n_classes)
+void CMulticlassLabels::allocate_confidences_for(index_t n_classes)
 {
 	int32_t n_labels = m_labels.size();
 	REQUIRE(n_labels!=0,"%s::allocate_confidences_for(): There should be "
@@ -68,7 +68,7 @@ void CMulticlassLabels::ensure_valid(const char* context)
     CDenseLabels::ensure_valid(context);
 
     int32_t subset_size=get_num_labels();
-    for (int32_t i=0; i<subset_size; i++)
+    for (index_t i=0; i<subset_size; i++)
     {
         int32_t real_i = m_subset_stack->subset_idx_conversion(i);
         int32_t label = int32_t(m_labels[real_i]);
@@ -97,7 +97,7 @@ CBinaryLabels* CMulticlassLabels::get_binary_for_class(int32_t i)
 	}
 	if (use_confidences)
 	{
-		for (int32_t k=0; k<binary_labels.vlen; k++)
+		for (index_t k=0; k<binary_labels.vlen; k++)
 		{
 			int32_t label = get_int_label(k);
 			float64_t confidence = m_multiclass_confidences(label,k);
@@ -106,7 +106,7 @@ CBinaryLabels* CMulticlassLabels::get_binary_for_class(int32_t i)
 	}
 	else
 	{
-		for (int32_t k=0; k<binary_labels.vlen; k++)
+		for (index_t k=0; k<binary_labels.vlen; k++)
 		{
 			int32_t label = get_int_label(k);
 			binary_labels[k] = label == i ? +1.0 : -1.0;

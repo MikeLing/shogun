@@ -34,7 +34,7 @@ public:
 	 * @param use_quadr whether to use quadratic features or not
 	 * @param keep_lin_terms whether to maintain the linear terms in the computations
 	 */
-	CHashedDenseFeatures(int32_t size=0, bool use_quadr = false, bool keep_lin_terms = true);
+	CHashedDenseFeatures(index_t size=0, bool use_quadr = false, bool keep_lin_terms = true);
 
 	/** constructor
 	 *
@@ -43,7 +43,7 @@ public:
 	 * @param use_quadr whether to use quadratic features or not
 	 * @param keep_lin_terms whether to maintain the linear terms in the computations
 	 */
-	CHashedDenseFeatures(CDenseFeatures<ST>* feats, int32_t d, bool use_quadr = false,
+	CHashedDenseFeatures(CDenseFeatures<ST>* feats, index_t d, bool use_quadr = false,
 			bool keep_lin_terms = true);
 
 	/** constructor
@@ -53,7 +53,7 @@ public:
 	 * @param use_quadr whether to use quadratic features or not
 	 * @param keep_lin_terms whether to maintain the linear terms in the computations
 	 */
-	CHashedDenseFeatures(SGMatrix<ST> matrix, int32_t dm, bool use_quadr = false,
+	CHashedDenseFeatures(SGMatrix<ST> matrix, index_t dm, bool use_quadr = false,
 			bool keep_lin_terms = true);
 
 	/** constructor
@@ -65,7 +65,7 @@ public:
 	 * @param use_quadr whether to use quadratic features or not
 	 * @param keep_lin_terms whether to maintain the linear terms in the computations
 	 */
-	CHashedDenseFeatures(ST* src, int32_t num_feat, int32_t num_vec, int32_t d,
+	CHashedDenseFeatures(ST* src, index_t num_feat, index_t num_vec, index_t d,
 			bool use_quadr = false, bool keep_lin_terms = true);
 
 	/** constructor loading features from file
@@ -75,7 +75,7 @@ public:
 	 * @param use_quadr whether to use quadratic features or not
 	 * @param keep_lin_terms whether to maintain the linear terms in the computations
 	 */
-	CHashedDenseFeatures(CFile* loader, int32_t d, bool use_quadr = false,
+	CHashedDenseFeatures(CFile* loader, index_t d, bool use_quadr = false,
 			bool keep_lin_terms = false);
 
 	/** copy constructor */
@@ -94,7 +94,7 @@ public:
 	 *
 	 * @return dimensionality
 	 */
-	virtual int32_t get_dim_feature_space() const;
+	virtual index_t get_dim_feature_space() const;
 
 	/** compute dot product between vector1 and vector2,
 	 * appointed by their indices
@@ -105,8 +105,8 @@ public:
 	 * @param df DotFeatures (of same kind) to compute dot product with
 	 * @param vec_idx2 index of second vector
 	 */
-	virtual float64_t dot(int32_t vec_idx1, CDotFeatures* df,
-			int32_t vec_idx2);
+	virtual float64_t dot(index_t vec_idx1, CDotFeatures* df,
+			index_t vec_idx2);
 
 	/** compute dot product between vector1 and a dense vector
 	 *
@@ -116,8 +116,8 @@ public:
 	 * @param vec2 pointer to real valued vector
 	 * @param vec2_len length of real valued vector
 	 */
-	virtual float64_t dense_dot(int32_t vec_idx1, const float64_t* vec2,
-			int32_t vec2_len);
+	virtual float64_t dense_dot(index_t vec_idx1, const float64_t* vec2,
+			index_t vec2_len);
 
 	/** add vector 1 multiplied with alpha to dense vector2
 	 *
@@ -129,15 +129,15 @@ public:
 	 * @param vec2_len length of real valued vector
 	 * @param abs_val if true add the absolute value
 	 */
-	virtual void add_to_dense_vec(float64_t alpha, int32_t vec_idx1,
-			float64_t* vec2, int32_t vec2_len, bool abs_val = false);
+	virtual void add_to_dense_vec(float64_t alpha, index_t vec_idx1,
+			float64_t* vec2, index_t vec2_len, bool abs_val = false);
 
 	/** get number of non-zero features in vector
 	 *
 	 * @param num which vector
 	 * @return number of non-zero features in vector
 	 */
-	virtual int32_t get_nnz_features_for_vector(int32_t num);
+	virtual index_t get_nnz_features_for_vector(index_t num);
 
 	/** iterate over the non-zero features
 	 *
@@ -150,7 +150,7 @@ public:
 	 *			iterate over
 	 * @return feature iterator (to be passed to get_next_feature)
 	 */
-	virtual void* get_feature_iterator(int32_t vector_index);
+	virtual void* get_feature_iterator(index_t vector_index);
 
 	/** iterate over the non-zero features
 	 *
@@ -164,7 +164,7 @@ public:
 	 * @param iterator as returned by get_first_feature
 	 * @return true if a new non-zero feature got returned
 	 */
-	virtual bool get_next_feature(int32_t& index, float64_t& value,
+	virtual bool get_next_feature(index_t& index, float64_t& value,
 			void* iterator);
 
 	/** clean up iterator
@@ -193,14 +193,14 @@ public:
 	 *
 	 * @return number of feature vectors
 	 */
-	virtual int32_t get_num_vectors() const;
+	virtual index_t get_num_vectors() const;
 
 	/** get the hashed representation of the requested vector
 	 *
 	 * @param vec_idx the index of the vector
 	 * @return the hashed representation of the vector
 	 */
-	SGSparseVector<ST> get_hashed_feature_vector(int32_t vec_idx);
+	SGSparseVector<ST> get_hashed_feature_vector(index_t vec_idx);
 
 	/** returns a hashed represenation of vector vec in a new feature space of dimension dim
 	 *
@@ -210,11 +210,11 @@ public:
 	 * @param keep_linear_terms whether to maintain the linear terms in the computations
 	 * @return the hashed representation
 	 */
-	static SGSparseVector<ST> hash_vector(SGVector<ST> vec, int32_t dim, bool use_quadratic = false,
+	static SGSparseVector<ST> hash_vector(SGVector<ST> vec, index_t dim, bool use_quadratic = false,
 			bool keep_linear_terms = true);
 
 private:
-	void init(CDenseFeatures<ST>* feats, int32_t d, bool use_quadr, bool keep_lin_terms);
+	void init(CDenseFeatures<ST>* feats, index_t d, bool use_quadr, bool keep_lin_terms);
 
 protected:
 
@@ -222,7 +222,7 @@ protected:
 	CDenseFeatures<ST>* dense_feats;
 
 	/** new feature space dimension */
-	int32_t dim;
+	index_t dim;
 
 	/** use quadratic feature or not */
 	bool use_quadratic;

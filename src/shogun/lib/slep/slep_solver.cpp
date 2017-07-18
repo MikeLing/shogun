@@ -30,10 +30,10 @@ double compute_regularizer(double* w, double lambda, double lambda2, int n_vecs,
 	{
 		case MULTITASK_GROUP:
 		{
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 			{
 				double w_row_norm = 0.0;
-				for (int t=0; t<n_blocks; t++)
+				for (index_t t=0; t<n_blocks; t++)
 					w_row_norm += CMath::pow(w[i+t*n_feats],options.q);
 				regularizer += CMath::pow(w_row_norm,1.0/options.q);
 			}
@@ -42,7 +42,7 @@ double compute_regularizer(double* w, double lambda, double lambda2, int n_vecs,
 		break;
 		case MULTITASK_TREE:
 		{
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 			{
 				double tree_norm = 0.0;
 
@@ -58,12 +58,12 @@ double compute_regularizer(double* w, double lambda, double lambda2, int n_vecs,
 		break;
 		case FEATURE_GROUP:
 		{
-			for (int t=0; t<n_blocks; t++)
+			for (index_t t=0; t<n_blocks; t++)
 			{
 				double group_qpow_sum = 0.0;
 				int group_ind_start = options.ind[t];
 				int group_ind_end = options.ind[t+1];
-				for (int i=group_ind_start; i<group_ind_end; i++)
+				for (index_t i=group_ind_start; i<group_ind_end; i++)
 					group_qpow_sum += CMath::pow(w[i], options.q);
 
 				regularizer += options.gWeight[t]*CMath::pow(group_qpow_sum, 1.0/options.q);
@@ -83,7 +83,7 @@ double compute_regularizer(double* w, double lambda, double lambda2, int n_vecs,
 		break;
 		case PLAIN:
 		{
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 				regularizer += CMath::abs(w[i]);
 
 			regularizer *= lambda;
@@ -92,11 +92,11 @@ double compute_regularizer(double* w, double lambda, double lambda2, int n_vecs,
 		case FUSED:
 		{
 			double l1 = 0.0;
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 				l1 += CMath::abs(w[i]);
 			regularizer += lambda*l1;
 			double fuse = 0.0;
-			for (int i=1; i<n_feats; i++)
+			for (index_t i=1; i<n_feats; i++)
 				fuse += CMath::abs(w[i]-w[i-1]);
 			regularizer += lambda2*fuse;
 		}
@@ -133,7 +133,7 @@ double compute_lambda(
 		case MULTITASK_GROUP:
 		case MULTITASK_TREE:
 		{
-			for (int t=0; t<n_blocks; t++)
+			for (index_t t=0; t<n_blocks; t++)
 			{
 				SGVector<index_t> task_idx = options.tasks_indices[t];
 				int n_vecs_task = task_idx.vlen;
@@ -144,14 +144,14 @@ double compute_lambda(
 					{
 						double b = 0.0;
 						int m1 = 0, m2 = 0;
-						for (int i=0; i<n_vecs_task; i++)
+						for (index_t i=0; i<n_vecs_task; i++)
 						{
 							if (y[task_idx[i]]>0)
 								m1++;
 							else
 								m2++;
 						}
-						for (int i=0; i<n_vecs_task; i++)
+						for (index_t i=0; i<n_vecs_task; i++)
 						{
 							if (y[task_idx[i]]>0)
 								b = double(m1)/(m1+m2);
@@ -164,7 +164,7 @@ double compute_lambda(
 					break;
 					case LEAST_SQUARES:
 					{
-						for (int i=0; i<n_vecs_task; i++)
+						for (index_t i=0; i<n_vecs_task; i++)
 							features->add_to_dense_vec(y[task_idx[i]],task_idx[i],ATx+t*n_feats,n_feats);
 					}
 				}
@@ -182,12 +182,12 @@ double compute_lambda(
 				{
 					int m1 = 0, m2 = 0;
 					double b = 0.0;
-					for (int i=0; i<n_vecs; i++)
+					for (index_t i=0; i<n_vecs; i++)
 						y[i]>0 ? m1++ : m2++;
 
 					SG_SDEBUG("# pos = %d , # neg = %d\n",m1,m2)
 
-					for (int i=0; i<n_vecs; i++)
+					for (index_t i=0; i<n_vecs; i++)
 					{
 						y[i]>0 ? b=double(m2) / CMath::sq(n_vecs) : b=-double(m1) / CMath::sq(n_vecs);
 						features->add_to_dense_vec(b,i,ATx,n_feats);
@@ -196,7 +196,7 @@ double compute_lambda(
 				break;
 				case LEAST_SQUARES:
 				{
-					for (int i=0; i<n_vecs; i++)
+					for (index_t i=0; i<n_vecs; i++)
 						features->add_to_dense_vec(y[i],i,ATx,n_feats);
 				}
 				break;
@@ -209,10 +209,10 @@ double compute_lambda(
 	{
 		case MULTITASK_GROUP:
 		{
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 			{
 				double sum = 0.0;
-				for (int t=0; t<n_blocks; t++)
+				for (index_t t=0; t<n_blocks; t++)
 					sum += CMath::pow(fabs(ATx[t*n_feats+i]),q_bar);
 				lambda_max =
 					CMath::max(lambda_max, CMath::pow(sum,1.0/q_bar));
@@ -234,12 +234,12 @@ double compute_lambda(
 		break;
 		case FEATURE_GROUP:
 		{
-			for (int t=0; t<n_blocks; t++)
+			for (index_t t=0; t<n_blocks; t++)
 			{
 				int group_ind_start = options.ind[t];
 				int group_ind_end = options.ind[t+1];
 				double sum = 0.0;
-				for (int i=group_ind_start; i<group_ind_end; i++)
+				for (index_t i=group_ind_start; i<group_ind_end; i++)
 					sum += CMath::pow(fabs(ATx[i]),q_bar);
 
 				sum = CMath::pow(sum, 1.0/q_bar);
@@ -262,7 +262,7 @@ double compute_lambda(
 		case FUSED:
 		{
 			double max = 0.0;
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 			{
 				if (CMath::abs(ATx[i]) > max)
 					max = CMath::abs(ATx[i]);
@@ -300,12 +300,12 @@ void projection(double* w, double* v, int n_feats, int n_blocks, double lambda, 
 				altra(w, v, n_feats, options.ind_t, options.n_nodes, lambda/L);
 		break;
 		case PLAIN:
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 				w[i] = CMath::sign(v[i])*CMath::max(0.0,CMath::abs(v[i])-lambda/L);
 		break;
 		case FUSED:
 			flsa(w,z,NULL,v,z0,lambda/L,lambda2/L,n_feats,1000,1e-8,1,6);
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 				z0[i] = z[i];
 		break;
 	}
@@ -325,7 +325,7 @@ double search_point_gradient_and_objective(CDotFeatures* features, double* ATx, 
 	{
 		case MULTITASK_GROUP:
 		case MULTITASK_TREE:
-			for (int t=0; t<n_tasks; t++)
+			for (index_t t=0; t<n_tasks; t++)
 			{
 				SGVector<index_t> task_idx = options.tasks_indices[t];
 				int n_vecs_task = task_idx.vlen;
@@ -333,7 +333,7 @@ double search_point_gradient_and_objective(CDotFeatures* features, double* ATx, 
 				{
 					case LOGISTIC:
 						gc[t] = 0.0;
-						for (int i=0; i<n_vecs_task; i++)
+						for (index_t i=0; i<n_vecs_task; i++)
 						{
 							double aa = -y[task_idx[i]]*(As[task_idx[i]]+sc[t]);
 							double bb = CMath::max(aa,0.0);
@@ -345,9 +345,9 @@ double search_point_gradient_and_objective(CDotFeatures* features, double* ATx, 
 						}
 					break;
 					case LEAST_SQUARES:
-						for (int i=0; i<n_feats*n_tasks; i++)
+						for (index_t i=0; i<n_feats*n_tasks; i++)
 							g[i] = -ATx[i];
-						for (int i=0; i<n_vecs_task; i++)
+						for (index_t i=0; i<n_vecs_task; i++)
 							features->add_to_dense_vec(As[task_idx[i]],task_idx[i],g+t*n_feats,n_feats);
 					break;
 				}
@@ -362,7 +362,7 @@ double search_point_gradient_and_objective(CDotFeatures* features, double* ATx, 
 				case LOGISTIC:
 					gc[0] = 0.0;
 
-					for (int i=0; i<n_vecs; i++)
+					for (index_t i=0; i<n_vecs; i++)
 					{
 						double aa = -y[i]*(As[i]+sc[0]);
 						double bb = CMath::max(aa,0.0);
@@ -388,9 +388,9 @@ double search_point_gradient_and_objective(CDotFeatures* features, double* ATx, 
 					fun_s /= n_vecs;
 				break;
 				case LEAST_SQUARES:
-					for (int i=0; i<n_feats; i++)
+					for (index_t i=0; i<n_feats; i++)
 						g[i] = -ATx[i];
-					for (int i=0; i<n_vecs; i++)
+					for (index_t i=0; i<n_vecs; i++)
 						features->add_to_dense_vec(As[i],i,g,n_feats);
 				break;
 			}

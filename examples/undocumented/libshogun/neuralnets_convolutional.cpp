@@ -80,8 +80,8 @@ int main(int, char*[])
 		return 0;
 	}
 
-	for (int32_t i = 0; i < num_classes; i++)
-		for (int32_t j = 0; j < num_examples_per_class; j++)
+	for (index_t i = 0; i < num_classes; i++)
+		for (index_t j = 0; j < num_examples_per_class; j++)
 			Y[i*num_examples_per_class + j] = i;
 
 	CDenseFeatures<float64_t>* features = new CDenseFeatures<float64_t>(X);

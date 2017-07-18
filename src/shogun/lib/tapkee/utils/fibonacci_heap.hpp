@@ -69,12 +69,12 @@ public:
 		num_trees(0), max_num_nodes(capacity), A(NULL), Dn(0)
 	{
 		nodes = (fibonacci_heap_node**)malloc(sizeof(fibonacci_heap_node*)*max_num_nodes);
-		for (int i = 0; i < max_num_nodes; i++)
+		for (index_t i = 0; i < max_num_nodes; i++)
 			nodes[i] = new fibonacci_heap_node;
 
 		Dn = 1 + (int)(log(ScalarType(max_num_nodes))/log(2.));
 		A = (fibonacci_heap_node**)malloc(sizeof(fibonacci_heap_node*)*Dn);
-		for (int i = 0; i < Dn; i++)
+		for (index_t i = 0; i < Dn; i++)
 			A[i] = NULL;
 
 		num_nodes = 0;

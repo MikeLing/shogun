@@ -14,7 +14,7 @@ void display_vector(const SGString<char> &vec)
 {
 	printf("\nNew Vector\n------------------\n");
 	printf("Length=%d.\n", vec.slen);
-	for (int32_t i=0; i<vec.slen; i++)
+	for (index_t i=0; i<vec.slen; i++)
 	{
 		printf("%c", vec.string[i]);
 	}

@@ -1282,7 +1282,7 @@ bool CGUIClassifier::get_svm(
 		cols=2;
 		weights=SG_MALLOC(float64_t, rows*cols);
 
-		for (int32_t i=0; i<rows; i++)
+		for (index_t i=0; i<rows; i++)
 		{
 			weights[i]=svm->get_alpha(i);
 			weights[i+rows]=svm->get_support_vector(i);
@@ -1337,7 +1337,7 @@ bool CGUIClassifier::get_clustering(
 			rows=p.num_rows;
 			cols=p.num_cols;
 			centers=SG_MALLOC(float64_t, rows*cols);
-			for (int32_t i=0; i<rows*cols; i++)
+			for (index_t i=0; i<rows*cols; i++)
 				centers[i]=(float64_t) p.matrix[i];
 
 			break;

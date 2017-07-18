@@ -68,10 +68,10 @@ SGMatrix<int32_t> CECOCDiscriminantEncoder::create_codebook(int32_t num_classes)
     m_codebook.zero();
     m_code_idx = 0;
 
-    for (int32_t itree = 0; itree < m_num_trees; ++itree)
+    for (index_t itree = 0; itree < m_num_trees; ++itree)
     {
         vector<int32_t> classes(num_classes);
-        for (int32_t i=0; i < num_classes; ++i)
+        for (index_t i=0; i < num_classes; ++i)
             classes[i] = i;
 
         binary_partition(classes);
@@ -113,7 +113,7 @@ void CECOCDiscriminantEncoder::run_sffs(vector<int32_t>& part1, vector<int32_t>&
     std::set<int32_t> idata1;
     std::set<int32_t> idata2;
 
-    for (int32_t i=0; i < m_labels->get_num_labels(); ++i)
+    for (index_t i=0; i < m_labels->get_num_labels(); ++i)
     {
         if (find(part1.begin(), part1.end(), ((CMulticlassLabels*) m_labels)->get_int_label(i)) != part1.end())
             idata1.insert(i);
@@ -122,7 +122,7 @@ void CECOCDiscriminantEncoder::run_sffs(vector<int32_t>& part1, vector<int32_t>&
     }
 
     float64_t MI = compute_MI(idata1, idata2);
-    for (int32_t i=0; i < m_iterations; ++i)
+    for (index_t i=0; i < m_iterations; ++i)
     {
         if (i % 2 == 0)
             MI = sffs_iteration(MI, part1, idata1, part2, idata2);
@@ -141,7 +141,7 @@ float64_t CECOCDiscriminantEncoder::sffs_iteration(float64_t MI, vector<int32_t>
     int32_t clas = part1[iclas];
 
     // move clas from part1 to part2
-    for (int32_t i=0; i < m_labels->get_num_labels(); ++i)
+    for (index_t i=0; i < m_labels->get_num_labels(); ++i)
     {
         if (((CMulticlassLabels*) m_labels)->get_int_label(i) == clas)
         {
@@ -160,7 +160,7 @@ float64_t CECOCDiscriminantEncoder::sffs_iteration(float64_t MI, vector<int32_t>
     else
     {
         // revert changes
-        for (int32_t i=0; i < m_labels->get_num_labels(); ++i)
+        for (index_t i=0; i < m_labels->get_num_labels(); ++i)
         {
             if (((CMulticlassLabels*) m_labels)->get_int_label(i) == clas)
             {
@@ -180,11 +180,11 @@ float64_t CECOCDiscriminantEncoder::compute_MI(const std::set<int32_t>& idata1, 
     int32_t hist1[10];
     int32_t hist2[10];
 
-    for (int32_t i=0; i < m_feats.num_rows; ++i)
+    for (index_t i=0; i < m_feats.num_rows; ++i)
     {
         float64_t max_val = m_feats(i, 0);
         float64_t min_val = m_feats(i, 0);
-        for (int32_t j=1; j < m_feats.num_cols; ++j)
+        for (index_t j=1; j < m_feats.num_cols; ++j)
         {
             max_val = max(max_val, m_feats(i, j));
             min_val = min(min_val, m_feats(i, j));
@@ -197,7 +197,7 @@ float64_t CECOCDiscriminantEncoder::compute_MI(const std::set<int32_t>& idata1, 
         compute_hist(i, max_val, min_val, idata2, hist2);
 
         float64_t MI_i = 0;
-        for (int j=0; j < 10; ++j)
+        for (index_t j=0; j < 10; ++j)
             MI_i += (hist1[j]-hist2[j])*(hist1[j]-hist2[j]);
         MI += CMath::sqrt(MI_i);
     }

@@ -83,7 +83,7 @@ void CCombinedDotFeatures::update_dim_feature_space_and_num_vec()
 	SG_DEBUG("vecs=%d, dims=%d\n", num_vectors, num_dimensions)
 }
 
-float64_t CCombinedDotFeatures::dot(int32_t vec_idx1, CDotFeatures* df, int32_t vec_idx2)
+float64_t CCombinedDotFeatures::dot(index_t vec_idx1, CDotFeatures* df, index_t vec_idx2)
 {
 	float64_t result=0;
 
@@ -114,7 +114,7 @@ float64_t CCombinedDotFeatures::dot(int32_t vec_idx1, CDotFeatures* df, int32_t 
 	return result;
 }
 
-float64_t CCombinedDotFeatures::dense_dot(int32_t vec_idx1, const float64_t* vec2, int32_t vec2_len)
+float64_t CCombinedDotFeatures::dense_dot(index_t vec_idx1, const float64_t* vec2, index_t vec2_len)
 {
 	float64_t result=0;
 
@@ -123,7 +123,7 @@ float64_t CCombinedDotFeatures::dense_dot(int32_t vec_idx1, const float64_t* vec
 	for (index_t f_idx=0; f_idx<get_num_feature_obj(); f_idx++)
 	{
 		CDotFeatures* f = get_feature_obj(f_idx);
-		int32_t dim = f->get_dim_feature_space();
+		index_t dim = f->get_dim_feature_space();
 		result += f->dense_dot(vec_idx1, vec2+offs, dim)*f->get_combined_feature_weight();
 		offs += dim;
 
@@ -133,7 +133,7 @@ float64_t CCombinedDotFeatures::dense_dot(int32_t vec_idx1, const float64_t* vec
 	return result;
 }
 
-void CCombinedDotFeatures::dense_dot_range(float64_t* output, int32_t start, int32_t stop, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
+void CCombinedDotFeatures::dense_dot_range(float64_t* output, index_t start, index_t stop, float64_t* alphas, float64_t* vec, index_t dim, float64_t b)
 {
 	if (stop<=start)
 		return;
@@ -156,7 +156,7 @@ void CCombinedDotFeatures::dense_dot_range(float64_t* output, int32_t start, int
 		else
 		{
 			f->dense_dot_range(tmp, start, stop, alphas, vec+offs, f_dim, b);
-			for (int32_t i=0; i<num; i++)
+			for (index_t i=0; i<num; i++)
 				output[i]+=tmp[i];
 		}
 		offs += f_dim;
@@ -166,7 +166,7 @@ void CCombinedDotFeatures::dense_dot_range(float64_t* output, int32_t start, int
 	SG_FREE(tmp);
 }
 
-void CCombinedDotFeatures::dense_dot_range_subset(int32_t* sub_index, int32_t num, float64_t* output, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
+void CCombinedDotFeatures::dense_dot_range_subset(index_t* sub_index, index_t num, float64_t* output, float64_t* alphas, float64_t* vec, index_t dim, float64_t b)
 {
 	if (num<=0)
 		return;
@@ -179,7 +179,7 @@ void CCombinedDotFeatures::dense_dot_range_subset(int32_t* sub_index, int32_t nu
 	for (index_t f_idx=0; f_idx<get_num_feature_obj(); f_idx++)
 	{
 		CDotFeatures* f = get_feature_obj(f_idx);
-		int32_t f_dim = f->get_dim_feature_space();
+		index_t f_dim = f->get_dim_feature_space();
 		if (first)
 		{
 			f->dense_dot_range_subset(sub_index, num, output, alphas, vec+offs, f_dim, b);
@@ -188,7 +188,7 @@ void CCombinedDotFeatures::dense_dot_range_subset(int32_t* sub_index, int32_t nu
 		else
 		{
 			f->dense_dot_range_subset(sub_index, num, tmp, alphas, vec+offs, f_dim, b);
-			for (int32_t i=0; i<num; i++)
+			for (index_t i=0; i<num; i++)
 				output[i]+=tmp[i];
 		}
 		offs += f_dim;
@@ -198,7 +198,7 @@ void CCombinedDotFeatures::dense_dot_range_subset(int32_t* sub_index, int32_t nu
 	SG_FREE(tmp);
 }
 
-void CCombinedDotFeatures::add_to_dense_vec(float64_t alpha, int32_t vec_idx1, float64_t* vec2, int32_t vec2_len, bool abs_val)
+void CCombinedDotFeatures::add_to_dense_vec(float64_t alpha, index_t vec_idx1, float64_t* vec2, index_t vec2_len, bool abs_val)
 {
 	uint32_t offs=0;
 
@@ -213,7 +213,7 @@ void CCombinedDotFeatures::add_to_dense_vec(float64_t alpha, int32_t vec_idx1, f
 	}
 }
 
-void* CCombinedDotFeatures::get_feature_iterator(int32_t vector_index)
+void* CCombinedDotFeatures::get_feature_iterator(index_t vector_index)
 {
 	combined_feature_iterator* it=SG_MALLOC(combined_feature_iterator, 1);
 
@@ -224,7 +224,7 @@ void* CCombinedDotFeatures::get_feature_iterator(int32_t vector_index)
 	return it;
 }
 
-bool CCombinedDotFeatures::get_next_feature(int32_t& index, float64_t& value, void* iterator)
+bool CCombinedDotFeatures::get_next_feature(index_t& index, float64_t& value, void* iterator)
 {
 	ASSERT(iterator)
 	combined_feature_iterator* it = (combined_feature_iterator*) iterator;
@@ -266,12 +266,12 @@ void CCombinedDotFeatures::free_feature_iterator(void* iterator)
 	}
 }
 
-CDotFeatures* CCombinedDotFeatures::get_feature_obj(int32_t idx)
+CDotFeatures* CCombinedDotFeatures::get_feature_obj(index_t idx)
 {
 	return (CDotFeatures*) feature_array->get_element(idx);
 }
 
-bool CCombinedDotFeatures::insert_feature_obj(CDotFeatures* obj, int32_t idx)
+bool CCombinedDotFeatures::insert_feature_obj(CDotFeatures* obj, index_t idx)
 {
 	ASSERT(obj)
 	bool result=feature_array->insert_element(obj, idx);
@@ -288,7 +288,7 @@ bool CCombinedDotFeatures::append_feature_obj(CDotFeatures* obj)
 	return n+1==get_num_feature_obj();
 }
 
-bool CCombinedDotFeatures::delete_feature_obj(int32_t idx)
+bool CCombinedDotFeatures::delete_feature_obj(index_t idx)
 {
 	bool succesful_deletion = feature_array->delete_element(idx);
 	if (succesful_deletion)
@@ -296,14 +296,14 @@ bool CCombinedDotFeatures::delete_feature_obj(int32_t idx)
 	return succesful_deletion;
 }
 
-int32_t CCombinedDotFeatures::get_num_feature_obj()
+index_t CCombinedDotFeatures::get_num_feature_obj()
 {
 	return feature_array->get_num_elements();
 }
 
-int32_t CCombinedDotFeatures::get_nnz_features_for_vector(int32_t num)
+index_t CCombinedDotFeatures::get_nnz_features_for_vector(index_t num)
 {
-	int32_t result=0;
+	index_t result=0;
 
 	for (index_t f_idx=0; f_idx<get_num_feature_obj(); f_idx++)
 	{

@@ -97,7 +97,7 @@ SGMatrix<float64_t> CGaussianARDSparseKernel::get_parameter_gradient(
 		REQUIRE(rhs, "Right features not set!\n");
 		REQUIRE(index>=0 && index<num_lhs,"Index (%d) is out of bound (%d)\n",
 			index, num_rhs);
-		int32_t idx_l=index;
+		index_t idx_l=index;
 		//Note that CDotKernel requires lhs and rhs are CDotFeatures pointers
 		//This Kernel is a subclass of CDotKernel
 		SGVector<float64_t> left_vec=get_feature_vector(idx_l, lhs);
@@ -105,7 +105,7 @@ SGMatrix<float64_t> CGaussianARDSparseKernel::get_parameter_gradient(
 
 		lazy_update_weights();
 
-		for (int32_t idx_r=0; idx_r<num_rhs; idx_r++)
+		for (index_t idx_r=0; idx_r<num_rhs; idx_r++)
 		{
 			SGVector<float64_t> right_vec=get_feature_vector(idx_r, rhs);
 			Map<VectorXd> eigen_res_col_vec(res.get_column_vector(idx_r),left_vec.vlen);

@@ -32,13 +32,13 @@ TEST(ProbingSampler, get_coloring_vector)
 	const int32_t max_pow=10;
 
 	SGSparseMatrix<float64_t> m(size, size);
-	for (int32_t i=0; i<size; ++i)
+	for (index_t i=0; i<size; ++i)
 		m(i,i)=2.0;
 
-	for (int32_t i=0; i<size; i+=4)
+	for (index_t i=0; i<size; i+=4)
 		m(i,size-1)=2.0;
 
-	for (int32_t i=0; i<size; i+=4)
+	for (index_t i=0; i<size; i+=4)
 		m(size-1,i)=2.0;
 
 	CSparseMatrixOperator<float64_t>* op

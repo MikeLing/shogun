@@ -100,7 +100,7 @@ void CContingencyTableEvaluation::compute_scores(CBinaryLabels* predicted, CBina
 	m_FN = 0.0;
 	m_N = predicted->get_num_labels();
 
-	for (int i=0; i<predicted->get_num_labels(); i++)
+	for (index_t i=0; i<predicted->get_num_labels(); i++)
 	{
 		if (ground_truth->get_label(i)==1)
 		{

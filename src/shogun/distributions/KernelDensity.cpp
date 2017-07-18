@@ -130,19 +130,19 @@ int32_t CKernelDensity::get_num_model_parameters()
 	return 0;
 }
 
-float64_t CKernelDensity::get_log_model_parameter(int32_t num_param)
+float64_t CKernelDensity::get_log_model_parameter(index_t num_param)
 {
 	SG_NOTIMPLEMENTED;
 	return 0;
 }
 
-float64_t CKernelDensity::get_log_derivative(int32_t num_param, int32_t num_example)
+float64_t CKernelDensity::get_log_derivative(index_t num_param, index_t num_example)
 {
 	SG_NOTIMPLEMENTED;
 	return 0;
 }
 
-float64_t CKernelDensity::get_log_likelihood_example(int32_t num_example)
+float64_t CKernelDensity::get_log_likelihood_example(index_t num_example)
 {
 	SG_NOTIMPLEMENTED;
 	return 0;

@@ -18,7 +18,7 @@ CIndexFeatures::~CIndexFeatures()
 {
 }
 
-int32_t CIndexFeatures::get_num_vectors() const
+index_t CIndexFeatures::get_num_vectors() const
 {
 	return m_subset_stack->has_subsets() ? m_subset_stack->get_size() : num_vectors;
 }
@@ -54,7 +54,7 @@ SGVector<index_t> CIndexFeatures::get_feature_index()
 	SGVector<index_t> sub_feature_index(get_num_vectors());
 
 	/* copy a subset vector wise */
-	for (int32_t i=0; i<sub_feature_index.vlen; ++i)
+	for (index_t i=0; i<sub_feature_index.vlen; ++i)
 	{
 		int32_t real_i = m_subset_stack->subset_idx_conversion(i);
 		sub_feature_index[i] = m_feature_index[real_i];

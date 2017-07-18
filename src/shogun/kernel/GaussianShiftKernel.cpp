@@ -41,9 +41,9 @@ CGaussianShiftKernel::~CGaussianShiftKernel()
 {
 }
 
-float64_t CGaussianShiftKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CGaussianShiftKernel::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool afree, bfree;
 
 	float64_t* avec=
@@ -54,19 +54,19 @@ float64_t CGaussianShiftKernel::compute(int32_t idx_a, int32_t idx_b)
 
 	float64_t result = 0.0 ;
 	float64_t sum=0.0 ;
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 		sum+=(avec[i]-bvec[i])*(avec[i]-bvec[i]);
 	result += exp(-sum/get_width()) ;
 
-	for (int32_t shift = shift_step, s=1; shift<max_shift; shift+=shift_step, s++)
+	for (index_t shift = shift_step, s=1; shift<max_shift; shift+=shift_step, s++)
 	{
 		sum=0.0 ;
-		for (int32_t i=0; i<alen-shift; i++)
+		for (index_t i=0; i<alen-shift; i++)
 			sum+=(avec[i+shift]-bvec[i])*(avec[i+shift]-bvec[i]);
 		result += exp(-sum/get_width())/(2*s) ;
 
 		sum=0.0 ;
-		for (int32_t i=0; i<alen-shift; i++)
+		for (index_t i=0; i<alen-shift; i++)
 			sum+=(avec[i]-bvec[i+shift])*(avec[i]-bvec[i+shift]);
 		result += exp(-sum/get_width())/(2*s) ;
 	}

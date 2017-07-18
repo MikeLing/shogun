@@ -254,10 +254,10 @@ void CDistance::do_precompute_matrix()
 	SG_FREE(precomputed_matrix);
 	precomputed_matrix=SG_MALLOC(float32_t, num*(num+1)/2);
 
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 	{
 		SG_PROGRESS(i*i,0,num*num)
-		for (int32_t j=0; j<=i; j++)
+		for (index_t j=0; j<=i; j++)
 			precomputed_matrix[i*(i+1)/2+j] = compute(i,j) ;
 	}
 
@@ -295,14 +295,14 @@ template <class T> void* CDistance::get_distance_matrix_helper(void* p)
 	int64_t total_end=params->total_end;
 	int64_t total=total_start;
 
-	for (int32_t i=i_start; i<i_end; i++)
+	for (index_t i=i_start; i<i_end; i++)
 	{
 		int32_t j_start=0;
 
 		if (symmetric)
 			j_start=i;
 
-		for (int32_t j=j_start; j<n; j++)
+		for (index_t j=j_start; j<n; j++)
 		{
 			float64_t v=k->distance(i,j);
 			result[i+j*m]=v;

@@ -87,11 +87,11 @@ void CMultitaskLinearMachine::post_lock(CLabels* labels, CFeatures* features_)
 	SGVector<index_t>* tasks_indices = ((CTaskGroup*)m_task_relation)->get_tasks_indices();
 
 	m_tasks_indices.clear();
-	for (int32_t i=0; i<n_tasks; i++)
+	for (index_t i=0; i<n_tasks; i++)
 	{
 		std::set<index_t> indices_set;
 		SGVector<index_t> task_indices = tasks_indices[i];
-		for (int32_t j=0; j<task_indices.vlen; j++)
+		for (index_t j=0; j<task_indices.vlen; j++)
 			indices_set.insert(task_indices[j]);
 
 		m_tasks_indices.push_back(indices_set);
@@ -105,11 +105,11 @@ bool CMultitaskLinearMachine::train_locked(SGVector<index_t> indices)
 	int n_tasks = ((CTaskGroup*)m_task_relation)->get_num_tasks();
 	ASSERT((int)m_tasks_indices.size()==n_tasks)
 	vector< vector<index_t> > cutted_task_indices;
-	for (int32_t i=0; i<n_tasks; i++)
+	for (index_t i=0; i<n_tasks; i++)
 		cutted_task_indices.push_back(vector<index_t>());
-	for (int32_t i=0; i<indices.vlen; i++)
+	for (index_t i=0; i<indices.vlen; i++)
 	{
-		for (int32_t j=0; j<n_tasks; j++)
+		for (index_t j=0; j<n_tasks; j++)
 		{
 			if (m_tasks_indices[j].count(indices[i]))
 			{
@@ -119,10 +119,10 @@ bool CMultitaskLinearMachine::train_locked(SGVector<index_t> indices)
 		}
 	}
 	SGVector<index_t>* tasks = SG_MALLOC(SGVector<index_t>, n_tasks);
-	for (int32_t i=0; i<n_tasks; i++)
+	for (index_t i=0; i<n_tasks; i++)
 	{
 		tasks[i]=SGVector<index_t>(cutted_task_indices[i].size());
-		for (int32_t j=0; j<(int)cutted_task_indices[i].size(); j++)
+		for (index_t j=0; j<(int)cutted_task_indices[i].size(); j++)
 			tasks[i][j] = cutted_task_indices[i][j];
 		//tasks[i].display_vector();
 	}
@@ -142,9 +142,9 @@ CBinaryLabels* CMultitaskLinearMachine::apply_locked_binary(SGVector<index_t> in
 	int n_tasks = ((CTaskGroup*)m_task_relation)->get_num_tasks();
 	SGVector<float64_t> result(indices.vlen);
 	result.zero();
-	for (int32_t i=0; i<indices.vlen; i++)
+	for (index_t i=0; i<indices.vlen; i++)
 	{
-		for (int32_t j=0; j<n_tasks; j++)
+		for (index_t j=0; j<n_tasks; j++)
 		{
 			if (m_tasks_indices[j].count(indices[i]))
 			{
@@ -157,7 +157,7 @@ CBinaryLabels* CMultitaskLinearMachine::apply_locked_binary(SGVector<index_t> in
 	return new CBinaryLabels(result);
 }
 
-float64_t CMultitaskLinearMachine::apply_one(int32_t i)
+float64_t CMultitaskLinearMachine::apply_one(index_t i)
 {
 	SG_NOTIMPLEMENTED
 	return 0.0;
@@ -179,7 +179,7 @@ SGVector<float64_t> CMultitaskLinearMachine::apply_get_outputs(CFeatures* data)
 	int32_t num=features->get_num_vectors();
 	ASSERT(num>0)
 	float64_t* out=SG_MALLOC(float64_t, num);
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		out[i] = apply_one(i);
 
 	return SGVector<float64_t>(out,num);
@@ -188,14 +188,14 @@ SGVector<float64_t> CMultitaskLinearMachine::apply_get_outputs(CFeatures* data)
 SGVector<float64_t> CMultitaskLinearMachine::get_w() const
 {
 	SGVector<float64_t> w_(m_tasks_w.num_rows);
-	for (int32_t i=0; i<w_.vlen; i++)
+	for (index_t i=0; i<w_.vlen; i++)
 		w_[i] = m_tasks_w(i,m_current_task);
 	return w_;
 }
 
 void CMultitaskLinearMachine::set_w(const SGVector<float64_t> src_w)
 {
-	for (int32_t i=0; i<m_tasks_w.num_rows; i++)
+	for (index_t i=0; i<m_tasks_w.num_rows; i++)
 		m_tasks_w(i,m_current_task) = src_w[i];
 }
 
@@ -216,25 +216,25 @@ SGVector<index_t>* CMultitaskLinearMachine::get_subset_tasks_indices()
 
 	CSubsetStack* sstack = features->get_subset_stack();
 	map<index_t,index_t> subset_inv_map = map<index_t,index_t>();
-	for (int32_t i=0; i<sstack->get_size(); i++)
+	for (index_t i=0; i<sstack->get_size(); i++)
 		subset_inv_map[sstack->subset_idx_conversion(i)] = i;
 
 	SG_UNREF(sstack);
 	sstack=NULL;
 
 	SGVector<index_t>* subset_tasks_indices = SG_MALLOC(SGVector<index_t>, n_tasks);
-	for (int32_t i=0; i<n_tasks; i++)
+	for (index_t i=0; i<n_tasks; i++)
 	{
 		SGVector<index_t> task = tasks_indices[i];
 		//task.display_vector("task");
 		vector<index_t> cutted = vector<index_t>();
-		for (int32_t j=0; j<task.vlen; j++)
+		for (index_t j=0; j<task.vlen; j++)
 		{
 			if (subset_inv_map.count(task[j]))
 				cutted.push_back(subset_inv_map[task[j]]);
 		}
 		SGVector<index_t> cutted_task(cutted.size());
-		for (int32_t j=0; j<cutted_task.vlen; j++)
+		for (index_t j=0; j<cutted_task.vlen; j++)
 			cutted_task[j] = cutted[j];
 		//cutted_task.display_vector("cutted");
 		subset_tasks_indices[i] = cutted_task;

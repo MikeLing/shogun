@@ -197,7 +197,7 @@ template<class T> class CCache : public CSGObject
 				}
 			}
 
-			for (int64_t i=start; i<nr_cache_lines; i++)
+			for (index_t i=start; i<nr_cache_lines; i++)
 			{
 				if (!cache_table[i])
 				{

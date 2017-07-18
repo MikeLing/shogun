@@ -75,7 +75,7 @@ float64_t CStructuredAccuracy::evaluate_real(CStructuredLabels * predicted,
 	int32_t length = predicted->get_num_labels();
 	int32_t num_equal = 0;
 
-	for (int32_t i = 0 ; i < length ; ++i)
+	for (index_t i = 0 ; i < length ; ++i)
 	{
 		CRealNumber * truth = CRealNumber::obtain_from_generic(ground_truth->get_label(i));
 		CRealNumber * pred = CRealNumber::obtain_from_generic(predicted->get_label(i));
@@ -97,7 +97,7 @@ float64_t CStructuredAccuracy::evaluate_sequence(CStructuredLabels * predicted,
 	SGVector<float64_t> accuracies(length);
 	int32_t num_equal = 0;
 
-	for (int32_t i = 0 ; i < length ; ++i)
+	for (index_t i = 0 ; i < length ; ++i)
 	{
 		CSequence * true_seq = CSequence::obtain_from_generic(ground_truth->get_label(i));
 		CSequence * pred_seq = CSequence::obtain_from_generic(predicted->get_label(i));
@@ -111,7 +111,7 @@ float64_t CStructuredAccuracy::evaluate_sequence(CStructuredLabels * predicted,
 		num_equal = 0;
 
 		// Count the number of elements that are equal in both sequences
-		for (int32_t j = 0 ; j < true_seq_data.size() ; ++j)
+		for (index_t j = 0 ; j < true_seq_data.size() ; ++j)
 		{
 			num_equal += true_seq_data[j] == pred_seq_data[j];
 		}

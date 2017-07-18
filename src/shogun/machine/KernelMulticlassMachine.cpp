@@ -59,12 +59,12 @@ void CKernelMulticlassMachine::store_model_features()
 	/* now the old SV indices have to be mapped to the new features */
 
 	/* update SV of all machines */
-	for (int32_t i=0; i<m_machines->get_num_elements(); ++i)
+	for (index_t i=0; i<m_machines->get_num_elements(); ++i)
 	{
 		CKernelMachine *machine=(CKernelMachine *)get_machine(i);
 
 		/* for each machine, replace SV by index in sv_idx array */
-		for (int32_t j=0; j<machine->get_num_support_vectors(); ++j)
+		for (index_t j=0; j<machine->get_num_support_vectors(); ++j)
 		{
 			/* get index of SV in old features */
 			index_t current_sv_idx=machine->get_support_vector(j);
@@ -146,7 +146,7 @@ bool CKernelMulticlassMachine::init_machines_for_apply(CFeatures* data)
 	}
 
 	/* set kernel to all sub-machines */
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 	{
 		CKernelMachine *machine=
 				(CKernelMachine*)m_machines->get_element(i);

@@ -75,7 +75,7 @@ public:
 		else
 			hash_array=(CMapNode<K, T>**) calloc(size, sizeof(CMapNode<K, T>*));
 
-		for (int32_t i=0; i<size; i++)
+		for (index_t i=0; i<size; i++)
 		{
 			hash_array[i]=NULL;
 		}
@@ -270,14 +270,14 @@ public:
 			hash_array = (CMapNode<K, T>**) calloc(hash_size,
 					sizeof(CMapNode<K, T>*));
 
-		for (int32_t i = 0; i<hash_size; i++)
+		for (index_t i = 0; i<hash_size; i++)
 		{
 			hash_array[i] = NULL;
 		}
 
 		array = new DynArray<CMapNode<K, T>*>(128, use_sg_mallocs);
 
-		for (int i = 0; i < orig.num_elements; i++)
+		for (index_t i = 0; i < orig.num_elements; i++)
 		{
 			CMapNode<K, T>* node = orig.array->get_element(i);
 			add(node->key, node->data);
@@ -412,7 +412,7 @@ private:
 	{
 		if (array!=NULL)
 		{
-			for(int32_t i=0; i<array->get_num_elements(); i++)
+			for(index_t i=0; i<array->get_num_elements(); i++)
 			{
 				CMapNode<K, T>* element = array->get_element(i);
 				if (element!=NULL)

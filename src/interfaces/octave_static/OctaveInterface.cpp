@@ -265,7 +265,7 @@ void COctaveInterface::function_name(sg_type*& vec, int32_t& len)						\
 	len = m.cols();																	\
 	vec=SG_MALLOC(sg_type, len);															\
 																					\
-	for (int32_t i=0; i<len; i++)														\
+	for (index_t i=0; i<len; i++)														\
 			vec[i]= (sg_type) m(i);													\
 }
 GET_VECTOR(get_vector, is_uint8_type, uint8NDArray, uint8_array_value, uint8_t, uint8_t, "Byte")
@@ -290,8 +290,8 @@ void COctaveInterface::function_name(sg_type*& matrix, int32_t& num_feat, int32_
 	num_feat = m.rows();															\
 	matrix = SG_MALLOC(sg_type, num_vec*num_feat);											\
 																					\
-	for (int32_t i=0; i<num_vec; i++)													\
-		for (int32_t j=0; j<num_feat; j++)												\
+	for (index_t i=0; i<num_vec; i++)													\
+		for (index_t j=0; j<num_feat; j++)												\
 			matrix[i*num_feat+j]= (sg_type) m(j,i);									\
 }
 GET_MATRIX(get_matrix, is_uint8_type, uint8NDArray, uint8_array_value, uint8_t, uint8_t, "Byte")
@@ -314,14 +314,14 @@ void COctaveInterface::function_name(sg_type*& array, int32_t*& dims, int32_t& n
 	dim_vector dimvec = mat_feat.dims();											\
 																					\
 	dims=SG_MALLOC(int32_t, num_dims);														\
-	for (int32_t d=0; d<num_dims; d++)												\
+	for (index_t d=0; d<num_dims; d++)												\
 		dims[d]=(int32_t) dimvec(d);												\
 																					\
 	oct_type m = mat_feat.oct_converter();											\
 	int64_t total_size=m.nelem();													\
 																					\
 	array=SG_MALLOC(sg_type, total_size);													\
-	for (int64_t i=0; i<total_size; i++)											\
+	for (index_t i=0; i<total_size; i++)											\
 		array[i]= (sg_type) m(i);													\
 }
 GET_NDARRAY(get_ndarray, is_uint8_type, uint8NDArray, uint8_array_value, uint8_t, uint8_t, "Byte")
@@ -347,7 +347,7 @@ void COctaveInterface::get_sparse_matrix(SGSparseVector<float64_t>*& matrix, int
 	matrix=SG_MALLOC(SGSparseVector<float64_t>, num_vec);
 
 	int64_t offset=0;
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		int32_t len=sm.cidx(i+1)-sm.cidx(i);
 		matrix[i].num_feat_entries=len;
@@ -356,7 +356,7 @@ void COctaveInterface::get_sparse_matrix(SGSparseVector<float64_t>*& matrix, int
 		{
 			matrix[i].features=SG_MALLOC(SGSparseVectorEntry<float64_t>, len);
 
-			for (int32_t j=0; j<len; j++)
+			for (index_t j=0; j<len; j++)
 			{
 				matrix[i].features[j].entry=sm.data(offset);
 				matrix[i].features[j].feat_index=sm.ridx(offset);
@@ -382,7 +382,7 @@ void COctaveInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		ASSERT(num_str>=1);															\
 		strings=SG_MALLOC(SGString<sg_type>, num_str);								\
 																					\
-		for (int32_t i=0; i<num_str; i++)											\
+		for (index_t i=0; i<num_str; i++)											\
 		{																			\
 			if (!c.elem(i).oct_type_check1() || !c.elem(i).oct_type_check2()		\
 					|| !c.elem(i).rows()==1)										\
@@ -416,7 +416,7 @@ void COctaveInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		int32_t len=data.rows();													\
 		strings=SG_MALLOC(SGString<sg_type>, num_str);								\
 																					\
-		for (int32_t i=0; i<num_str; i++)											\
+		for (index_t i=0; i<num_str; i++)											\
 		{																			\
 			if (len>0)																\
 			{																		\
@@ -482,7 +482,7 @@ void COctaveInterface::function_name(const sg_type* vec, int32_t len)				\
 {																				\
 	oct_type mat=oct_type(dim_vector(1, len));									\
 																				\
-	for (int32_t i=0; i<len; i++)													\
+	for (index_t i=0; i<len; i++)													\
 			mat(i) = (if_type) vec[i];											\
 																				\
 	set_arg_increment(mat);														\
@@ -501,9 +501,9 @@ void COctaveInterface::function_name(const sg_type* matrix, int32_t num_feat, in
 {																				\
 	oct_type mat=oct_type(dim_vector(num_feat, num_vec));						\
 																				\
-	for (int32_t i=0; i<num_vec; i++)												\
+	for (index_t i=0; i<num_vec; i++)												\
 	{																			\
-		for (int32_t j=0; j<num_feat; j++)											\
+		for (index_t j=0; j<num_feat; j++)											\
 			mat(j,i) = (if_type) matrix[j+i*num_feat];							\
 	}																			\
 																				\
@@ -523,11 +523,11 @@ void COctaveInterface::set_sparse_matrix(const SGSparseVector<float64_t>* matrix
 	SparseMatrix sm((octave_idx_type) num_feat, (octave_idx_type) num_vec, (octave_idx_type) nnz);
 
 	int64_t offset=0;
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		int32_t len=matrix[i].num_feat_entries;
 		sm.cidx(i)=offset;
-		for (int32_t j=0; j<len; j++)
+		for (index_t j=0; j<len; j++)
 		{
 			sm.data(offset) = matrix[i].features[j].entry;
 			sm.ridx(offset) = matrix[i].features[j].feat_index;
@@ -549,7 +549,7 @@ void COctaveInterface::function_name(const SGString<sg_type>* strings, int32_t n
 	if (c.nelem()!=num_str)															\
 		SG_ERROR("Couldn't create Cell Array of %d strings.\n", num_str)			\
 																					\
-	for (int32_t i=0; i<num_str; i++)												\
+	for (index_t i=0; i<num_str; i++)												\
 	{																				\
 		int32_t len=strings[i].slen;												\
 		if (len>0)																	\
@@ -558,7 +558,7 @@ void COctaveInterface::function_name(const SGString<sg_type>* strings, int32_t n
 			if (str.cols()!=len)													\
 				SG_ERROR("Couldn't create " error_string " String %d of length %d.\n", i, len)	\
 																					\
-			for (int32_t j=0; j<len; j++)											\
+			for (index_t j=0; j<len; j++)											\
 				str(j)= (if_type) strings[i].string[j];								\
 			c.elem(i)=str;															\
 		}																			\
@@ -623,7 +623,7 @@ void COctaveInterface::clear_octave_globals()
 
 	//int gcount = gvars.length();
 
-	//for (int i = 0; i < gcount; i++)
+	//for (index_t i = 0; i < gcount; i++)
 	//	symbol_table::clear_global(gvars[i]);
 	int parse_status;
 	eval_string("clear all", false, parse_status);
@@ -678,7 +678,7 @@ bool COctaveInterface::run_octave_helper(CSGInterface* from_if)
 		char* octave_code=NULL;
 		clear_octave_globals();
 
-		for (int i=0; i<from_if->get_nrhs(); i++)
+		for (index_t i=0; i<from_if->get_nrhs(); i++)
 		{
 			int len=0;
 			char* var_name = from_if->get_string(len);
@@ -750,7 +750,7 @@ bool COctaveInterface::run_octave_helper(CSGInterface* from_if)
 			COctaveInterface* out = new COctaveInterface(results, sz, false);
 
 			//process d
-			for (int32_t i=0; i<sz; i++)
+			for (index_t i=0; i<sz; i++)
 				from_if->translate_arg(out, from_if);
 
 			SG_UNREF(out);

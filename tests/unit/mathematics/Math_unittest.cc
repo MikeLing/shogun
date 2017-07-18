@@ -418,7 +418,7 @@ TEST(CMath,misc)
 	/* test, min, max */
 	int arg_max = 0;
 	float64_t min = 1025, max = -1025;
-	for (int32_t i = 0; i < a.vlen; ++i)
+	for (index_t i = 0; i < a.vlen; ++i)
 	{
 		if (a[i] > max)
 		{
@@ -505,7 +505,7 @@ TEST(CMath, dot)
 	a.random(0.0, 1024.0);
 	float64_t dot_val = 0.0;
 
-	for (int32_t i = 0; i < a.vlen; ++i)
+	for (index_t i = 0; i < a.vlen; ++i)
 		dot_val += a[i]*a[i];
 
 	float64_t sgdot_val = CMath::dot(a.vector,a.vector, a.vlen);

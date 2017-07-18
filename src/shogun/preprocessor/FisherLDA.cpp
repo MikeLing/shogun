@@ -316,9 +316,9 @@ SGMatrix<float64_t> CFisherLDA::apply_to_feature_matrix(CFeatures*features)
 			transform_matrix.transpose()*feature_matrix;
 
 	SG_INFO("Form matrix of target dimension")
-	for (int32_t col=0; col<num_vectors; col++)
+	for (index_t col=0; col<num_vectors; col++)
 	{
-		for (int32_t row=0; row<m_num_dim; row++)
+		for (index_t row=0; row<m_num_dim; row++)
 			m[col*m_num_dim+row]=feature_matrix(row, col);
 	}
 	m.num_rows=m_num_dim;

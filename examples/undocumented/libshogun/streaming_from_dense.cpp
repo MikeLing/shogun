@@ -32,11 +32,11 @@ using namespace shogun;
 
 void gen_rand_data(SGMatrix<float64_t> feat, SGVector<float64_t> lab)
 {
-	for (int32_t i=0; i<NUM; i++)
+	for (index_t i=0; i<NUM; i++)
 	{
 		if (i<NUM/2)
 		{
-			for (int32_t j=0; j<DIMS; j++)
+			for (index_t j=0; j<DIMS; j++)
 				feat[i*DIMS+j]=CMath::random(0.0, 1.0)+DIST;
 
 			if (lab.vector)
@@ -44,7 +44,7 @@ void gen_rand_data(SGMatrix<float64_t> feat, SGVector<float64_t> lab)
 		}
 		else
 		{
-			for (int32_t j=0; j<DIMS; j++)
+			for (index_t j=0; j<DIMS; j++)
 				feat[i*DIMS+j]=CMath::random(0.0, 1.0)-DIST;
 
 			if (lab.vector)
@@ -93,7 +93,7 @@ void test_general()
 		float64_t label=streaming->get_label();
 
 		SG_SPRINT("Vector %d: [\t", counter);
-		for (int32_t i=0; i<vec.vlen; i++)
+		for (index_t i=0; i<vec.vlen; i++)
 		{
 			SG_SPRINT("%f\t", vec.vector[i]);
 		}

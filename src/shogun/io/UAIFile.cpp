@@ -124,7 +124,7 @@ void CUAIFile::get_vector(sg_type*& vector, int32_t& len) \
     \
     vector = SG_MALLOC(sg_type, num_elements); \
     m_parser->set_text(line); \
-    for (int32_t i=0; i<num_elements; i++) \
+    for (index_t i=0; i<num_elements; i++) \
         vector[i] = m_parser->read_func(); \
     len = num_elements; \
 }
@@ -192,20 +192,20 @@ void CUAIFile::parse()
     m_num_factors = m_parser->read_int();
 
     m_factors_scope = new SGVector<int32_t> [m_num_factors];
-    for (int32_t i=0; i<m_num_factors; i++)
+    for (index_t i=0; i<m_num_factors; i++)
     {
         int32_t num_elems;
         line = m_line_reader->read_line();
         m_parser->set_text(line);
         num_elems = m_parser->read_int();
         SGVector<int32_t> vars_index(num_elems);
-        for (int32_t j=0; j<num_elems; j++)
+        for (index_t j=0; j<num_elems; j++)
             vars_index[j] = m_parser->read_int();
         m_factors_scope[i] = vars_index;
     }
 
     m_factors_table = new SGVector<float64_t> [m_num_factors];
-    for (int32_t i=0; i<m_num_factors; i++)
+    for (index_t i=0; i<m_num_factors; i++)
     {
         int32_t data_size;
         line=m_line_reader->read_line();
@@ -261,12 +261,12 @@ void CUAIFile::set_factors_scope(int num_factors,
         got %d factors", m_num_factors, num_factors)
 
     m_factors_scope = new SGVector<int32_t> [m_num_factors];
-    for (int32_t i=0; i<m_num_factors; i++)
+    for (index_t i=0; i<m_num_factors; i++)
     {
         SGVector<int32_t> scope = factors_scope[i];
         m_factors_scope[i] = scope;
         fprintf(file, "%d ", scope.vlen);
-        for (int32_t j=0; j<scope.vlen; j++)
+        for (index_t j=0; j<scope.vlen; j++)
             fprintf(file, "%d ", scope[j]);
         fprintf(file, "\n");
     }
@@ -279,7 +279,7 @@ void CUAIFile::set_factors_table(int32_t num_factors,
         got %d factors", m_num_factors, num_factors);
 
     m_factors_table = new SGVector<float64_t> [m_num_factors];
-    for (int32_t i=0; i<m_num_factors; i++)
+    for (index_t i=0; i<m_num_factors; i++)
     {
         fprintf(file, "\n");
         SGVector<float64_t> data = factors_table[i];
@@ -301,14 +301,14 @@ void CUAIFile::get_preamble(SGVector<char>& net_type,
     num_factors = m_num_factors;
 
     factors_scope = new SGVector<int32_t> [m_num_factors];
-    for (int32_t i=0; i<m_num_factors; i++)
+    for (index_t i=0; i<m_num_factors; i++)
         factors_scope[i] = m_factors_scope[i];
 }
 
 void CUAIFile::get_factors_table(SGVector<float64_t>*& factors_table)
 {
     factors_table = new SGVector<float64_t> [m_num_factors];
-    for (int32_t i=0; i<m_num_factors; i++)
+    for (index_t i=0; i<m_num_factors; i++)
         factors_table[i] = m_factors_table[i];
 }
 

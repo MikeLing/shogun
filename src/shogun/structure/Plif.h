@@ -240,7 +240,7 @@ class CPlif: public CPlifBase
 		{
 			ASSERT(len==p_len)
 
-			for (int32_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 			{
 				limits[i]=p_limits[i];
 				penalties[i]=p_penalties[i];
@@ -295,7 +295,7 @@ class CPlif: public CPlifBase
 				cum_derivatives = SGVector<float64_t>(len);
 			}
 
-			for (int32_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 			{
 				limits[i]=0.0;
 				penalties[i]=0.0;

@@ -14,26 +14,26 @@ TEST(SGVectorTest,ctor)
 	EXPECT_EQ(a.vlen, 10);
 
 	a.zero();
-	for (int i=0; i < 10; ++i)
+	for (index_t i=0; i < 10; ++i)
 		EXPECT_EQ(0, a[i]);
 
 	a.set_const(3.3);
-	for (int i=0; i < 10; ++i)
+	for (index_t i=0; i < 10; ++i)
 		EXPECT_EQ(3.3, a[i]);
 
 	float64_t* a_clone = SGVector<float64_t>::clone_vector(a.vector, a.vlen);
-	for (int i=0; i < 10; ++i)
+	for (index_t i=0; i < 10; ++i)
 		EXPECT_EQ(a_clone[i], a[i]);
 
 	SGVector<float64_t> b(a_clone, 10);
 	EXPECT_EQ(b.vlen, 10);
-	for (int i=0; i < 10; ++i)
+	for (index_t i=0; i < 10; ++i)
 		EXPECT_EQ(b[i], a[i]);
 
 	/* test copy ctor */
 	SGVector<float64_t> c(b);
 	EXPECT_EQ(c.vlen, b.vlen);
-	for (int i=0; i < c.vlen; ++i)
+	for (index_t i=0; i < c.vlen; ++i)
 		EXPECT_EQ(b[i], c[i]);
 
 }
@@ -73,12 +73,12 @@ TEST(SGVectorTest,add)
 	SGVector<float64_t> c(b_clone, 10);
 
 	c.add(a);
-	for (int i=0; i < c.vlen; ++i)
+	for (index_t i=0; i < c.vlen; ++i)
 		EXPECT_EQ(c[i], a[i]+b[i]);
 
 	c = a + a;
 	EXPECT_EQ(c.vlen, 10);
-	for (int i=0; i < c.vlen; ++i)
+	for (index_t i=0; i < c.vlen; ++i)
 		EXPECT_EQ(c[i], 2*a[i]);
 }
 
@@ -95,7 +95,7 @@ TEST(SGVectorTest,norm)
 	EXPECT_NEAR(l2_norm, sgl2_norm, 1e-12);
 
 	float64_t l1_norm = 0.0;
-	for (int32_t i = 0; i < a.vlen; ++i)
+	for (index_t i = 0; i < a.vlen; ++i)
 		l1_norm += CMath::abs(a[i]);
 	EXPECT_EQ(l1_norm, SGVector<float64_t>::onenorm(a.vector, a.vlen));
 
@@ -114,7 +114,7 @@ TEST(SGVectorTest,misc)
 
 	/* test, sum */
 	float64_t sum = 0.0, sum_abs = 0.0;
-	for (int32_t i = 0; i < a.vlen; ++i)
+	for (index_t i = 0; i < a.vlen; ++i)
 	{
 		sum += a[i];
 		sum_abs += CMath::abs(a[i]);
@@ -126,12 +126,12 @@ TEST(SGVectorTest,misc)
 	/* test ::vector_multiply(...) */
 	SGVector<float64_t> c(10);
 	SGVector<float64_t>::vector_multiply(c.vector, a.vector, a.vector, a.vlen);
-	for (int32_t i = 0; i < c.vlen; ++i)
+	for (index_t i = 0; i < c.vlen; ++i)
 		EXPECT_EQ(c[i], a[i]*a[i]);
 
 	/* test ::add(...) */
 	SGVector<float64_t>::add(c.vector, 1.5, a.vector, 1.3, a.vector, a.vlen);
-	for (int32_t i = 0; i < a.vlen; ++i)
+	for (index_t i = 0; i < a.vlen; ++i)
 		EXPECT_EQ(c[i],1.5*a[i]+1.3*a[i]);
 
 	/* tests ::add_scalar */
@@ -139,13 +139,13 @@ TEST(SGVectorTest,misc)
 	float64_t* a_clone = SGVector<float64_t>::clone_vector(a.vector, a.vlen);
 	SGVector<float64_t> b(a_clone, 10);
 	SGVector<float64_t>::add_scalar(1.1, b.vector, b.vlen);
-	for (int32_t i = 0; i < b.vlen; ++i)
+	for (index_t i = 0; i < b.vlen; ++i)
 		EXPECT_EQ(b[i],a[i]+1.1);
 
 	float64_t* b_clone = SGVector<float64_t>::clone_vector(b.vector, b.vlen);
 	SGVector<float64_t> d(b_clone, b.vlen);
 	SGVector<float64_t>::vec1_plus_scalar_times_vec2(d.vector, 1.3, d.vector, b.vlen);
-	for (int32_t i = 0; i < d.vlen; ++i)
+	for (index_t i = 0; i < d.vlen; ++i)
 		EXPECT_DOUBLE_EQ(d[i],b[i]+1.3*b[i]);
 }
 
@@ -276,12 +276,12 @@ TEST(SGVectorTest, to_eigen3_column_vector)
 	const int n = 9;
 
 	SGVector<float64_t> sg_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		sg_vec[i] = i;
 
 	Eigen::Map<Eigen::VectorXd> eigen_vec = sg_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(sg_vec[i], eigen_vec[i]);
 }
 
@@ -290,12 +290,12 @@ TEST(SGVectorTest, from_eigen3_column_vector)
 	const int n = 9;
 
 	Eigen::VectorXd eigen_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		eigen_vec[i] = i;
 
 	SGVector<float64_t> sg_vec = eigen_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(eigen_vec[i], sg_vec[i]);
 }
 
@@ -304,12 +304,12 @@ TEST(SGVectorTest, to_eigen3_row_vector)
 	const int n = 9;
 
 	SGVector<float64_t> sg_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		sg_vec[i] = i;
 
 	Eigen::Map<Eigen::RowVectorXd> eigen_vec = sg_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(sg_vec[i], eigen_vec[i]);
 }
 
@@ -318,11 +318,11 @@ TEST(SGVectorTest, from_eigen3_row_vector)
 	const int n = 9;
 
 	Eigen::RowVectorXd eigen_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		eigen_vec[i] = i;
 
 	SGVector<float64_t> sg_vec = eigen_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(eigen_vec[i], sg_vec[i]);
 }

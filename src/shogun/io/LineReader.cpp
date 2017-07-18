@@ -137,9 +137,9 @@ int32_t CLineReader::read(int32_t& bytes_to_skip)
 	while (1)
 	{
 		if (bytes_to_skip==line_end)
-			line_end=m_buffer->next_token_idx(bytes_to_skip);
+			line_end=m_buffer->next_token_idx(int32_t(bytes_to_skip));
 		else
-			line_end=m_buffer->next_token_idx(temp_bytes_to_skip);
+			line_end=m_buffer->next_token_idx(int32_t(temp_bytes_to_skip));
 
 		if (m_buffer->num_bytes_contained()!=0 && line_end<m_buffer->num_bytes_contained())
 			return line_end;

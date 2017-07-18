@@ -176,7 +176,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param num index of the string
 		 * @return the selected string
 		 */
-		SGVector<ST> get_feature_vector(int32_t num);
+		SGVector<ST> get_feature_vector(index_t num);
 
 		/** set string for selected example num
 		 *
@@ -185,7 +185,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param vector string to set
 		 * @param num index of the string
 		 */
-		void set_feature_vector(SGVector<ST> vector, int32_t num);
+		void set_feature_vector(SGVector<ST> vector, index_t num);
 
 		/** call this to preprocess string features upon call to get_feature_vector */
 		void enable_on_the_fly_preprocessing();
@@ -205,7 +205,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * caller via free_feature_vector
 		 * @return feature vector for sample num
 		 */
-		ST* get_feature_vector(int32_t num, int32_t& len, bool& dofree);
+		ST* get_feature_vector(index_t num, index_t& len, bool& dofree);
 
 		/** get a transposed copy of the features
 		 *
@@ -257,7 +257,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param feat_num which feature, possibly from subset
 		 * @return feature
 		 */
-		virtual ST get_feature(int32_t vec_num, int32_t feat_num);
+		virtual ST get_feature(index_t vec_num, index_t feat_num);
 
 		/** get vector length
 		 *
@@ -266,7 +266,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param vec_num which vector, possibly from subset
 		 * @return length of vector
 		 */
-		virtual int32_t get_vector_length(int32_t vec_num);
+		virtual index_t get_vector_length(index_t vec_num);
 
 		/** get maximum vector length
 		 *
@@ -277,7 +277,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		virtual int32_t get_max_vector_length();
 
 		/** @return number of vectors, possibly of subset */
-		virtual int32_t get_num_vectors() const;
+		virtual index_t get_num_vectors() const;
 
 		/** get number of symbols
 		 *
@@ -426,8 +426,8 @@ template <class ST> class CStringFeatures : public CFeatures
 		 *
 		 * @return if setting was successful
 		 */
-		bool append_features(SGString<ST>* p_features, int32_t p_num_vectors,
-				int32_t p_max_string_length);
+		bool append_features(SGString<ST>* p_features, index_t p_num_vectors,
+				index_t p_max_string_length);
 
 		/** get_features
 		 * @return features
@@ -442,7 +442,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param max_str_len maximal string length (returned)
 		 * @return string features
 		 */
-		virtual SGString<ST>* get_features(int32_t& num_str, int32_t& max_str_len);
+		virtual SGString<ST>* get_features(index_t& num_str, index_t& max_str_len);
 
 		/** copy_features
 		 *
@@ -621,7 +621,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param string string with the feature vector's content
 		 * @param len length of the string
 		 */
-		virtual void set_feature_vector(int32_t num, ST* string, int32_t len);
+		virtual void set_feature_vector(index_t num, ST* string, index_t len);
 
 		/** compute histogram over strings
 		 *
@@ -664,7 +664,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		 * @param len length of vector
 		 * @return feature vector
 		 */
-		virtual ST* compute_feature_vector(int32_t num, int32_t& len);
+		virtual ST* compute_feature_vector(index_t num, index_t& len);
 
 	private:
 		void init();
@@ -674,7 +674,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		CAlphabet* alphabet;
 
 		/** number of string vectors (for subset, is updated) */
-		int32_t num_vectors;
+		index_t num_vectors;
 
 		/** this contains the array of features */
 		SGString<ST>* features;
@@ -683,10 +683,10 @@ template <class ST> class CStringFeatures : public CFeatures
 		ST* single_string;
 
 		/// length of prior single string
-		int32_t length_of_single_string;
+		index_t length_of_single_string;
 
 		/** length of longest string (for subset, is updated) */
-		int32_t max_string_length;
+		int64_t max_string_length;
 
 		/// number of used symbols
 		floatmax_t num_symbols;
@@ -701,7 +701,7 @@ template <class ST> class CStringFeatures : public CFeatures
 		ST* symbol_mask_table;
 
 		/// order used in higher order mapping
-		int32_t symbol_mask_table_len;
+		index_t symbol_mask_table_len;
 
 		/// preprocess on-the-fly?
 		bool preprocess_on_get;

@@ -62,7 +62,7 @@ public:
 		set_task_vector_rhs(task_rhs);
 
 		// set active tasks
-		for (int32_t i = 0; i != (int32_t)(active_tasks_vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(active_tasks_vec.size()); ++i)
 		{
 			active_tasks.insert(active_tasks_vec[i]);
 		}
@@ -165,7 +165,7 @@ public:
 
 		task_vector_lhs.clear();
 
-		for (int32_t i = 0; i != (int32_t)(vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(vec.size()); ++i)
 		{
 			task_vector_lhs.push_back(vec[i]);
 		}
@@ -186,7 +186,7 @@ public:
 
 		task_vector_rhs.clear();
 
-		for (int32_t i = 0; i != (int32_t)(vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(vec.size()); ++i)
 		{
 			task_vector_rhs.push_back(vec[i]);
 		}

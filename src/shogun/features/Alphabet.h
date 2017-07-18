@@ -182,7 +182,7 @@ class CAlphabet : public CSGObject
 		template <class T>
 		void add_string_to_histogram(T* p, int64_t len)
 		{
-			for (int64_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				add_byte_to_histogram((uint8_t) (p[i]));
 		}
 

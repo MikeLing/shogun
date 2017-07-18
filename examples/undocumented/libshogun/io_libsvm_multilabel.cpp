@@ -45,7 +45,7 @@ void test_libsvmfile_multilabel(const char* fname)
 
 #ifdef SHOW_DATA
 	// Display the labels
-	for (int32_t i = 0; i < num_samples; i++)
+	for (index_t i = 0; i < num_samples; i++)
 	{
 		labels[i].display_vector();
 	}

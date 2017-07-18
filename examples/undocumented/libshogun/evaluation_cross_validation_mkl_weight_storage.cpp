@@ -29,20 +29,20 @@ void gen_rand_data(SGVector<float64_t> lab, SGMatrix<float64_t> feat,
 	index_t dims=feat.num_rows;
 	index_t num=lab.vlen;
 
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 	{
 		if (i<num/2)
 		{
 			lab[i]=-1.0;
 
-			for (int32_t j=0; j<dims; j++)
+			for (index_t j=0; j<dims; j++)
 				feat(j, i)=CMath::random(0.0, 1.0)+dist;
 		}
 		else
 		{
 			lab[i]=1.0;
 
-			for (int32_t j=0; j<dims; j++)
+			for (index_t j=0; j<dims; j++)
 				feat(j, i)=CMath::random(0.0, 1.0)-dist;
 		}
 	}

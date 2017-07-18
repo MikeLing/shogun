@@ -66,7 +66,7 @@ TEST(LossFunction, squared_loss_test)
 	SGVector<float64_t> firstd(5);
 	SGVector<float64_t> secondd(5);
 
-	for (int32_t i=0;i<5;i++)
+	for (index_t i=0;i<5;i++)
 	{
 		loss[i]=lossf->loss(predicted[i],actual[i]);
 		firstd[i]=lossf->first_derivative(predicted[i],actual[i]);
@@ -107,7 +107,7 @@ TEST(LossFunction, exponential_loss_test)
 	SGVector<float64_t> firstd(5);
 	SGVector<float64_t> secondd(5);
 
-	for (int32_t i=0;i<5;i++)
+	for (index_t i=0;i<5;i++)
 	{
 		loss[i]=lossf->loss(predicted[i],actual[i]);
 		firstd[i]=lossf->first_derivative(predicted[i],actual[i]);
@@ -148,7 +148,7 @@ TEST(LossFunction, abs_deviation_loss_test)
 	SGVector<float64_t> firstd(5);
 	SGVector<float64_t> secondd(5);
 
-	for (int32_t i=0;i<5;i++)
+	for (index_t i=0;i<5;i++)
 	{
 		loss[i]=lossf->loss(predicted[i],actual[i]);
 		firstd[i]=lossf->first_derivative(predicted[i],actual[i]);
@@ -189,7 +189,7 @@ TEST(LossFunction, huber_loss_test)
 	SGVector<float64_t> firstd(5);
 	SGVector<float64_t> secondd(5);
 
-	for (int32_t i=0;i<5;i++)
+	for (index_t i=0;i<5;i++)
 	{
 		loss[i]=lossf->loss(predicted[i],actual[i]);
 		firstd[i]=lossf->first_derivative(predicted[i],actual[i]);

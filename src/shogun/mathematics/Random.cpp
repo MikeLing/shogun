@@ -109,7 +109,7 @@ void CRandom::init()
 	// Thus -m_xComp[0] is the probability that a sample point is within the box part of the segment.
 	m_xComp[0] = (uint32_t)(((m_R * m_y[0]) / m_A) * (float64_t)std::numeric_limits<uint32_t>::max());
 
-	for(int32_t i=1; i < m_blockCount-1; i++)
+	for(index_t i=1; i < m_blockCount-1; i++)
 	{
 		m_xComp[i] = (uint32_t)((m_x[i+1] / m_x[i]) * (float64_t)std::numeric_limits<uint32_t>::max());
 	}
@@ -146,7 +146,7 @@ void CRandom::fill_array(uint32_t* array, int32_t size) const
 		return;
 	}
 #endif
-	for (int32_t i=0; i < size; i++)
+	for (index_t i=0; i < size; i++)
 		array[i] = random_32();
 }
 
@@ -159,7 +159,7 @@ void CRandom::fill_array(uint64_t* array, int32_t size) const
 		return;
 	}
 #endif
-	for (int32_t i=0; i < size; i++)
+	for (index_t i=0; i < size; i++)
 		array[i] = random_64();
 }
 
@@ -172,7 +172,7 @@ void CRandom::fill_array_oc(float64_t* array, int32_t size) const
 		return;
 	}
 #endif
-	for (int32_t i=0; i < size; i++)
+	for (index_t i=0; i < size; i++)
 		array[i] = dsfmt_genrand_open_close(m_dsfmt);
 }
 
@@ -185,7 +185,7 @@ void CRandom::fill_array_co(float64_t* array, int32_t size) const
 		return;
 	}
 #endif
-	for (int32_t i=0; i < size; i++)
+	for (index_t i=0; i < size; i++)
 		array[i] = dsfmt_genrand_close_open(m_dsfmt);
 }
 
@@ -198,7 +198,7 @@ void CRandom::fill_array_oo(float64_t* array, int32_t size) const
 		return;
 	}
 #endif
-	for (int32_t i=0; i < size; i++)
+	for (index_t i=0; i < size; i++)
 		array[i] = dsfmt_genrand_open_open(m_dsfmt);
 }
 
@@ -211,7 +211,7 @@ void CRandom::fill_array_c1o2(float64_t* array, int32_t size) const
 		return;
 	}
 #endif
-	for (int32_t i=0; i < size; i++)
+	for (index_t i=0; i < size; i++)
 		array[i] = dsfmt_genrand_close1_open2(m_dsfmt);
 }
 

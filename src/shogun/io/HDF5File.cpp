@@ -419,7 +419,7 @@ void CHDF5File::get_dims(hid_t dataset, int32_t*& dims, int32_t& ndims, int64_t&
 	hsize_t* dims_out=SG_MALLOC(hsize_t, ndims);
 	dims=SG_MALLOC(int32_t, ndims);
 	H5Sget_simple_extent_dims(dataspace, dims_out, NULL);
-	for (int32_t i=0; i<ndims; i++)
+	for (index_t i=0; i<ndims; i++)
 		dims[i]=dims_out[i];
 	SG_FREE(dims_out);
 	H5Sclose(dataspace);
@@ -429,7 +429,7 @@ void CHDF5File::create_group_hierarchy()
 {
 	char* vname=get_strdup(variable_name);
 	int32_t vlen=strlen(vname);
-	for (int32_t i=0; i<vlen; i++)
+	for (index_t i=0; i<vlen; i++)
 	{
 		if (i!=0 && vname[i]=='/')
 		{

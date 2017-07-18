@@ -27,7 +27,7 @@ CMulticlassOneVsRestStrategy::CMulticlassOneVsRestStrategy(EProbHeuristicType pr
 
 SGVector<int32_t> CMulticlassOneVsRestStrategy::train_prepare_next()
 {
-	for (int32_t i=0; i < m_orig_labels->get_num_labels(); ++i)
+	for (index_t i=0; i < m_orig_labels->get_num_labels(); ++i)
 	{
 		if (((CMulticlassLabels*) m_orig_labels)->get_int_label(i)==m_train_iter)
 			((CBinaryLabels*) m_train_labels)->set_label(i, +1.0);
@@ -53,14 +53,14 @@ SGVector<index_t> CMulticlassOneVsRestStrategy::decide_label_multiple_output(SGV
 {
 	float64_t* outputs_ = SG_MALLOC(float64_t, outputs.vlen);
 	int32_t* indices_ = SG_MALLOC(int32_t, outputs.vlen);
-	for (int32_t i=0; i<outputs.vlen; i++)
+	for (index_t i=0; i<outputs.vlen; i++)
 	{
 		outputs_[i] = outputs[i];
 		indices_[i] = i;
 	}
 	CMath::qsort_backward_index(outputs_,indices_,outputs.vlen);
 	SGVector<index_t> result(n_outputs);
-	for (int32_t i=0; i<n_outputs; i++)
+	for (index_t i=0; i<n_outputs; i++)
 		result[i] = indices_[i];
 	SG_FREE(outputs_);
 	SG_FREE(indices_);
@@ -104,7 +104,7 @@ void CMulticlassOneVsRestStrategy::rescale_heuris_norm(SGVector<float64_t> outpu
 
 	float64_t norm = SGVector<float64_t>::sum(outputs);
 	norm += 1E-10;
-	for (int32_t i=0; i<outputs.vlen; i++)
+	for (index_t i=0; i<outputs.vlen; i++)
 		outputs[i] /= norm;
 }
 
@@ -117,11 +117,11 @@ void CMulticlassOneVsRestStrategy::rescale_heuris_softmax(SGVector<float64_t> ou
 				get_name(), outputs.vlen, m_num_classes);
 	}
 
-	for (int32_t i=0; i<outputs.vlen; i++)
+	for (index_t i=0; i<outputs.vlen; i++)
 		outputs[i] = CMath::exp(-As[i]*outputs[i]-Bs[i]);
 
 	float64_t norm = SGVector<float64_t>::sum(outputs);
 	norm += 1E-10;
-	for (int32_t i=0; i<outputs.vlen; i++)
+	for (index_t i=0; i<outputs.vlen; i++)
 		outputs[i] /= norm;
 }

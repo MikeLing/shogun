@@ -25,7 +25,7 @@ inline void index_to_grid(int32_t index, int32_t& x, int32_t& y, int32_t w = 10)
 float64_t hamming_loss(SGVector<int32_t> y_truth, SGVector<int32_t> y_pred)
 {
 	float64_t loss = 0.0;
-	for (int32_t i = 0; i < y_truth.size(); i++)
+	for (index_t i = 0; i < y_truth.size(); i++)
 	{
 		if (y_truth[i] != y_pred[i])
 			loss += 1;
@@ -81,7 +81,7 @@ TEST(BeliefPropagation, tree_max_product_random)
 
 	EXPECT_EQ(assignment.size(), assignment_expected.size());
 
-	for (int32_t i = 0; i < assignment.size(); i++)
+	for (index_t i = 0; i < assignment.size(); i++)
 		EXPECT_EQ(assignment[i], assignment_expected[i]);
 
 	EXPECT_NEAR(min_energy_expected, infer_met.get_energy(), 1E-10);
@@ -131,13 +131,13 @@ TEST(BeliefPropagation, loss_augmented_energies)
 	fg->loss_augmentation(y_truth);
 
 	SGVector<int32_t> y_cand(3);
-	for (int i = 0; i < 2; i++)
+	for (index_t i = 0; i < 2; i++)
 	{
 		y_cand[0] = i;
-		for (int j = 0; j < 2; j++)
+		for (index_t j = 0; j < 2; j++)
 		{
 			y_cand[1] = j;
-			for (int k = 0; k < 2; k++)
+			for (index_t k = 0; k < 2; k++)
 			{
 				y_cand[2] = k;
 				float64_t loss_eg = fg->evaluate_energy(y_cand);

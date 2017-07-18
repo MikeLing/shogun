@@ -45,11 +45,11 @@ float64_t CEMMixtureModel::expectation_step()
 {
 	float64_t log_likelihood=0;
 	// for each data point
-	for (int32_t i=0;i<data.alpha.num_rows;i++)
+	for (index_t i=0;i<data.alpha.num_rows;i++)
 	{
 		SGVector<float64_t> alpha_ij(data.alpha.num_cols);
 		// for each component
-		for (int32_t j=0;j<data.alpha.num_cols;j++)
+		for (index_t j=0;j<data.alpha.num_cols;j++)
 		{
 			CDistribution* jth_component=CDistribution::obtain_from_generic(data.components->get_element(j));
 			alpha_ij[j]=CMath::log(data.weights[j])+jth_component->get_log_likelihood_example(i);
@@ -60,7 +60,7 @@ float64_t CEMMixtureModel::expectation_step()
 		log_likelihood+=normalize;
 
 		// fill row of alpha
-		for (int32_t j=0;j<data.alpha.num_cols;j++)
+		for (index_t j=0;j<data.alpha.num_cols;j++)
 			data.alpha(i,j)=CMath::exp(alpha_ij[j]-normalize);
 	}
 
@@ -72,7 +72,7 @@ void CEMMixtureModel::maximization_step()
 	// for each component
 	float64_t* alpha_j=NULL;
 	float64_t sum_weights=0;
-	for (int32_t j=0;j<data.alpha.num_cols;j++)
+	for (index_t j=0;j<data.alpha.num_cols;j++)
 	{
 		CDistribution* jth_component=CDistribution::obtain_from_generic(data.components->get_element(j));
 
@@ -88,6 +88,6 @@ void CEMMixtureModel::maximization_step()
 	}
 
 	// update weights - normalization
-	for (int32_t j=0;j<data.alpha.num_cols;j++)
+	for (index_t j=0;j<data.alpha.num_cols;j++)
 		data.weights[j]/=sum_weights;
 }

@@ -98,7 +98,7 @@ class BasicCompositeHashTable {
                           typename InnerHashTable::Factory* factory)
       : l_(l), factory_(factory) {
     tables_.resize(l_);
-    for (int_fast32_t ii = 0; ii < l_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
       tables_[ii].reset(factory_->new_hash_table());
       if (!tables_[ii]) {
         throw CompositeHashTableError(
@@ -172,7 +172,7 @@ class DynamicCompositeHashTable
     if (static_cast<int_fast32_t>(keys.size()) != this->l_) {
       throw CompositeHashTableError("Number of keys in insert incorrect.");
     }
-    for (int_fast32_t ii = 0; ii < this->l_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < this->l_; ++ii) {
       (this->tables_[ii])->insert(keys[ii], value);
     }
   }
@@ -181,7 +181,7 @@ class DynamicCompositeHashTable
     if (static_cast<int_fast32_t>(keys.size()) != this->l_) {
       throw CompositeHashTableError("Number of hashes in remove incorrect.");
     }
-    for (int_fast32_t ii = 0; ii < this->l_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < this->l_; ++ii) {
       (this->tables_[ii])->remove(keys[ii], value);
     }
   }

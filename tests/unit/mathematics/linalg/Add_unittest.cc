@@ -55,7 +55,7 @@ TEST(AddMatrix, eigen3_backend)
 	SGMatrix<float64_t> B(3,3);
 	SGMatrix<float64_t> C(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -63,7 +63,7 @@ TEST(AddMatrix, eigen3_backend)
 
 	linalg::add<linalg::Backend::EIGEN3>(A, B, C, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -76,7 +76,7 @@ TEST(AddVector, eigen3_backend)
 	SGVector<float64_t> B(9);
 	SGVector<float64_t> C(9);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -84,7 +84,7 @@ TEST(AddVector, eigen3_backend)
 
 	linalg::add<linalg::Backend::EIGEN3>(A, B, C, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -97,7 +97,7 @@ TEST(AddMatrix, CGPUMatrix_eigen3_backend)
 	CGPUMatrix<float64_t> A(3,3);
 	CGPUMatrix<float64_t> B(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -105,7 +105,7 @@ TEST(AddMatrix, CGPUMatrix_eigen3_backend)
 
 	CGPUMatrix<float64_t> C = linalg::add<linalg::Backend::EIGEN3>(A, B, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -117,7 +117,7 @@ TEST(AddVector, CGPUVector_eigen3_backend)
 	CGPUVector<float64_t> A(9);
 	CGPUVector<float64_t> B(9);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -125,7 +125,7 @@ TEST(AddVector, CGPUVector_eigen3_backend)
 
 	CGPUVector<float64_t> C = linalg::add<linalg::Backend::EIGEN3>(A, B, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -138,7 +138,7 @@ TEST(AddMatrix, viennacl_backend)
 	CGPUMatrix<float64_t> B(3,3);
 	CGPUMatrix<float64_t> C(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -146,7 +146,7 @@ TEST(AddMatrix, viennacl_backend)
 
 	linalg::add<linalg::Backend::VIENNACL>(A, B, C, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -159,7 +159,7 @@ TEST(AddVector, viennacl_backend)
 	CGPUVector<float64_t> B(9);
 	CGPUVector<float64_t> C(9);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -167,7 +167,7 @@ TEST(AddVector, viennacl_backend)
 
 	linalg::add<linalg::Backend::VIENNACL>(A, B, C, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -179,7 +179,7 @@ TEST(AddMatrix, SGMatrix_viennacl_backend)
 	SGMatrix<float64_t> A(3,3);
 	SGMatrix<float64_t> B(3,3);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -187,7 +187,7 @@ TEST(AddMatrix, SGMatrix_viennacl_backend)
 
 	SGMatrix<float64_t> C = linalg::add<linalg::Backend::VIENNACL>(A, B, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 
@@ -199,7 +199,7 @@ TEST(AddVector, SGVector_viennacl_backend)
 	SGVector<float64_t> A(9);
 	SGVector<float64_t> B(9);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 	{
 		A[i] = i;
 		B[i] = 0.5*i;
@@ -207,7 +207,7 @@ TEST(AddVector, SGVector_viennacl_backend)
 
 	SGVector<float64_t> C = linalg::add<linalg::Backend::VIENNACL>(A, B, alpha, beta);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(alpha*A[i]+beta*B[i], C[i], 1e-15);
 }
 #endif // HAVE_VIENNACL

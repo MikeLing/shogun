@@ -51,7 +51,7 @@ class CDotFeatures;
  * \li 8bit Byte matrix - CDenseFeatures<uint8_t>
  * \li 16bit Integer matrix - CDenseFeatures<int16_t>
  * \li 16bit Word matrix - CDenseFeatures<uint16_t>
- * \li 32bit Integer matrix - CDenseFeatures<int32_t>
+ * \li 32bit Integer matrix - CDenseFeatures<index_t>
  * \li 32bit Unsigned Integer matrix - CDenseFeatures<uint32_t>
  * \li 32bit Float matrix - CDenseFeatures<float32_t>
  * \li 64bit Float matrix - CDenseFeatures<float64_t>
@@ -90,7 +90,7 @@ public:
 	 * @param num_feat number of features in matrix
 	 * @param num_vec number of vectors in matrix
 	 */
-	CDenseFeatures(ST* src, int32_t num_feat, int32_t num_vec);
+	CDenseFeatures(ST* src, index_t num_feat, index_t num_vec);
 
 	/** constructor loading features from file
 	 *
@@ -129,7 +129,7 @@ public:
 	 * caller via free_feature_vector
 	 * @return feature vector
 	 */
-	ST* get_feature_vector(int32_t num, int32_t& len, bool& dofree);
+	ST* get_feature_vector(index_t num, index_t& len, bool& dofree);
 
 	/** set feature vector num
 	 *
@@ -138,7 +138,7 @@ public:
 	 * @param vector vector
 	 * @param num index if vector to set
 	 */
-	void set_feature_vector(SGVector<ST> vector, int32_t num);
+	void set_feature_vector(SGVector<ST> vector, index_t num);
 
 	/** get feature vector num
 	 *
@@ -147,7 +147,7 @@ public:
 	 * @param num index of vector
 	 * @return feature vector
 	 */
-	SGVector<ST> get_feature_vector(int32_t num);
+	SGVector<ST> get_feature_vector(index_t num);
 
 	/** free feature vector
 	 *
@@ -157,7 +157,7 @@ public:
 	 * @param num index in feature cache
 	 * @param dofree if vector should be really deleted
 	 */
-	void free_feature_vector(ST* feat_vec, int32_t num, bool dofree);
+	void free_feature_vector(ST* feat_vec, index_t num, bool dofree);
 
 	/** free feature vector
 	 *
@@ -166,7 +166,7 @@ public:
 	 * @param vec feature vector to free
 	 * @param num index in feature cache
 	 */
-	void free_feature_vector(SGVector<ST> vec, int32_t num);
+	void free_feature_vector(SGVector<ST> vec, index_t num);
 
 	/**
 	 * Extracts the feature vectors mentioned in idx and replaces them in
@@ -181,7 +181,7 @@ public:
 	 *
 	 * Note: assumes idx is sorted
 	 */
-	void vector_subset(int32_t* idx, int32_t idx_len);
+	void vector_subset(index_t* idx, index_t idx_len);
 
 	/**
 	 * Extracts the features mentioned in idx and replaces them in
@@ -196,7 +196,7 @@ public:
 	 *
 	 * Note: assumes idx is sorted
 	 */
-	void feature_subset(int32_t* idx, int32_t idx_len);
+	void feature_subset(index_t* idx, index_t idx_len);
 
 	/** Getter the feature matrix
 	 *
@@ -237,7 +237,7 @@ public:
 	 * @param num_vec number of vectors in matrix
 	 * @return feature matrix
 	 */
-	ST* get_feature_matrix(int32_t &num_feat, int32_t &num_vec);
+	ST* get_feature_matrix(index_t &num_feat, index_t &num_vec);
 
 	/** get a transposed copy of the features
 	 *
@@ -258,7 +258,7 @@ public:
 	 * @param num_vec number of vectors in matrix
 	 * @return transposed sparse feature matrix
 	 */
-	ST* get_transposed(int32_t &num_feat, int32_t &num_vec);
+	ST* get_transposed(index_t &num_feat, index_t &num_vec);
 
 	/** copy feature matrix
 	 * store copy of feature_matrix, where num_features is the
@@ -295,19 +295,19 @@ public:
 	 *
 	 * @return number of feature vectors
 	 */
-	virtual int32_t get_num_vectors() const;
+	virtual index_t get_num_vectors() const;
 
 	/** get number of features (of possible subset)
 	 *
 	 * @return number of features
 	 */
-	int32_t get_num_features() const;
+	index_t get_num_features() const;
 
 	/** set number of features
 	 *
 	 * @param num number to set
 	 */
-	void set_num_features(int32_t num);
+	void set_num_features(index_t num);
 
 	/** set number of vectors
 	 *
@@ -315,7 +315,7 @@ public:
 	 *
 	 * @param num number to set
 	 */
-	void set_num_vectors(int32_t num);
+	void set_num_vectors(index_t num);
 
 	/** Initialize cache
 	 *
@@ -343,7 +343,7 @@ public:
 	 * @param p_num_vectors new number of vectors
 	 * @return if reshaping was successful
 	 */
-	virtual bool reshape(int32_t p_num_features, int32_t p_num_vectors);
+	virtual bool reshape(index_t p_num_features, index_t p_num_vectors);
 
 	/** obtain the dimensionality of the feature space
 	 *
@@ -352,7 +352,7 @@ public:
 	 *
 	 * @return dimensionality
 	 */
-	virtual int32_t get_dim_feature_space() const;
+	virtual index_t get_dim_feature_space() const;
 
 	/** compute dot product between vector1 and vector2,
 	 * appointed by their indices
@@ -363,8 +363,8 @@ public:
 	 * @param df DotFeatures (of same kind) to compute dot product with
 	 * @param vec_idx2 index of second vector
 	 */
-	virtual float64_t dot(int32_t vec_idx1, CDotFeatures* df,
-			int32_t vec_idx2);
+	virtual float64_t dot(index_t vec_idx1, CDotFeatures* df,
+			index_t vec_idx2);
 
 	/** compute dot product between vector1 and a dense vector
 	 *
@@ -374,8 +374,8 @@ public:
 	 * @param vec2 pointer to real valued vector
 	 * @param vec2_len length of real valued vector
 	 */
-	virtual float64_t dense_dot(int32_t vec_idx1, const float64_t* vec2,
-			int32_t vec2_len);
+	virtual float64_t dense_dot(index_t vec_idx1, const float64_t* vec2,
+			index_t vec2_len);
 
 	/** add vector 1 multiplied with alpha to dense vector2
 	 *
@@ -387,15 +387,15 @@ public:
 	 * @param vec2_len length of real valued vector
 	 * @param abs_val if true add the absolute value
 	 */
-	virtual void add_to_dense_vec(float64_t alpha, int32_t vec_idx1,
-			float64_t* vec2, int32_t vec2_len, bool abs_val = false);
+	virtual void add_to_dense_vec(float64_t alpha, index_t vec_idx1,
+			float64_t* vec2, index_t vec2_len, bool abs_val = false);
 
 	/** get number of non-zero features in vector
 	 *
 	 * @param num which vector
 	 * @return number of non-zero features in vector
 	 */
-	virtual int32_t get_nnz_features_for_vector(int32_t num);
+	virtual index_t get_nnz_features_for_vector(index_t num);
 
 	/** load features from file
 	 *
@@ -416,14 +416,14 @@ public:
 		/** pointer to feature vector */
 		ST* vec;
 		/** index of vector */
-		int32_t vidx;
+		index_t vidx;
 		/** length of vector */
-		int32_t vlen;
+		index_t vlen;
 		/** if we need to free the vector*/
 		bool vfree;
 
 		/** feature index */
-		int32_t index;
+		index_t index;
 	};
 #endif
 
@@ -438,7 +438,7 @@ public:
 	 *			iterate over
 	 * @return feature iterator (to be passed to get_next_feature)
 	 */
-	virtual void* get_feature_iterator(int32_t vector_index);
+	virtual void* get_feature_iterator(index_t vector_index);
 
 	/** iterate over the non-zero features
 	 *
@@ -452,7 +452,7 @@ public:
 	 * @param iterator as returned by get_first_feature
 	 * @return true if a new non-zero feature got returned
 	 */
-	virtual bool get_next_feature(int32_t& index, float64_t& value,
+	virtual bool get_next_feature(index_t& index, float64_t& value,
 			void* iterator);
 
 	/** clean up iterator
@@ -534,7 +534,7 @@ protected:
 	 * @param target
 	 * @return feature vector
 	 */
-	virtual ST* compute_feature_vector(int32_t num, int32_t& len,
+	virtual ST* compute_feature_vector(index_t num, index_t& len,
 			ST* target = NULL);
 
 private:
@@ -542,10 +542,10 @@ private:
 
 protected:
 	/// number of vectors in cache
-	int32_t num_vectors;
+	index_t num_vectors;
 
 	/// number of features in cache
-	int32_t num_features;
+	index_t num_features;
 
 	/** Feature matrix and its associated number of
 	 * vectors and features. Note that num_vectors / num_features

@@ -104,7 +104,7 @@ CMulticlassLabels* CMCLDA::apply_multiclass(CFeatures* data)
 	bool vfree;
 	float64_t* vec;
 	Map< VectorXd > Em_xbar(m_xbar, m_dim);
-	for (int i = 0; i < num_vecs; i++)
+	for (index_t i = 0; i < num_vecs; i++)
 	{
 		vec = rf->get_feature_vector(i, vlen, vfree);
 		ASSERT(vec)
@@ -144,7 +144,7 @@ CMulticlassLabels* CMCLDA::apply_multiclass(CFeatures* data)
 
 	// argmax to apply labels
 	CMulticlassLabels* out = new CMulticlassLabels(num_vecs);
-	for (int i = 0; i < num_vecs; i++)
+	for (index_t i = 0; i < num_vecs; i++)
 		out->set_label(i, CMath::arg_max(d.data()+i, num_vecs, m_num_classes));
 
 	return out;
@@ -184,7 +184,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 	int32_t* class_nums = SG_MALLOC(int32_t, m_num_classes); // number of examples of each class
 	memset(class_nums, 0, m_num_classes*sizeof(int32_t));
 
-	for (int i = 0; i < train_labels.vlen; i++)
+	for (index_t i = 0; i < train_labels.vlen; i++)
 	{
 		int32_t class_idx = train_labels.vector[i];
 
@@ -199,7 +199,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 		}
 	}
 
-	for (int i = 0; i < m_num_classes; i++)
+	for (index_t i = 0; i < m_num_classes; i++)
 	{
 		if (class_nums[i] <= 0)
 		{
@@ -229,12 +229,12 @@ bool CMCLDA::train_machine(CFeatures* data)
 	int32_t vlen;
 	bool vfree;
 	float64_t* vec;
-	for (int k = 0; k < m_num_classes; k++)
+	for (index_t k = 0; k < m_num_classes; k++)
 	{
 		// gather all the samples for class k into buffer and calculate the mean of class k
 		MatrixXd buffer(class_nums[k], m_dim);
 		Map< VectorXd > Em_mean(m_means.get_column_vector(k), m_dim);
-		for (int i = 0; i < class_nums[k]; i++)
+		for (index_t i = 0; i < class_nums[k]; i++)
 		{
 			vec = rf->get_feature_vector(class_idxs[k*num_vec + i], vlen, vfree);
 			ASSERT(vec)
@@ -249,7 +249,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 		Em_mean /= class_nums[k];
 
 		// subtract the mean of class k from each sample of class k and store the centered data in Xc
-		for (int i = 0; i < class_nums[k]; i++)
+		for (index_t i = 0; i < class_nums[k]; i++)
 		{
 			buffer.row(i) -= Em_mean;
 			X.row(iX) += buffer.row(i);
@@ -275,7 +275,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 		m_cov.zero();
 		Map< MatrixXd > Em_cov(m_cov.matrix, m_dim, m_dim);
 
-		for (int k = 0; k < m_num_classes; k++)
+		for (index_t k = 0; k < m_num_classes; k++)
 		{
 			Map< MatrixXd > Em_cov_k(covs.get_matrix(k), m_dim, m_dim);
 			Em_cov += Em_cov_k;
@@ -306,7 +306,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 	std = (X.rowwise() - Em_xbar.transpose()).array().pow(2).colwise().sum();
 	std = std.array() / num_vec;
 
-	for (int j = 0; j < m_dim; j++)
+	for (index_t j = 0; j < m_dim; j++)
 		if(std[j] == 0)
 			std[j] = 1;
 
@@ -322,7 +322,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 
 	///////////////////////////////
 	// 2) Within variance scaling
-	for (int i = 0; i < num_vec; i++)
+	for (index_t i = 0; i < num_vec; i++)
 		X.row(i) = sqrt(fac) * X.row(i).array() / std.transpose().array();
 
 
@@ -346,8 +346,8 @@ bool CMCLDA::train_machine(CFeatures* data)
 		SG_ERROR("Warning: Variables are collinear\n")
 
 	MatrixXd scalings(m_dim, rank);
-	for (int i = 0; i < m_dim; i++)
-		for (int j = 0; j < rank; j++)
+	for (index_t i = 0; i < m_dim; i++)
+		for (index_t j = 0; j < rank; j++)
 			scalings(i,j) = V(j,i) / std[j] / S[j];
 
 #ifdef DEBUG_MCLDA
@@ -363,7 +363,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 	Map< MatrixXd > Em_means(m_means.matrix, m_dim, m_num_classes);
 	Xc = (Em_means.transpose()*scalings);
 
-	for (int i = 0; i < m_num_classes; i++)
+	for (index_t i = 0; i < m_num_classes; i++)
 		Xc.row(i) *= sqrt(class_nums[i] * fac);
 
 	// Centers are living in a space with n_classes-1 dim (maximum)
@@ -408,7 +408,7 @@ bool CMCLDA::train_machine(CFeatures* data)
 	// intercept
 	m_intercept  = SGVector< float64_t >(m_num_classes);
 	m_intercept.zero();
-	for (int j = 0; j < m_num_classes; j++)
+	for (index_t j = 0; j < m_num_classes; j++)
 		m_intercept[j] = -0.5*m_coef[j]*m_coef[j] + log(class_nums[j]/float(num_vec));
 
 #ifdef DEBUG_MCLDA

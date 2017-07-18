@@ -19,7 +19,7 @@ SGMatrix<float64_t> CJADiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 	int L = C.dims[2];
 
 	// check that the input matrices are pos def
-	for (int i = 0; i < L; i++)
+	for (index_t i = 0; i < L; i++)
 	{
 		Map<MatrixXd> Ci(C.get_matrix(i),d,d);
 
@@ -28,7 +28,7 @@ SGMatrix<float64_t> CJADiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 
 		MatrixXd D = eig.pseudoEigenvalueMatrix();
 
-		for (int j = 0; j < d; j++)
+		for (index_t j = 0; j < d; j++)
 		{
 			if (D(j,j) < 0)
 			{
@@ -47,7 +47,7 @@ SGMatrix<float64_t> CJADiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float6
 	w.setOnes();
 
 	MatrixXd ctot(d, d*L);
-	for (int i = 0; i < L; i++)
+	for (index_t i = 0; i < L; i++)
 	{
 		Map<MatrixXd> Ci(C.get_matrix(i),d,d);
 		ctot.block(0,i*d,d,d) = Ci;

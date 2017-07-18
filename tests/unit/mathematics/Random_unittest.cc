@@ -118,7 +118,7 @@ TEST(Random, normal_distrib)
 TEST(Random, random_uint64_1_2)
 {
 	CMath::init_random(17);
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		uint64_t r=CMath::random((uint64_t) 1, (uint64_t) 2);
 		EXPECT_TRUE(r == 1 || r == 2);
@@ -129,13 +129,13 @@ TEST(Random, random_uint64_0_10)
 {
 	CMath::init_random(17);
 	int rnds[10] = {0,0,0,0,0,0};
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		uint64_t r=CMath::random((uint64_t) 0, (uint64_t) 9);
 		rnds[r]++;
 	}
 
-	for (int32_t i=0; i<10; i++) {
+	for (index_t i=0; i<10; i++) {
 		EXPECT_TRUE(rnds[i]>0);
 	}
 }
@@ -143,7 +143,7 @@ TEST(Random, random_uint64_0_10)
 TEST(Random, random_int64_1_2)
 {
 	CMath::init_random(17);
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		int64_t r=CMath::random((int64_t) 1, (int64_t) 2);
 		EXPECT_TRUE(r == 1 || r == 2);
@@ -154,13 +154,13 @@ TEST(Random, random_int64_0_10)
 {
 	CMath::init_random(17);
 	int rnds[10] = {0,0,0,0,0,0};
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		int64_t r=CMath::random((int64_t) 0, (int64_t) 9);
 		rnds[r]++;
 	}
 
-	for (int32_t i=0; i<10; i++) {
+	for (index_t i=0; i<10; i++) {
 		EXPECT_TRUE(rnds[i]>0);
 	}
 }
@@ -168,7 +168,7 @@ TEST(Random, random_int64_0_10)
 TEST(Random, random_uint32_1_2)
 {
 	CMath::init_random(17);
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		uint32_t r=CMath::random((uint32_t) 1, (uint32_t) 2);
 		EXPECT_TRUE(r == 1 || r == 2);
@@ -179,13 +179,13 @@ TEST(Random, random_uint32_0_10)
 {
 	CMath::init_random(17);
 	int rnds[10] = {0,0,0,0,0,0};
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		uint32_t r=CMath::random((uint32_t) 0, (uint32_t) 9);
 		rnds[r]++;
 	}
 
-	for (int32_t i=0; i<10; i++) {
+	for (index_t i=0; i<10; i++) {
 		EXPECT_TRUE(rnds[i]>0);
 	}
 }
@@ -193,7 +193,7 @@ TEST(Random, random_uint32_0_10)
 TEST(Random, random_int32_1_2)
 {
 	CMath::init_random(17);
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 	{
 		int32_t r=CMath::random((int32_t) 1, (int32_t) 2);
 		EXPECT_TRUE(r == 1 || r == 2);
@@ -333,7 +333,7 @@ TEST(Random, random_std_normal_quantiles)
 	SGVector<int64_t> counts(10);
 	counts.zero();
 
-	for (int64_t i=0; i<m; ++i)
+	for (index_t i=0; i<m; ++i)
 	{
 		float64_t quantile=CStatistics::normal_cdf(rand->std_normal_distrib(), 1);
 		index_t idx=(int32_t)(quantile*counts.vlen);

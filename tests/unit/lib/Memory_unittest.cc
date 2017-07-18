@@ -13,7 +13,7 @@ TEST(MemoryTest,get_copy)
 	unsigned char bytes[len] = {1,2,3};
 	unsigned char* copy = (unsigned char*) get_copy(bytes, len);
 
-	for (int i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		EXPECT_EQ(bytes[i], copy[i]);
 
 	SG_FREE(copy);
@@ -28,7 +28,7 @@ TEST(MemoryTest,get_strdup)
 	int len2 = strlen(str2);
 	EXPECT_EQ(len1, len2);
 
-	for (int i=0; i<len1; i++)
+	for (index_t i=0; i<len1; i++)
 		EXPECT_EQ(str1[i], str2[i]);
 
 	SG_FREE(str2);

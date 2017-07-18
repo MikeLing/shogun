@@ -49,7 +49,7 @@ protected:
     virtual float64_t compute_distance(SGVector<float64_t> outputs, const int32_t *code)
     {
         float64_t dist = 0;
-        for (int32_t i=0; i < outputs.vlen; ++i)
+        for (index_t i=0; i < outputs.vlen; ++i)
             dist += (outputs[i]-code[i])*(outputs[i]-code[i]) * CMath::abs(code[i]);
         return CMath::sqrt(dist);
     }

@@ -34,7 +34,7 @@ TEST(SGMatrixListTest,fixed_nmats_ctor)
 	EXPECT_NE((SGMatrix<float64_t>*) NULL,a.matrix_list);
 	EXPECT_EQ(17, a.num_matrices);
 
-	for (int i=0; i < 17; i++)
+	for (index_t i=0; i < 17; i++)
 	{
 		SGMatrix<float64_t> m=a.get_matrix(i);
 		EXPECT_EQ(0, m.num_rows);
@@ -47,7 +47,7 @@ TEST(SGMatrixListTest,list_ctor)
 {
 	SGMatrix<float64_t>* matrices = SG_MALLOC(SGMatrix<float64_t>, 17);
 
-	for (int i=0; i < 17; i++)
+	for (index_t i=0; i < 17; i++)
 	{
 		matrices[i]=SGMatrix<float64_t>(10,5);
 		matrices[i].zero();
@@ -55,7 +55,7 @@ TEST(SGMatrixListTest,list_ctor)
 
 	SGMatrixList<float64_t> ml(matrices, 17);
 
-	for (int i=0; i < 17; i++)
+	for (index_t i=0; i < 17; i++)
 	{
 		SGMatrix<float64_t> m=ml[i];
 
@@ -69,7 +69,7 @@ TEST(SGMatrixListTest,setget)
 {
 	SGMatrix<float64_t>* matrices = SG_MALLOC(SGMatrix<float64_t>, 17);
 
-	for (int i=0; i < 17; i++)
+	for (index_t i=0; i < 17; i++)
 	{
 		matrices[i]=SGMatrix<float64_t>(10,5);
 		matrices[i].zero();
@@ -77,7 +77,7 @@ TEST(SGMatrixListTest,setget)
 
 	SGMatrixList<float64_t> ml(matrices, 17);
 
-	for (int i=0; i < 17; i++)
+	for (index_t i=0; i < 17; i++)
 	{
 		SGMatrix<float64_t> m=ml[i];
 
@@ -86,7 +86,7 @@ TEST(SGMatrixListTest,setget)
 		EXPECT_EQ(0, m[0]);
 	}
 
-	for (int i=0; i < 7; i++)
+	for (index_t i=0; i < 7; i++)
 	{
 		SGMatrix<float64_t> m(3,2);
 		m.set_const(17);
@@ -94,7 +94,7 @@ TEST(SGMatrixListTest,setget)
 		ml.set_matrix(i, m);
 	}
 
-	for (int i=0; i < 17; i++)
+	for (index_t i=0; i < 17; i++)
 	{
 		SGMatrix<float64_t> m=ml[i];
 

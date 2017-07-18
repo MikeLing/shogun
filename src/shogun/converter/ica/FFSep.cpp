@@ -75,7 +75,7 @@ CFeatures* CFFSep::apply(CFeatures* features)
 	M_dims[2] = N;
 	m_covs = SGNDArray< float64_t >(M_dims, 3);
 
-	for (int t = 0; t < N; t++)
+	for (index_t t = 0; t < N; t++)
 	{
 		Map<MatrixXd> EM(m_covs.get_matrix(t),n,n);
 		EM = cor(EX,m_tau[t]);
@@ -91,7 +91,7 @@ CFeatures* CFFSep::apply(CFeatures* features)
 	C = EQ.inverse();
 
 	// Normalize Estimated Mixing Matrix
-	for (int t = 0; t < C.cols(); t++)
+	for (index_t t = 0; t < C.cols(); t++)
 		C.col(t) /= C.col(t).maxCoeff();
 
 	// Unmix

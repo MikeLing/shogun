@@ -127,7 +127,7 @@ CMulticlassLabels* CMulticlassMachine::apply_multiclass(CFeatures* data)
 		SGVector<float64_t> As(num_machines);
 		SGVector<float64_t> Bs(num_machines);
 
-		for (int32_t i=0; i<num_machines; ++i)
+		for (index_t i=0; i<num_machines; ++i)
 		{
 			outputs[i] = (CBinaryLabels*) get_submachine_outputs(i);
 
@@ -147,9 +147,9 @@ CMulticlassLabels* CMulticlassMachine::apply_multiclass(CFeatures* data)
 		if (heuris!=PROB_HEURIS_NONE)
 			r_output_for_i.resize_vector(num_classes);
 
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
-			for (int32_t j=0; j<num_machines; j++)
+			for (index_t j=0; j<num_machines; j++)
 				output_for_i[j] = outputs[j]->get_value(i);
 
 			if (heuris==PROB_HEURIS_NONE)
@@ -164,7 +164,7 @@ CMulticlassLabels* CMulticlassMachine::apply_multiclass(CFeatures* data)
 					m_multiclass_strategy->rescale_outputs(output_for_i);
 
 				// only first num_classes are returned
-				for (int32_t r=0; r<num_classes; r++)
+				for (index_t r=0; r<num_classes; r++)
 					r_output_for_i[r] = output_for_i[r];
 
 				SG_DEBUG("%s::apply_multiclass(): sum(r_output_for_i) = %f\n",
@@ -176,7 +176,7 @@ CMulticlassLabels* CMulticlassMachine::apply_multiclass(CFeatures* data)
 			result->set_multiclass_confidences(i, r_output_for_i);
 		}
 
-		for (int32_t i=0; i < num_machines; ++i)
+		for (index_t i=0; i < num_machines; ++i)
 			SG_UNREF(outputs[i]);
 
 		SG_FREE(outputs);
@@ -215,19 +215,19 @@ CMultilabelLabels* CMulticlassMachine::apply_multilabel_output(CFeatures* data, 
 		CMultilabelLabels* result=new CMultilabelLabels(num_vectors, n_outputs);
 		CBinaryLabels** outputs=SG_MALLOC(CBinaryLabels*, num_machines);
 
-		for (int32_t i=0; i < num_machines; ++i)
+		for (index_t i=0; i < num_machines; ++i)
 			outputs[i] = (CBinaryLabels*) get_submachine_outputs(i);
 
 		SGVector<float64_t> output_for_i(num_machines);
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
-			for (int32_t j=0; j<num_machines; j++)
+			for (index_t j=0; j<num_machines; j++)
 				output_for_i[j] = outputs[j]->get_value(i);
 
 			result->set_label(i, m_multiclass_strategy->decide_label_multiple_output(output_for_i, n_outputs));
 		}
 
-		for (int32_t i=0; i < num_machines; ++i)
+		for (index_t i=0; i < num_machines; ++i)
 			SG_UNREF(outputs[i]);
 
 		SG_FREE(outputs);
@@ -280,14 +280,14 @@ bool CMulticlassMachine::train_machine(CFeatures* data)
 	return true;
 }
 
-float64_t CMulticlassMachine::apply_one(int32_t vec_idx)
+float64_t CMulticlassMachine::apply_one(index_t vec_idx)
 {
 	init_machines_for_apply(NULL);
 
 	ASSERT(m_machines->get_num_elements()>0)
 	SGVector<float64_t> outputs(m_machines->get_num_elements());
 
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 		outputs[i] = get_submachine_output(i, vec_idx);
 
 	float64_t result = m_multiclass_strategy->decide_label(outputs);

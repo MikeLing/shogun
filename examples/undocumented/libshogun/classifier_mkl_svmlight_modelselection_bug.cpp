@@ -68,7 +68,7 @@ void test()
 	/* create some data and labels */
 	SGMatrix<float64_t> matrix(dim_vectors, num_vectors);
 	CBinaryLabels* labels=new CBinaryLabels(num_vectors);
-	for (int32_t i=0; i<num_vectors*dim_vectors; i++)
+	for (index_t i=0; i<num_vectors*dim_vectors; i++)
 		matrix.matrix[i]=CMath::randn_double();
 
 	/* create num_feautres 2-dimensional vectors */

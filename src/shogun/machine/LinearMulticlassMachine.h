@@ -112,7 +112,7 @@ class CLinearMulticlassMachine : public CMulticlassMachine
 			if (data)
 				set_features((CDotFeatures*)data);
 
-			for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+			for (index_t i=0; i<m_machines->get_num_elements(); i++)
 			{
 				CLinearMachine* machine = (CLinearMachine*)m_machines->get_element(i);
 				ASSERT(m_features)

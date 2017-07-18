@@ -84,7 +84,7 @@ void MKLMulticlassGLPK::setup(const int32_t numkernels2)
 
 	//set up betas
 	int32_t offset=2;
-	for (int32_t i=0; i<numkernels;++i)
+	for (index_t i=0; i<numkernels;++i)
 	{
       glp_set_col_bnds((glp_prob*)linearproblem,offset+i,GLP_DB,0.0,1.0);
       glp_set_obj_coef((glp_prob*)linearproblem,offset+i,0.0);
@@ -95,7 +95,7 @@ void MKLMulticlassGLPK::setup(const int32_t numkernels2)
 
 	int32_t*betainds(NULL);
    betainds=SG_MALLOC(int, 1+numkernels);
-	for (int32_t i=0; i<numkernels;++i)
+	for (index_t i=0; i<numkernels;++i)
 	{
 		betainds[1+i]=2+i; // coefficient for theta stays zero, therefore
 							//start at 2 not at 1 !
@@ -103,7 +103,7 @@ void MKLMulticlassGLPK::setup(const int32_t numkernels2)
 
 	float64_t *betacoeffs = SG_MALLOC(float64_t, 1+numkernels);
 	betacoeffs[0]=0;
-	for (int32_t i=0; i<numkernels;++i)
+	for (index_t i=0; i<numkernels;++i)
 	{
 		betacoeffs[1+i]=1;
 	}
@@ -140,7 +140,7 @@ void MKLMulticlassGLPK::addconstraint(const ::std::vector<float64_t> & normw2,
    betainds=SG_MALLOC(int, 1+1+numkernels);
 
 	betainds[1]=1;
-	for (int32_t i=0; i<numkernels;++i)
+	for (index_t i=0; i<numkernels;++i)
 	{
 		betainds[2+i]=2+i; // coefficient for theta stays zero, therefore start
 			//at 2 not at 1 !
@@ -151,7 +151,7 @@ void MKLMulticlassGLPK::addconstraint(const ::std::vector<float64_t> & normw2,
 
 	betacoeffs[1]=-1;
 
-	for (int32_t i=0; i<numkernels;++i)
+	for (index_t i=0; i<numkernels;++i)
 	{
 		betacoeffs[2+i]=0.5*normw2[i];
 	}
@@ -181,7 +181,7 @@ void MKLMulticlassGLPK::computeweights(std::vector<float64_t> & weights2)
    glp_simplex((glp_prob*) linearproblem,NULL);
 
 	float64_t sum=0;
-	for (int32_t i=0; i< numkernels;++i)
+	for (index_t i=0; i< numkernels;++i)
 	{
       weights2[i]=glp_get_col_prim((glp_prob*) linearproblem, i+2);
 		weights2[i]= ::std::max(0.0, ::std::min(1.0,weights2[i]));
@@ -190,7 +190,7 @@ void MKLMulticlassGLPK::computeweights(std::vector<float64_t> & weights2)
 
 	if (sum>0)
 	{
-		for (int32_t i=0; i< numkernels;++i)
+		for (index_t i=0; i< numkernels;++i)
 		{
 			weights2[i]/=sum;
 		}

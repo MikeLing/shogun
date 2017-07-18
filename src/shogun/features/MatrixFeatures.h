@@ -88,7 +88,7 @@ template< class ST > class CMatrixFeatures : public CFeatures
 		 * @return number of examples/vectors (possibly of subset, if
 		 * implemented)
 		 */
-		virtual int32_t get_num_vectors() const { return m_num_vectors; }
+		virtual index_t get_num_vectors() const { return m_num_vectors; }
 
 		/** get feature vector num
 		 *
@@ -96,7 +96,7 @@ template< class ST > class CMatrixFeatures : public CFeatures
 		 *
 		 * @return feature vector
 		 */
-		SGMatrix< ST > get_feature_vector(int32_t num) const;
+		SGMatrix< ST > get_feature_vector(index_t num) const;
 
 		/** get a column of a feature vector
 		 *
@@ -104,14 +104,14 @@ template< class ST > class CMatrixFeatures : public CFeatures
 		 * @param num index of the feature vector
 		 * @param col index of the column to get
 		 */
-		void get_feature_vector_col(SGVector< ST > out, int32_t num, int32_t col) const;
+		void get_feature_vector_col(SGVector< ST > out, index_t num, index_t col) const;
 
 		/** set feature vector num
 		 *
 		 * @param vec feature vector
 		 * @param num index of vector to set
 		 */
-		void set_feature_vector(SGMatrix< ST > const vec, int32_t num);
+		void set_feature_vector(SGMatrix< ST > const vec, index_t num);
 
 		/** get features
 		 *
@@ -124,7 +124,7 @@ template< class ST > class CMatrixFeatures : public CFeatures
 		 * @param features to set
 		 * @param num_feats number of features per vector
 		 */
-		void set_features(SGMatrixList< ST > features, int32_t num_feats);
+		void set_features(SGMatrixList< ST > features, index_t num_feats);
 
 		/** @return object name */
 		virtual const char* get_name() const { return "MatrixFeatures"; }

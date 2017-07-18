@@ -19,7 +19,7 @@ double tron_ddot(const int N, const double *X, const int incX, const double *Y, 
 	return cblas_ddot(N,X,incX,Y,incY);
 #else
 	double dot = 0.0;
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 		dot += X[incX*i]*Y[incY*i];
 	return dot;
 #endif
@@ -31,7 +31,7 @@ double tron_dnrm2(const int N, const double *X, const int incX)
 	return cblas_dnrm2(N,X,incX);
 #else
 	double dot = 0.0;
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 		dot += X[incX*i]*X[incX*i];
 	return sqrt(dot);
 #endif
@@ -42,7 +42,7 @@ void tron_dscal(const int N, const double alpha, double *X, const int incX)
 #ifdef HAVE_LAPACK
 	return cblas_dscal(N,alpha,X,incX);
 #else
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 		X[i]*= alpha;
 #endif
 }
@@ -52,7 +52,7 @@ void tron_daxpy(const int N, const double alpha, const double *X, const int incX
 #ifdef HAVE_LAPACK
 	cblas_daxpy(N,alpha,X,incX,Y,incY);
 #else
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 		Y[i] += alpha*X[i];
 #endif
 }
@@ -252,7 +252,7 @@ int32_t CTron::trcg(float64_t delta, double* g, double* s, double* r)
 float64_t CTron::norm_inf(int32_t n, float64_t *x)
 {
 	float64_t dmax = CMath::abs(x[0]);
-	for (int32_t i=1; i<n; i++)
+	for (index_t i=1; i<n; i++)
 		if (CMath::abs(x[i]) >= dmax)
 			dmax = CMath::abs(x[i]);
 	return(dmax);

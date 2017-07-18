@@ -230,7 +230,7 @@ template <class T> void CParseBuffer<T>::init_vector()
 {
 	if (!free_vectors_on_destruct)
 		return;
-	for (int32_t i=0; i<ring_size; i++)
+	for (index_t i=0; i<ring_size; i++)
 	{
 		if(ex_ring[i].fv==NULL)
 			ex_ring[i].fv = new T();
@@ -252,7 +252,7 @@ template <class T> CParseBuffer<T>::CParseBuffer(int32_t size)
 	ex_write_index = 0;
 	ex_read_index = 0;
 
-	for (int32_t i=0; i<ring_size; i++)
+	for (index_t i=0; i<ring_size; i++)
 	{
 		ex_used[i] = E_EMPTY;
 
@@ -271,7 +271,7 @@ template <class T> CParseBuffer<T>::CParseBuffer(int32_t size)
 
 template <class T> CParseBuffer<T>::~CParseBuffer()
 {
-	for (int32_t i=0; i<ring_size; i++)
+	for (index_t i=0; i<ring_size; i++)
 	{
 		if (ex_ring[i].fv != NULL && free_vectors_on_destruct)
 		{

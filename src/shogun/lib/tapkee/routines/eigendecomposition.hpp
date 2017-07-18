@@ -108,7 +108,7 @@ EigendecompositionResult eigendecomposition_impl_randomized(const MatrixType& wm
 		ScalarType norm = Y.col(i).norm();
 		if (norm < 1e-4)
 		{
-			for (int k = i; k<Y.cols(); k++)
+			for (index_t k = i; k<Y.cols(); k++)
 				Y.col(k).setZero();
 		}
 		Y.col(i) *= (1.f / norm);

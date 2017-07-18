@@ -163,7 +163,7 @@ TEST(SGSparseMatrix, io_libsvm)
 	SGVector<float64_t> labels_from_file=m_from_file.load_with_labels(fin, false);
 	SG_UNREF(fin);
 
-	for (int32_t i=0; i<size; i++)
+	for (index_t i=0; i<size; i++)
 	{
 		EXPECT_EQ(labels[i], labels_from_file[i]);
 		for (index_t j=0; j<num_feat; ++j)

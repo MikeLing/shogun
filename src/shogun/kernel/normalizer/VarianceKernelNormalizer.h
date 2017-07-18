@@ -59,11 +59,11 @@ class CVarianceKernelNormalizer : public CKernelNormalizer
 
 			float64_t diag_mean=0;
 			float64_t overall_mean=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 			{
 				diag_mean+=k->compute(i, i);
 
-				for (int32_t j=0; j<n; j++)
+				for (index_t j=0; j<n; j++)
 					overall_mean+=k->compute(i, j);
 			}
 			diag_mean/=n;

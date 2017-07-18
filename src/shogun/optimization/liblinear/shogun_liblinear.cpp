@@ -152,7 +152,7 @@ void l2r_lr_fun::XTv(double *v, double *res_XTv)
 	if (m_prob->use_bias)
 		n--;
 
-	for (int32_t i=0;i<l;i++)
+	for (index_t i=0;i<l;i++)
 	{
 		m_prob->x->add_to_dense_vec(v[i], i, res_XTv, n);
 
@@ -273,7 +273,7 @@ void l2r_l2_svc_fun::subXv(double *v, double *res_Xv)
 
 	m_prob->x->dense_dot_range_subset(I, sizeI, res_Xv, NULL, v, n, bias);
 
-	/*for (int32_t i=0;i<sizeI;i++)
+	/*for (index_t i=0;i<sizeI;i++)
 	{
 		res_Xv[i]=m_prob->x->dense_dot(I[i], v, n);
 
@@ -290,7 +290,7 @@ void l2r_l2_svc_fun::subXTv(double *v, double *XTv)
 		n--;
 
 	memset(XTv, 0, sizeof(float64_t)*m_prob->n);
-	for (int32_t i=0;i<sizeI;i++)
+	for (index_t i=0;i<sizeI;i++)
 	{
 		m_prob->x->add_to_dense_vec(v[i], I[i], XTv, n);
 

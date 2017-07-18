@@ -86,7 +86,7 @@ void CFile::get_vector(bool*& vector, int32_t& len)
 	ASSERT(len>0)
 	vector= SG_MALLOC(bool, len);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vector[i]= (int_vector[i]!=0);
 
 	SG_FREE(int_vector);
@@ -95,7 +95,7 @@ void CFile::get_vector(bool*& vector, int32_t& len)
 void CFile::set_vector(const bool* vector, int32_t len)
 {
 	int32_t* int_vector = SG_MALLOC(int32_t, len);
-	for (int32_t i=0;i<len;i++)
+	for (index_t i=0;i<len;i++)
 	{
 		if (vector[i])
 			int_vector[i]=1;
@@ -114,9 +114,9 @@ void CFile::get_matrix(bool*& matrix, int32_t& num_feat, int32_t& num_vec)
 	ASSERT(num_feat > 0 && num_vec > 0)
 	matrix = SG_MALLOC(bool, num_feat*num_vec);
 
-	for(int32_t i = 0;i < num_vec;i++)
+	for(index_t i = 0;i < num_vec;i++)
 	{
-		for(int32_t j = 0;j < num_feat;j++)
+		for(index_t j = 0;j < num_feat;j++)
 			matrix[i*num_feat+j] = byte_matrix[i*num_feat+j] != 0 ? 1 : 0;
 	}
 
@@ -126,9 +126,9 @@ void CFile::get_matrix(bool*& matrix, int32_t& num_feat, int32_t& num_vec)
 void CFile::set_matrix(const bool* matrix, int32_t num_feat, int32_t num_vec)
 {
 	uint8_t * byte_matrix = SG_MALLOC(uint8_t, num_feat*num_vec);
-	for(int32_t i = 0;i < num_vec;i++)
+	for(index_t i = 0;i < num_vec;i++)
 	{
-		for(int32_t j = 0;j < num_feat;j++)
+		for(index_t j = 0;j < num_feat;j++)
 			byte_matrix[i*num_feat+j] = matrix[i*num_feat+j] != 0 ? 1 : 0;
 	}
 
@@ -147,15 +147,15 @@ void CFile::get_string_list(
 	ASSERT(num_str>0 && max_string_len>0)
 	strings=SG_MALLOC(SGString<bool>, num_str);
 
-	for(int32_t i = 0;i < num_str;i++)
+	for(index_t i = 0;i < num_str;i++)
 	{
 		strings[i].slen = strs[i].slen;
                 strings[i].string = SG_MALLOC(bool, strs[i].slen);
-		for(int32_t j = 0;j < strs[i].slen;j++)
+		for(index_t j = 0;j < strs[i].slen;j++)
 		strings[i].string[j] = strs[i].string[j] != 0 ? 1 : 0;
 	}
 
-	for(int32_t i = 0;i < num_str;i++)
+	for(index_t i = 0;i < num_str;i++)
 		SG_FREE(strs[i].string);
 	SG_FREE(strs);
 }
@@ -164,17 +164,17 @@ void CFile::set_string_list(const SGString<bool>* strings, int32_t num_str)
 {
 	SGString<int8_t> * strs = SG_MALLOC(SGString<int8_t>, num_str);
 
-	for(int32_t i = 0;i < num_str;i++)
+	for(index_t i = 0;i < num_str;i++)
 	{
 		strs[i].slen = strings[i].slen;
 		strs[i].string = SG_MALLOC(int8_t, strings[i].slen);
-		for(int32_t j = 0;j < strings[i].slen;j++)
+		for(index_t j = 0;j < strings[i].slen;j++)
 		strs[i].string[j] = strings[i].string[j] != 0 ? 1 : 0;
 	}
 
 	set_string_list(strs,num_str);
 
-	for(int32_t i = 0;i < num_str;i++)
+	for(index_t i = 0;i < num_str;i++)
 		SG_FREE(strs[i].string);
 	SG_FREE(strs);
 }

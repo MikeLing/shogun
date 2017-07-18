@@ -49,7 +49,7 @@ TEST(MulticlassLibLinearTest,train_and_apply)
 	mocas->train();
 
 	CLabels* pred=mocas->apply(features_test);
-	for (int i=0; i<features_test->get_num_vectors(); ++i)
+	for (index_t i=0; i<features_test->get_num_vectors(); ++i)
 		EXPECT_EQ(labels_test->get_label(i), ((CMulticlassLabels* )pred)->get_label(i));
 
 	SG_UNREF(mocas);

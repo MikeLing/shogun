@@ -72,7 +72,7 @@ SGVector<float64_t> CSoftMaxLikelihood::get_log_probability_f(const CLabels* lab
 			"Labels must be type of CMulticlassLabels\n")
 
 	SGVector<int32_t> labels=((CMulticlassLabels*) lab)->get_int_labels();
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 		REQUIRE(((labels[i]>-1)&&(labels[i]<func.vlen/labels.vlen)),
 		 "Labels must be between 0 and C(ie %d here). Currently labels[%d] is"
 		"%d\n",func.vlen/labels.vlen,i,labels[i]);
@@ -92,7 +92,7 @@ SGVector<float64_t> CSoftMaxLikelihood::get_log_probability_f(const CLabels* lab
 	SGVector<float64_t> ret=SGVector<float64_t>(labels.vlen);
 	Map<VectorXd> eigen_ret(ret.vector,ret.vlen);
 
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 		eigen_ret(i)=eigen_f(i,labels[i]);
 
 	eigen_ret=eigen_ret-log_sum_exp;
@@ -125,7 +125,7 @@ SGVector<float64_t> CSoftMaxLikelihood::get_log_probability_derivative1_f(
 			"number of vectors in function\n")
 
 	SGVector<int32_t> labels=((CMulticlassLabels*) lab)->get_int_labels();
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 		REQUIRE(((labels[i]>-1)&&(labels[i]<func.num_cols)),
 		 "Labels must be between 0 and C(ie %d here). Currently labels[%d] is"
 		"%d\n",func.num_cols,i,labels[i]);
@@ -149,7 +149,7 @@ SGVector<float64_t> CSoftMaxLikelihood::get_log_probability_derivative1_f(
 
 	MatrixXd y=MatrixXd::Zero(func.num_rows,func.num_cols);
 
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 		y(i,labels[i])=1.;
 
 	eigen_ret=y-eigen_ret;
@@ -168,7 +168,7 @@ SGVector<float64_t> CSoftMaxLikelihood::get_log_probability_derivative2_f(SGMatr
 	VectorXd tmp=f1.rowwise().sum();
 	f1=f1.array().colwise()/tmp.array();
 
-	for (int32_t i=0;i<eigen_f.rows();i++)
+	for (index_t i=0;i<eigen_f.rows();i++)
 	{
 		eigen_ret.block(i*eigen_f.cols(),0,eigen_f.cols(),eigen_f.cols())=
 						f1.transpose().col(i)*f1.row(i);
@@ -192,13 +192,13 @@ SGVector<float64_t> CSoftMaxLikelihood::get_log_probability_derivative3_f(SGMatr
 	VectorXd tmp=f1.rowwise().sum();
 	f1=f1.array().colwise()/tmp.array();
 
-	for (int32_t i=0;i<func.num_rows;i++)
+	for (index_t i=0;i<func.num_rows;i++)
 	{
-		for (int32_t c1=0;c1<func.num_cols;c1++)
+		for (index_t c1=0;c1<func.num_cols;c1++)
 		{
-			for (int32_t c2=0;c2<func.num_cols;c2++)
+			for (index_t c2=0;c2<func.num_cols;c2++)
 			{
-				for (int32_t c3=0;c3<func.num_cols;c3++)
+				for (index_t c3=0;c3<func.num_cols;c3++)
 				{
 					float64_t sum_temp=0;
 					if ((c1==c2) && (c2==c3))

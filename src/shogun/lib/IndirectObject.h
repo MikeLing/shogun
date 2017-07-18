@@ -67,7 +67,7 @@ template <class T, class P> class CIndirectObject
 			if (stop==-1)
 				stop=len;
 
-			for (int32_t i=start; i<stop && i<len; i++)
+			for (index_t i=start; i<stop && i<len; i++)
 				a[i].index=i;
 		}
 

@@ -586,7 +586,7 @@ struct sum<Backend::VIENNACL,Matrix>
 					int local_id = get_local_id(0);
 
 					DATATYPE thread_sum = 0;
-					for (int i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
+					for (index_t i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
 					{
 					#ifdef NO_DIAG
 						if (!(i/nrows == i%nrows))
@@ -596,7 +596,7 @@ struct sum<Backend::VIENNACL,Matrix>
 
 					buffer[local_id] = thread_sum;
 
-					for (int j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
+					for (index_t j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
 					{
 						barrier(CLK_LOCAL_MEM_FENCE);
 						if (local_id < j)
@@ -727,7 +727,7 @@ struct colwise_sum<Backend::VIENNACL,Matrix>
 						return;
 
 					DATATYPE sum = 0;
-					for (int i=0; i<nrows; i++)
+					for (index_t i=0; i<nrows; i++)
 					{
 					#ifdef NO_DIAG
 						if (i!=j)
@@ -844,7 +844,7 @@ struct rowwise_sum<Backend::VIENNACL,Matrix>
 						return;
 
 					DATATYPE sum = 0;
-					for (int j=0; j<ncols; j++)
+					for (index_t j=0; j<ncols; j++)
 					{
 					#ifdef NO_DIAG
 						if (i!=j)

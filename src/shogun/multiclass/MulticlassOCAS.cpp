@@ -130,7 +130,7 @@ bool CMulticlassOCAS::train_machine(CFeatures* data)
 	SG_DEBUG("Exit flag [exitflag] = %d \n",value.exitflag)
 
 	m_machines->reset_array();
-	for (int32_t i=0; i<num_classes; i++)
+	for (index_t i=0; i<num_classes; i++)
 	{
 		CLinearMachine* machine = new CLinearMachine();
 		machine->set_w(SGVector<float64_t>(&user_data.W[i*num_features],num_features,false).clone());

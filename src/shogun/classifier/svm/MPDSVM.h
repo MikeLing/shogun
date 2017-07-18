@@ -88,7 +88,7 @@ class CMPDSVM : public CSVM
 				line=kernel_cache->set_entry(i);
 				ASSERT(line)
 
-				for (int32_t j=0; j<m_labels->get_num_labels(); j++)
+				for (index_t j=0; j<m_labels->get_num_labels(); j++)
 					line[j]=(KERNELCACHE_ELEM) ((CBinaryLabels*) m_labels)->get_label(i)*((CBinaryLabels*) m_labels)->get_label(j)*kernel->kernel(i,j);
 			}
 

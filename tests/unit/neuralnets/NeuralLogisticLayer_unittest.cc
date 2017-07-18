@@ -50,7 +50,7 @@ TEST(NeuralLogisticLayer, compute_activations)
 	// initialize some random inputs
 	CMath::init_random(100);
 	SGMatrix<float64_t> x(12,3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input = new CNeuralInputLayer (x.num_rows);
@@ -80,13 +80,13 @@ TEST(NeuralLogisticLayer, compute_activations)
 	float64_t* biases = params.vector;
 	float64_t* weights = biases + layer.get_num_neurons();
 
-	for (int32_t i=0; i<A_ref.num_rows; i++)
+	for (index_t i=0; i<A_ref.num_rows; i++)
 	{
-		for (int32_t j=0; j<A_ref.num_cols; j++)
+		for (index_t j=0; j<A_ref.num_cols; j++)
 		{
 			A_ref(i,j) = biases[i];
 
-			for (int32_t k=0; k<x.num_rows; k++)
+			for (index_t k=0; k<x.num_rows; k++)
 				A_ref(i,j) += weights[i+k*A_ref.num_rows]*x(k,j);
 
 			A_ref(i,j) = 1/(1+CMath::exp(-1*A_ref(i,j)));
@@ -96,7 +96,7 @@ TEST(NeuralLogisticLayer, compute_activations)
 	// compare
 	EXPECT_EQ(A_ref.num_rows, A.num_rows);
 	EXPECT_EQ(A_ref.num_cols, A.num_cols);
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 		EXPECT_NEAR(A_ref[i], A[i], 1e-12);
 
 	SG_UNREF(layers);
@@ -111,7 +111,7 @@ TEST(NeuralLogisticLayer, compute_local_gradients)
 
 	CMath::init_random(100);
 	SGMatrix<float64_t> x(12,3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input = new CNeuralInputLayer (x.num_rows);
@@ -131,7 +131,7 @@ TEST(NeuralLogisticLayer, compute_local_gradients)
 	layer.set_batch_size(x.num_cols);
 
 	SGMatrix<float64_t> y(layer.get_num_neurons(), x.num_cols);
-	for (int32_t i=0; i<y.num_rows*y.num_cols; i++)
+	for (index_t i=0; i<y.num_rows*y.num_cols; i++)
 		y[i] = CMath::random(0.0,1.0);
 
 	// compute the layer's local gradients
@@ -144,7 +144,7 @@ TEST(NeuralLogisticLayer, compute_local_gradients)
 	SGMatrix<float64_t> A = layer.get_activations();
 	SGMatrix<float64_t> LG_numerical(A.num_rows, A.num_cols);
 	float64_t epsilon = 1e-9;
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 	{
 		A[i] += epsilon;
 		float64_t error_plus = layer.compute_error(y);
@@ -159,7 +159,7 @@ TEST(NeuralLogisticLayer, compute_local_gradients)
 	// compare
 	EXPECT_EQ(LG_numerical.num_rows, LG.num_rows);
 	EXPECT_EQ(LG_numerical.num_cols, LG.num_cols);
-	for (int32_t i=0; i<LG.num_rows*LG.num_cols; i++)
+	for (index_t i=0; i<LG.num_rows*LG.num_cols; i++)
 		EXPECT_NEAR(LG_numerical[i], LG[i], 1e-6);
 
 	SG_UNREF(layers);

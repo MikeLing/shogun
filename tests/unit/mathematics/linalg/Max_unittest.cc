@@ -52,10 +52,10 @@ TEST(MaxMatrix, eigen3_backend)
 
 	float64_t a[] = {1, 2, 5, 8, 3, 1, 0, -1, 4};
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = a[i];
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(8, linalg::max<linalg::Backend::EIGEN3>(A), 1e-15);
 }
 
@@ -65,10 +65,10 @@ TEST(MaxVector, eigen3_backend)
 
 	float64_t a[] = {1, 2, 5, 8, 3, 1, 0, -1, 4};
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = a[i];
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(8, linalg::max<linalg::Backend::EIGEN3>(A), 1e-15);
 }
 
@@ -79,10 +79,10 @@ TEST(MaxMatrix, viennacl_backend)
 
 	float64_t a[] = {1, 2, 5, 8, 3, 1, 0, -1, 4};
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = a[i];
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(8, linalg::max<linalg::Backend::VIENNACL>(A), 1e-15);
 }
 
@@ -92,10 +92,10 @@ TEST(MaxVector, viennacl_backend)
 
 	float64_t a[] = {1, 2, 5, 8, 3, 1, 0, -1, 4};
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		A[i] = a[i];
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_NEAR(8, linalg::max<linalg::Backend::VIENNACL>(A), 1e-15);
 }
 #endif // HAVE_VIENNACL

@@ -162,7 +162,7 @@ CRegressionLabels* CGUIHMM::classify(CRegressionLabels* result)
 	if (!result)
 		result=new CRegressionLabels(num_vec);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		result->set_label(i, pos->model_probability(i) - neg->model_probability(i));
 
 	//pos->set_observations(old_pos);
@@ -203,7 +203,7 @@ CRegressionLabels* CGUIHMM::one_class_classify(CRegressionLabels* result)
 	if (!result)
 		result=new CRegressionLabels(num_vec);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		result->set_label(i, working->model_probability(i));
 
 	//working->set_observations(old_pos);
@@ -225,7 +225,7 @@ CRegressionLabels* CGUIHMM::linear_one_class_classify(CRegressionLabels* result)
 	if (!result)
 		result=new CRegressionLabels(num_vec);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		result->set_label(i, working->linear_model_probability(i));
 
 	//working->set_observations(old_pos);
@@ -279,7 +279,7 @@ bool CGUIHMM::append_model(char* filename, int32_t base1, int32_t base2)
 		float64_t* cur_o=SG_MALLOC(float64_t, h->get_M());
 		float64_t* app_o=SG_MALLOC(float64_t, h->get_M());
 
-		for (int32_t i=0; i<h->get_M(); i++)
+		for (index_t i=0; i<h->get_M(); i++)
 		{
 			if (i==base1)
 				cur_o[i]=0;
@@ -542,7 +542,7 @@ bool CGUIHMM::best_path(int32_t from, int32_t to)
 	//get path
 	working->best_path(0);
 
-	for (int32_t t=0; t<working->get_observations()->get_vector_length(0)-1 && t<to; t++)
+	for (index_t t=0; t<working->get_observations()->get_vector_length(0)-1 && t<to; t++)
 		SG_PRINT("%d ", working->get_best_path_state(0, t))
 	SG_PRINT("\n")
 
@@ -579,9 +579,9 @@ bool CGUIHMM::relative_entropy(float64_t*& values, int32_t& len)
 	SG_FREE(values);
 	values=SG_MALLOC(float64_t, pos_N);
 
-	for (int32_t i=0; i<pos_N; i++)
+	for (index_t i=0; i<pos_N; i++)
 	{
-		for (int32_t j=0; j<pos_M; j++)
+		for (index_t j=0; j<pos_M; j++)
 		{
 			p[j]=pos->get_b(i, j);
 			q[j]=neg->get_b(i, j);
@@ -608,9 +608,9 @@ bool CGUIHMM::entropy(float64_t*& values, int32_t& len)
 	SG_FREE(values);
 	values=SG_MALLOC(float64_t, n);
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
-		for (int32_t j=0; j<m; j++)
+		for (index_t j=0; j<m; j++)
 			p[j]=working->get_b(i, j);
 
 		values[i]=CStatistics::entropy(p, m);

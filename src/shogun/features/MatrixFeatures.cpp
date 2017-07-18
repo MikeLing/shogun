@@ -71,7 +71,7 @@ template< class ST > EFeatureClass CMatrixFeatures< ST >::get_feature_class() co
 }
 
 template< class ST > SGMatrix< ST > CMatrixFeatures< ST >::get_feature_vector(
-		int32_t num) const
+		index_t num) const
 {
 	if ( num < 0 || num >= get_num_vectors() )
 	{
@@ -84,8 +84,8 @@ template< class ST > SGMatrix< ST > CMatrixFeatures< ST >::get_feature_vector(
 
 template< class ST > void CMatrixFeatures< ST >::get_feature_vector_col(
 		SGVector< ST > out,
-		int32_t num,
-		int32_t col) const
+		index_t num,
+		index_t col) const
 {
 	if ( num < 0 || num >= get_num_vectors() )
 	{
@@ -118,7 +118,7 @@ template< class ST > void CMatrixFeatures< ST >::get_feature_vector_col(
 
 template< class ST > void CMatrixFeatures< ST >::set_feature_vector(
 		SGMatrix< ST > const vec,
-		int32_t num)
+		index_t num)
 {
 	if ( num < 0 || num >= get_num_vectors() )
 	{
@@ -137,7 +137,7 @@ template< class ST > void CMatrixFeatures< ST >::set_feature_vector(
 }
 
 template< class ST > void CMatrixFeatures< ST >::set_features(
-		SGMatrixList< ST > features, int32_t num_feats)
+		SGMatrixList< ST > features, index_t num_feats)
 {
 	m_features     = features;
 	m_num_vectors  = features.num_matrices;

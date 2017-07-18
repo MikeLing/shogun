@@ -253,7 +253,7 @@ void tester()
 	ASSERT(res);
 
 	float64_t err=0;
-	for(int32_t i=0; i<numdata;++i)
+	for(index_t i=0; i<numdata;++i)
 	{
 		ASSERT(i< res->get_num_labels());
 		if (lab->get_int_label(i)!=res->get_int_label(i))
@@ -301,7 +301,7 @@ void tester()
 
 	SG_SPRINT("test kernel weights\n");
 
-	for(int32_t i=0; i< numweights;++i)
+	for(index_t i=0; i< numweights;++i)
 		SG_SPRINT("%f ", weights[i]);
 
 	SG_SPRINT("\n");
@@ -314,7 +314,7 @@ void tester()
 	CMulticlassLabels* tres=CLabelsFactory::to_multiclass(tsvm->apply());
 
 	float64_t terr=0;
-	for(int32_t i=0; i<numdatatest;++i)
+	for(index_t i=0; i<numdatatest;++i)
 	{
 		ASSERT(i< tres->get_num_labels());
 		if(tlab->get_int_label(i)!=tres->get_int_label(i))

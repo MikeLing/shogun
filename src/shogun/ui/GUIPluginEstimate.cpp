@@ -116,7 +116,7 @@ CLabels* CGUIPluginEstimate::apply()
 	return estimator->apply();
 }
 
-float64_t CGUIPluginEstimate::apply_one(int32_t idx)
+float64_t CGUIPluginEstimate::apply_one(index_t idx)
 {
 	CFeatures* testfeatures=ui->ui_features->get_test_features();
 

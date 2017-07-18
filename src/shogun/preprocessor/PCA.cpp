@@ -137,7 +137,7 @@ bool CPCA::init(CFeatures* features)
 					{
 						float64_t eig_sum = eigenValues.sum();
 						float64_t com_sum = 0;
-						for (int32_t i=num_features-1; i<-1; i++)
+						for (index_t i=num_features-1; i<-1; i++)
 						{
 							num_dim++;
 							com_sum += m_eigenvalues_vector.vector[i];
@@ -148,7 +148,7 @@ bool CPCA::init(CFeatures* features)
 					break;
 
 				case THRESHOLD :
-					for (int32_t i=num_features-1; i<-1; i++)
+					for (index_t i=num_features-1; i<-1; i++)
 					{
 						if (m_eigenvalues_vector.vector[i]>m_thresh)
 							num_dim++;
@@ -169,7 +169,7 @@ bool CPCA::init(CFeatures* features)
 						num_features-num_dim, num_features,num_dim);
 			if (m_whitening)
 			{
-				for (int32_t i=0; i<num_dim; i++)
+				for (index_t i=0; i<num_dim; i++)
 				{
 					if (CMath::fequals_abs<float64_t>(0.0, eigenValues[i+max_dim_allowed-num_dim],
 											m_eigenvalue_zero_tolerance))
@@ -209,7 +209,7 @@ bool CPCA::init(CFeatures* features)
 					{
 						float64_t eig_sum = eigenValues.sum();
 						float64_t com_sum = 0;
-						for (int32_t i=0; i<num_features; i++)
+						for (index_t i=0; i<num_features; i++)
 						{
 							num_dim++;
 							com_sum += m_eigenvalues_vector.vector[i];
@@ -220,7 +220,7 @@ bool CPCA::init(CFeatures* features)
 					break;
 
 				case THRESHOLD :
-					for (int32_t i=0; i<num_features; i++)
+					for (index_t i=0; i<num_features; i++)
 					{
 						if (m_eigenvalues_vector.vector[i]>m_thresh)
 							num_dim++;
@@ -238,7 +238,7 @@ bool CPCA::init(CFeatures* features)
 			transformMatrix = svd.matrixV().block(0, 0, num_features, num_dim);
 			if (m_whitening)
 			{
-				for (int32_t i=0; i<num_dim; i++)
+				for (index_t i=0; i<num_dim; i++)
 				{
 					if (CMath::fequals_abs<float64_t>(0.0, eigenValues[i],
 								m_eigenvalue_zero_tolerance))
@@ -299,9 +299,9 @@ SGMatrix<float64_t> CPCA::apply_to_feature_matrix(CFeatures* features)
 					transform_matrix.transpose()*feature_matrix;
 
 			SG_INFO("Form matrix of target dimension")
-			for (int32_t col=0; col<num_vectors; col++)
+			for (index_t col=0; col<num_vectors; col++)
 			{
-				for (int32_t row=0; row<num_dim; row++)
+				for (index_t row=0; row<num_dim; row++)
 					m.matrix[col*num_dim+row] = feature_matrix(row,col);
 			}
 			m.num_rows = num_dim;

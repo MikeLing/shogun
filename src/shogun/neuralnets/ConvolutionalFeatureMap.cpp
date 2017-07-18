@@ -83,23 +83,23 @@ void CConvolutionalFeatureMap::compute_activations(
 	int32_t batch_size = activations.num_cols;
 
 	float64_t bias = parameters[0];
-	for (int32_t i=0; i<m_output_num_neurons; i++)
+	for (index_t i=0; i<m_output_num_neurons; i++)
 	{
-		for (int32_t j=0; j<batch_size; j++)
+		for (index_t j=0; j<batch_size; j++)
 		{
 			activations(i+m_row_offset,j) = bias;
 		}
 	}
 
 	int32_t weights_index_offset = 1;
-	for (int32_t l=0; l<input_indices.vlen; l++)
+	for (index_t l=0; l<input_indices.vlen; l++)
 	{
 		CNeuralLayer* layer =
 			(CNeuralLayer*)layers->element(input_indices[l]);
 
 		int32_t num_maps = layer->get_num_neurons()/m_input_num_neurons;
 
-		for (int32_t m=0; m<num_maps; m++)
+		for (index_t m=0; m<num_maps; m++)
 		{
 			SGMatrix<float64_t> weights_matrix(parameters.vector+weights_index_offset,
 				m_filter_height, m_filter_width, false);
@@ -114,15 +114,15 @@ void CConvolutionalFeatureMap::compute_activations(
 
 	if (m_activation_function==CMAF_LOGISTIC)
 	{
-		for (int32_t i=0; i<m_output_num_neurons; i++)
-			for (int32_t j=0; j<batch_size; j++)
+		for (index_t i=0; i<m_output_num_neurons; i++)
+			for (index_t j=0; j<batch_size; j++)
 				activations(i+m_row_offset,j) =
 					1.0/(1.0+CMath::exp(-1.0*activations(i+m_row_offset,j)));
 	}
 	else if (m_activation_function==CMAF_RECTIFIED_LINEAR)
 	{
-		for (int32_t i=0; i<m_output_num_neurons; i++)
-			for (int32_t j=0; j<batch_size; j++)
+		for (index_t i=0; i<m_output_num_neurons; i++)
+			for (index_t j=0; j<batch_size; j++)
 				activations(i+m_row_offset,j) =
 					CMath::max<float64_t>(0, activations(i+m_row_offset,j));
 	}
@@ -140,9 +140,9 @@ void CConvolutionalFeatureMap::compute_gradients(
 
 	if (m_activation_function==CMAF_LOGISTIC)
 	{
-		for (int32_t i=0; i<m_output_num_neurons; i++)
+		for (index_t i=0; i<m_output_num_neurons; i++)
 		{
-			for (int32_t j=0; j<batch_size; j++)
+			for (index_t j=0; j<batch_size; j++)
 			{
 				activation_gradients(i+m_row_offset,j) *=
 					activation_gradients(i+m_row_offset,j) *
@@ -152,28 +152,28 @@ void CConvolutionalFeatureMap::compute_gradients(
 	}
 	else if (m_activation_function==CMAF_RECTIFIED_LINEAR)
 	{
-		for (int32_t i=0; i<m_output_num_neurons; i++)
-			for (int32_t j=0; j<batch_size; j++)
+		for (index_t i=0; i<m_output_num_neurons; i++)
+			for (index_t j=0; j<batch_size; j++)
 				if (activations(i+m_row_offset,j)==0)
 					activation_gradients(i+m_row_offset,j) = 0;
 	}
 
 	float64_t bias_gradient = 0;
-	for (int32_t i=0; i<m_output_num_neurons; i++)
-		for (int32_t j=0; j<batch_size; j++)
+	for (index_t i=0; i<m_output_num_neurons; i++)
+		for (index_t j=0; j<batch_size; j++)
 			bias_gradient += activation_gradients(i+m_row_offset,j);
 
 	parameter_gradients[0] = bias_gradient;
 
 	int32_t weights_index_offset = 1;
-	for (int32_t l=0; l<input_indices.vlen; l++)
+	for (index_t l=0; l<input_indices.vlen; l++)
 	{
 		CNeuralLayer* layer =
 			(CNeuralLayer*)layers->element(input_indices[l]);
 
 		int32_t num_maps = layer->get_num_neurons()/m_input_num_neurons;
 
-		for (int32_t m=0; m<num_maps; m++)
+		for (index_t m=0; m<num_maps; m++)
 		{
 			SGMatrix<float64_t> W(parameters.vector+weights_index_offset,
 				m_filter_height, m_filter_width, false);
@@ -211,7 +211,7 @@ void CConvolutionalFeatureMap::pool_activations(
 		result_height /= pooling_height;
 	}
 
-	for (int32_t i=0; i<pooled_activations.num_cols; i++)
+	for (index_t i=0; i<pooled_activations.num_cols; i++)
 	{
 		SGMatrix<float64_t> image(
 			activations.matrix+i*activations.num_rows + m_row_offset,
@@ -231,16 +231,16 @@ void CConvolutionalFeatureMap::pool_activations(
 			indices.set_const(-1.0);
 		}
 
-		for (int32_t x=0; x<m_output_width; x+=pooling_width)
+		for (index_t x=0; x<m_output_width; x+=pooling_width)
 		{
-			for (int32_t y=0; y<m_output_height; y+=pooling_height)
+			for (index_t y=0; y<m_output_height; y+=pooling_height)
 			{
 				float64_t max = image(y,x);
 				int32_t max_index = m_row_offset+y+x*image.num_rows;
 
-				for (int32_t x1=x; x1<x+pooling_width; x1++)
+				for (index_t x1=x; x1<x+pooling_width; x1++)
 				{
-					for (int32_t y1=y; y1<y+pooling_height; y1++)
+					for (index_t y1=y; y1<y+pooling_height; y1++)
 					{
 						if (image(y1,x1) > max)
 						{
@@ -273,7 +273,7 @@ void CConvolutionalFeatureMap::convolve(
 	int32_t inputs_row_offset,
  	int32_t outputs_row_offset)
 {
-	for (int32_t i=0; i<outputs.num_cols; i++)
+	for (index_t i=0; i<outputs.num_cols; i++)
 	{
 		SGMatrix<float64_t> image(
 			inputs.matrix+i*inputs.num_rows + inputs_row_offset,
@@ -283,17 +283,17 @@ void CConvolutionalFeatureMap::convolve(
 			outputs.matrix+i*outputs.num_rows + outputs_row_offset,
 			m_output_height, m_output_width, false);
 
-		for (int32_t x=0; x<m_input_width; x+=m_stride_x)
+		for (index_t x=0; x<m_input_width; x+=m_stride_x)
 		{
-			for (int32_t y=0; y<m_input_height; y+=m_stride_y)
+			for (index_t y=0; y<m_input_height; y+=m_stride_y)
 			{
 				int32_t res_x = m_autoencoder_position == NLAP_NONE ? x/m_stride_x : x;
 				int32_t res_y = m_autoencoder_position == NLAP_NONE ? y/m_stride_y : y;
 
 				float64_t sum = reset_output ? 0 : result(res_y,res_x);
-				for (int32_t x1=x-m_radius_x; x1<=x+m_radius_x; x1++)
+				for (index_t x1=x-m_radius_x; x1<=x+m_radius_x; x1++)
 				{
-					for (int32_t y1=y-m_radius_y; y1<=y+m_radius_y; y1++)
+					for (index_t y1=y-m_radius_y; y1<=y+m_radius_y; y1++)
 					{
 						if (x1>=0 && y1>=0 && x1<image.num_cols && y1<image.num_rows)
 						{
@@ -320,7 +320,7 @@ void CConvolutionalFeatureMap::compute_weight_gradients(
  	int32_t local_gradients_row_offset)
 {
 	weight_gradients.zero();
-	for (int32_t i=0; i<local_gradients.num_cols; i++)
+	for (index_t i=0; i<local_gradients.num_cols; i++)
 	{
 		SGMatrix<float64_t> image(
 			inputs.matrix+i*inputs.num_rows + inputs_row_offset,
@@ -330,13 +330,13 @@ void CConvolutionalFeatureMap::compute_weight_gradients(
 			local_gradients.matrix+i*local_gradients.num_rows
 			+ local_gradients_row_offset, m_output_height, m_output_width, false);
 
-		for (int32_t x=0; x<m_input_width; x+=m_stride_x)
+		for (index_t x=0; x<m_input_width; x+=m_stride_x)
 		{
-			for (int32_t y=0; y<m_input_height; y+=m_stride_y)
+			for (index_t y=0; y<m_input_height; y+=m_stride_y)
 			{
-				for (int32_t x1=x-m_radius_x; x1<=x+m_radius_x; x1++)
+				for (index_t x1=x-m_radius_x; x1<=x+m_radius_x; x1++)
 				{
-					for (int32_t y1=y-m_radius_y; y1<=y+m_radius_y; y1++)
+					for (index_t y1=y-m_radius_y; y1<=y+m_radius_y; y1++)
 					{
 						if (x1>=0 && y1>=0 && x1<image.num_cols && y1<image.num_rows)
 						{

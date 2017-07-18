@@ -110,7 +110,7 @@ CNeuralNetwork* CNeuralNetworkFileReader::parse_network(json_object* json_networ
 			{
 				int32_t len = json_object_array_length(layer_iter.val);
 
-				for (int32_t i=0; i<len; i++)
+				for (index_t i=0; i<len; i++)
 				{
 					const char* input_key = json_object_get_string(
 						json_object_array_get_idx(layer_iter.val, i));

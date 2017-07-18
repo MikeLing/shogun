@@ -181,7 +181,7 @@ public:
 	 *
 	 * @return dimensionality
 	 */
-	virtual int32_t get_dim_feature_space() const;
+	virtual index_t get_dim_feature_space() const;
 
 	/**
 	 * Dot product taken with another StreamingDotFeatures object.
@@ -328,7 +328,7 @@ public:
 	 *
 	 * @return 1 if current_vector exists, else 0.
 	 */
-	virtual int32_t get_num_vectors() const;
+	virtual index_t get_num_vectors() const;
 
 private:
 	/**

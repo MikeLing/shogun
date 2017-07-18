@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 
 	// create three 2-dimensional vectors
 	SGMatrix<float64_t> matrix(2,3);
-	for (int32_t i=0; i<6; i++)
+	for (index_t i=0; i<6; i++)
 		matrix.matrix[i]=i;
 
 	// shogun will now own the matrix created

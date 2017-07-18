@@ -358,7 +358,7 @@ void CProtobufFile::write_sparse_matrix_header( \
 	SparseMatrixHeader data_header; \
 	data_header.set_num_features(num_feat); \
 	data_header.set_num_vectors(num_vec); \
-	for (int32_t i=0; i<num_vec; i++) \
+	for (index_t i=0; i<num_vec; i++) \
 	{ \
 		data_header.add_num_feat_entries(matrix[i].num_feat_entries); \
 	} \
@@ -387,7 +387,7 @@ void CProtobufFile::write_string_list_header(const SGString<sg_type>* strings, i
 	int32_t max_string_len=0; \
 	StringListHeader data_header; \
 	data_header.set_num_str(num_str); \
-	for (int32_t i=0; i<num_str; i++) \
+	for (index_t i=0; i<num_str; i++) \
 	{ \
 		data_header.add_str_len(strings[i].slen); \
 		if (strings[i].slen>max_string_len) \
@@ -453,7 +453,7 @@ void CProtobufFile::read_memory_block(sg_type*& vector, uint64_t len, int32_t nu
 	\
 	chunk_type chunk; \
 	int32_t elements_in_message=message_size/sizeof(sg_type); \
-	for (int32_t i=0; i<num_messages; i++) \
+	for (index_t i=0; i<num_messages; i++) \
 	{ \
 		read_message(chunk); \
 		\
@@ -463,7 +463,7 @@ void CProtobufFile::read_memory_block(sg_type*& vector, uint64_t len, int32_t nu
 		else \
 			num_elements_to_read=elements_in_message; \
 		\
-		for (int32_t j=0; j<num_elements_to_read; j++) \
+		for (index_t j=0; j<num_elements_to_read; j++) \
 			vector[j+i*elements_in_message]=chunk.data(j); \
 	} \
 }
@@ -487,7 +487,7 @@ void CProtobufFile::write_memory_block(const sg_type* vector, uint64_t len, int3
 { \
 	chunk_type chunk; \
 	int32_t elements_in_message=message_size/sizeof(sg_type); \
-	for (int32_t i=0; i<num_messages; i++) \
+	for (index_t i=0; i<num_messages; i++) \
 	{ \
 		\
 		int32_t num_elements_to_write=0; \
@@ -496,7 +496,7 @@ void CProtobufFile::write_memory_block(const sg_type* vector, uint64_t len, int3
 		else \
 			num_elements_to_write=elements_in_message; \
 		\
-		for (int32_t j=0; j<num_elements_to_write; j++) \
+		for (index_t j=0; j<num_elements_to_write; j++) \
 			chunk.add_data(vector[j+i*elements_in_message]); \
 		\
 		write_message(chunk); \
@@ -534,7 +534,7 @@ void CProtobufFile::read_sparse_matrix( \
 	for (uint32_t i=0; i<data_header.num_vectors(); i++) \
 	{ \
 		matrix[i]=SGSparseVector<sg_type>(data_header.num_feat_entries(i)); \
-		for (int32_t j=0; j<matrix[i].num_feat_entries; j++) \
+		for (index_t j=0; j<matrix[i].num_feat_entries; j++) \
 		{ \
 			matrix[i].features[j].feat_index=feat_index_chunk.data(buffer_counter); \
 			matrix[i].features[j].entry=entry_chunk.data(buffer_counter); \
@@ -573,9 +573,9 @@ void CProtobufFile::write_sparse_matrix( \
 	chunk_type entry_chunk; \
 	int32_t elements_in_message=message_size/sizeof(sg_type); \
 	int32_t buffer_counter=0; \
-	for (int32_t i=0; i<num_vec; i++) \
+	for (index_t i=0; i<num_vec; i++) \
 	{ \
-		for (int32_t j=0; j<matrix[i].num_feat_entries; j++) \
+		for (index_t j=0; j<matrix[i].num_feat_entries; j++) \
 		{ \
 			feat_index_chunk.add_data(matrix[i].features[j].feat_index); \
 			entry_chunk.add_data(matrix[i].features[j].entry); \
@@ -627,7 +627,7 @@ void CProtobufFile::read_string_list( \
 	for (uint32_t i=0; i<data_header.num_str(); i++) \
 	{ \
 		strings[i]=SGString<sg_type>(data_header.str_len(i)); \
-		for (int32_t j=0; j<strings[i].slen; j++) \
+		for (index_t j=0; j<strings[i].slen; j++) \
 		{ \
 			strings[i].string[j]=chunk.data(buffer_counter); \
 			buffer_counter++; \
@@ -662,9 +662,9 @@ void CProtobufFile::write_string_list( \
 	chunk_type chunk; \
 	int32_t elements_in_message=message_size/sizeof(sg_type); \
 	int32_t buffer_counter=0; \
-	for (int32_t i=0; i<num_str; i++) \
+	for (index_t i=0; i<num_str; i++) \
 	{ \
-		for (int32_t j=0; j<strings[i].slen; j++) \
+		for (index_t j=0; j<strings[i].slen; j++) \
 		{ \
 			chunk.add_data(strings[i].string[j]); \
 			buffer_counter++; \

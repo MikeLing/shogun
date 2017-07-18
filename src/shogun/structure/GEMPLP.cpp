@@ -46,13 +46,13 @@ void CGEMPLP::init()
 	m_region_intersections.resize(num_factors);
 
 	// get all the intersections
-	for (int32_t i = 0; i < num_factors; i++)
+	for (index_t i = 0; i < num_factors; i++)
 	{
 		CFactor* factor_i = dynamic_cast<CFactor*>(m_factors->get_element(i));
 		SGVector<int32_t> region_i = factor_i->get_variables();
 		SG_UNREF(factor_i);
 
-		for (int32_t j = i; j < num_factors; j++)
+		for (index_t j = i; j < num_factors; j++)
 		{
 			CFactor* factor_j = dynamic_cast<CFactor*>(m_factors->get_element(j));
 			SGVector<int32_t> region_j = factor_j->get_variables();
@@ -72,7 +72,7 @@ void CGEMPLP::init()
 	m_msgs_from_region.resize(num_factors);
 	m_theta_region.resize(num_factors);
 
-	for (int32_t c = 0; c < num_factors; c++)
+	for (index_t c = 0; c < num_factors; c++)
 	{
 		CFactor* factor_c = dynamic_cast<CFactor*>(m_factors->get_element(c));
 		SGVector<int32_t> vars_c = factor_c->get_variables();
@@ -90,7 +90,7 @@ void CGEMPLP::init()
 			SGVector<int32_t> inds_s(curr_intersection.size());
 			SGVector<int32_t> dims_array(curr_intersection.size());
 
-			for (int32_t i = 0; i < inds_s.size(); i++)
+			for (index_t i = 0; i < inds_s.size(); i++)
 			{
 				inds_s[i] = vars_c.find(curr_intersection[i])[0];
 				REQUIRE(inds_s[i] >= 0,
@@ -121,7 +121,7 @@ void CGEMPLP::init()
 		SGVector<int32_t> vars_intersection = m_all_intersections[i];
 		SGVector<int32_t> dims_array(vars_intersection.size());
 
-		for (int32_t j = 0; j < dims_array.size(); j++)
+		for (index_t j = 0; j < dims_array.size(); j++)
 			dims_array[j] = fg_var_sizes[vars_intersection[j]];
 
 		SGNDArray<float64_t> curr_array(dims_array);
@@ -139,13 +139,13 @@ SGNDArray<float64_t> CGEMPLP::convert_energy_to_potential(CFactor* factor)
 
 	if (cards.size() == 1)
 	{
-		for (int32_t i = 0; i < energies.size(); i++)
+		for (index_t i = 0; i < energies.size(); i++)
 			message.array[i] = - energies[i];
 	}
 	else if (cards.size() == 2)
 	{
-		for (int32_t y = 0; y < cards[1]; y++)
-			for (int32_t x = 0; x < cards[0]; x++)
+		for (index_t y = 0; y < cards[1]; y++)
+			for (index_t x = 0; x < cards[0]; x++)
 				message.array[x*cards[1]+y] = - energies[y*cards[0]+x];
 	}
 	else
@@ -158,9 +158,9 @@ int32_t CGEMPLP::find_intersection_index(SGVector<int32_t> region_A, SGVector<in
 {
 	vector<int32_t> tmp;
 
-	for (int32_t i = 0; i < region_A.size(); i++)
+	for (index_t i = 0; i < region_A.size(); i++)
 	{
-		for (int32_t j = 0; j < region_B.size(); j++)
+		for (index_t j = 0; j < region_B.size(); j++)
 		{
 			if (region_A[i] == region_B[j])
 				tmp.push_back(region_A[i]);
@@ -199,10 +199,10 @@ float64_t CGEMPLP::inference(SGVector<int32_t> assignment)
 	float64_t last_obj = CMath::INFTY;
 
 	// block coordinate desent, outer loop
-	for (int32_t it = 0; it < m_param.m_max_iter; ++it)
+	for (index_t it = 0; it < m_param.m_max_iter; ++it)
 	{
 		// update message, iterate over all regions
-		for (int32_t c = 0; c < m_factors->get_num_elements(); c++)
+		for (index_t c = 0; c < m_factors->get_num_elements(); c++)
 		{
 			CFactor* factor_c = dynamic_cast<CFactor*>(m_factors->get_element(c));
 			SGVector<int32_t> vars = factor_c->get_variables();
@@ -230,13 +230,13 @@ float64_t CGEMPLP::inference(SGVector<int32_t> assignment)
 		float64_t int_val = 0;
 
 		// iterates over factors
-		for (int32_t c = 0; c < m_factors->get_num_elements(); c++)
+		for (index_t c = 0; c < m_factors->get_num_elements(); c++)
 		{
 			CFactor* factor = dynamic_cast<CFactor*>(m_factors->get_element(c));
 			SGVector<int32_t> vars = factor->get_variables();
 			SGVector<int32_t> var_assignment(vars.size());
 
-			for (int32_t i = 0; i < vars.size(); i++)
+			for (index_t i = 0; i < vars.size(); i++)
 				var_assignment[i] = assignment[vars[i]];
 
 			// add value from current factor
@@ -349,7 +349,7 @@ void CGEMPLP::max_in_subdimension(SGNDArray<float64_t> tar_arr, SGVector<int32_t
 	SGVector<int32_t> inds_for_tar(tar_arr.num_dims);
 	inds_for_tar.zero();
 
-	for (int32_t vi = 0; vi < tar_arr.len_array; vi++)
+	for (index_t vi = 0; vi < tar_arr.len_array; vi++)
 	{
 		int32_t y = 0;
 

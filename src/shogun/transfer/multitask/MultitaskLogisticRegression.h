@@ -87,7 +87,7 @@ class CMultitaskLogisticRegression : public CMultitaskLinearMachine
 		void set_z(float64_t z);
 
 		/** applies to one vector */
-		virtual float64_t apply_one(int32_t i);
+		virtual float64_t apply_one(index_t i);
 
 	protected:
 

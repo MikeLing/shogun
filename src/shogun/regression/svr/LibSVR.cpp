@@ -82,7 +82,7 @@ bool CLibSVR::train_machine(CFeatures* data)
 	problem.x=SG_MALLOC(struct svm_node*, problem.l);
 	x_space=SG_MALLOC(struct svm_node, 2*problem.l);
 
-	for (int32_t i=0; i<problem.l; i++)
+	for (index_t i=0; i<problem.l; i++)
 	{
 		problem.y[i]=((CRegressionLabels*) m_labels)->get_label(i);
 		problem.x[i]=&x_space[2*i];
@@ -143,7 +143,7 @@ bool CLibSVR::train_machine(CFeatures* data)
 
 		set_bias(-model->rho[0]);
 
-		for (int32_t i=0; i<num_sv; i++)
+		for (index_t i=0; i<num_sv; i++)
 		{
 			set_support_vector(i, (model->SV[i])->index);
 			set_alpha(i, model->sv_coef[0][i]);

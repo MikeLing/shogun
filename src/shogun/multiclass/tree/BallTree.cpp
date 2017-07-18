@@ -41,7 +41,7 @@ float64_t CBallTree::min_dist(bnode_t* node,float64_t* feat, int32_t dim)
 {
 	float64_t dist=0;
 	SGVector<float64_t> center=node->data.center;
-	for (int32_t i=0;i<dim;i++)
+	for (index_t i=0;i<dim;i++)
 		dist+=add_dim_dist(center[i]-feat[i]);
 
 	dist=actual_dists(dist);
@@ -53,7 +53,7 @@ float64_t CBallTree::min_dist_dual(bnode_t* nodeq, bnode_t* noder)
 	float64_t dist=0;
 	SGVector<float64_t> center1=nodeq->data.center;
 	SGVector<float64_t> center2=noder->data.center;
-	for (int32_t i=0;i<center1.vlen;i++)
+	for (index_t i=0;i<center1.vlen;i++)
 		dist+=add_dim_dist(center1[i]-center2[i]);
 
 	dist=actual_dists(dist);
@@ -65,7 +65,7 @@ float64_t CBallTree::max_dist_dual(bnode_t* nodeq, bnode_t* noder)
 	float64_t dist=0;
 	SGVector<float64_t> center1=nodeq->data.center;
 	SGVector<float64_t> center2=noder->data.center;
-	for (int32_t i=0;i<center1.vlen;i++)
+	for (index_t i=0;i<center1.vlen;i++)
 		dist+=add_dim_dist(center1[i]-center2[i]);
 
 	dist=actual_dists(dist);
@@ -76,7 +76,7 @@ void CBallTree::min_max_dist(float64_t* pt, bnode_t* node, float64_t &lower,floa
 {
 	float64_t dist=0;
 	SGVector<float64_t> center=node->data.center;
-	for (int32_t i=0;i<dim;i++)
+	for (index_t i=0;i<dim;i++)
 		dist+=add_dim_dist(center[i]-pt[i]);
 
 	dist=actual_dists(dist);
@@ -90,12 +90,12 @@ void CBallTree::init_node(bnode_t* node, index_t start, index_t end)
 	SGVector<float64_t> lower_bounds(m_data.num_rows);
 
 	SGVector<float64_t> center(m_data.num_rows);
-	for (int32_t i=0;i<m_data.num_rows;i++)
+	for (index_t i=0;i<m_data.num_rows;i++)
 	{
 		center[i]=m_data(i,m_vec_id[start]);
 		upper_bounds[i]=m_data(i,m_vec_id[start]);
 		lower_bounds[i]=m_data(i,m_vec_id[start]);
-		for (int32_t j=start+1;j<=end;j++)
+		for (index_t j=start+1;j<=end;j++)
 		{
 			float64_t data_pt=m_data(i,m_vec_id[j]);
 			upper_bounds[i]=CMath::max(upper_bounds[i],data_pt);
@@ -107,7 +107,7 @@ void CBallTree::init_node(bnode_t* node, index_t start, index_t end)
 	}
 
 	float64_t radius=0;
-	for (int32_t i=start;i<=end;i++)
+	for (index_t i=start;i<=end;i++)
 		radius=CMath::max(distance(m_vec_id[i],center.vector,center.vlen),radius);
 
 	node->data.radius=radius;

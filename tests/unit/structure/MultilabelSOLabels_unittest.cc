@@ -65,7 +65,7 @@ TEST(MultilabelSOLabels, set_sparse_label)
 	                                     ml->get_label(0));
 	SGVector<int32_t> slabel_data = slabel->get_data();
 
-	for (int i = 0; i < slabel_data.vlen; i++)
+	for (index_t i = 0; i < slabel_data.vlen; i++)
 	{
 		EXPECT_EQ(lab[i], slabel_data[i]);
 	}
@@ -125,14 +125,14 @@ TEST(MultilabelSOLabels, set_sparse_labels)
 
 	ml->set_sparse_labels(labels);
 
-	for (int i = 0; i < ml->get_num_labels(); i++)
+	for (index_t i = 0; i < ml->get_num_labels(); i++)
 	{
 		CSparseMultilabel * slabel = CSparseMultilabel::obtain_from_generic(ml->get_label(i));
 		SGVector<int32_t> slabel_data = slabel->get_data();
 		SGVector<int32_t> lab = labels[i];
 		EXPECT_EQ(slabel_data.vlen, lab.vlen);
 
-		for (int j = 0; i < slabel_data.vlen; i++)
+		for (index_t j = 0; i < slabel_data.vlen; i++)
 		{
 			EXPECT_EQ(lab[j], slabel_data[j]);
 		}
@@ -165,7 +165,7 @@ TEST(MultilabelSOLabels, to_dense)
 
 	ml->set_sparse_labels(labels);
 
-	for (int i = 0; i < ml->get_num_labels(); i++)
+	for (index_t i = 0; i < ml->get_num_labels(); i++)
 	{
 		CSparseMultilabel * slabel = CSparseMultilabel::obtain_from_generic(ml->get_label(0));
 		SGVector<float64_t> slabel_dense_data = CMultilabelSOLabels::to_dense(slabel, ml->get_num_classes(), 1, 0);

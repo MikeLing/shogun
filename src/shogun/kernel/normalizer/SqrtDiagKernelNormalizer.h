@@ -123,7 +123,7 @@ class CSqrtDiagKernelNormalizer : public CKernelNormalizer
 			SG_FREE(v);
 			v=SG_MALLOC(float64_t, num);
 
-			for (int32_t i=0; i<num; i++)
+			for (index_t i=0; i<num; i++)
 			{
 				if (k->get_kernel_type() == K_COMMWORDSTRING)
 				{
@@ -150,13 +150,13 @@ class CSqrtDiagKernelNormalizer : public CKernelNormalizer
 		float64_t* sqrtdiag_lhs;
 
 		/** num sqrt diagonal left-hand side */
-		int32_t num_sqrtdiag_lhs;
+		index_t num_sqrtdiag_lhs;
 
 		/** sqrt diagonal right-hand side */
 		float64_t* sqrtdiag_rhs;
 
 		/** num sqrt diagonal right-hand side */
-		int32_t num_sqrtdiag_rhs;
+		index_t num_sqrtdiag_rhs;
 
 		/** f optimized diagonal computation is used */
 		bool use_optimized_diagonal_computation;

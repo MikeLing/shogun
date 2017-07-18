@@ -70,11 +70,11 @@ bool CMulticlassLogisticRegression::train_machine(CFeatures* data)
 	{
 		SGMatrix<float64_t> all_w_old(n_feats, n_classes);
 		SGVector<float64_t> all_c_old(n_classes);
-		for (int32_t i=0; i<n_classes; i++)
+		for (index_t i=0; i<n_classes; i++)
 		{
 			CLinearMachine* machine = (CLinearMachine*)m_machines->get_element(i);
 			SGVector<float64_t> w = machine->get_w();
-			for (int32_t j=0; j<n_feats; j++)
+			for (index_t j=0; j<n_feats; j++)
 				all_w_old(j,i) = w[j];
 			all_c_old[i] = machine->get_bias();
 			SG_UNREF(machine);
@@ -88,10 +88,10 @@ bool CMulticlassLogisticRegression::train_machine(CFeatures* data)
 
 	SGMatrix<float64_t> all_w = result.w;
 	SGVector<float64_t> all_c = result.c;
-	for (int32_t i=0; i<n_classes; i++)
+	for (index_t i=0; i<n_classes; i++)
 	{
 		SGVector<float64_t> w(n_feats);
-		for (int32_t j=0; j<n_feats; j++)
+		for (index_t j=0; j<n_feats; j++)
 			w[j] = all_w(j,i);
 		float64_t c = all_c[i];
 		CLinearMachine* machine = new CLinearMachine();

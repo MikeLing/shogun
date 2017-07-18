@@ -56,12 +56,12 @@ class CBitString : public CSGObject
 			word_len = width*nbits;
 
 			mask=0;
-			for (int32_t j=0; j<word_len; j++)
+			for (index_t j=0; j<word_len; j++)
 				mask=(mask<<1) | (uint64_t) 1;
 			mask<<=sizeof(uint64_t)*8-word_len;
 
 			single_mask=0;
-			for (int32_t j=0; j<nbits; j++)
+			for (index_t j=0; j<nbits; j++)
 				mask=(mask<<1) | (uint64_t) 1;
 		}
 
@@ -175,7 +175,7 @@ class CBitString : public CSGObject
 					uint64_t idx=0;
 					int32_t k=0;
 
-					for (int32_t j=0; j<fasta_len; j++, k++)
+					for (index_t j=0; j<fasta_len; j++, k++)
 					{
 						if (fasta[j]=='\n')
 						{
@@ -239,7 +239,7 @@ class CBitString : public CSGObject
 
 				char ar[256][256] ;
 
-				for (int i=0; i<8; i++)
+				for (index_t i=0; i<8; i++)
 				{
 					//fprintf(stdout, "%i %lx %lx %lx %i\n", i, res, m, b, (int)cnt) ;
 					if (m&1)

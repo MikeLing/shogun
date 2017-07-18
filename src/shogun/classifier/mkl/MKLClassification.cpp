@@ -26,7 +26,7 @@ float64_t CMKLClassification::compute_sum_alpha()
 {
 	float64_t suma=0;
 	int32_t nsv=svm->get_num_support_vectors();
-	for (int32_t i=0; i<nsv; i++)
+	for (index_t i=0; i<nsv; i++)
 		suma+=CMath::abs(svm->get_alpha(i));
 
 	return suma;

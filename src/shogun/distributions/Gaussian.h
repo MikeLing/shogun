@@ -82,7 +82,7 @@ class CGaussian : public CDistribution
 		 * @return model parameter (logarithmic) if num_param < m_dim returns
 		 * an element from the mean, else return an element from the covariance
 		 */
-		virtual float64_t get_log_model_parameter(int32_t num_param);
+		virtual float64_t get_log_model_parameter(index_t num_param);
 
 		/** get partial derivative of likelihood function (logarithmic)
 		 *
@@ -91,7 +91,7 @@ class CGaussian : public CDistribution
 		 * @return derivative of likelihood (logarithmic)
 		 */
 		virtual float64_t get_log_derivative(
-			int32_t num_param, int32_t num_example);
+			index_t num_param, index_t num_example);
 
 		/** compute log likelihood for example
 		 *
@@ -100,7 +100,7 @@ class CGaussian : public CDistribution
 		 * @param num_example which example
 		 * @return log likelihood for example
 		 */
-		virtual float64_t get_log_likelihood_example(int32_t num_example);
+		virtual float64_t get_log_likelihood_example(index_t num_example);
 
 		/** update parameters in the em maximization step for mixture model of which
 		 * this distribution is a part

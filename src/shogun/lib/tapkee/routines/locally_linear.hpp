@@ -289,7 +289,7 @@ DenseSymmetricMatrixPair construct_neighborhood_preserving_eigenproblem(SparseWe
 		rhs.selfadjointView<Eigen::Upper>().rankUpdate(rank_update_vector_i);
 	}
 
-	for (int i=0; i<W.outerSize(); ++i)
+	for (index_t i=0; i<W.outerSize(); ++i)
 	{
 		for (SparseWeightMatrix::InnerIterator it(W,i); it; ++it)
 		{
@@ -330,7 +330,7 @@ DenseSymmetricMatrixPair construct_lltsa_eigenproblem(SparseWeightMatrix W,
 	}
 	rhs.selfadjointView<Eigen::Upper>().rankUpdate(sum,-1./(end-begin));
 
-	for (int i=0; i<W.outerSize(); ++i)
+	for (index_t i=0; i<W.outerSize(); ++i)
 	{
 		for (SparseWeightMatrix::InnerIterator it(W,i); it; ++it)
 		{

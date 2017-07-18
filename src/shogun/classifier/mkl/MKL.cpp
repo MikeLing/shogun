@@ -112,7 +112,7 @@ public:
 		//SG_PRINT("const=%f\n", const_term)
 		ASSERT(CMath::fequal(const_term, 0.0))
 
-		for (int32_t i=0; i<num_kernels; i++)
+		for (index_t i=0; i<num_kernels; i++)
 		{
 			grad_beta[i]=mkl_norm * pow(beta[i], mkl_norm-1);
 			hess_beta[i]=0.5*mkl_norm*(mkl_norm-1) * pow(beta[i], mkl_norm-2);
@@ -446,7 +446,7 @@ bool CMKL::train_machine(CFeatures* data)
 	create_new_model(nsv);
 
 	set_bias(svm->get_bias());
-	for (int32_t i=0; i<nsv; i++)
+	for (index_t i=0; i<nsv; i++)
 	{
 		set_alpha(i, svm->get_alpha(i));
 		set_support_vector(i, svm->get_support_vector(i));
@@ -506,7 +506,7 @@ bool CMKL::perform_mkl_step(
 	float64_t mkl_objective=0;
 
 	mkl_objective=-suma;
-	for (int32_t i=0; i<num_kernels; i++)
+	for (index_t i=0; i<num_kernels; i++)
 	{
 		beta[i]=old_beta[i];
 		mkl_objective+=old_beta[i]*sumw[i];
@@ -652,7 +652,7 @@ void CMKL::elasticnet_dual(float64_t *ff, float64_t *gg, float64_t *hh,
 {
 	std::list<int32_t> I;
 	float64_t gam = 1.0-lambda;
-	for (int32_t i=0; i<len;i++)
+	for (index_t i=0; i<len;i++)
 	{
 		if (nm[i]>=CMath::sqrt(2*del*gam))
 			I.push_back(i);
@@ -666,9 +666,9 @@ void CMKL::elasticnet_dual(float64_t *ff, float64_t *gg, float64_t *hh,
 	{
 		float64_t nmit = nm[*it];
 
-		*ff += del*gam*CMath::pow(nmit/CMath::sqrt(2*del*gam)-1,2)/lambda;
+		*ff += del*gam*CMath::pow(nmit/CMath::sqrt(2*del*gam)-1,(int64_t)2)/lambda;
 		*gg += CMath::sqrt(gam/(2*del))*nmit;
-		*hh += -0.5*CMath::sqrt(gam/(2*CMath::pow(del,3)))*nmit;
+		*hh += -0.5*CMath::sqrt(gam/(2*CMath::pow(del,(int64_t)3)))*nmit;
 	}
 }
 
@@ -691,11 +691,11 @@ float64_t CMKL::compute_elasticnet_dual_objective()
 		{
 			CKernel* kn = ((CCombinedKernel*) kernel)->get_kernel(k_idx);
 			float64_t sum=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 			{
 				int32_t ii=get_support_vector(i);
 
-				for (int32_t j=0; j<n; j++)
+				for (index_t j=0; j<n; j++)
 				{
 					int32_t jj=get_support_vector(j);
 					sum+=get_alpha(i)*get_alpha(j)*kn->kernel(ii,jj);
@@ -1085,14 +1085,14 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 		double   lb[NUMCOLS]; /* calling external lib */
 		double   ub[NUMCOLS]; /* calling external lib */
 
-		for (int32_t i=0; i<2*num_kernels; i++)
+		for (index_t i=0; i<2*num_kernels; i++)
 		{
 			obj[i]=0 ;
 			lb[i]=0 ;
 			ub[i]=1 ;
 		}
 
-		for (int32_t i=num_kernels; i<2*num_kernels; i++)
+		for (index_t i=num_kernels; i<2*num_kernels; i++)
 			obj[i]= C_mkl;
 
 		obj[2*num_kernels]=1 ;
@@ -1122,7 +1122,7 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 			initial_sense[0]='E' ; // equality
 
 			// sparse matrix
-			for (int32_t i=0; i<num_kernels; i++)
+			for (index_t i=0; i<num_kernels; i++)
 			{
 				initial_rmatind[i]=i ; //index of non-zero element
 				initial_rmatval[i]=1 ; //value of ...
@@ -1151,7 +1151,7 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 
 			if (mkl_norm==2)
 			{
-				for (int32_t i=0; i<num_kernels; i++)
+				for (index_t i=0; i<num_kernels; i++)
 				{
 					initial_rmatind[i]=i ;
 					initial_rmatval[i]=1 ;
@@ -1172,7 +1172,7 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 
 		if (C_mkl!=0.0)
 		{
-			for (int32_t q=0; q<num_kernels-1; q++)
+			for (index_t q=0; q<num_kernels-1; q++)
 			{
 				// add constraint w[i]-w[i+1]<s[i];
 				// add constraint w[i+1]-w[i]<s[i];
@@ -1232,7 +1232,7 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 
 		sense[0]='L' ;
 
-		for (int32_t i=0; i<num_kernels; i++)
+		for (index_t i=0; i<num_kernels; i++)
 		{
 			rmatind[i]=i ;
 			if (mkl_norm==1)
@@ -1262,9 +1262,9 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 		{
 			float64_t* beta=SG_MALLOC(float64_t, 2*num_kernels+1);
 			float64_t objval_old=1e-8; //some value to cause the loop to not terminate yet
-			for (int32_t i=0; i<num_kernels; i++)
+			for (index_t i=0; i<num_kernels; i++)
 				beta[i]=old_beta[i];
-			for (int32_t i=num_kernels; i<2*num_kernels+1; i++)
+			for (index_t i=num_kernels; i<2*num_kernels+1; i++)
 				beta[i]=0;
 
 			while (true)
@@ -1345,7 +1345,7 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 			if (C_mkl!=0.0)
 				start_row+=2*(num_kernels-1);
 
-			for (int32_t i = start_row; i < cur_numrows; i++)  // skip first
+			for (index_t i = start_row; i < cur_numrows; i++)  // skip first
 			{
 				if (mkl_norm==1)
 				{
@@ -1398,7 +1398,7 @@ float64_t CMKL::compute_optimal_betas_via_cplex(float64_t* new_beta, const float
 			rho = 1 ;
 		}
 	}
-	for (int32_t i=0; i<num_kernels; i++)
+	for (index_t i=0; i<num_kernels; i++)
 		new_beta[i]=x[i];
 
 	SG_FREE(x);
@@ -1425,12 +1425,12 @@ float64_t CMKL::compute_optimal_betas_via_glpk(float64_t* beta, const float64_t*
 
 		//set obj function, note glpk indexing is 1-based
 		glp_add_cols(self->lp_glpk, NUMCOLS);
-		for (int i=1; i<=2*num_kernels; i++)
+		for (index_t i=1; i<=2*num_kernels; i++)
 		{
 			glp_set_obj_coef(self->lp_glpk, i, 0);
 			glp_set_col_bnds(self->lp_glpk, i, GLP_DB, 0, 1);
 		}
-		for (int i=num_kernels+1; i<=2*num_kernels; i++)
+		for (index_t i=num_kernels+1; i<=2*num_kernels; i++)
 		{
 			glp_set_obj_coef(self->lp_glpk, i, C_mkl);
 		}
@@ -1441,7 +1441,7 @@ float64_t CMKL::compute_optimal_betas_via_glpk(float64_t* beta, const float64_t*
 		int row_index = glp_add_rows(self->lp_glpk, 1);
 		int* ind = SG_MALLOC(int, num_kernels+2);
 		float64_t* val = SG_MALLOC(float64_t, num_kernels+2);
-		for (int i=1; i<=num_kernels; i++)
+		for (index_t i=1; i<=num_kernels; i++)
 		{
 			ind[i] = i;
 			val[i] = 1;
@@ -1457,7 +1457,7 @@ float64_t CMKL::compute_optimal_betas_via_glpk(float64_t* beta, const float64_t*
 
 		if (C_mkl!=0.0)
 		{
-			for (int32_t q=1; q<num_kernels; q++)
+			for (index_t q=1; q<num_kernels; q++)
 			{
 				int mat_ind[4];
 				float64_t mat_val[4];
@@ -1481,7 +1481,7 @@ float64_t CMKL::compute_optimal_betas_via_glpk(float64_t* beta, const float64_t*
 	int* ind=SG_MALLOC(int,num_kernels+2);
 	float64_t* val=SG_MALLOC(float64_t, num_kernels+2);
 	int row_index = glp_add_rows(self->lp_glpk, 1);
-	for (int32_t i=1; i<=num_kernels; i++)
+	for (index_t i=1; i<=num_kernels; i++)
 	{
 		ind[i] = i;
 		val[i] = -(sumw[i-1]-suma);
@@ -1508,17 +1508,17 @@ float64_t CMKL::compute_optimal_betas_via_glpk(float64_t* beta, const float64_t*
 	float64_t* row_primal = SG_MALLOC(float64_t, cur_numrows);
 	float64_t* row_dual = SG_MALLOC(float64_t, cur_numrows);
 
-	for (int i=0; i<cur_numrows; i++)
+	for (index_t i=0; i<cur_numrows; i++)
 	{
 		row_primal[i] = glp_get_row_prim(self->lp_glpk, i+1);
 		row_dual[i] = glp_get_row_dual(self->lp_glpk, i+1);
 	}
-	for (int i=0; i<cur_numcols; i++)
+	for (index_t i=0; i<cur_numcols; i++)
 		col_primal[i] = glp_get_col_prim(self->lp_glpk, i+1);
 
 	obj = -col_primal[2*num_kernels];
 
-	for (int i=0; i<num_kernels; i++)
+	for (index_t i=0; i<num_kernels; i++)
 		beta[i] = col_primal[i];
 
 	int32_t num_active_rows=0;
@@ -1530,7 +1530,7 @@ float64_t CMKL::compute_optimal_betas_via_glpk(float64_t* beta, const float64_t*
 		if (C_mkl!=0.0)
 			start_row += 2*(num_kernels-1);
 
-		for (int32_t i= start_row; i<cur_numrows; i++)
+		for (index_t i= start_row; i<cur_numrows; i++)
 		{
 			if (row_dual[i]!=0)
 				num_active_rows++;
@@ -1575,24 +1575,24 @@ void CMKL::compute_sum_beta(float64_t* sumw)
 	ASSERT(nweights==num_kernels)
 	ASSERT(old_beta)
 
-	for (int32_t i=0; i<num_kernels; i++)
+	for (index_t i=0; i<num_kernels; i++)
 	{
 		beta.vector[i]=0;
 		sumw[i]=0;
 	}
 
-	for (int32_t n=0; n<num_kernels; n++)
+	for (index_t n=0; n<num_kernels; n++)
 	{
 		beta.vector[n]=1.0;
 		/* this only copies the value of the first entry of this array
 		 * so it may be freed safely afterwards. */
 		kernel->set_subkernel_weights(beta);
 
-		for (int32_t i=0; i<nsv; i++)
+		for (index_t i=0; i<nsv; i++)
 		{
 			int32_t ii=svm->get_support_vector(i);
 
-			for (int32_t j=0; j<nsv; j++)
+			for (index_t j=0; j<nsv; j++)
 			{
 				int32_t jj=svm->get_support_vector(j);
 				sumw[n]+=0.5*svm->get_alpha(i)*svm->get_alpha(j)*kernel->kernel(ii,jj);
@@ -1624,11 +1624,11 @@ float64_t CMKL::compute_mkl_dual_objective()
 		{
 			CKernel* kn = ((CCombinedKernel*) kernel)->get_kernel(k_idx);
 			float64_t sum=0;
-			for (int32_t i=0; i<n; i++)
+			for (index_t i=0; i<n; i++)
 			{
 				int32_t ii=get_support_vector(i);
 
-				for (int32_t j=0; j<n; j++)
+				for (index_t j=0; j<n; j++)
 				{
 					int32_t jj=get_support_vector(j);
 					sum+=get_alpha(i)*get_alpha(j)*kn->kernel(ii,jj);

@@ -104,14 +104,14 @@ bool CFWSOSVM::train_machine(CFeatures* data)
 	int32_t k = 0;
 	SGVector<float64_t> w_s(M);
 	float64_t ell_s = 0;
-	for (int32_t pi = 0; pi < m_num_iter; ++pi)
+	for (index_t pi = 0; pi < m_num_iter; ++pi)
 	{
 		// init w_s and ell_s
 		k = pi;
 		w_s.zero();
 		ell_s = 0;
 
-		for (int32_t si = 0; si < N; ++si)
+		for (index_t si = 0; si < N; ++si)
 		{
 			// 1) solve the loss-augmented inference for point si
 			CResultSet* result = m_model->argmax(m_w, si);

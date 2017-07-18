@@ -64,7 +64,7 @@ TEST(BaggingMachine, mock_train)
 
 	{
 		InSequence s;
-		for (int i = 0; i < num_bags; i++) {
+		for (index_t i = 0; i < num_bags; i++) {
 			EXPECT_CALL(mm, clone())
 				.Times(1)
 				.WillRepeatedly(Return(&mm));

@@ -186,7 +186,7 @@ SGVector<float64_t> CLogDetEstimator::sample(index_t num_estimates)
 	int32_t num_aggregates=aggregators->get_num_elements();
 	index_t idx_row=0;
 	index_t idx_col=0;
-	for (int32_t i=0; i<num_aggregates; ++i)
+	for (index_t i=0; i<num_aggregates; ++i)
 	{
 		// this cast is safe due to above way of building the array
 		CJobResultAggregator* agg=dynamic_cast<CJobResultAggregator*>
@@ -260,7 +260,7 @@ SGMatrix<float64_t> CLogDetEstimator::sample_without_averaging(
 
 	// use the aggregators to find the final result
 	int32_t num_aggregates=aggregators.get_num_elements();
-	for (int32_t i=0; i<num_aggregates; ++i)
+	for (index_t i=0; i<num_aggregates; ++i)
 	{
 		CJobResultAggregator* agg=dynamic_cast<CJobResultAggregator*>
 			(aggregators.get_element(i));

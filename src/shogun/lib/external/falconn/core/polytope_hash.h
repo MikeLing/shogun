@@ -170,14 +170,14 @@ class CrossPolytopeHashBase {
 
       typename BatchVectorType::FullSequenceIterator iter =
           points.get_full_sequence();
-      for (int_fast64_t ii = 0; ii < nn; ++ii) {
+      for (index_t_fast64_t ii = 0; ii < nn; ++ii) {
         (*res)[ii] = 0;
         int_fast32_t pattern = l * parent_.k_ * parent_.num_rotations_;
 
-        for (int_fast32_t jj = 0; jj < parent_.k_ - 1; ++jj) {
+        for (index_t_fast32_t jj = 0; jj < parent_.k_ - 1; ++jj) {
           parent_.embed(iter.get_point(), l, jj, &tmp_vector_);
 
-          for (int_fast32_t rot = 0; rot < parent_.num_rotations_; ++rot) {
+          for (index_t_fast32_t rot = 0; rot < parent_.num_rotations_; ++rot) {
             tmp_vector_ =
                 tmp_vector_.cwiseProduct(parent_.random_signs_[pattern]);
             ++pattern;
@@ -190,7 +190,7 @@ class CrossPolytopeHashBase {
         }
 
         parent_.embed(iter.get_point(), l, parent_.k_ - 1, &tmp_vector_);
-        for (int_fast32_t rot = 0; rot < parent_.num_rotations_; ++rot) {
+        for (index_t_fast32_t rot = 0; rot < parent_.num_rotations_; ++rot) {
           tmp_vector_ =
               tmp_vector_.cwiseProduct(parent_.random_signs_[pattern]);
           ++pattern;
@@ -214,7 +214,7 @@ class CrossPolytopeHashBase {
 
   void reserve_transformed_vector_memory(TransformedVectorType* tv) const {
     tv->resize(k_ * l_);
-    for (int_fast32_t ii = 0; ii < k_ * l_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < k_ * l_; ++ii) {
       (*tv)[ii].resize(rotation_dim_);
     }
   }
@@ -262,7 +262,7 @@ class CrossPolytopeHashBase {
       best = -data[0];
       res = dim;
     }
-    for (int_fast64_t ii = 1; ii < dim; ++ii) {
+    for (index_t_fast64_t ii = 1; ii < dim; ++ii) {
       if (data[ii] > best) {
         best = data[ii];
         res = ii;
@@ -335,9 +335,9 @@ class CrossPolytopeHashBase {
     std::mt19937_64 gen(seed_);
     std::uniform_int_distribution<int_fast32_t> bernoulli(0, 1);
 
-    for (int_fast32_t ii = 0; ii < k_ * l_ * num_rotations_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < k_ * l_ * num_rotations_; ++ii) {
       RotatedVectorType tmp_vec(rotation_dim_);
-      for (int_fast32_t jj = 0; jj < rotation_dim_; ++jj) {
+      for (index_t_fast32_t jj = 0; jj < rotation_dim_; ++jj) {
         tmp_vec(jj) = 2 * bernoulli(gen) - 1;
       }
       random_signs_.push_back(tmp_vec);
@@ -355,10 +355,10 @@ class CrossPolytopeHashBase {
       res.resize(l);
     }
 
-    for (int_fast32_t ii = 0; ii < l; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < l; ++ii) {
       res[ii] = 0;
 
-      for (int_fast32_t jj = 0; jj < k - 1; ++jj) {
+      for (index_t_fast32_t jj = 0; jj < k - 1; ++jj) {
         res[ii] = res[ii] << (log_dim + 1);
         res[ii] = res[ii] | decodeCP(rotated_vectors[ii * k + jj], dim);
       }
@@ -385,12 +385,12 @@ class CrossPolytopeHashBase {
       const VectorT& v, TransformedVectorType* result,
       cp_hash_helpers::FHTHelper<CoordinateType>* fht) const {
     int_fast32_t pattern = 0;
-    for (int_fast32_t ii = 0; ii < l_; ++ii) {
-      for (int_fast32_t jj = 0; jj < k_; ++jj) {
+    for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
+      for (index_t_fast32_t jj = 0; jj < k_; ++jj) {
         RotatedVectorType& cur_vec = (*result)[ii * k_ + jj];
         static_cast<const Derived*>(this)->embed(v, ii, jj, &cur_vec);
 
-        for (int_fast32_t rot = 0; rot < num_rotations_; ++rot) {
+        for (index_t_fast32_t rot = 0; rot < num_rotations_; ++rot) {
           cur_vec = cur_vec.cwiseProduct(random_signs_[pattern]);
           ++pattern;
           fht->apply(cur_vec.data());
@@ -418,8 +418,8 @@ class CrossPolytopeHashBase {
           sorted_coordinate_indices_(parent.k_ * parent.l_),
           inc_sorted_coordinate_indices_(parent.k_ * parent.l_),
           main_table_probes_(parent.l_) {
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
-        for (int_fast32_t jj = 0; jj < k_; ++jj) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
+        for (index_t_fast32_t jj = 0; jj < k_; ++jj) {
           int_fast32_t cur_cp_dim = (jj == k_ - 1 ? last_cp_dim_ : dim_);
           sorted_coordinate_indices_[ii * k_ + jj].resize(2 * cur_cp_dim);
         }
@@ -458,8 +458,8 @@ class CrossPolytopeHashBase {
 
       // For each CP, we now sort the potential hash values (2 * dim) by their
       // distance to the largest absolute value in the respective CP
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
-        for (int_fast32_t jj = 0; jj < k_; ++jj) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
+        for (index_t_fast32_t jj = 0; jj < k_; ++jj) {
           int_fast32_t cur_cp_dim = (jj == k_ - 1 ? last_cp_dim_ : dim_);
           const VectorType& cur_vec = transformed_vector[ii * k_ + jj];
           std::vector<std::pair<CoordinateType, int_fast32_t>>& cur_indices =
@@ -467,11 +467,11 @@ class CrossPolytopeHashBase {
 
           // TODO: use eigen for abs and max here
           CoordinateType max_abs_coord = std::abs(cur_vec[0]);
-          for (int_fast32_t mm = 1; mm < cur_cp_dim; ++mm) {
+          for (index_t_fast32_t mm = 1; mm < cur_cp_dim; ++mm) {
             max_abs_coord = std::max(max_abs_coord, std::abs(cur_vec[mm]));
           }
 
-          for (int_fast32_t mm = 0; mm < cur_cp_dim; ++mm) {
+          for (index_t_fast32_t mm = 0; mm < cur_cp_dim; ++mm) {
             cur_indices[mm] = std::make_pair(max_abs_coord - cur_vec[mm], mm);
             cur_indices[mm + cur_cp_dim] =
                 std::make_pair(max_abs_coord + cur_vec[mm], mm + cur_cp_dim);
@@ -487,7 +487,7 @@ class CrossPolytopeHashBase {
         heap_.resize(2 * k_ * l_ * num_probes_ + l_);
       }
       heap_.reset();
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
         heap_.insert_unsorted(0.0, ProbeCandidate(ii, 0, 0, 0));
       }
       heap_.heapify();
@@ -651,7 +651,7 @@ class CrossPolytopeHashSparse
         (static_cast<int_fast64_t>(this->k_) * this->l_) * vector_dim_;
     feature_hashing_index_.resize(num_feature_hashing_indices);
     feature_hashing_coeff_.resize(num_feature_hashing_indices);
-    for (int_fast64_t ii = 0; ii < num_feature_hashing_indices; ++ii) {
+    for (index_t_fast64_t ii = 0; ii < num_feature_hashing_indices; ++ii) {
       feature_hashing_index_[ii] = feature_hashing_distribution(gen);
       feature_hashing_coeff_[ii] = 2 * bernoulli(gen) - 1;
     }
@@ -704,10 +704,10 @@ class CrossPolytopeHashDense
 
   void embed(const DerivedVectorT& v, int, int, DerivedVectorT* result) const {
     // TODO: use something more low-level here?
-    for (int_fast32_t ii = 0; ii < vector_dim_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < vector_dim_; ++ii) {
       (*result)[ii] = v[ii];
     }
-    for (int_fast32_t ii = vector_dim_; ii < this->rotation_dim_; ++ii) {
+    for (index_t_fast32_t ii = vector_dim_; ii < this->rotation_dim_; ++ii) {
       (*result)[ii] = 0.0;
     }
   }

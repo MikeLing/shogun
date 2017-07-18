@@ -39,9 +39,9 @@ TEST(MLDataHDF5File, read_matrix)
 	EXPECT_EQ(tmp.num_rows, num_rows);
 	EXPECT_EQ(tmp.num_cols, num_cols);
 
-	for (int32_t i=0; i<tmp.num_rows; i++)
+	for (index_t i=0; i<tmp.num_rows; i++)
 	{
-		for (int32_t j=0; j<tmp.num_cols; j++)
+		for (index_t j=0; j<tmp.num_cols; j++)
 		{
 			EXPECT_EQ(tmp(i, j), a(i, j));
 		}

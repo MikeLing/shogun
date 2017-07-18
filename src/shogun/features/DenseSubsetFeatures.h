@@ -31,7 +31,7 @@ public:
 	CDenseSubsetFeatures():m_fea(NULL) { set_generic<ST>(); }
 
 	/** constructor */
-	CDenseSubsetFeatures(CDenseFeatures<ST> *fea, SGVector<int32_t> idx)
+	CDenseSubsetFeatures(CDenseFeatures<ST> *fea, SGVector<index_t> idx)
 		:m_fea(fea), m_idx(idx) { SG_REF(m_fea); set_generic<ST>(); }
 
     /** destructor */
@@ -93,7 +93,7 @@ public:
 	 *
 	 * @return number of examples/vectors (possibly of subset, if implemented)
 	 */
-	virtual int32_t get_num_vectors() const
+	virtual index_t get_num_vectors() const
 	{
 		return m_fea->get_num_vectors();
 	}
@@ -105,7 +105,7 @@ public:
 	 *
 	 * @return dimensionality
 	 */
-	virtual int32_t get_dim_feature_space() const
+	virtual index_t get_dim_feature_space() const
 	{
 		return m_idx.vlen;
 	}
@@ -117,7 +117,7 @@ public:
 	 * @param df DotFeatures (of same kind) to compute dot product with
 	 * @param vec_idx2 index of second vector
 	 */
-	virtual float64_t dot(int32_t vec_idx1, CDotFeatures* df, int32_t vec_idx2)
+	virtual float64_t dot(index_t vec_idx1, CDotFeatures* df, index_t vec_idx2)
 	{
 		CDenseSubsetFeatures<ST> *dsf = dynamic_cast<CDenseSubsetFeatures<ST> *>(df);
 		if (dsf == NULL)
@@ -130,7 +130,7 @@ public:
 		SGVector<ST> vec2 = dsf->m_fea->get_feature_vector(vec_idx2);
 
 		float64_t sum = 0;
-		for (int32_t i=0; i < m_idx.vlen; ++i)
+		for (index_t i=0; i < m_idx.vlen; ++i)
 			sum += vec1[m_idx[i]] * vec2[dsf->m_idx[i]];
 
 		return sum;
@@ -142,14 +142,14 @@ public:
 	 * @param vec2 pointer to real valued vector
 	 * @param vec2_len length of real valued vector
 	 */
-	virtual float64_t dense_dot(int32_t vec_idx1, const float64_t* vec2, int32_t vec2_len)
+	virtual float64_t dense_dot(index_t vec_idx1, const float64_t* vec2, index_t vec2_len)
 	{
 		if (m_idx.vlen != vec2_len)
 			SG_ERROR("Cannot dot vectors of different length\n")
 		SGVector<ST> vec1 = m_fea->get_feature_vector(vec_idx1);
 
 		float64_t sum=0;
-		for (int32_t i=0; i < vec2_len; ++i)
+		for (index_t i=0; i < vec2_len; ++i)
 			sum += vec1[m_idx[i]] * vec2[i];
 
 		return sum;
@@ -163,7 +163,7 @@ public:
 	 * @param vec2_len length of real valued vector
 	 * @param abs_val if true add the absolute value
 	 */
-	virtual void add_to_dense_vec(float64_t alpha, int32_t vec_idx1, float64_t* vec2, int32_t vec2_len, bool abs_val=false)
+	virtual void add_to_dense_vec(float64_t alpha, index_t vec_idx1, float64_t* vec2, index_t vec2_len, bool abs_val=false)
 	{
 		if (m_idx.vlen != vec2_len)
 			SG_ERROR("Cannot add_to_dense_vec vectors of different length\n")
@@ -171,12 +171,12 @@ public:
 		SGVector<ST> vec1 = m_fea->get_feature_vector(vec_idx1);
 		if (abs_val)
 		{
-			for (int32_t i=0; i < vec2_len; ++i)
+			for (index_t i=0; i < vec2_len; ++i)
 				vec2[i] += alpha * CMath::abs(vec1[m_idx[i]]);
 		}
 		else
 		{
-			for (int32_t i=0; i < vec2_len; ++i)
+			for (index_t i=0; i < vec2_len; ++i)
 				vec2[i] += alpha * vec1[m_idx[i]];
 		}
 	}
@@ -188,7 +188,7 @@ public:
 	 * @param num which vector
 	 * @return number of sparse features in vector
 	 */
-	virtual int32_t get_nnz_features_for_vector(int32_t num)
+	virtual index_t get_nnz_features_for_vector(index_t num)
 	{
 		return m_idx.vlen;
 	}
@@ -202,7 +202,7 @@ public:
 	 *			iterate over
 	 * @return feature iterator (to be passed to get_next_feature)
 	 */
-	virtual void* get_feature_iterator(int32_t vector_index)
+	virtual void* get_feature_iterator(index_t vector_index)
 	{
 		SG_NOTIMPLEMENTED
 		return NULL;
@@ -218,7 +218,7 @@ public:
 	 * @param iterator as returned by get_feature_iterator
 	 * @return true if a new non-zero feature got returned
 	 */
-	virtual bool get_next_feature(int32_t& index, float64_t& value, void* iterator)
+	virtual bool get_next_feature(index_t& index, float64_t& value, void* iterator)
 	{
 		SG_NOTIMPLEMENTED
 		return false;
@@ -235,7 +235,7 @@ public:
 	}
 private:
 	CDenseFeatures<ST> *m_fea;
-	SGVector<int32_t> m_idx;
+	SGVector<index_t> m_idx;
 };
 } /*  shogun */
 

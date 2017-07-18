@@ -47,10 +47,10 @@ void CDistantSegmentsKernel::init()
 	SG_ADD(&m_theta, "theta", "Theta parameter of the DS-Kernel", MS_AVAILABLE);
 }
 
-float64_t CDistantSegmentsKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CDistantSegmentsKernel::compute(index_t idx_a, index_t idx_b)
 {
 	bool free_a, free_b;
-	int32_t aLength=0, bLength=0;
+	index_t aLength=0, bLength=0;
 	char* a=((CStringFeatures<char>*) lhs)->get_feature_vector(idx_a, aLength,
 			free_a);
 	char* b=((CStringFeatures<char>*) rhs)->get_feature_vector(idx_b, bLength,
@@ -89,9 +89,9 @@ int32_t CDistantSegmentsKernel::compute(char* s, int32_t sLength, char* t,
 	int32_t c=0;
 	int32_t* i_=SG_MALLOC(int32_t, delta_m+1);
 	int32_t* l_=SG_MALLOC(int32_t, delta_m+1);
-	for (int32_t j_s=0; j_s<=(int32_t) sLength-1; j_s++)
+	for (index_t j_s=0; j_s<=(int32_t) sLength-1; j_s++)
 	{
-		for (int32_t j_t=0; j_t<=(int32_t) tLength-1; j_t++)
+		for (index_t j_t=0; j_t<=(int32_t) tLength-1; j_t++)
 		{
 			if (s[j_s-1+1]==t[j_t-1+1])
 			{
@@ -114,7 +114,7 @@ int32_t CDistantSegmentsKernel::compute(char* s, int32_t sLength, char* t,
 				c+=bin(l_[0], 3)-2*bin(l_[0]-theta_m, 3)
 						+bin(l_[0]-2*theta_m, 3);
 				int32_t c1=0;
-				for (int32_t r=1; r<=k; r++)
+				for (index_t r=1; r<=k; r++)
 				{
 					c1+=bin(l_[r], 2)-bin(l_[r]-theta_m, 2);
 				}

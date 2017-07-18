@@ -45,7 +45,7 @@ SGMatrix<float64_t> flatten(SGMatrix<float64_t> AB)
 	return Ab1_f;
 }
 
-SGMatrix<float64_t> reverse_flatten(float64_t* matrix, int32_t rows, int32_t cols )
+SGMatrix<float64_t> reverse_flatten(float64_t* matrix, index_t rows, index_t cols )
 {
 	SGMatrix<float64_t> Ab2_f(matrix, rows, cols, false);
 	return Ab2_f;
@@ -80,11 +80,11 @@ int main()
 	// 3. fill in them in the Stacked_mats defined above.
 
 	SGMatrix<float64_t> temp1, temp2;
-	for (int32_t j=0; j<size; ++j)
+	for (index_t j=0; j<size; ++j)
 	{
 		temp1=CV2SGFactory::get_sgmatrix<float64_t>(images[j]);
 		temp2=flatten(temp1);
-		for(int32_t i=0; i<length; ++i)
+		for(index_t i=0; i<length; ++i)
 			Stacked_mats(i,j)=temp2(0,i);
 	}
 

@@ -53,7 +53,7 @@ void CNeuralRectifiedLinearLayer::compute_activations(
 	CNeuralLinearLayer::compute_activations(parameters, layers);
 
 	int32_t len = m_num_neurons*m_batch_size;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		m_activations[i] = CMath::max<float64_t>(0, m_activations[i]);
 	}
@@ -68,13 +68,13 @@ float64_t CNeuralRectifiedLinearLayer::compute_contraction_term(
 		m_num_neurons, num_inputs, false);
 
 	float64_t contraction_term = 0;
-	for (int32_t i=0; i<m_num_neurons; i++)
+	for (index_t i=0; i<m_num_neurons; i++)
 	{
 		float64_t sum_j = 0;
-		for (int32_t j=0; j<num_inputs; j++)
+		for (index_t j=0; j<num_inputs; j++)
 			sum_j += W(i,j)*W(i,j);
 
-		for (int32_t k = 0; k<m_batch_size; k++)
+		for (index_t k = 0; k<m_batch_size; k++)
 		{
 			if (m_activations(i,k) > 0)
 				contraction_term += sum_j;
@@ -94,13 +94,13 @@ void CNeuralRectifiedLinearLayer::compute_contraction_term_gradients(
 	SGMatrix<float64_t> WG(gradients.vector+m_num_neurons,
 		m_num_neurons, num_inputs, false);
 
-	for (int32_t k = 0; k<m_batch_size; k++)
+	for (index_t k = 0; k<m_batch_size; k++)
 	{
-		for (int32_t i=0; i<m_num_neurons; i++)
+		for (index_t i=0; i<m_num_neurons; i++)
 		{
 			if (m_activations(i,k) > 0)
 			{
-				for (int32_t j=0; j<num_inputs; j++)
+				for (index_t j=0; j<num_inputs; j++)
 					WG(i,j) += 2 * (contraction_coefficient/m_batch_size) * W(i,j);
 			}
 		}
@@ -114,7 +114,7 @@ void CNeuralRectifiedLinearLayer::compute_local_gradients(
 	if (targets.num_rows != 0)
 	{
 		int32_t length = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 		{
 			if (m_activations[i]==0)
 				m_local_gradients[i] = 0;
@@ -125,7 +125,7 @@ void CNeuralRectifiedLinearLayer::compute_local_gradients(
 	else
 	{
 		int32_t len = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i< len; i++)
+		for (index_t i=0; i< len; i++)
 		{
 			if (m_activations[i]==0)
 				m_local_gradients[i] = 0;

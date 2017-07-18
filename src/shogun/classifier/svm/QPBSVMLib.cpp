@@ -109,13 +109,13 @@ int32_t CQPBSVMLib::solve_qp(float64_t* result, int32_t len)
 	int32_t status = -1;
 	ASSERT(len==m_dim)
 	float64_t* Nabla=SG_MALLOC(float64_t, m_dim);
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 		Nabla[i]=m_f[i];
 
 	SG_FREE(m_diag_H);
 	m_diag_H=SG_MALLOC(float64_t, m_dim);
 
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 		m_diag_H[i]=m_H[i*m_dim+i];
 
 	float64_t* History=NULL;
@@ -562,7 +562,7 @@ int32_t CQPBSVMLib::qpbsvm_prloqo(float64_t *x,
 	float64_t* dual=SG_MALLOC(float64_t, 1+2*m_dim);
 	float64_t* a=SG_MALLOC(float64_t, m_dim);
 
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 	{
 		a[i]=0.0;
 		lb[i]=0;
@@ -592,12 +592,12 @@ int32_t CQPBSVMLib::qpbsvm_gauss_seidel(float64_t *x,
             float64_t **ptr_History,
             int32_t   verb)
 {
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 		x[i]=CMath::random(0.0, 1.0);
 
-	for (int32_t t=0; t<200; t++)
+	for (index_t t=0; t<200; t++)
 	{
-		for (int32_t i=0; i<m_dim; i++)
+		for (index_t i=0; i<m_dim; i++)
 		{
 			x[i]= (-m_f[i]-(CMath::dot(x,&m_H[m_dim*i], m_dim) -
 						m_H[m_dim*i+i]*x[i]))/m_H[m_dim*i+i];
@@ -606,7 +606,7 @@ int32_t CQPBSVMLib::qpbsvm_gauss_seidel(float64_t *x,
 	}
 
 	int32_t atbound=0;
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 	{
 		if (x[i]==0.0 || x[i]==1.0)
 			atbound++;
@@ -623,12 +623,12 @@ int32_t CQPBSVMLib::qpbsvm_gradient_descent(float64_t *x,
             float64_t **ptr_History,
             int32_t   verb)
 {
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 		x[i]=CMath::random(0.0, 1.0);
 
-	for (int32_t t=0; t<2000; t++)
+	for (index_t t=0; t<2000; t++)
 	{
-		for (int32_t i=0; i<m_dim; i++)
+		for (index_t i=0; i<m_dim; i++)
 		{
 			x[i]-=0.001*(CMath::dot(x,&m_H[m_dim*i], m_dim)+m_f[i]);
 			x[i]=CMath::clamp(x[i], 0.0, 1.0);
@@ -636,7 +636,7 @@ int32_t CQPBSVMLib::qpbsvm_gradient_descent(float64_t *x,
 	}
 
 	int32_t atbound=0;
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 	{
 		if (x[i]==0.0 || x[i]==1.0)
 			atbound++;
@@ -663,7 +663,7 @@ int32_t CQPBSVMLib::qpbsvm_cplex(float64_t *x,
 	float64_t* lb=SG_MALLOC(float64_t, m_dim);
 	float64_t* ub=SG_MALLOC(float64_t, m_dim);
 
-	for (int32_t i=0; i<m_dim; i++)
+	for (index_t i=0; i<m_dim; i++)
 	{
 		lb[i]=0;
 		ub[i]=m_UB;

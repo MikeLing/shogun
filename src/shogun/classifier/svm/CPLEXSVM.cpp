@@ -61,12 +61,12 @@ bool CCPLEXSVM::train_machine(CFeatures* data)
 		float64_t* ub=SG_MALLOC(float64_t, n);
 
 		//hessian y'y.*K
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
 			lb[i]=0;
 			ub[i]=get_C1();
 
-			for (int32_t j=0; j<n; j++)
+			for (index_t j=0; j<n; j++)
 				H[i*n+j]*=y[j]*y[i];
 		}
 
@@ -74,7 +74,7 @@ bool CCPLEXSVM::train_machine(CFeatures* data)
 
 
 		int32_t j=0;
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
 			if (alphas[i]>0)
 			{

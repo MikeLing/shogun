@@ -258,10 +258,10 @@ class CWeightedDegreePositionStringKernel: public CStringKernel<char>
 			weights_buffer = SG_MALLOC(float64_t, num_weights);
 
 			if (position_weights!=NULL)
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 					weights_buffer[i] = position_weights[i*mkl_stepsize] ;
 			else
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 					weights_buffer[i] = weights[i*mkl_stepsize] ;
 
 			return weights_buffer ;
@@ -281,23 +281,23 @@ class CWeightedDegreePositionStringKernel: public CStringKernel<char>
 				SG_ERROR("number of weights do not match\n")
 
 			if (position_weights!=NULL)
-				for (int32_t i=0; i<num_weights; i++)
-					for (int32_t j=0; j<mkl_stepsize; j++)
+				for (index_t i=0; i<num_weights; i++)
+					for (index_t j=0; j<mkl_stepsize; j++)
 					{
 						if (i*mkl_stepsize+j<seq_length)
 							position_weights[i*mkl_stepsize+j] = weights2[i] ;
 					}
 			else if (length==0)
 			{
-				for (int32_t i=0; i<num_weights; i++)
-					for (int32_t j=0; j<mkl_stepsize; j++)
+				for (index_t i=0; i<num_weights; i++)
+					for (index_t j=0; j<mkl_stepsize; j++)
 						if (i*mkl_stepsize+j<get_degree())
 							weights[i*mkl_stepsize+j] = weights2[i] ;
 			}
 			else
 			{
-				for (int32_t i=0; i<num_weights; i++)
-					for (int32_t j=0; j<mkl_stepsize; j++)
+				for (index_t i=0; i<num_weights; i++)
+					for (index_t j=0; j<mkl_stepsize; j++)
 						if (i*mkl_stepsize+j<get_degree()*length)
 							weights[i*mkl_stepsize+j] = weights2[i] ;
 			}
@@ -629,7 +629,7 @@ class CWeightedDegreePositionStringKernel: public CStringKernel<char>
 		 * @param idx_b index b
 		 * @return computed kernel function at indices a,b
 		 */
-		virtual float64_t compute(int32_t idx_a, int32_t idx_b);
+		virtual float64_t compute(index_t idx_a, index_t idx_b);
 
 		/** compute with mismatch
 		 *
@@ -707,16 +707,16 @@ class CWeightedDegreePositionStringKernel: public CStringKernel<char>
 		/** position weights */
 		float64_t* position_weights;
 		/** position weights len */
-		int32_t position_weights_len;
+		index_t position_weights_len;
 
 		/** position weights left-hand side */
 		float64_t* position_weights_lhs;
 		/** position weights len */
-		int32_t position_weights_lhs_len;
+		index_t position_weights_lhs_len;
 		/** position weights right-hand side */
 		float64_t* position_weights_rhs;
 		/** position weights len */
-		int32_t position_weights_rhs_len;
+		index_t position_weights_rhs_len;
 		/** position mask */
 		bool* position_mask;
 
@@ -738,7 +738,7 @@ class CWeightedDegreePositionStringKernel: public CStringKernel<char>
 		/** shifts */
 		int32_t *shift;
 		/** length of shifts */
-		int32_t shift_len;
+		index_t shift_len;
 		/** maximum shift */
 		int32_t max_shift;
 

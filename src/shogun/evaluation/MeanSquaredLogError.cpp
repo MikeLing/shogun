@@ -24,7 +24,7 @@ float64_t CMeanSquaredLogError::evaluate(CLabels* predicted, CLabels* ground_tru
 
 	int32_t length=predicted->get_num_labels();
 	float64_t msle=0.0;
-	for (int32_t i=0; i<length; i++)
+	for (index_t i=0; i<length; i++)
 	{
 		float64_t prediction=((CRegressionLabels*) predicted)->get_label(i);
 		float64_t truth=((CRegressionLabels*) ground_truth)->get_label(i);

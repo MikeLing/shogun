@@ -113,10 +113,10 @@ float64_t CStructuredOutputMachine::risk_nslack_margin_rescale(float64_t* subgra
 	SG_UNREF(features);
 
 	float64_t R = 0.0;
-	for (int32_t i=0; i<dim; i++)
+	for (index_t i=0; i<dim; i++)
 		subgrad[i] = 0;
 
-	for (int32_t i=from; i<to; i++)
+	for (index_t i=from; i<to; i++)
 	{
 		CResultSet* result = m_model->argmax(SGVector<float64_t>(W,dim,false), i, true);
 		SGVector<float64_t> psi_pred = result->psi_pred;

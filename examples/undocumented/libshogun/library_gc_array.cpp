@@ -21,11 +21,11 @@ int main(int argc, char** argv)
 		CGCArray<CKernel*> kernels(l);
 
 		// fill array with kernels
-		for (int i=0; i<l; i++)
+		for (index_t i=0; i<l; i++)
 			kernels.set(new CGaussianKernel(10, 1.0), i);
 
 		// print kernels
-		for (int i=0; i<l; i++)
+		for (index_t i=0; i<l; i++)
 		{
 			CKernel* kernel = kernels.get(i);
 			printf("kernels[%d]=%p\n", i, kernel);

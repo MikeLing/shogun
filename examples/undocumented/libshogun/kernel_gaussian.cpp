@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
 	// create some data
 	SGMatrix<float64_t> matrix(2,3);
-	for (int32_t i=0; i<6; i++)
+	for (index_t i=0; i<6; i++)
 		matrix.matrix[i]=i;
 
 	// create three 2-dimensional vectors
@@ -29,9 +29,9 @@ int main(int argc, char** argv)
 	CGaussianKernel* kernel = new CGaussianKernel(features, features, 0.5, 10);
 
 	// print kernel matrix
-	for (int32_t i=0; i<3; i++)
+	for (index_t i=0; i<3; i++)
 	{
-		for (int32_t j=0; j<3; j++)
+		for (index_t j=0; j<3; j++)
 		{
 			SG_SPRINT("%f ", kernel->kernel(i,j));
 		}

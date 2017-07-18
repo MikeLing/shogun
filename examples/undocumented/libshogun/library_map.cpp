@@ -19,13 +19,13 @@ int main(int argc, char** argv)
 
 	CMap<int32_t, const char*>* map = new CMap<int32_t, const char*>(SIZE/2, SIZE/2);
 
-	for (int i=0; i<SIZE; i++)
+	for (index_t i=0; i<SIZE; i++)
 		map->add(i, v[i]);
 
 	map->remove(0);
 
 	//SG_SPRINT("Num of elements: %d\n", map->get_num_elements());
-	for (int i=0; i<SIZE; i++)
+	for (index_t i=0; i<SIZE; i++)
 	{
 		if (map->contains(i))
 			;

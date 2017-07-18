@@ -10,7 +10,7 @@ TEST(MulticlassStrategy,rescale_ova_norm)
 {
 	SGVector<float64_t> scores(3);
 
-	for (int32_t i=0; i<3; i++)
+	for (index_t i=0; i<3; i++)
 		scores[i] = (i+1)*0.1;
 
 	CMulticlassOneVsRestStrategy ova(OVA_NORM);
@@ -36,7 +36,7 @@ TEST(MulticlassStrategy,rescale_ova_softmax)
 	SGVector<float64_t> As(3);
 	SGVector<float64_t> Bs(3);
 	Bs.zero();
-	for (int32_t i=0; i<3; i++)
+	for (index_t i=0; i<3; i++)
 		As[i] = (i+1)*0.1;
 
 	CMulticlassOneVsRestStrategy ova(OVA_SOFTMAX);
@@ -92,7 +92,7 @@ TEST(MulticlassStrategy,rescale_ova_hastie)
 	SG_REF(train_labels);
 
 	ovo.train_start(orig_labels, train_labels);
-	for (int32_t i=0; i<3; i++)
+	for (index_t i=0; i<3; i++)
 	{
 		ovo.train_prepare_next();
 	}

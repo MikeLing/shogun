@@ -2725,7 +2725,7 @@ Parameter::Parameter() : m_params(1)
 
 Parameter::~Parameter()
 {
-	for (int32_t i=0; i<get_num_parameters(); i++)
+	for (index_t i=0; i<get_num_parameters(); i++)
 		delete m_params.get_element(i);
 
 	SG_UNREF(sg_io);
@@ -2748,7 +2748,7 @@ Parameter::add_type(const TSGDataType* type, void* param,
 		}
 	}
 
-	for (int32_t i=0; i<get_num_parameters(); i++)
+	for (index_t i=0; i<get_num_parameters(); i++)
 		if (strcmp(m_params.get_element(i)->m_name, name) == 0)
 			SG_SERROR("FATAL: Parameter::add_type(): "
 					 "Double parameter `%s'!\n", name);
@@ -2761,14 +2761,14 @@ Parameter::add_type(const TSGDataType* type, void* param,
 void
 Parameter::print(const char* prefix)
 {
-	for (int32_t i=0; i<get_num_parameters(); i++)
+	for (index_t i=0; i<get_num_parameters(); i++)
 		m_params.get_element(i)->print(prefix);
 }
 
 bool
 Parameter::save(CSerializableFile* file, const char* prefix)
 {
-	for (int32_t i=0; i<get_num_parameters(); i++)
+	for (index_t i=0; i<get_num_parameters(); i++)
 	{
 		if (!m_params.get_element(i)->save(file, prefix))
 			return false;
@@ -2780,7 +2780,7 @@ Parameter::save(CSerializableFile* file, const char* prefix)
 bool
 Parameter::load(CSerializableFile* file, const char* prefix)
 {
-	for (int32_t i=0; i<get_num_parameters(); i++)
+	for (index_t i=0; i<get_num_parameters(); i++)
 		if (!m_params.get_element(i)->load(file, prefix))
 			return false;
 

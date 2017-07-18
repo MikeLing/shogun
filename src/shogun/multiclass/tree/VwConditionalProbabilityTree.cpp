@@ -113,7 +113,7 @@ bool CVwConditionalProbabilityTree::train_machine(CFeatures* data)
 	m_leaves.clear();
 
 	m_feats->start_parser();
-	for (int32_t ipass=0; ipass < m_num_passes; ++ipass)
+	for (index_t ipass=0; ipass < m_num_passes; ++ipass)
 	{
 		while (m_feats->get_next_example())
 		{

@@ -102,7 +102,7 @@ CFeatures* CFastICA::apply(CFeatures* features)
 
 		// see Hyvarinen (6.33) p.140
 		K = u.transpose();
-		for (int r = 0; r < K.rows(); r++)
+		for (index_t r = 0; r < K.rows(); r++)
 			K.row(r) /= d(r);
 
 		// see Hyvarinen (13.6) p.267 Here WX is white and data
@@ -120,9 +120,9 @@ CFeatures* CFastICA::apply(CFeatures* features)
 	{
 		m_mixing_matrix = SGMatrix<float64_t>(m,m);
 
-		for (int i = 0; i < m; i++)
+		for (index_t i = 0; i < m; i++)
 		{
-			for (int j = 0; j < m; j++)
+			for (index_t j = 0; j < m; j++)
 				m_mixing_matrix(i,j) = CMath::randn_double();
 		}
 	}

@@ -83,9 +83,9 @@ void MKLMulticlassGradient::genbetas( ::std::vector<float64_t> & weights ,const 
 	// numkernels-dimensional polar transform
 	weights[0]=1;
 
-	for(int32_t i=0; i< numkernels-1 ;++i)
+	for(index_t i=0; i< numkernels-1 ;++i)
 	{
-		for(int32_t k=0; k< i+1 ;++k)
+		for(index_t k=0; k< i+1 ;++k)
 		{
 			weights[k]*=cos( std::min(std::max(0.0,gammas[i]),pi4) );
 		}
@@ -95,12 +95,12 @@ void MKLMulticlassGradient::genbetas( ::std::vector<float64_t> & weights ,const 
 	// pnorm- manifold adjustment
 	if(pnorm!=2.0)
 	{
-		for(int32_t i=0; i< numkernels ;++i)
+		for(index_t i=0; i< numkernels ;++i)
 			weights[i]=pow(weights[i],2.0/pnorm);
 	}
 }
 
-void MKLMulticlassGradient::gengammagradient( ::std::vector<float64_t> & gammagradient ,const ::std::vector<float64_t> & gammas,const int32_t dim)
+void MKLMulticlassGradient::gengammagradient( ::std::vector<float64_t> & gammagradient ,const ::std::vector<float64_t> & gammas,const index_t dim)
 {
 
 	assert((int32_t)gammas.size()+1==numkernels);
@@ -113,11 +113,11 @@ void MKLMulticlassGradient::gengammagradient( ::std::vector<float64_t> & gammagr
 	// numkernels-dimensional polar transform
 	gammagradient[0]=1;
 
-	for(int32_t i=0; i< numkernels-1 ;++i)
+	for(index_t i=0; i< numkernels-1 ;++i)
 	{
 		if(i!=dim)
 		{
-			for(int32_t k=0; k< std::min(i+1,dim+2) ;++k)
+			for(index_t k=0; k< std::min(i+1,dim+2) ;++k)
 			{
 				gammagradient[k]*=pow( cos( std::min(std::max(0.0,gammas[i]),pi4) ), 2.0/pnorm) ;
 			}
@@ -127,7 +127,7 @@ void MKLMulticlassGradient::gengammagradient( ::std::vector<float64_t> & gammagr
 		else if(i==dim)
 		{
 			// i==dim, higher dims are 0
-			for(int32_t k=0; k< i+1 ;++k)
+			for(index_t k=0; k< i+1 ;++k)
 			{
 				gammagradient[k]*= pow( cos( std::min(std::max(0.0,gammas[i]),pi4) ), 2.0/pnorm-1.0)*(-1)*sin( std::min(std::max(0.0,gammas[i]),pi4) );
 			}
@@ -144,7 +144,7 @@ float64_t MKLMulticlassGradient::objectives(const ::std::vector<float64_t> & wei
 
 
 	float64_t obj= -sumsofalphas[index];
-	for(int32_t i=0; i< numkernels ;++i)
+	for(index_t i=0; i< numkernels ;++i)
 	{
 		obj+=0.5*normsofsubkernels[index][i]*weights[i];
 	}
@@ -173,12 +173,12 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 	{
 	// curgamma from init: arcsin on highest dim ^p/2 !!! and divided everthing by its cos
 		std::vector<float64_t> tmpbeta(numkernels);
-		for(int32_t i=numkernels-1; i>= 0 ;--i)
+		for(index_t i=numkernels-1; i>= 0 ;--i)
 		{
          tmpbeta[i]=pow(oldweights[i],pnorm/2);
 		}
 
-		for(int32_t i=numkernels-1; i>= 1 ;--i)
+		for(index_t i=numkernels-1; i>= 1 ;--i)
 		{
 			curgamma[i-1]=asin(tmpbeta[i]);
 
@@ -191,7 +191,7 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 				}
 			}
 
-			for(int32_t k=numkernels-2; k>= 1 ;--k) // k==0 not necessary
+			for(index_t k=numkernels-2; k>= 1 ;--k) // k==0 not necessary
 			{
 				if(cos(curgamma[i-1])>0)
 				{
@@ -223,7 +223,7 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 		int32_t minind=0;
 		float64_t minval=objectives(curbeta,  minind);
 		SG_SINFO("linesearch(...): objectives at i %f\n",minval)
-		for(int32_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
+		for(index_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
 		{
 			float64_t tmpval=objectives(curbeta, i);
 		SG_SINFO("linesearch(...): objectives at i %f\n",tmpval)
@@ -236,7 +236,7 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 		float64_t lobj=minval;
 		//compute gradient for smallest objective
 		std::vector<float64_t> curgrad;
-		for(int32_t i=0; i< numkernels-1 ;++i)
+		for(index_t i=0; i< numkernels-1 ;++i)
 		{
 			::std::vector<float64_t> gammagradient;
 			gengammagradient(  gammagradient ,curgamma,i);
@@ -245,7 +245,7 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 		//find boundary hit point (check for each dim) to [0, pi/4]
 		std::vector<float64_t> maxalphas(numkernels-1,0);
 		float64_t maxgrad=0;
-		for(int32_t i=0; i< numkernels-1 ;++i)
+		for(index_t i=0; i< numkernels-1 ;++i)
 		{
 			maxgrad=std::max(maxgrad,fabs(curgrad[i]) );
 			if(curgrad[i]<0)
@@ -263,7 +263,7 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 		}
 
 		float64_t maxalpha=maxalphas[0];
-		for(int32_t i=1; i< numkernels-1 ;++i)
+		for(index_t i=1; i< numkernels-1 ;++i)
 		{
 			maxalpha=std::min(maxalpha,maxalphas[i]);
 		}
@@ -281,13 +281,13 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 			float64_t leftalpha=0, rightalpha=maxalpha, midalpha=(leftalpha+rightalpha)/2;
 
 			std::vector<float64_t> tmpgamma=curgamma, tmpbeta;
-			for(int32_t i=1; i< numkernels-1 ;++i)
+			for(index_t i=1; i< numkernels-1 ;++i)
 			{
 				tmpgamma[i]=tmpgamma[i]+rightalpha*curgrad[i];
 			}
 			genbetas( tmpbeta ,tmpgamma);
 			float64_t curobj=objectives(tmpbeta, 0);
-			for(int32_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
+			for(index_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
 			{
 				curobj=std::min(curobj,objectives(tmpbeta, i));
 			}
@@ -299,13 +299,13 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 				midalpha=(leftalpha+rightalpha)/2;
 				++curhalfiter;
 				tmpgamma=curgamma;
-				for(int32_t i=1; i< numkernels-1 ;++i)
+				for(index_t i=1; i< numkernels-1 ;++i)
 				{
 					tmpgamma[i]=tmpgamma[i]+rightalpha*curgrad[i];
 				}
 				genbetas( tmpbeta ,tmpgamma);
 				curobj=objectives(tmpbeta, 0);
-				for(int32_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
+				for(index_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
 				{
 					curobj=std::min(curobj,objectives(tmpbeta, i));
 				}
@@ -319,13 +319,13 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 				tmpobj=std::max(lobj,robj);
 
 				tmpgamma=curgamma;
-				for(int32_t i=1; i< numkernels-1 ;++i)
+				for(index_t i=1; i< numkernels-1 ;++i)
 				{
 					tmpgamma[i]=tmpgamma[i]+midalpha*curgrad[i];
 				}
 				genbetas( tmpbeta ,tmpgamma);
 				curobj=objectives(tmpbeta, 0);
-				for(int32_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
+				for(index_t i=1; i< (int32_t)sumsofalphas.size() ;++i)
 				{
 					curobj=std::min(curobj,objectives(tmpbeta, i));
 				}
@@ -355,14 +355,14 @@ void MKLMulticlassGradient::linesearch(std::vector<float64_t> & finalbeta,const 
 	}
 	genbetas(finalbeta,finalgamma);
 	float64_t nor=0;
-	for(int32_t i=0; i< numkernels ;++i)
+	for(index_t i=0; i< numkernels ;++i)
 	{
 		nor+=pow(finalbeta[i],pnorm);
 	}
 	if(nor>0)
 	{
 		nor=pow(nor,1.0/pnorm);
-		for(int32_t i=0; i< numkernels ;++i)
+		for(index_t i=0; i< numkernels ;++i)
 		{
 			finalbeta[i]/=nor;
 		}

@@ -95,10 +95,10 @@ SGMatrix<float64_t> CDomainAdaptationMulticlassLibLinear::obtain_regularizer_mat
 	int32_t n_features = ((CDotFeatures*)m_source_machine->get_features())->get_dim_feature_space();
 	SGMatrix<float64_t> w0(n_classes,n_features);
 
-	for (int32_t i=0; i<n_classes; i++)
+	for (index_t i=0; i<n_classes; i++)
 	{
 		SGVector<float64_t> w = ((CLinearMachine*)m_source_machine->get_machine(i))->get_w();
-		for (int32_t j=0; j<n_features; j++)
+		for (index_t j=0; j<n_features; j++)
 			w0(j,i) = m_train_factor*w[j];
 	}
 
@@ -112,7 +112,7 @@ CBinaryLabels* CDomainAdaptationMulticlassLibLinear::get_submachine_outputs(int3
 	int32_t n_target_outputs = target_outputs->get_num_labels();
 	ASSERT(n_target_outputs==source_outputs->get_num_labels())
 	SGVector<float64_t> result(n_target_outputs);
-	for (int32_t j=0; j<result.vlen; j++)
+	for (index_t j=0; j<result.vlen; j++)
 		result[j] = (1-m_source_bias)*target_outputs->get_value(j) + m_source_bias*source_outputs->get_value(j);
 
 	SG_UNREF(target_outputs);

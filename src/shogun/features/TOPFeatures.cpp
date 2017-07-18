@@ -84,7 +84,7 @@ void CTOPFeatures::set_models(CHMM* p, CHMM* n)
 }
 
 float64_t* CTOPFeatures::compute_feature_vector(
-	int32_t num, int32_t &len, float64_t* target)
+	index_t num, index_t &len, float64_t* target)
 {
 	float64_t* featurevector=target;
 
@@ -100,10 +100,10 @@ float64_t* CTOPFeatures::compute_feature_vector(
 }
 
 void CTOPFeatures::compute_feature_vector(
-	float64_t* featurevector, int32_t num, int32_t& len)
+	float64_t* featurevector, index_t num, index_t& len)
 {
-	int32_t i,j,p=0,x=num;
-	int32_t idx=0;
+	index_t i,j,p=0,x=num;
+	index_t idx=0;
 
 	float64_t posx=(poslinear) ?
 		(pos->linear_model_probability(x)) : (pos->model_probability(x));
@@ -190,7 +190,7 @@ void CTOPFeatures::compute_feature_vector(
 
 float64_t* CTOPFeatures::set_feature_matrix()
 {
-	int32_t len=0;
+	index_t len=0;
 
 	num_features=get_num_features();
 	ASSERT(num_features)
@@ -208,7 +208,7 @@ float64_t* CTOPFeatures::set_feature_matrix()
 
 	SG_INFO("calculating top feature matrix\n")
 
-	for (int32_t x=0; x<num_vectors; x++)
+	for (index_t x=0; x<num_vectors; x++)
 	{
 		if (!(x % (num_vectors/10+1)))
 			SG_DEBUG("%02d%%.", (int) (100.0*x/num_vectors))

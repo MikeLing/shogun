@@ -66,11 +66,11 @@ int main(int, char*[])
 		return 0;
 	}
 
-	for (int32_t i=0; i<num_features; i++)
+	for (index_t i=0; i<num_features; i++)
 			means[i] = CMath::random(-1.0,1.0);
 
-	for (int32_t i=0; i<num_features; i++)
-			for (int32_t j=0; j<num_examples; j++)
+	for (index_t i=0; i<num_features; i++)
+			for (index_t j=0; j<num_examples; j++)
 				X(i,j) = CMath::normal_random(means[i], 1.0);
 
 	CDenseFeatures<float64_t>* features = new CDenseFeatures<float64_t>(X);
@@ -107,7 +107,7 @@ int main(int, char*[])
 
 	// compute the average difference between the sample means and the true means
 	float64_t avg_diff = 0;
-	for (int32_t i=0; i<num_features; i++)
+	for (index_t i=0; i<num_features; i++)
 		avg_diff += CMath::abs(means[i]-samples_means[i]);
 	avg_diff /= num_features;
 

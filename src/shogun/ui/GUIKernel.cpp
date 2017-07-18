@@ -320,7 +320,7 @@ CKernel* CGUIKernel::create_weighteddegreepositionstring3(
 	if (!position_weights)
 	{
 		position_weights=SG_MALLOC(float64_t, length);
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 			position_weights[i]=1.0/length;
 	}
 	((CWeightedDegreePositionStringKernel*) kern)->
@@ -361,7 +361,7 @@ float64_t* CGUIKernel::get_weights(int32_t order, int32_t max_mismatch)
 
 	for (i=0; i<order; i++)
 	{
-		for (int32_t j=1; j<=max_mismatch; j++)
+		for (index_t j=1; j<=max_mismatch; j++)
 		{
 			if (j<i+1)
 			{
@@ -723,7 +723,7 @@ bool CGUIKernel::init_kernel_optimization()
 			int32_t* sv_idx=SG_MALLOC(int32_t, num_sv);
 			float64_t* sv_weight=SG_MALLOC(float64_t, num_sv);
 
-			for (int32_t i=0; i<num_sv; i++)
+			for (index_t i=0; i<num_sv; i++)
 			{
 				sv_idx[i]=svm->get_support_vector(i);
 				sv_weight[i]=svm->get_alpha(i);

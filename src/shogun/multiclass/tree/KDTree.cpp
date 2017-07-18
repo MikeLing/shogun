@@ -44,7 +44,7 @@ CKDTree::~CKDTree()
 float64_t CKDTree::min_dist(bnode_t* node,float64_t* feat, int32_t dim)
 {
 	float64_t dist=0;
-	for (int32_t i=0;i<dim;i++)
+	for (index_t i=0;i<dim;i++)
 	{
 		float64_t dim_dist=(node->data.bbox_lower[i]-feat[i])+CMath::abs(feat[i]-node->data.bbox_lower[i]);
 		dim_dist+=(feat[i]-node->data.bbox_upper[i])+CMath::abs(feat[i]-node->data.bbox_upper[i]);
@@ -61,7 +61,7 @@ float64_t CKDTree::min_dist_dual(bnode_t* nodeq, bnode_t* noder)
 	SGVector<float64_t> noder_lower=noder->data.bbox_lower;
 	SGVector<float64_t> noder_upper=noder->data.bbox_upper;
 	float64_t dist=0;
-	for(int32_t i=0;i<noder_lower.vlen;i++)
+	for(index_t i=0;i<noder_lower.vlen;i++)
 	{
 		float64_t d1=nodeq_lower[i]-noder_upper[i];
 		float64_t d2=noder_lower[i]-nodeq_upper[i];
@@ -78,7 +78,7 @@ float64_t CKDTree::max_dist_dual(bnode_t* nodeq, bnode_t* noder)
 	SGVector<float64_t> noder_lower=noder->data.bbox_lower;
 	SGVector<float64_t> noder_upper=noder->data.bbox_upper;
 	float64_t dist=0;
-	for(int32_t i=0;i<noder_lower.vlen;i++)
+	for(index_t i=0;i<noder_lower.vlen;i++)
 	{
 		float64_t d1=CMath::abs(nodeq_lower[i]-noder_upper[i]);
 		float64_t d2=CMath::abs(noder_lower[i]-nodeq_upper[i]);
@@ -92,7 +92,7 @@ void CKDTree::min_max_dist(float64_t* pt, bnode_t* node, float64_t &lower,float6
 {
 	lower=0;
 	upper=0;
-	for(int32_t i=0;i<dim;i++)
+	for(index_t i=0;i<dim;i++)
 	{
 		float64_t low_dist=node->data.bbox_lower[i]-pt[i];
 		float64_t high_dist=pt[i]-node->data.bbox_upper[i];
@@ -109,11 +109,11 @@ void CKDTree::init_node(bnode_t* node, index_t start, index_t end)
 	SGVector<float64_t> upper_bounds(m_data.num_rows);
 	SGVector<float64_t> lower_bounds(m_data.num_rows);
 
-	for (int32_t i=0;i<m_data.num_rows;i++)
+	for (index_t i=0;i<m_data.num_rows;i++)
 	{
 		upper_bounds[i]=m_data(i,m_vec_id[start]);
 		lower_bounds[i]=m_data(i,m_vec_id[start]);
-		for (int32_t j=start+1;j<=end;j++)
+		for (index_t j=start+1;j<=end;j++)
 		{
 			upper_bounds[i]=CMath::max(upper_bounds[i],m_data(i,m_vec_id[j]));
 			lower_bounds[i]=CMath::min(lower_bounds[i],m_data(i,m_vec_id[j]));
@@ -121,7 +121,7 @@ void CKDTree::init_node(bnode_t* node, index_t start, index_t end)
 	}
 
 	float64_t radius=0;
-	for (int32_t i=0;i<m_data.num_rows;i++)
+	for (index_t i=0;i<m_data.num_rows;i++)
 		radius=CMath::max(radius,upper_bounds[i]-lower_bounds[i]);
 
 	node->data.bbox_upper=upper_bounds;

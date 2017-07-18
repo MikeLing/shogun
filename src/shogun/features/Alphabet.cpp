@@ -178,7 +178,7 @@ bool CAlphabet::set_alphabet(EAlphabet alpha)
 
 void CAlphabet::init_map_table()
 {
-	for (int32_t i=0; i<(1<<(8*sizeof(uint8_t))); i++)
+	for (index_t i=0; i<(1<<(8*sizeof(uint8_t))); i++)
 	{
 		maptable_to_bin[i] = MAPTABLE_UNDEF;
 		maptable_to_char[i] = MAPTABLE_UNDEF;
@@ -280,7 +280,7 @@ void CAlphabet::init_map_table()
 		case PROTEIN:
 			{
 				int32_t skip=0 ;
-				for (int32_t i=0; i<21; i++)
+				for (index_t i=0; i<21; i++)
 				{
 					if (i==1) skip++ ;
 					if (i==8) skip++ ;
@@ -306,13 +306,13 @@ void CAlphabet::init_map_table()
 
 		case ALPHANUM:
 			{
-				for (int32_t i=0; i<26; i++)
+				for (index_t i=0; i<26; i++)
 				{
 					valid_chars[(uint8_t) 'A'+i]=true;
 					maptable_to_bin[(uint8_t) 'A'+i]=i ;
 					maptable_to_char[i]='A'+i ;
 				} ;
-				for (int32_t i=0; i<10; i++)
+				for (index_t i=0; i<10; i++)
 				{
 					valid_chars[(uint8_t) '0'+i]=true;
 					maptable_to_bin[(uint8_t) '0'+i]=26+i ;
@@ -324,7 +324,7 @@ void CAlphabet::init_map_table()
 		case RAWBYTE:
 			{
 				//identity
-				for (int32_t i=0; i<256; i++)
+				for (index_t i=0; i<256; i++)
 				{
 					valid_chars[i]=true;
 					maptable_to_bin[i]=i;
@@ -352,7 +352,7 @@ void CAlphabet::init_map_table()
 		case RAWDNA:
 			{
 				//identity
-				for (int32_t i=0; i<4; i++)
+				for (index_t i=0; i<4; i++)
 				{
 					valid_chars[i]=true;
 					maptable_to_bin[i]=i;
@@ -383,7 +383,7 @@ void CAlphabet::init_map_table()
 		case RAWSNP:
 			{
 				//identity
-				for (int32_t i=0; i<5; i++)
+				for (index_t i=0; i<5; i++)
 				{
 					valid_chars[i]=true;
 					maptable_to_bin[i]=i;
@@ -550,7 +550,7 @@ void CAlphabet::clear_histogram()
 int32_t CAlphabet::get_max_value_in_histogram()
 {
 	int32_t max_sym=-1;
-	for (int32_t i=(int32_t) (1 <<(sizeof(uint8_t)*8))-1;i>=0; i--)
+	for (index_t i=(int32_t) (1 <<(sizeof(uint8_t)*8))-1;i>=0; i--)
 	{
 		if (histogram[i])
 		{
@@ -565,7 +565,7 @@ int32_t CAlphabet::get_max_value_in_histogram()
 int32_t CAlphabet::get_num_symbols_in_histogram()
 {
 	int32_t num_sym=0;
-	for (int32_t i=0; i<(int32_t) (1 <<(sizeof(uint8_t)*8)); i++)
+	for (index_t i=0; i<(int32_t) (1 <<(sizeof(uint8_t)*8)); i++)
 	{
 		if (histogram[i])
 			num_sym++;
@@ -586,7 +586,7 @@ int32_t CAlphabet::get_num_bits_in_histogram()
 
 void CAlphabet::print_histogram()
 {
-	for (int32_t i=0; i<(int32_t) (1 <<(sizeof(uint8_t)*8)); i++)
+	for (index_t i=0; i<(int32_t) (1 <<(sizeof(uint8_t)*8)); i++)
 	{
 		if (histogram[i])
 		{
@@ -618,7 +618,7 @@ bool CAlphabet::check_alphabet(bool print_error)
 {
 	bool result = true;
 
-	for (int32_t i=0; i<(int32_t) (1 <<(sizeof(uint8_t)*8)); i++)
+	for (index_t i=0; i<(int32_t) (1 <<(sizeof(uint8_t)*8)); i++)
 	{
 		if (histogram[i]>0 && valid_chars[i]==0)
 		{

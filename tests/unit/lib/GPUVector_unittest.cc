@@ -54,10 +54,10 @@ TEST(GPUVector, element_read_write)
 
 	CGPUVector<float64_t> vec(n);
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		vec[i] = i;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(i, vec[i]);
 }
 
@@ -68,7 +68,7 @@ TEST(GPUVector, zero)
 	CGPUVector<float64_t> vec(n);
 	vec.zero();
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(0, vec[i]);
 }
 
@@ -79,7 +79,7 @@ TEST(GPUVector, set_const)
 	CGPUVector<float64_t> vec(n);
 	vec.set_const(3);
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(3, vec[i]);
 }
 
@@ -87,12 +87,12 @@ TEST(GPUVector, set_const)
 TEST(GPUVector, element_access_with_offset)
 {
 	CGPUVector<float64_t> data(25);
-	for (int32_t i=0; i<25; i++)
+	for (index_t i=0; i<25; i++)
 		data[i] = i;
 
 	CGPUVector<float64_t> vec(data.vector, 9, 7);
 
-	for (int32_t i=0; i<9; i++)
+	for (index_t i=0; i<9; i++)
 		EXPECT_EQ(data[i+7], vec[i]);
 }
 
@@ -102,7 +102,7 @@ TEST(GPUVector, element_access_with_offset)
 TEST(GPUVector, dot_product_with_offset)
 {
 	CGPUVector<float64_t> data(24);
-	for (int32_t i=0; i<24; i++)
+	for (index_t i=0; i<24; i++)
 		data[i] = i;
 
 	CGPUVector<float64_t> A(data.vector, 12, 0);
@@ -121,12 +121,12 @@ TEST(GPUVector, to_sgvector)
 	const int n = 9;
 
 	CGPUVector<float64_t> gpu_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		gpu_vec[i] = i;
 
 	SGVector<float64_t> sg_vec = gpu_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(gpu_vec[i], sg_vec[i]);
 }
 
@@ -135,12 +135,12 @@ TEST(GPUVector, from_sgvector)
 	const int n = 9;
 
 	SGVector<float64_t> sg_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		sg_vec[i] = i;
 
 	CGPUVector<float64_t> gpu_vec = sg_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(sg_vec[i], gpu_vec[i]);
 }
 
@@ -149,12 +149,12 @@ TEST(GPUVector, to_eigen3_column_vector)
 	const int n = 9;
 
 	CGPUVector<float64_t> gpu_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		gpu_vec[i] = i;
 
 	Eigen::VectorXd eigen_vec = gpu_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(gpu_vec[i], eigen_vec[i]);
 }
 
@@ -163,12 +163,12 @@ TEST(GPUVector, from_eigen3_column_vector)
 // 	const int n = 9;
 //
 // 	Eigen::VectorXd eigen_vec(9);
-// 	for (int32_t i=0; i<n; i++)
+// 	for (index_t i=0; i<n; i++)
 // 		eigen_vec[i] = i;
 //
 // 	CGPUVector<float64_t> gpu_vec = eigen_vec;
 //
-// 	for (int32_t i=0; i<n; i++)
+// 	for (index_t i=0; i<n; i++)
 // 		EXPECT_EQ(eigen_vec[i], gpu_vec[i]);
 }
 
@@ -177,12 +177,12 @@ TEST(GPUVector, to_eigen3_row_vector)
 	const int n = 9;
 
 	CGPUVector<float64_t> gpu_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		gpu_vec[i] = i;
 
 	Eigen::RowVectorXd eigen_vec = gpu_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(gpu_vec[i], eigen_vec[i]);
 }
 
@@ -191,12 +191,12 @@ TEST(GPUVector, from_eigen3_row_vector)
 	const int n = 9;
 
 	Eigen::RowVectorXd eigen_vec(9);
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		eigen_vec[i] = i;
 
 	CGPUVector<float64_t> gpu_vec = eigen_vec;
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		EXPECT_EQ(eigen_vec[i], gpu_vec[i]);
 }
 

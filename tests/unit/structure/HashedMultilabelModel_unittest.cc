@@ -68,7 +68,7 @@ TEST(HashedMultilabelModel, get_joint_feature_vector)
 	{
 		uint32_t seed = (uint32_t)lab_1[i];
 
-		for (int32_t j = 0; j < feat_1.num_feat_entries; j++)
+		for (index_t j = 0; j < feat_1.num_feat_entries; j++)
 		{
 			uint32_t hash = CHash::MurmurHash3(
 			                        (uint8_t *)&feat_1.features[j].feat_index,
@@ -205,7 +205,7 @@ TEST(HashedMultilabelModel, argmax)
 		uint32_t seed = (uint32_t)slabel_1[i];
 		SGSparseVector<float64_t> h_vec(feat_1.num_feat_entries);
 
-		for (int32_t j = 0; j < feat_1.num_feat_entries; j++)
+		for (index_t j = 0; j < feat_1.num_feat_entries; j++)
 		{
 			uint32_t hash = CHash::MurmurHash3(
 			                        (uint8_t *)&feat_1.features[j].feat_index,
@@ -238,7 +238,7 @@ TEST(HashedMultilabelModel, argmax)
 		uint32_t seed = (uint32_t)slabel_1[i];
 		SGSparseVector<float64_t> h_vec(feat_1.num_feat_entries);
 
-		for (int32_t j = 0; j < feat_1.num_feat_entries; j++)
+		for (index_t j = 0; j < feat_1.num_feat_entries; j++)
 		{
 			uint32_t hash = CHash::MurmurHash3(
 			                        (uint8_t *)&feat_1.features[j].feat_index,

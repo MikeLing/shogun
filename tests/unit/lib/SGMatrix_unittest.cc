@@ -14,16 +14,16 @@ TEST(SGMatrixTest,ctor_zero_const)
 	EXPECT_EQ(a.num_cols, 5);
 
 	a.zero();
-	for (int i=0; i < 10; ++i)
+	for (index_t i=0; i < 10; ++i)
 	{
-		for (int j=0; j < 5; ++j)
+		for (index_t j=0; j < 5; ++j)
 		EXPECT_EQ(0, a(i,j));
 	}
 
 	a.set_const(3.3);
-	for (int i=0; i < 10; ++i)
+	for (index_t i=0; i < 10; ++i)
 	{
-		for (int j=0; j < 5; ++j)
+		for (index_t j=0; j < 5; ++j)
 		EXPECT_EQ(3.3, a(i,j));
 	}
 }
@@ -496,12 +496,12 @@ TEST(SGMatrixTest, to_eigen3)
 	const int ncols = 4;
 
 	SGMatrix<float64_t> sg_mat(nrows,ncols);
- 	for (int32_t i=0; i<nrows*ncols; i++)
+ 	for (index_t i=0; i<nrows*ncols; i++)
  		sg_mat[i] = i;
 
 	Eigen::Map<Eigen::MatrixXd> eigen_mat = sg_mat;
 
-	for (int32_t i=0; i<nrows*ncols; i++)
+	for (index_t i=0; i<nrows*ncols; i++)
 		EXPECT_EQ(sg_mat[i], eigen_mat(i));
 }
 
@@ -511,11 +511,11 @@ TEST(SGMatrixTest, from_eigen3)
 	const int ncols = 4;
 
 	Eigen::MatrixXd eigen_mat(nrows,ncols);
-	for (int32_t i=0; i<nrows*ncols; i++)
+	for (index_t i=0; i<nrows*ncols; i++)
 		eigen_mat(i) = i;
 
 	SGMatrix<float64_t> sg_mat = eigen_mat;
 
-	for (int32_t i=0; i<nrows*ncols; i++)
+	for (index_t i=0; i<nrows*ncols; i++)
 		EXPECT_EQ(eigen_mat(i), sg_mat[i]);
 }

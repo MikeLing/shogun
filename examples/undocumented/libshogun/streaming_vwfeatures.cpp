@@ -53,7 +53,7 @@ int main()
 	// Apply on all examples and return a CLabels*
 	CBinaryLabels* test_labels = sgd->apply_binary(test_features);
 
-	for (int32_t i=0; i<test_labels->get_num_labels(); i++)
+	for (index_t i=0; i<test_labels->get_num_labels(); i++)
 		SG_SPRINT("For example %d, predicted label is %f.\n", i, test_labels->get_label(i));
 
 	SG_UNREF(test_features);

@@ -68,20 +68,20 @@ TEST(UAIFileTest, preamble)
 
     const char net_type_expected[] = "MARKOV";
     EXPECT_EQ(net_type.vlen, strlen(net_type_expected));
-    for (int32_t i=0; i<net_type.vlen; i++)
+    for (index_t i=0; i<net_type.vlen; i++)
         EXPECT_EQ(net_type[i], net_type_expected[i]);
 
     EXPECT_EQ(num_vars, 3);
     EXPECT_EQ(vars_card_in.vlen, 3);
-    for (int32_t i=0; i<num_vars; i++)
+    for (index_t i=0; i<num_vars; i++)
         EXPECT_EQ(vars_card_in[i], vars_card[i]);
     EXPECT_EQ(num_factors, 2);
-    for (int32_t i=0; i<num_factors; i++)
+    for (index_t i=0; i<num_factors; i++)
     {
         SGVector<int32_t> scope = factors_scope[i];
         SGVector<int32_t> scope_in = factors_scope_in[i];
         EXPECT_EQ(scope.vlen, scope_in.vlen);
-        for (int32_t j=0; j<scope.vlen; j++)
+        for (index_t j=0; j<scope.vlen; j++)
             EXPECT_EQ(scope_in[j], scope[j]);
     }
 
@@ -89,12 +89,12 @@ TEST(UAIFileTest, preamble)
 
     fin->get_factors_table(factors_table_in);
 
-    for (int32_t i=0; i<2; i++)
+    for (index_t i=0; i<2; i++)
     {
         SGVector<float64_t> table = factors_table[i];
         SGVector<float64_t> table_in = factors_table_in[i];
         EXPECT_EQ(table.vlen, table_in.vlen);
-        for (int32_t j=0; j<table.vlen; j++)
+        for (index_t j=0; j<table.vlen; j++)
             EXPECT_NEAR(table_in[j], table[j], 1E-14);
     }
 

@@ -72,6 +72,31 @@ void CStreamingDotFeatures::expand_if_required(float64_t*& vec, int32_t &len)
 	}
 }
 
+
+void CStreamingDotFeatures::expand_if_required(float32_t*& vec, int64_t &len)
+{
+	int32_t dim = get_dim_feature_space();
+	if (dim > len)
+	{
+		vec = SG_REALLOC(float32_t, vec, len, dim);
+		memset(&vec[len], 0, (dim-len) * sizeof(float32_t));
+		len = dim;
+	}
+}
+
+void CStreamingDotFeatures::expand_if_required(float64_t*& vec, int64_t &len)
+{
+	int32_t dim = get_dim_feature_space();
+	if (dim > len)
+	{
+		vec = SG_REALLOC(float64_t, vec, len, dim);
+		memset(&vec[len], 0, (dim-len) * sizeof(float64_t));
+		len = dim;
+	}
+}
+
+
+
 void* CStreamingDotFeatures::get_feature_iterator()
 {
 	SG_NOTIMPLEMENTED

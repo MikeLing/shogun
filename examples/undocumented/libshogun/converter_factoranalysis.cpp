@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 	int N = 100;
 	int dim = 3;
 	float64_t* matrix = new double[N*dim];
-	for (int i=0; i<N*dim; i++)
+	for (index_t i=0; i<N*dim; i++)
 		matrix[i] = CMath::sin((i/float64_t(N*dim))*3.14);
 
 	CDenseFeatures<double>* features = new CDenseFeatures<double>(SGMatrix<double>(matrix,dim,N));

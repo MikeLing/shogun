@@ -30,7 +30,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 *
 		 * @param size cache size
 		 */
-		CDirectorDotFeatures(int32_t size=0) : CDotFeatures(size)
+		CDirectorDotFeatures(index_t size=0) : CDotFeatures(size)
 		{
 		}
 
@@ -42,7 +42,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 *
 		 * @return number of examples/vectors (possibly of subset, if implemented)
 		 */
-		virtual int32_t get_num_vectors() const
+		virtual index_t get_num_vectors() const
 		{
 			SG_NOTIMPLEMENTED
 			return 0;
@@ -56,7 +56,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 *
 		 * @return dimensionality
 		 */
-		virtual int32_t get_dim_feature_space() const
+		virtual index_t get_dim_feature_space() const
 		{
 			SG_NOTIMPLEMENTED
 			return 0;
@@ -69,7 +69,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param df DotFeatures (of same kind) to compute dot product with
 		 * @param vec_idx2 index of second vector
 		 */
-		virtual float64_t dot(int32_t vec_idx1, CDotFeatures* df, int32_t vec_idx2)
+		virtual float64_t dot(index_t vec_idx1, CDotFeatures* df, index_t vec_idx2)
 		{
 			SG_NOTIMPLEMENTED
 			return 0;
@@ -80,7 +80,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param vec_idx1 index of first vector
 		 * @param vec2 dense vector
 		 */
-		virtual float64_t dense_dot_sgvec(int32_t vec_idx1, const SGVector<float64_t> vec2)
+		virtual float64_t dense_dot_sgvec(index_t vec_idx1, const SGVector<float64_t> vec2)
 		{
 			SG_NOTIMPLEMENTED
 			return 0;
@@ -94,7 +94,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param vec2_len length of real valued vector
 		 * @param abs_val if true add the absolute value
 		 */
-		virtual void add_to_dense_sgvec(float64_t alpha, int32_t vec_idx1, SGVector<float64_t> vec2, bool abs_val=false)
+		virtual void add_to_dense_sgvec(float64_t alpha, index_t vec_idx1, SGVector<float64_t> vec2, bool abs_val=false)
 		{
 			SG_NOTIMPLEMENTED
 		}
@@ -105,7 +105,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param vec2 pointer to real valued vector
 		 * @param vec2_len length of real valued vector
 		 */
-		virtual float64_t dense_dot(int32_t vec_idx1, const float64_t* vec2, int32_t vec2_len)
+		virtual float64_t dense_dot(index_t vec_idx1, const float64_t* vec2, index_t vec2_len)
 		{
 			return dense_dot_sgvec(vec_idx1, SGVector<float64_t>((float64_t*) vec2, vec2_len, false));
 		}
@@ -118,7 +118,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param vec2_len length of real valued vector
 		 * @param abs_val if true add the absolute value
 		 */
-		virtual void add_to_dense_vec(float64_t alpha, int32_t vec_idx1, float64_t* vec2, int32_t vec2_len, bool abs_val=false)
+		virtual void add_to_dense_vec(float64_t alpha, index_t vec_idx1, float64_t* vec2, index_t vec2_len, bool abs_val=false)
 		{
 			add_to_dense_sgvec(alpha, vec_idx1, SGVector<float64_t>(vec2, vec2_len, false), abs_val);
 		}
@@ -136,7 +136,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 *
 		 * note that the result will be written to output[0...(stop-start-1)]
 		 */
-		virtual void dense_dot_range(float64_t* output, int32_t start, int32_t stop, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
+		virtual void dense_dot_range(float64_t* output, index_t start, index_t stop, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
 		{
 			CDotFeatures::dense_dot_range(output, start, stop, alphas, vec, dim, b);
 		}
@@ -152,8 +152,8 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param dim length of the dense vector
 		 * @param b bias
 		 */
-		virtual void dense_dot_range_subset(int32_t* sub_index, int32_t num,
-				float64_t* output, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
+		virtual void dense_dot_range_subset(index_t* sub_index, index_t num,
+				float64_t* output, float64_t* alphas, float64_t* vec, index_t dim, float64_t b)
 		{
 			CDotFeatures::dense_dot_range_subset(sub_index, num, output, alphas, vec, dim, b);
 		}
@@ -165,7 +165,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param num which vector
 		 * @return number of sparse features in vector
 		 */
-		virtual int32_t get_nnz_features_for_vector(int32_t num)
+		virtual index_t get_nnz_features_for_vector(index_t num)
 		{
 			SG_NOTIMPLEMENTED
 			return 0;
@@ -180,7 +180,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 *			iterate over
 		 * @return feature iterator (to be passed to get_next_feature)
 		 */
-		virtual void* get_feature_iterator(int32_t vector_index)
+		virtual void* get_feature_iterator(index_t vector_index)
 		{
 			SG_NOTIMPLEMENTED
 			return NULL;
@@ -196,7 +196,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param iterator as returned by get_feature_iterator
 		 * @return true if a new non-zero feature got returned
 		 */
-		virtual bool get_next_feature(int32_t& index, float64_t& value, void* iterator)
+		virtual bool get_next_feature(index_t& index, float64_t& value, void* iterator)
 		{
 			SG_NOTIMPLEMENTED
 			return false;
@@ -278,7 +278,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 *
 		 * @param num index of preprocessor in list
 		 */
-		virtual void del_preprocessor(int32_t num)
+		virtual void del_preprocessor(index_t num)
 		{
 			CFeatures::del_preprocessor(num);
 		}
@@ -291,7 +291,7 @@ IGNORE_IN_CLASSLIST class CDirectorDotFeatures : public CDotFeatures
 		 * @param num_vectors new number of vectors
 		 * @return if reshaping was successful
 		 */
-		virtual bool reshape(int32_t num_features, int32_t num_vectors)
+		virtual bool reshape(index_t num_features, index_t num_vectors)
 		{
 			SG_NOTIMPLEMENTED
 			return false;

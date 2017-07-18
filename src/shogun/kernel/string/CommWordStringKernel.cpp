@@ -82,9 +82,9 @@ void CCommWordStringKernel::cleanup()
 	CKernel::cleanup();
 }
 
-float64_t CCommWordStringKernel::compute_diag(int32_t idx_a)
+float64_t CCommWordStringKernel::compute_diag(index_t idx_a)
 {
-	int32_t alen;
+	index_t alen;
 	CStringFeatures<uint16_t>* l = (CStringFeatures<uint16_t>*) lhs;
 	CStringFeatures<uint16_t>* r = (CStringFeatures<uint16_t>*) rhs;
 
@@ -102,12 +102,12 @@ float64_t CCommWordStringKernel::compute_diag(int32_t idx_a)
 	int32_t* dic = dict_diagonal_optimization;
 	memset(dic, 0, num_symbols*sizeof(int32_t));
 
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 		dic[av[i]]++;
 
 	if (use_sign)
 	{
-		for (int32_t i=0; i<(int32_t) l->get_num_symbols(); i++)
+		for (index_t i=0; i<(int32_t) l->get_num_symbols(); i++)
 		{
 			if (dic[i]!=0)
 				result++;
@@ -115,7 +115,7 @@ float64_t CCommWordStringKernel::compute_diag(int32_t idx_a)
 	}
 	else
 	{
-		for (int32_t i=0; i<num_symbols; i++)
+		for (index_t i=0; i<num_symbols; i++)
 		{
 			if (dic[i]!=0)
 				result+=dic[i]*dic[i];
@@ -127,9 +127,9 @@ float64_t CCommWordStringKernel::compute_diag(int32_t idx_a)
 }
 
 float64_t CCommWordStringKernel::compute_helper(
-	int32_t idx_a, int32_t idx_b, bool do_sort)
+	index_t idx_a, index_t idx_b, bool do_sort)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_av, free_bv;
 
 	CStringFeatures<uint16_t>* l = (CStringFeatures<uint16_t>*) lhs;
@@ -303,7 +303,7 @@ bool CCommWordStringKernel::init_optimization(
 
 	SG_DEBUG("initializing CCommWordStringKernel optimization\n")
 
-	for (int32_t i=0; i<count; i++)
+	for (index_t i=0; i<count; i++)
 	{
 		if ( (i % (count/10+1)) == 0)
 			SG_PROGRESS(i, 0, count)
@@ -390,7 +390,7 @@ float64_t* CCommWordStringKernel::compute_scoring(
 
 	num_sym=0;
 
-	for (int32_t i=0; i<order; i++)
+	for (index_t i=0; i<order; i++)
 		num_sym+=CMath::pow((int32_t) num_words,i+1);
 
 	SG_DEBUG("num_words:%d, order:%d, len:%d sz:%d (len*sz:%d)\n", num_words, order,
@@ -406,14 +406,14 @@ float64_t* CCommWordStringKernel::compute_scoring(
 	uint32_t kmer_mask=0;
 	uint32_t words=CMath::pow((int32_t) num_words,(int32_t) order);
 
-	for (int32_t o=0; o<max_degree; o++)
+	for (index_t o=0; o<max_degree; o++)
 	{
 		float64_t* contrib=&target[offset];
 		offset+=CMath::pow((int32_t) num_words,(int32_t) o+1);
 
 		kmer_mask=(kmer_mask<<(num_bits)) | str->get_masked_symbols(0xffff, 1);
 
-		for (int32_t p=-o; p<order; p++)
+		for (index_t p=-o; p<order; p++)
 		{
 			int32_t o_sym=0, m_sym=0, il=0,ir=0, jl=0;
 			uint32_t imer_mask=kmer_mask;
@@ -486,7 +486,7 @@ float64_t* CCommWordStringKernel::compute_scoring(
 		}
 	}
 
-	for (int32_t i=1; i<num_feat; i++)
+	for (index_t i=1; i<num_feat; i++)
 		memcpy(&target[num_sym*i], target, num_sym*sizeof(float64_t));
 
 	SG_UNREF(alpha);
@@ -521,19 +521,19 @@ char* CCommWordStringKernel::compute_consensus(
 	int32_t* bt=SG_MALLOC(int32_t, total_len);
 	float64_t* score=SG_MALLOC(float64_t, total_len);
 
-	for (int64_t i=0; i<total_len; i++)
+	for (index_t i=0; i<total_len; i++)
 	{
 		bt[i]=-1;
 		score[i]=0;
 	}
 
-	for (int32_t t=0; t<num_words; t++)
+	for (index_t t=0; t<num_words; t++)
 		score[t]=dictionary_weights[t];
 
 	//dynamic program
-	for (int32_t i=1; i<num_feat; i++)
+	for (index_t i=1; i<num_feat; i++)
 	{
-		for (int32_t t1=0; t1<num_words; t1++)
+		for (index_t t1=0; t1<num_words; t1++)
 		{
 			max_idx=-1;
 			max_score=0;
@@ -549,7 +549,7 @@ char* CCommWordStringKernel::compute_consensus(
 			 * pair */
 			uint16_t suffix=(uint16_t) t1 >> num_bits;
 
-			for (int32_t sym=0; sym<str->get_original_num_symbols(); sym++)
+			for (index_t sym=0; sym<str->get_original_num_symbols(); sym++)
 			{
 				uint16_t t=suffix | sym << (num_bits*(order-1));
 
@@ -573,7 +573,7 @@ char* CCommWordStringKernel::compute_consensus(
 	//backtracking
 	max_idx=0;
 	max_score=score[num_words*(num_feat-1) + 0];
-	for (int32_t t=1; t<num_words; t++)
+	for (index_t t=1; t<num_words; t++)
 	{
 		float64_t sc=score[num_words*(num_feat-1) + t];
 		if (sc>max_score)
@@ -585,10 +585,10 @@ char* CCommWordStringKernel::compute_consensus(
 
 	SG_DEBUG("max_idx:%i, max_score:%f\n", max_idx, max_score)
 
-	for (int32_t i=result_len-1; i>=num_feat; i--)
+	for (index_t i=result_len-1; i>=num_feat; i--)
 		result[i]=alpha->remap_to_char( (uint8_t) str->get_masked_symbols( (uint16_t) max_idx >> (num_bits*(result_len-1-i)), 1) );
 
-	for (int32_t i=num_feat-1; i>=0; i--)
+	for (index_t i=num_feat-1; i>=0; i--)
 	{
 		result[i]=alpha->remap_to_char( (uint8_t) str->get_masked_symbols( (uint16_t) max_idx >> (num_bits*(order-1)), 1) );
 		max_idx=bt[num_words*i + max_idx];

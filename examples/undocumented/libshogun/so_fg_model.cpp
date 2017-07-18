@@ -43,7 +43,7 @@ void test(int32_t num_samples)
 	CFactorGraphLabels* labels = new CFactorGraphLabels(num_samples);
 	SG_REF(labels);
 
-	for (int32_t n = 0; n < num_samples; ++n)
+	for (index_t n = 0; n < num_samples; ++n)
 	{
 		// factor graph
 		SGVector<int32_t> vc(3);
@@ -180,7 +180,7 @@ void test(int32_t num_samples)
 	float64_t acc_loss_primcp = 0.0;
 	float64_t ave_loss_primcp = 0.0;
 
-	for (int32_t i=0; i<num_samples; ++i)
+	for (index_t i=0; i<num_samples; ++i)
 	{
 		CStructuredData* y_pred = labels_primcp->get_label(i);
 		CStructuredData* y_truth = labels->get_label(i);
@@ -200,7 +200,7 @@ void test(int32_t num_samples)
 	float64_t acc_loss_bmrm = 0.0;
 	float64_t ave_loss_bmrm = 0.0;
 
-	for (int32_t i=0; i<num_samples; ++i)
+	for (index_t i=0; i<num_samples; ++i)
 	{
 		CStructuredData* y_pred = labels_bmrm->get_label(i);
 		CStructuredData* y_truth = labels->get_label(i);
@@ -219,7 +219,7 @@ void test(int32_t num_samples)
 	float64_t acc_loss_sgd = 0.0;
 	float64_t ave_loss_sgd = 0.0;
 
-	for (int32_t i=0; i<num_samples; ++i)
+	for (index_t i=0; i<num_samples; ++i)
 	{
 		CStructuredData* y_pred = labels_sgd->get_label(i);
 		CStructuredData* y_truth = labels->get_label(i);
@@ -238,7 +238,7 @@ void test(int32_t num_samples)
 	float64_t acc_loss_fw = 0.0;
 	float64_t ave_loss_fw = 0.0;
 
-	for (int32_t i=0; i<num_samples; ++i)
+	for (index_t i=0; i<num_samples; ++i)
 	{
 		CStructuredData* y_pred = labels_fw->get_label(i);
 		CStructuredData* y_truth = labels->get_label(i);

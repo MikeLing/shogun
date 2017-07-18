@@ -24,9 +24,9 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 	{
 		V = SGMatrix<float64_t>(N,N);
 
-		for (int i = 0; i < N; i++)
+		for (index_t i = 0; i < N; i++)
 		{
-			for (int j = 0; j < N; j++)
+			for (index_t j = 0; j < N; j++)
 				V(i,j) = CMath::randn_double();
 		}
 	}
@@ -39,11 +39,11 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 	EV = EV * VectorXd::Ones(EV.rows()).cwiseQuotient((EV.transpose() * C0 * EV).cwiseSqrt().diagonal()).asDiagonal();
 
 	MatrixXd P = MatrixXd::Zero(N,N);
-	for (int i = 0; i < N; i++)
+	for (index_t i = 0; i < N; i++)
 		P(i,N-1-i) = 1;
 
 	std::vector<bool> issymmetric(T);
-	for (int l = 0; l < T; l++)
+	for (index_t l = 0; l < T; l++)
 	{
 		Map<MatrixXd> Ci(C.get_matrix(l),N,N);
 
@@ -60,7 +60,7 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 
 	// initialisations for OKN^3
 	MatrixXd D = MatrixXd::Zero(N,N);
-	for (int t = 0; t < T; t++)
+	for (index_t t = 0; t < T; t++)
 	{
 		Map<MatrixXd> Ci(C.get_matrix(t),N,N);
 		MatrixXd M1 = Ci * EV;
@@ -83,11 +83,11 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 	{
 		float64_t delta_w = 0.0;
 
-		for (int i = 0; i < N; i++)
+		for (index_t i = 0; i < N; i++)
 		{
 			VectorXd w = EV.col(i);
 
-			for (int t = 0; t < T; t++)
+			for (index_t t = 0; t < T; t++)
 			{
 				Map<MatrixXd> Ci(C.get_matrix(t),N,N);
 				VectorXd m1 = Ci * w;
@@ -114,7 +114,7 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 			do
 			{
 				swap = false;
-				for (int j = 1; j < D.rows(); j++)
+				for (index_t j = 1; j < D.rows(); j++)
 				{
 					if( eigenvalues[j] > eigenvalues[j-1] )
 					{
@@ -129,7 +129,7 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 			VectorXd w_new = eigenvectors.col(N-1);
 			delta_w = std::max(delta_w, std::min(sqrt((w-w_new).cwiseAbs2().sum()), sqrt((w+w_new).cwiseAbs2().sum())));
 
-			for (int t = 0; t < T; t++)
+			for (index_t t = 0; t < T; t++)
 			{
 				Map<MatrixXd> Ci(C.get_matrix(t),N,N);
 
@@ -150,7 +150,7 @@ SGMatrix<float64_t> CQDiag::diagonalize(SGNDArray<float64_t> C, SGMatrix<float64
 		// err
 		crit.push_back(0.0);
 		EV = EV * (EV.transpose() * C0 * EV).diagonal().cwiseSqrt().asDiagonal().inverse();
-		for (int t = 0; t < T; t++)
+		for (index_t t = 0; t < T; t++)
 		{
 			Map<MatrixXd> Ci(C.get_matrix(t),N,N);
 			MatrixXd eD = EV.transpose() * Ci * EV;

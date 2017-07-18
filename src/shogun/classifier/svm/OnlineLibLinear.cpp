@@ -129,7 +129,7 @@ void COnlineLibLinear::stop_train()
 	SG_INFO("Optimization finished.\n")
 
 	// calculate objective value
-	for (int32_t i=0; i<w_dim; i++)
+	for (index_t i=0; i<w_dim; i++)
 		v += w[i]*w[i];
 	v += bias*bias;
 
@@ -193,7 +193,7 @@ void COnlineLibLinear::train_one(SGVector<float32_t> ex, float64_t label)
 		alpha_current = CMath::min(CMath::max(alpha_current - G/QD, 0.0), C);
 		d = (alpha_current - alpha_old) * y_current;
 
-		for (int32_t i=0; i < w_dim; ++i)
+		for (index_t i=0; i < w_dim; ++i)
 			w[i] += d*ex[i];
 
 
@@ -261,7 +261,7 @@ void COnlineLibLinear::train_one(SGSparseVector<float32_t> ex, float64_t label)
 		alpha_current = CMath::min(CMath::max(alpha_current - G/QD, 0.0), C);
 		d = (alpha_current - alpha_old) * y_current;
 
-		for (int32_t i=0; i < ex.num_feat_entries; i++)
+		for (index_t i=0; i < ex.num_feat_entries; i++)
 			w[ex.features[i].feat_index] += d*ex.features[i].entry;
 
 

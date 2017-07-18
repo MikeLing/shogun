@@ -68,7 +68,7 @@ void CSGDQN::set_loss_function(CLossFunction* loss_func)
 
 void CSGDQN::compute_ratio(float64_t* W,float64_t* W_1,float64_t* B,float64_t* dst,int32_t dim,float64_t lambda,float64_t loss_val)
 {
-	for (int32_t i=0; i < dim;i++)
+	for (index_t i=0; i < dim;i++)
 	{
 		float64_t diffw=W_1[i]-W[i];
 		if(diffw)
@@ -80,7 +80,7 @@ void CSGDQN::compute_ratio(float64_t* W,float64_t* W_1,float64_t* B,float64_t* d
 
 void CSGDQN::combine_and_clip(float64_t* Bc,float64_t* B,int32_t dim,float64_t c1,float64_t c2,float64_t v1,float64_t v2)
 {
-	for (int32_t i=0; i < dim;i++)
+	for (index_t i=0; i < dim;i++)
 	{
 		if(B[i])
 		{
@@ -144,11 +144,11 @@ bool CSGDQN::train(CFeatures* data)
 	if ((loss_type == L_LOGLOSS) || (loss_type == L_LOGLOSSMARGIN))
 		is_log_loss = true;
 
-	for(int32_t e=0; e<epochs && (!CSignal::cancel_computations()); e++)
+	for(index_t e=0; e<epochs && (!CSignal::cancel_computations()); e++)
 	{
 		count = skip;
 		bool updateB=false;
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 		{
 			SGVector<float64_t> v = features->get_computed_dot_feature_vector(i);
 			ASSERT(w.vlen==v.vlen)
@@ -217,7 +217,7 @@ void CSGDQN::calibrate()
 	int32_t n = 0;
 	float64_t r = 0;
 
-	for (int32_t j=0; j<num_vec ; j++, n++)
+	for (index_t j=0; j<num_vec ; j++, n++)
 		r += features->get_nnz_features_for_vector(j);
 
 

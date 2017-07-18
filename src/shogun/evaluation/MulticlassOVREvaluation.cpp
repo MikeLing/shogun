@@ -53,27 +53,27 @@ float64_t CMulticlassOVREvaluation::evaluate(CLabels* predicted, CLabels* ground
 	m_last_results = SGVector<float64_t>(n_classes);
 
 	SGMatrix<float64_t> all(n_labels,n_classes);
-	for (int32_t i=0; i<n_labels; i++)
+	for (index_t i=0; i<n_labels; i++)
 	{
 		SGVector<float64_t> confs = predicted_mc->get_multiclass_confidences(i);
-		for (int32_t j=0; j<n_classes; j++)
+		for (index_t j=0; j<n_classes; j++)
 		{
 			all(i,j) = confs[j];
 		}
 	}
 	if (dynamic_cast<CROCEvaluation*>(m_binary_evaluation) || dynamic_cast<CPRCEvaluation*>(m_binary_evaluation))
 	{
-		for (int32_t i=0; i<m_num_graph_results; i++)
+		for (index_t i=0; i<m_num_graph_results; i++)
 			m_graph_results[i].~SGMatrix<float64_t>();
 		SG_FREE(m_graph_results);
 		m_graph_results = SG_MALLOC(SGMatrix<float64_t>, n_classes);
 		m_num_graph_results = n_classes;
 	}
-	for (int32_t c=0; c<n_classes; c++)
+	for (index_t c=0; c<n_classes; c++)
 	{
 		CLabels* pred = new CBinaryLabels(SGVector<float64_t>(all.get_column_vector(c),n_labels,false));
 		SGVector<float64_t> gt_vec(n_labels);
-		for (int32_t i=0; i<n_labels; i++)
+		for (index_t i=0; i<n_labels; i++)
 		{
 			if (ground_truth_mc->get_label(i)==c)
 				gt_vec[i] = +1.0;

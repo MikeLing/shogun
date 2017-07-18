@@ -66,7 +66,7 @@ TEST(CircularBufferTest, push_pop)
 	EXPECT_EQ(test_string.vlen, tmp_string.vlen);
 	EXPECT_EQ(buffer_size, buffer->available());
 	EXPECT_EQ(0, buffer->num_bytes_contained());
-	for (int i=0; i<tmp_string.vlen; i++)
+	for (index_t i=0; i<tmp_string.vlen; i++)
 	{
 		EXPECT_EQ(test_string.vector[i], tmp_string.vector[i]);
 	}
@@ -100,7 +100,7 @@ TEST(CircularBufferTest, stress_test)
 	EXPECT_EQ(buffer_size, buffer->available());
 	EXPECT_EQ(0, buffer->num_bytes_contained());
 
-	for (int i=0; i<repeat; i++)
+	for (index_t i=0; i<repeat; i++)
 	{
 		buffer->push(test_string);
 

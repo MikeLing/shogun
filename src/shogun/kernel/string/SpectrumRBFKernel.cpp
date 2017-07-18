@@ -168,7 +168,7 @@ void CSpectrumRBFKernel::read_profiles_and_sequences()
 			profiles.push_back(std::vector<double>());
 
 			std::vector<double>& curr_profile = profiles.back();
-			for (int i=0; i < len_line; ++i)
+			for (index_t i=0; i < len_line; ++i)
 			{
 					std::getline(fin, line);
 					int a = line.find_first_not_of(' '); // index position
@@ -189,7 +189,7 @@ void CSpectrumRBFKernel::read_profiles_and_sequences()
 						a = line.find_first_not_of(' ', b); // beginning of block to ignore
 						b = line.find_first_of(' ', a); // aa position
 
-						for (int j=0; j < 19; ++j)
+						for (index_t j=0; j < 19; ++j)
 						{
 							a = line.find_first_not_of(' ', b);
 							b = line.find_first_of(' ', a);
@@ -197,7 +197,7 @@ void CSpectrumRBFKernel::read_profiles_and_sequences()
 
 						int all_zeros = 1;
 						// interesting block
-						for (int j=0; j < 20; ++j)
+						for (index_t j=0; j < 20; ++j)
 						{
 							a = line.find_first_not_of(' ', b);
 							b = line.find_first_of(' ', a);
@@ -224,7 +224,7 @@ void CSpectrumRBFKernel::read_profiles_and_sequences()
 								SG_DEBUG(">>> aa %c \t %d \t %f\n", aa.c_str()[0], aa_index, value)
 
 								/*
-								for (int z=0; z <20; ++z)
+								for (index_t z=0; z <20; ++z)
 								{
 									SG_DEBUG(" %d \t %f\t", z, curr_profile[z])
 								}
@@ -246,7 +246,7 @@ void CSpectrumRBFKernel::read_profiles_and_sequences()
 
 			/*
 			// 6 irrelevant lines
-			for (int i=0; i < 6; ++i)
+			for (index_t i=0; i < 6; ++i)
 			{
 				std::getline(fin, line);
 			}
@@ -261,7 +261,7 @@ void CSpectrumRBFKernel::read_profiles_and_sequences()
 	sequences = SG_MALLOC(SGString<char>, nof_sequences);
 
 	int max_len = 0;
-	for (int i=0; i < nof_sequences; ++i)
+	for (index_t i=0; i < nof_sequences; ++i)
 	{
 		int len = seqs[i].length();
 		sequences[i].string = SG_MALLOC(char, len+1);
@@ -332,7 +332,7 @@ float64_t CSpectrumRBFKernel::AA_helper(const char* path, const int seq_degree, 
 	//const char* AA = "ARNDCQEGHILKMFPSTWYV";
   float64_t diff=0.0 ;
 
-  for (int i=0; i<seq_degree; i++)
+  for (index_t i=0; i<seq_degree; i++)
     {
       if (!isaa(path[i])||!isaa(joint_seq[index+i]))
 	diff+=1.4 ;
@@ -349,18 +349,18 @@ float64_t CSpectrumRBFKernel::AA_helper(const char* path, const int seq_degree, 
   return exp( - diff/width) ;
 }
 
-float64_t CSpectrumRBFKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CSpectrumRBFKernel::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool afree, bfree;
 
 	char* avec = ((CStringFeatures<char>*) lhs)->get_feature_vector(idx_a, alen, afree);
 	char* bvec = ((CStringFeatures<char>*) rhs)->get_feature_vector(idx_b, blen, bfree);
 
 	float64_t result=0;
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	  {
-	    for (int32_t j=0; j<blen; j++)
+	    for (index_t j=0; j<blen; j++)
 	      {
 		if ((i+degree<=alen) && (j+degree<=blen))
 		  result += AA_helper(&(avec[i]), degree, bvec, j) ;

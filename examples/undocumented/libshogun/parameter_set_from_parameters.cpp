@@ -67,7 +67,7 @@ bool test_float_vector()
 
 	original_parameter_list->set_from_parameters(new_parameter_list);
 
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 		result&=original_parameter[i]==another_value;
 
 	delete original_parameter;
@@ -96,7 +96,7 @@ bool test_float_matrix()
 
 	original_parameter_list->set_from_parameters(new_parameter_list);
 
-	for (int32_t i=0; i<max*max; ++i)
+	for (index_t i=0; i<max*max; ++i)
 		result&=original_parameter[i]==another_value;
 
 	delete original_parameter;
@@ -139,7 +139,7 @@ bool test_sgobject_vector()
 
 	Parameter* original_parameter_list=new Parameter();
 	CSGObject** original_parameter=SG_MALLOC(CSGObject*, max);
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 	{
 		original_parameter[i]=new CDistantSegmentsKernel(1, 1, 1);
 		SG_REF(original_parameter[i]);
@@ -148,7 +148,7 @@ bool test_sgobject_vector()
 	original_parameter_list->add_vector(&original_parameter, &max, "param", "");
 
 	CSGObject** new_parameter=SG_MALLOC(CSGObject*, max);
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 		new_parameter[i]=new CDistantSegmentsKernel(2, 2, 2);
 
 	Parameter* new_parameter_list=new Parameter();
@@ -157,13 +157,13 @@ bool test_sgobject_vector()
 	/* note: old_parameters are SG_UNREF'ed, new ones SG_REF'ed */
 	original_parameter_list->set_from_parameters(new_parameter_list);
 
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 		result&=original_parameter[i]==new_parameter[i];
 
 	/* old original kernels were deleted by shogun's SG_UNREF */
 	delete original_parameter;
 
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 		SG_UNREF(new_parameter[i]);
 
 	delete new_parameter;
@@ -179,9 +179,9 @@ bool test_sgobject_matrix()
 
 	Parameter* original_parameter_list=new Parameter();
 	CSGObject** original_parameter=SG_MALLOC(CSGObject*, max*max);
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 	{
-		for (int32_t j=0; j<max; ++j)
+		for (index_t j=0; j<max; ++j)
 		{
 			original_parameter[j*max+i]=new CDistantSegmentsKernel(1, 1, 1);
 			SG_REF(original_parameter[j*max+i]);
@@ -191,9 +191,9 @@ bool test_sgobject_matrix()
 	original_parameter_list->add_matrix(&original_parameter, &max, &max, "param", "");
 
 	CSGObject** new_parameter=SG_MALLOC(CSGObject*, max*max);
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 	{
-		for (int32_t j=0; j<max; ++j)
+		for (index_t j=0; j<max; ++j)
 			new_parameter[j*max+i]=new CDistantSegmentsKernel(1, 1, 1);
 	}
 
@@ -203,16 +203,16 @@ bool test_sgobject_matrix()
 	/* note: old_parameters are SG_UNREF'ed, new ones SG_REF'ed */
 	original_parameter_list->set_from_parameters(new_parameter_list);
 
-	for (int32_t i=0; i<max; ++i)
+	for (index_t i=0; i<max; ++i)
 	{
-		for (int32_t j=0; j<max; ++j)
+		for (index_t j=0; j<max; ++j)
 			result&=original_parameter[j*max+i]==new_parameter[j*max+i];
 	}
 
 	/* old original kernels were deleted by shogun's SG_UNREF */
 	delete original_parameter;
 
-	for (int32_t i=0; i<max*max; ++i)
+	for (index_t i=0; i<max*max; ++i)
 		SG_UNREF(new_parameter[i]);
 
 	delete new_parameter;

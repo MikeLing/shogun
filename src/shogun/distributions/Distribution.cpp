@@ -30,7 +30,7 @@ float64_t CDistribution::get_log_likelihood_sample()
 	ASSERT(features)
 
 	float64_t sum=0;
-	for (int32_t i=0; i<features->get_num_vectors(); i++)
+	for (index_t i=0; i<features->get_num_vectors(); i++)
 		sum+=get_log_likelihood_example(i);
 
 	return sum/features->get_num_vectors();
@@ -43,7 +43,7 @@ SGVector<float64_t> CDistribution::get_log_likelihood()
 	int32_t num=features->get_num_vectors();
 	float64_t* vec=SG_MALLOC(float64_t, num);
 
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		vec[i]=get_log_likelihood_example(i);
 
 	return SGVector<float64_t>(vec,num);
@@ -54,7 +54,7 @@ int32_t CDistribution::get_num_relevant_model_parameters()
 	int32_t total_num=get_num_model_parameters();
 	int32_t num=0;
 
-	for (int32_t i=0; i<total_num; i++)
+	for (index_t i=0; i<total_num; i++)
 	{
 		if (get_log_model_parameter(i)>CMath::ALMOST_NEG_INFTY)
 			num++;
@@ -69,7 +69,7 @@ SGVector<float64_t> CDistribution::get_likelihood_for_all_examples()
 	ASSERT(num>0);
 
 	SGVector<float64_t> result=SGVector<float64_t>(num);
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		result[i]=get_likelihood_example(i);
 
 	return result;

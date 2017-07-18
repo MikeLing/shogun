@@ -41,7 +41,7 @@ CLPBoost::~CLPBoost()
 bool CLPBoost::init(int32_t num_vec)
 {
 	u=SG_MALLOC(float64_t, num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		u[i]=1.0/num_vec;
 
 	dim=new CDynamicArray<int32_t>(100000);
@@ -71,12 +71,12 @@ float64_t CLPBoost::find_max_violator(int32_t& max_dim)
 	float64_t max_val=0;
 	max_dim=-1;
 
-	for (int32_t i=0; i<num_svec; i++)
+	for (index_t i=0; i<num_svec; i++)
 	{
 		float64_t valplus=0;
 		float64_t valminus=0;
 
-		for (int32_t j=0; j<sfeat[i].num_feat_entries; j++)
+		for (index_t j=0; j<sfeat[i].num_feat_entries; j++)
 		{
 			int32_t idx=sfeat[i].features[j].feat_index;
 			float64_t v=u[idx]*((CBinaryLabels*)m_labels)->get_confidence(idx)*sfeat[i].features[j].entry;
@@ -158,7 +158,7 @@ bool CLPBoost::train_machine(CFeatures* data)
 	solver.optimize(u, lambda);
 
 	//CMath::display_vector(lambda, num_hypothesis, "lambda");
-	for (int32_t i=0; i<num_hypothesis; i++)
+	for (index_t i=0; i<num_hypothesis; i++)
 	{
 		int32_t d=dim->get_element(i);
 		if (d>=num_svec)

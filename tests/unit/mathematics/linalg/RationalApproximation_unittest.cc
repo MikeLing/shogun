@@ -161,7 +161,7 @@ TEST(RationalApproximation, trace_accuracy)
 	// use the aggregators to find the final result
 	int32_t num_aggregates=aggregators.get_num_elements();
 	float64_t result=0.0;
-	for (int32_t i=0; i<num_aggregates; ++i)
+	for (index_t i=0; i<num_aggregates; ++i)
 	{
 		CJobResultAggregator* agg=dynamic_cast<CJobResultAggregator*>
 			(aggregators.get_element(i));
@@ -348,7 +348,7 @@ TEST(RationalApproximation, trace_accuracy_cg_m)
 	// use the aggregators to find the final result
 	int32_t num_aggregates=aggregators.get_num_elements();
 	float64_t result=0.0;
-	for (int32_t i=0; i<num_aggregates; ++i)
+	for (index_t i=0; i<num_aggregates; ++i)
 	{
 		CJobResultAggregator* agg=dynamic_cast<CJobResultAggregator*>
 			(aggregators.get_element(i));

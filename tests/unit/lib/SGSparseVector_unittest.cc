@@ -181,7 +181,7 @@ TEST(SGSparseVector, sort_features_deduplicate_no_realloc)
 	SGSparseVector<float64_t> vec(vlen);
 	EXPECT_EQ(vlen, vec.num_feat_entries);
 
-	for (int32_t i=0; i<vlen; i++) {
+	for (index_t i=0; i<vlen; i++) {
 	        vec.features[i].feat_index = 0;
 	        vec.features[i].entry = 0.0;
 	}
@@ -201,7 +201,7 @@ TEST(SGSparseVector, sort_features_deduplicate_realloc)
 	SGSparseVector<float64_t> vec(vlen);
 	EXPECT_EQ(vlen, vec.num_feat_entries);
 
-	for (int32_t i=0; i<vlen; i++) {
+	for (index_t i=0; i<vlen; i++) {
 	        vec.features[i].feat_index = 0;
 	        vec.features[i].entry = 0.0;
 	}
@@ -364,7 +364,7 @@ TEST(SGSparseVector, clone_loop)
 		EXPECT_NE(expected.features, result.features);
 
 		ASSERT_EQ(expected.num_feat_entries, result.num_feat_entries);
-		for (int32_t idx=0; idx<expected.num_feat_entries; idx++) {
+		for (index_t idx=0; idx<expected.num_feat_entries; idx++) {
 			 SGSparseVectorEntry<float64_t> rfeat = result.features[idx];
 			 SGSparseVectorEntry<float64_t> efeat = expected.features[idx];
 
@@ -373,7 +373,7 @@ TEST(SGSparseVector, clone_loop)
 		}
 
 		EXPECT_EQ(expected.get_num_dimensions(), result.get_num_dimensions());
-		for (int32_t fidx=0; fidx<expected.get_num_dimensions()+1; fidx++) {
+		for (index_t fidx=0; fidx<expected.get_num_dimensions()+1; fidx++) {
 			 EXPECT_NEAR(
 				 expected.get_feature(fidx),
 				 result.get_feature(fidx),
@@ -385,7 +385,7 @@ TEST(SGSparseVector, clone_loop)
 TEST(SGSparseVector, sort_features_loop)
 {
 	// testing with and without realloc to be sure
-	for (int32_t r=0; r<2; r++) {
+	for (index_t r=0; r<2; r++) {
 		std::vector< std::pair< SGSparseVector<float64_t>,SGSparseVector<float64_t> > > test_cases = create_sort_features_mock_vectors();
 		bool stable_pointer = (r==1);
 
@@ -404,7 +404,7 @@ TEST(SGSparseVector, sort_features_loop)
 			}
 
 			ASSERT_EQ(expected.num_feat_entries, result.num_feat_entries);
-			for (int32_t idx=0; idx<result.num_feat_entries; idx++) {
+			for (index_t idx=0; idx<result.num_feat_entries; idx++) {
 				SGSparseVectorEntry<float64_t> vfeat = result.features[idx];
 				SGSparseVectorEntry<float64_t> efeat = expected.features[idx];
 
@@ -413,7 +413,7 @@ TEST(SGSparseVector, sort_features_loop)
 			}
 
 			EXPECT_EQ(expected.get_num_dimensions(), result.get_num_dimensions());
-			for (int32_t fidx=0; fidx<result.get_num_dimensions()+1; fidx++) {
+			for (index_t fidx=0; fidx<result.get_num_dimensions()+1; fidx++) {
 				EXPECT_NEAR(
 					expected.get_feature(fidx),
 					result.get_feature(fidx),
@@ -472,7 +472,7 @@ TEST(SGSparseVector, sparse_dot_not_uniq_features_different_length)
 	v1.features[1].entry = 1;
 
 	SGSparseVector<int32_t> v2 = SGSparseVector<int32_t>(20);
-	for (int32_t i=0; i<v2.num_feat_entries; i++) {
+	for (index_t i=0; i<v2.num_feat_entries; i++) {
 		v2.features[i].feat_index = 2;
 		v2.features[i].entry = 0;
 	}
@@ -494,7 +494,7 @@ TEST(SGSparseVector, sparse_dot_not_sorted_features_different_length_last_index_
 	v1.features[1].entry = 0;
 
 	SGSparseVector<int32_t> v2 = SGSparseVector<int32_t>(20);
-	for (int32_t i=0; i<v2.num_feat_entries; i++) {
+	for (index_t i=0; i<v2.num_feat_entries; i++) {
 		v2.features[i].feat_index = 0;
 		v2.features[i].entry = 0;
 	}

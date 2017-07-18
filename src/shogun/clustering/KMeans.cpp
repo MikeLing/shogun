@@ -79,7 +79,7 @@ void CKMeans::Lloyd_KMeans(SGMatrix<float64_t> centers, int32_t num_centers)
 		shared(centers, cluster_assignments, weights_set) \
 		reduction(+:changed) if (!fixed_centers)
 		/* Assigment step : Assign each point to nearest cluster */
-		for (int32_t i=0; i<lhs_size; i++)
+		for (index_t i=0; i<lhs_size; i++)
 		{ 
 			const int32_t cluster_assignments_i=cluster_assignments[i];
 			int32_t min_cluster, j;
@@ -155,7 +155,7 @@ void CKMeans::Lloyd_KMeans(SGMatrix<float64_t> centers, int32_t num_centers)
 			centers.zero();
 			Map<MatrixXd> map_centers(centers.matrix, centers.num_rows, centers.num_cols);
 			
-			for (int32_t i=0; i<lhs_size; i++)
+			for (index_t i=0; i<lhs_size; i++)
 			{
 				int32_t cluster_i=cluster_assignments[i];
 
@@ -167,7 +167,7 @@ void CKMeans::Lloyd_KMeans(SGMatrix<float64_t> centers, int32_t num_centers)
 				lhs->free_feature_vector(vec, i);
 			}
 		
-			for (int32_t i=0; i<num_centers; i++)
+			for (index_t i=0; i<num_centers; i++)
 			{
 				if (weights_set[i]!=0)
 					map_centers.col(i)*=1.0/weights_set[i];

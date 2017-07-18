@@ -75,7 +75,7 @@ template <class ST> class CStringFileFeatures : public CStringFeatures<ST>
 	 *
 	 * @return line (NOT ZERO TERMINATED)
 	 */
-	ST* get_line(uint64_t& len, uint64_t& offs, int32_t& line_nr, uint64_t file_length);
+	ST* get_line(uint64_t& len, uint64_t& offs, index_t& line_nr, uint64_t file_length);
 
 	/** cleanup string features */
 	virtual void cleanup();

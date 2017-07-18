@@ -79,7 +79,7 @@ class COnlineLinearMachine : public CMachine
 		{
 			ASSERT(w && w_dim>0)
 			dst_w=SG_MALLOC(float64_t, w_dim);
-			for (int32_t i=0; i<w_dim; i++)
+			for (index_t i=0; i<w_dim; i++)
 				dst_w[i]=w[i];
 			dst_dims=w_dim;
 		}
@@ -91,7 +91,7 @@ class COnlineLinearMachine : public CMachine
 		virtual SGVector<float32_t> get_w()
 		{
 			float32_t * dst_w = SG_MALLOC(float32_t, w_dim);
-			for (int32_t i=0; i<w_dim; i++)
+			for (index_t i=0; i<w_dim; i++)
 				dst_w[i]=w[i];
 			return SGVector<float32_t>(dst_w, w_dim);
 		}
@@ -119,7 +119,7 @@ class COnlineLinearMachine : public CMachine
 		{
 			SG_FREE(w);
 			w=SG_MALLOC(float32_t, src_w_dim);
-			for (int32_t i=0; i<src_w_dim; i++)
+			for (index_t i=0; i<src_w_dim; i++)
 				w[i] = src_w[i];
 			w_dim=src_w_dim;
 		}
@@ -170,7 +170,7 @@ class COnlineLinearMachine : public CMachine
 		virtual CBinaryLabels* apply_binary(CFeatures* data=NULL);
 
 		/// get output for example "vec_idx"
-		virtual float64_t apply_one(int32_t vec_idx)
+		virtual float64_t apply_one(index_t vec_idx)
 		{
 			SG_NOTIMPLEMENTED
 			return CMath::INFTY;
@@ -250,7 +250,7 @@ class COnlineLinearMachine : public CMachine
 
 	protected:
 		/** dimension of w */
-		int32_t w_dim;
+		index_t w_dim;
 		/** w */
 		float32_t* w;
 		/** bias */

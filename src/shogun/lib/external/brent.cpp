@@ -1505,7 +1505,7 @@ double zero ( double a, double b, double t, double f ( double x ) ){
 
 double monicPoly::operator()(double x){
   double rslt(1);
-  for (int ii = coeff.size()-1; ii >= 0; ii--){
+  for (index_t ii = coeff.size()-1; ii >= 0; ii--){
     rslt *= x;
     rslt += coeff[ii];
   }
@@ -1515,7 +1515,7 @@ double monicPoly::operator()(double x){
 // Similarly, evaluate a general polynomial (not necessarily monic):
 double Poly::operator()(double x){
   double rslt(0);
-  for (int ii = coeff.size()-1; ii >= 0; ii--){
+  for (index_t ii = coeff.size()-1; ii >= 0; ii--){
     rslt *= x;
     rslt += coeff[ii];
   }

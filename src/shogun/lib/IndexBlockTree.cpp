@@ -45,7 +45,7 @@ int count_sub_nodes_recursive(tree_node_t* node, int32_t self)
 	else
 	{
 		int c = 0;
-		for (int32_t i=0; i<node->n_desc; i++)
+		for (index_t i=0; i<node->n_desc; i++)
 		{
 			c += count_sub_nodes_recursive(node->desc[i], self);
 		}
@@ -57,10 +57,10 @@ int count_sub_nodes_recursive(tree_node_t* node, int32_t self)
 
 void print_tree(tree_node_t* node, int tabs)
 {
-	for (int32_t t=0; t<tabs; t++)
+	for (index_t t=0; t<tabs; t++)
 		SG_SPRINT("  ")
 	SG_SPRINT("%d %d\n",node->idx, node->sub_nodes_count)
-	for (int32_t i=0; i<node->n_desc; i++)
+	for (index_t i=0; i<node->n_desc; i++)
 		print_tree(node->desc[i],tabs+1);
 }
 
@@ -68,7 +68,7 @@ int32_t fill_G_recursive(tree_node_t* node, vector<int32_t>* G)
 {
 	int32_t c=1;
 	G->push_back(node->idx);
-	for (int32_t i=0; i<node->n_desc; i++)
+	for (index_t i=0; i<node->n_desc; i++)
 		c+= fill_G_recursive(node->desc[i], G);
 	return c;
 }
@@ -76,7 +76,7 @@ int32_t fill_G_recursive(tree_node_t* node, vector<int32_t>* G)
 void fill_ind_recursive(tree_node_t* node, vector<block_tree_node_t>* tree_nodes, int32_t lower)
 {
 	int32_t l = lower;
-	for (int32_t i=0; i<node->n_desc; i++)
+	for (index_t i=0; i<node->n_desc; i++)
 	{
 		int32_t c = node->desc[i]->sub_nodes_count;
 		if (c>0)
@@ -134,19 +134,19 @@ CIndexBlockTree::CIndexBlockTree(SGMatrix<float64_t> adjacency_matrix, bool incl
 	tree_node_t* nodes = SG_CALLOC(tree_node_t, n_features);
 
 	int32_t* nz_row = SG_CALLOC(int32_t, n_features);
-	for (int32_t i=0; i<n_features; i++)
+	for (index_t i=0; i<n_features; i++)
 	{
 		nodes[i].idx = i;
 		nodes[i].sub_nodes_count = 0;
 		int32_t c = 0;
-		for (int32_t j=i; j<n_features; j++)
+		for (index_t j=i; j<n_features; j++)
 		{
 			if (adjacency_matrix(j,i)!=0.0)
 				nz_row[c++] = j;
 		}
 		nodes[i].n_desc = c;
 		nodes[i].desc = SG_MALLOC(tree_node_t*, c);
-		for (int32_t j=0; j<c; j++)
+		for (index_t j=0; j<c; j++)
 		{
 			nodes[i].desc[j] = &nodes[nz_row[j]];
 		}
@@ -158,7 +158,7 @@ CIndexBlockTree::CIndexBlockTree(SGMatrix<float64_t> adjacency_matrix, bool incl
 	vector<int32_t> G;
 	vector<int32_t> ind_t;
 	int current_l_idx = 1;
-	for (int32_t i=1; i<n_features; i++)
+	for (index_t i=1; i<n_features; i++)
 	{
 		if (nodes[i].n_desc > 0)
 		{
@@ -171,11 +171,11 @@ CIndexBlockTree::CIndexBlockTree(SGMatrix<float64_t> adjacency_matrix, bool incl
 	}
 	/*
 	SG_SPRINT("[")
-	for (int32_t i=0; i<G.size(); i++)
+	for (index_t i=0; i<G.size(); i++)
 		SG_SPRINT(" %d ",G[i])
 	SG_SPRINT("]\n")
 	SG_SPRINT("[")
-	for (int32_t i=0; i<ind_t.size(); i++)
+	for (index_t i=0; i<ind_t.size(); i++)
 		SG_SPRINT(" %d ",ind_t[i])
 	SG_SPRINT("]\n")
 	*/
@@ -188,10 +188,10 @@ CIndexBlockTree::CIndexBlockTree(SGMatrix<float64_t> adjacency_matrix, bool incl
 		m_precomputed_ind_t[1] = -1;
 		m_precomputed_ind_t[2] = 1.0;
 	}
-	for (int32_t i=0; i<(int32_t)ind_t.size(); i++)
+	for (index_t i=0; i<(int32_t)ind_t.size(); i++)
 		m_precomputed_ind_t[i+supernode_offset] = ind_t[i];
 	m_precomputed_G = SGVector<float64_t>((int32_t)G.size());
-	for (int32_t i=0; i<(int32_t)G.size(); i++)
+	for (index_t i=0; i<(int32_t)G.size(); i++)
 		m_precomputed_G[i] = G[i] + 1;
 	m_general = true;
 	/*
@@ -206,14 +206,14 @@ CIndexBlockTree::CIndexBlockTree(SGMatrix<float64_t> adjacency_matrix, bool incl
 	m_precomputed_ind_t[1] = -1;
 	m_precomputed_ind_t[2] = 1.0;
 
-	for (int32_t i=0; i<(int)blocks.size(); i++)
+	for (index_t i=0; i<(int)blocks.size(); i++)
 	{
 		m_precomputed_ind_t[3+3*i+0] = blocks[i].t_min_index;
 		m_precomputed_ind_t[3+3*i+1] = blocks[i].t_max_index;
 		m_precomputed_ind_t[3+3*i+2] = blocks[i].weight;
 	}
 	*/
-	for (int32_t i=0; i<n_features; i++)
+	for (index_t i=0; i<n_features; i++)
 		SG_FREE(nodes[i].desc);
 	SG_FREE(nodes);
 }
@@ -287,7 +287,7 @@ SGVector<float64_t> CIndexBlockTree::get_SLEP_ind_t() const
 		ind_t[1] = -1;
 		ind_t[2] = 1.0;
 
-		for (int32_t i=0; i<(int32_t)tree_nodes.size(); i++)
+		for (index_t i=0; i<(int32_t)tree_nodes.size(); i++)
 		{
 			ind_t[3+i*3] = tree_nodes[i].t_min_index + 1;
 			ind_t[3+i*3+1] = tree_nodes[i].t_max_index;

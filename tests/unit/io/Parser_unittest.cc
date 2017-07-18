@@ -28,7 +28,7 @@ TEST(ParserTest, tokenization)
 		token=reader->read_string();
 
 		EXPECT_EQ((index_t) strlen(tokens[num_tokens]), token.vlen);
-		for (int32_t i=0; i<token.vlen; i++)
+		for (index_t i=0; i<token.vlen; i++)
 		{
 			EXPECT_EQ(tokens[num_tokens][i], token[i]);
 		}

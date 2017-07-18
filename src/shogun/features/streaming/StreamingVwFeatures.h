@@ -196,6 +196,26 @@ public:
 	 */
 	virtual void expand_if_required(float64_t*& vec, int32_t& len);
 
+	/**
+	 * Expand the vector passed so that it its length is equal to
+	 * the dimensionality of the features. The previous values are
+	 * kept intact through realloc, and the new ones are set to zero.
+	 *
+	 * @param vec float32_t* vector
+	 * @param len length of the vector
+	 */
+	virtual void expand_if_required(float32_t*& vec, int64_t& len);
+
+	/**
+	 * Expand the vector passed so that it its length is equal to
+	 * the dimensionality of the features. The previous values are
+	 * kept intact through realloc, and the new ones are set to zero.
+	 *
+	 * @param vec float64_t* vector
+	 * @param len length of the vector
+	 */
+	virtual void expand_if_required(float64_t*& vec, int64_t& len);
+
 	/** obtain the dimensionality of the feature space
 	 *
 	 * (not mix this up with the dimensionality of the input space, usually
@@ -203,7 +223,7 @@ public:
 	 *
 	 * @return dimensionality
 	 */
-	virtual int32_t get_dim_feature_space() const;
+	virtual index_t get_dim_feature_space() const;
 
 	/**
 	 * Reduce element 'w' to max(w-gravity, 0)
@@ -335,7 +355,7 @@ public:
 	 *
 	 * @return 1 if current_example exists, else 0.
 	 */
-	virtual int32_t get_num_vectors() const;
+	virtual index_t get_num_vectors() const;
 
 private:
 	/**
@@ -382,7 +402,7 @@ protected:
 	float64_t current_label;
 
 	/// Number of features in current example.
-	int32_t current_length;
+	index_t current_length;
 
 	/// Environment for VW
 	CVwEnvironment* env;

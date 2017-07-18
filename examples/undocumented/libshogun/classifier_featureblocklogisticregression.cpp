@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
 	// create some data
 	SGMatrix<float64_t> matrix(4,4);
-	for (int32_t i=0; i<4*4; i++)
+	for (index_t i=0; i<4*4; i++)
 		matrix.matrix[i]=i;
 
 	CDenseFeatures<float64_t>* features= new CDenseFeatures<float64_t>(matrix);

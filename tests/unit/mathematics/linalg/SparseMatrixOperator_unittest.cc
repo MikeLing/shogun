@@ -225,11 +225,11 @@ TEST(SparseMatrixOperator, get_sparsity_structure)
 	SGMatrix<float64_t> m(size, size);
 
 	m.set_const(0.0);
-	for (int32_t i=0; i<size; ++i)
+	for (index_t i=0; i<size; ++i)
 		m(i,i)=2.0;
-	for (int32_t i=0; i<size; i+=4)
+	for (index_t i=0; i<size; i+=4)
 		m(i,size-1)=2.0;
-	for (int32_t i=0; i<size; i+=4)
+	for (index_t i=0; i<size; i+=4)
 		m(size-1,i)=2.0;
 
 	CSparseFeatures<float64_t> feat(m);
@@ -244,7 +244,7 @@ TEST(SparseMatrixOperator, get_sparsity_structure)
 		=EigenSparseUtil<float64_t>::toEigenSparse(sm);
 
 	// compute direct matrix power and then the sparsity structure
-	for (int32_t i=2; i<=max_pow; ++i)
+	for (index_t i=2; i<=max_pow; ++i)
 #if EIGEN_VERSION_AT_LEAST(3,2,91)
 		sp=(sp.cast<float64_t>()*sm2).cast<bool>();
 #else

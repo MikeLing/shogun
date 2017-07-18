@@ -166,7 +166,7 @@ class CWeightedCommWordStringKernel: public CCommWordStringKernel
 
 	protected:
 		/** degree */
-		int32_t degree;
+		index_t degree;
 
 		/** weights for each of the subkernels of degree 1...d */
 		float64_t* weights;

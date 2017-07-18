@@ -47,7 +47,7 @@ EFeatureClass CFactorGraphFeatures::get_feature_class() const
 }
 
 
-int32_t CFactorGraphFeatures::get_num_vectors() const
+index_t CFactorGraphFeatures::get_num_vectors() const
 {
 	if (m_samples == NULL)
 		return 0;

@@ -136,7 +136,7 @@ void CCSVFile::init_with_defaults()
 
 void CCSVFile::skip_lines(int32_t num_lines)
 {
-	for (int32_t i=0; i<num_lines; i++)
+	for (index_t i=0; i<num_lines; i++)
 		m_line_reader->skip_line();
 }
 
@@ -199,7 +199,7 @@ void CCSVFile::get_matrix(sg_type*& matrix, int32_t& num_feat, int32_t& num_vec)
 		line=m_line_reader->read_line(); \
 		m_parser->set_text(line); \
 		\
-		for (int32_t i=0; i<num_tokens; i++) \
+		for (index_t i=0; i<num_tokens; i++) \
 		{ \
 			if (!m_parser->has_next()) \
 				return; \
@@ -284,7 +284,7 @@ void CCSVFile::set_vector(const sg_type* vector, int32_t len) \
 	\
 	if (!is_data_transposed) \
 	{ \
-		for (int32_t i=0; i<len; i++) \
+		for (index_t i=0; i<len; i++) \
 			fprintf(file, "%" format "\n", vector[i]); \
 	} \
 	else \
@@ -319,7 +319,7 @@ void CCSVFile::set_matrix(const sg_type* matrix, int32_t num_feat, int32_t num_v
 	\
 	if (!is_data_transposed) \
 	{ \
-		for (int32_t i=0; i<num_vec; i++) \
+		for (index_t i=0; i<num_vec; i++) \
 		{ \
 			int32_t j; \
 			for (j=0; j<num_feat-1; j++) \
@@ -329,7 +329,7 @@ void CCSVFile::set_matrix(const sg_type* matrix, int32_t num_feat, int32_t num_v
 	} \
 	else \
 	{ \
-		for (int32_t i=0; i<num_feat; i++) \
+		for (index_t i=0; i<num_feat; i++) \
 		{ \
 			int32_t j; \
 			for (j=0; j<num_vec-1; j++) \
@@ -395,7 +395,7 @@ void CCSVFile::get_string_list(
 		line=m_line_reader->read_line();
 		strings[current_line_idx].slen=line.vlen;
 		strings[current_line_idx].string=SG_MALLOC(char, line.vlen);
-		for (int32_t i=0; i<line.vlen; i++)
+		for (index_t i=0; i<line.vlen; i++)
 			strings[current_line_idx].string[i]=line[i];
 
 		if (line.vlen>max_string_len)
@@ -431,9 +431,9 @@ GET_STRING_LIST(uint16_t)
 void CCSVFile::set_string_list(
 			const SGString<char>* strings, int32_t num_str)
 {
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
-		for (int32_t j=0; j<strings[i].slen; j++)
+		for (index_t j=0; j<strings[i].slen; j++)
 			fprintf(file, "%c", strings[i].string[j]);
 		fprintf(file, "\n");
 	}

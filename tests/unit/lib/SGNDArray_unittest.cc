@@ -17,7 +17,7 @@ TEST(SGNDArrayTest,constructor)
 	SGNDArray<float64_t> arr_0(data, d_0, 2);
 	EXPECT_EQ(arr_0.len_array, 4);
 	EXPECT_EQ(arr_0.num_dims, 2);
-	for (int i=0; i < 4; ++i)
+	for (index_t i=0; i < 4; ++i)
 		EXPECT_EQ(arr_0[i], i);
 
 	index_t *d_1 = SG_MALLOC(index_t, 3);
@@ -29,22 +29,22 @@ TEST(SGNDArrayTest,constructor)
 	EXPECT_EQ(arr_1.num_dims, 3);
 
 	arr_1.set_const(0);
-	for (int i=0; i < 8; ++i)
+	for (index_t i=0; i < 8; ++i)
 		EXPECT_EQ(0, arr_1[i]);
 
 	arr_1.set_const(3.3);
-	for (int i=0; i < 8; ++i)
+	for (index_t i=0; i < 8; ++i)
 		EXPECT_EQ(3.3, arr_1[i]);
 
 	/* test clone */
 	SGNDArray<float64_t> arr_1_clone = arr_1.clone();
-	for (int i=0; i < 8; ++i)
+	for (index_t i=0; i < 8; ++i)
 		EXPECT_EQ(arr_1_clone[i], arr_1[i]);
 
 	/* test copy constructor */
 	SGNDArray<float64_t> arr_2(arr_1_clone);
 	EXPECT_EQ(arr_2.len_array, 8);
-	for (int i=0; i < 8; ++i)
+	for (index_t i=0; i < 8; ++i)
 		EXPECT_EQ(arr_2[i], arr_1[i]);
 
 	SGVector<index_t> d_3(3);
@@ -70,10 +70,10 @@ TEST(SGNDArrayTest,setget)
 
 	SGVector<index_t> v2 = arr.get_dimensions();
 	EXPECT_EQ(v2.size(), arr.num_dims);
-	for (int i=0; i < 2; i++)
+	for (index_t i=0; i < 2; i++)
 		EXPECT_EQ(v2[i], v1[1]);
 
-	for (int i=0; i < 4; i++)
+	for (index_t i=0; i < 4; i++)
 		EXPECT_EQ(arr[i], i);
 
 	/* get value */
@@ -110,17 +110,17 @@ TEST(SGNDArrayTest, operators)
 
 	/* += */
 	arr_1 += arr_0;
-	for (int i=0; i < 8; i++)
+	for (index_t i=0; i < 8; i++)
 		EXPECT_EQ(arr_1[i], 3.0);
 
 	/* -= */
 	arr_1 -= arr_0;
-	for (int i=0; i < 8; i++)
+	for (index_t i=0; i < 8; i++)
 		EXPECT_EQ(arr_1[i], 2.0);
 
 	/* *= */
 	arr_1 *= 2.0;
-	for (int i=0; i < 8; i++)
+	for (index_t i=0; i < 8; i++)
 		EXPECT_EQ(arr_1[i], 4.0);
 }
 
@@ -209,7 +209,7 @@ TEST(SGNDArrayTest,expand)
 	dims_s[0] = 2;
 	dims_s[1] = 2;
 	SGNDArray<float64_t> arr_s(dims_s);
-	for (int i=0; i < 4; i++)
+	for (index_t i=0; i < 4; i++)
 		arr_s[i] = i;
 
 	SGVector<index_t> dims_l(3);

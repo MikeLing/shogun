@@ -199,7 +199,7 @@ slep_result_t slep_mc_plain_lr(
 
 		// regularize objective with tree norm
 		double L1q_norm = 0.0;
-		for (int m=0; m<n_classes; m++)
+		for (index_t m=0; m<n_classes; m++)
 			L1q_norm += w.col(m).norm();
 		objective += lambda*L1q_norm;
 

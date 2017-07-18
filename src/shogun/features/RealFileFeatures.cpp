@@ -78,7 +78,7 @@ CRealFileFeatures::CRealFileFeatures(const CRealFileFeatures & orig)
 }
 
 float64_t* CRealFileFeatures::compute_feature_vector(
-	int32_t num, int32_t &len, float64_t* target)
+	index_t num, index_t &len, float64_t* target)
 {
 	ASSERT(num<num_vectors)
 	len=num_features;
@@ -103,7 +103,7 @@ float64_t* CRealFileFeatures::load_feature_matrix()
 
 	SG_INFO("loading... be patient.\n")
 
-	for (int32_t i=0; i<(int32_t) num_vectors; i++)
+	for (index_t i=0; i<(int32_t) num_vectors; i++)
 	{
 		if (!(i % (num_vectors/10+1)))
 			SG_PRINT("%02d%%.", (int) (100.0*i/num_vectors))

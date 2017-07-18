@@ -12,18 +12,18 @@ void gen_rand_data(SGMatrix<float64_t> features, SGVector<float64_t> labels, flo
 {
     index_t num_samples=labels.vlen;
     index_t dimensions=features.num_rows;
-    for (int32_t i=0; i<num_samples; i++)
+    for (index_t i=0; i<num_samples; i++)
     {
         if (i<num_samples/2)
         {
             labels[i]=-1.0;
-            for(int32_t j=0; j<dimensions; j++)
+            for(index_t j=0; j<dimensions; j++)
                 features(j,i)=CMath::random(0.0,1.0)+distance;
         }
         else
         {
             labels[i]=1.0;
-            for(int32_t j=0; j<dimensions; j++)
+            for(index_t j=0; j<dimensions; j++)
                 features(j,i)=CMath::random(0.0,1.0)-distance;
         }
     }
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     out_labels->scores_to_probabilities();
 
     //display output labels and probabilities
-    for (int32_t i=0; i<num_samples; i++)
+    for (index_t i=0; i<num_samples; i++)
     {
         SG_SPRINT("out[%d]=%f (%f)\n", i, out_labels->get_label(i),
             out_labels->get_value(i));

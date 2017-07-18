@@ -84,7 +84,7 @@ CLabels* CGUILabels::infer_labels(float64_t* lab, int32_t len)
 
 	bool binary=true;
 	bool multiclass=true;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		if (lab[i]!=-1 && lab[i]!=+1)
 			binary=false;

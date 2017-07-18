@@ -65,7 +65,7 @@ bool CMultitaskLeastSquaresRegression::train_locked_implementation(SGVector<inde
 	return false;
 }
 
-float64_t CMultitaskLeastSquaresRegression::apply_one(int32_t i)
+float64_t CMultitaskLeastSquaresRegression::apply_one(index_t i)
 {
 	float64_t dot = features->dense_dot(i,m_tasks_w.get_column_vector(m_current_task),m_tasks_w.num_rows);
 	return dot + m_tasks_c[m_current_task];

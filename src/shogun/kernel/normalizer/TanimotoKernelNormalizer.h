@@ -122,7 +122,7 @@ class CTanimotoKernelNormalizer : public CKernelNormalizer
 			SG_FREE(v);
 			v=SG_MALLOC(float64_t, num);
 
-			for (int32_t i=0; i<num; i++)
+			for (index_t i=0; i<num; i++)
 			{
 				if (k->get_kernel_type() == K_COMMWORDSTRING)
 				{

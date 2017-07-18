@@ -90,7 +90,7 @@ SGMatrix<index_t> CLMNNImpl::find_target_nn(CDenseFeatures<float64_t>* x,
 	for (index_t i = 0; i < unique_labels.vlen; ++i)
 	{
 		int32_t slice_size = 0;
-		for (int32_t j = 0; j < y->get_num_labels(); ++j)
+		for (index_t j = 0; j < y->get_num_labels(); ++j)
 		{
 			if (y->get_label(j)==unique_labels[i])
 			{
@@ -100,7 +100,7 @@ SGMatrix<index_t> CLMNNImpl::find_target_nn(CDenseFeatures<float64_t>* x,
 		}
 
 		MatrixXd slice_mat(d, slice_size);
-		for (int32_t j = 0; j < slice_size; ++j)
+		for (index_t j = 0; j < slice_size; ++j)
 			slice_mat.col(j) = Map<const VectorXd>(x->get_feature_vector(idxsmap[j]).vector, d);
 
 		features_slice->set_feature_matrix(SGMatrix<float64_t>(slice_mat.data(), d, slice_size, false));
@@ -295,7 +295,7 @@ bool CLMNNImpl::check_termination(float64_t stepsize, const SGVector<float64_t> 
 
 	if (iter >= 10)
 	{
-		for (int32_t i = 0; i < 3; ++i)
+		for (index_t i = 0; i < 3; ++i)
 		{
 			if (CMath::abs(obj[iter-i]-obj[iter-i-1]) >= obj_threshold)
 				return false;
@@ -354,7 +354,7 @@ MatrixXd CLMNNImpl::compute_sqdists(MatrixXd& LX, const SGMatrix<index_t> target
 	// initialize distances
 	MatrixXd sqdists(k,n);
 	sqdists.setZero();
-	for (int32_t i = 0; i < k; ++i)
+	for (index_t i = 0; i < k; ++i)
 	{
 		//FIXME avoid copying the rows of target_nn and access them directly. Maybe
 		//find_target_nn should be changed to return the output transposed wrt how it is
@@ -405,7 +405,7 @@ ImpostorsSetType CLMNNImpl::find_impostors_exact(MatrixXd& LX, const MatrixXd& s
 		CEuclideanDistance* euclidean = CLMNNImpl::setup_distance(lx,iidxs,gtidxs);
 		euclidean->set_disable_sqrt(true);
 
-		for (int32_t j = 0; j < k; ++j)
+		for (index_t j = 0; j < k; ++j)
 		{
 			for (std::size_t ii = 0; ii < iidxs.size(); ++ii)
 			{

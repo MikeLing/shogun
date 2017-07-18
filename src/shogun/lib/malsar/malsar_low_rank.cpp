@@ -67,7 +67,7 @@ malsar_result_t malsar_low_rank(
 		{
 			SGVector<index_t> task_idx = options.tasks_indices[task];
 			int n_task_vecs = task_idx.vlen;
-			for (int i=0; i<n_task_vecs; i++)
+			for (index_t i=0; i<n_task_vecs; i++)
 			{
 				double aa = -y[task_idx[i]]*(features->dense_dot(task_idx[i], Ws.col(task).data(), n_feats)+Cs[task]);
 				double bb = CMath::max(aa,0.0);
@@ -96,7 +96,7 @@ malsar_result_t malsar_low_rank(
 			//internal::set_is_malloc_allowed(true);
 			Wzp.setZero();
 			JacobiSVD<MatrixXd> svd((Ws - gWs/gamma).transpose(),ComputeThinU | ComputeThinV);
-			for (int i=0; i<svd.singularValues().size(); i++)
+			for (index_t i=0; i<svd.singularValues().size(); i++)
 			{
 				if (svd.singularValues()[i] > rho/gamma)
 					Wzp += (svd.matrixU().col(i)*
@@ -113,7 +113,7 @@ malsar_result_t malsar_low_rank(
 			{
 				SGVector<index_t> task_idx = options.tasks_indices[task];
 				int n_task_vecs = task_idx.vlen;
-				for (int i=0; i<n_task_vecs; i++)
+				for (index_t i=0; i<n_task_vecs; i++)
 				{
 					double aa = -y[task_idx[i]]*(features->dense_dot(task_idx[i], Wzp.col(task).data(), n_feats)+Czp[task]);
 					double bb = CMath::max(aa,0.0);
@@ -201,13 +201,13 @@ malsar_result_t malsar_low_rank(
 	SG_SDEBUG("%d iteration passed, objective = %f\n",iter,obj)
 
 	SGMatrix<float64_t> tasks_w(n_feats, n_tasks);
-	for (int i=0; i<n_feats; i++)
+	for (index_t i=0; i<n_feats; i++)
 	{
 		for (task=0; task<n_tasks; task++)
 			tasks_w(i,task) = Wzp(i,task);
 	}
 	SGVector<float64_t> tasks_c(n_tasks);
-	for (int i=0; i<n_tasks; i++) tasks_c[i] = Czp[i];
+	for (index_t i=0; i<n_tasks; i++) tasks_c[i] = Czp[i];
 	return malsar_result_t(tasks_w, tasks_c);
 };
 };

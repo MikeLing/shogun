@@ -54,7 +54,7 @@ int main()
 
 	CMulticlassLabels *gnd = new CMulticlassLabels(pred->get_num_labels());
 	test_features->start_parser();
-	for (int32_t i=0; i < pred->get_num_labels(); ++i)
+	for (index_t i=0; i < pred->get_num_labels(); ++i)
 	{
 		test_features->get_next_example();
 		gnd->set_int_label(i, test_features->get_label());

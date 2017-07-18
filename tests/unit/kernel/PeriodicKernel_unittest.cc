@@ -9,7 +9,7 @@ TEST(PeriodicKernelTest,test_kernel_matrix)
 {
 	// Construct matrix with features
 	SGMatrix<float64_t> matrix(2,3);
-	for (int32_t i=0; i<6; i++) {
+	for (index_t i=0; i<6; i++) {
 		matrix.matrix[i]=i;
 	}
 
@@ -43,7 +43,7 @@ TEST(PeriodicKernelTest,test_derivative_width)
 {
 	// Construct matrix with features
 	SGMatrix<float64_t> matrix(2,3);
-	for (int32_t i=0; i<6; i++) {
+	for (index_t i=0; i<6; i++) {
 		matrix.matrix[i]=i;
 	}
 
@@ -81,7 +81,7 @@ TEST(PeriodicKernelTest,test_derivative_period)
 {
 	// Construct matrix with features
 	SGMatrix<float64_t> matrix(2,3);
-	for (int32_t i=0; i<6; i++) {
+	for (index_t i=0; i<6; i++) {
 		matrix.matrix[i]=i;
 	}
 

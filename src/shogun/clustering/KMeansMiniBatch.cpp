@@ -83,19 +83,19 @@ void CKMeansMiniBatch::minibatch_KMeans()
 	SGVector<float64_t> v=SGVector<float64_t>(k);
 	v.zero();
 
-	for (int32_t i=0; i<minib_iter; i++)
+	for (index_t i=0; i<minib_iter; i++)
 	{
 		SGVector<int32_t> M=mbchoose_rand(batch_size,XSize);
 		SGVector<int32_t> ncent=SGVector<int32_t>(batch_size);
-		for (int32_t j=0; j<batch_size; j++)
+		for (index_t j=0; j<batch_size; j++)
 		{
 			SGVector<float64_t> dists=SGVector<float64_t>(k);
-			for (int32_t p=0; p<k; p++)
+			for (index_t p=0; p<k; p++)
 				dists[p]=distance->distance(M[j],p);
 
 			int32_t imin=0;
 			float64_t min=dists[0];
-			for (int32_t p=1; p<k; p++)
+			for (index_t p=1; p<k; p++)
 			{
 				if (dists[p]<min)
 				{
@@ -105,14 +105,14 @@ void CKMeansMiniBatch::minibatch_KMeans()
 			}
 			ncent[j]=imin;
 		}
-		for (int32_t j=0; j<batch_size; j++)
+		for (index_t j=0; j<batch_size; j++)
 		{
 			int32_t near=ncent[j];
 			SGVector<float64_t> c_alive=rhs_mus->get_feature_vector(near);
 			SGVector<float64_t> x=lhs->get_feature_vector(M[j]);
 			v[near]+=1.0;
 			float64_t eta=1.0/v[near];
-			for (int32_t c=0; c<dims; c++)
+			for (index_t c=0; c<dims; c++)
 			{
 				c_alive[c]=(1.0-eta)*c_alive[c]+eta*x[c];
 			}

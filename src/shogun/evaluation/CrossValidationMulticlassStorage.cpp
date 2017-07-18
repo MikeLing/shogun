@@ -64,7 +64,7 @@ void CCrossValidationMulticlassStorage::post_init()
 	{
 		SG_DEBUG("Allocating %d ROC graphs\n", m_num_folds*m_num_runs*m_num_classes)
 		m_fold_ROC_graphs = SG_MALLOC(SGMatrix<float64_t>, m_num_folds*m_num_runs*m_num_classes);
-		for (int32_t i=0; i<m_num_folds*m_num_runs*m_num_classes; i++)
+		for (index_t i=0; i<m_num_folds*m_num_runs*m_num_classes; i++)
 			new (&m_fold_ROC_graphs[i]) SGMatrix<float64_t>();
 	}
 
@@ -72,7 +72,7 @@ void CCrossValidationMulticlassStorage::post_init()
 	{
 		SG_DEBUG("Allocating %d PRC graphs\n", m_num_folds*m_num_runs*m_num_classes)
 		m_fold_PRC_graphs = SG_MALLOC(SGMatrix<float64_t>, m_num_folds*m_num_runs*m_num_classes);
-		for (int32_t i=0; i<m_num_folds*m_num_runs*m_num_classes; i++)
+		for (index_t i=0; i<m_num_folds*m_num_runs*m_num_classes; i++)
 			new (&m_fold_PRC_graphs[i]) SGMatrix<float64_t>();
 	}
 
@@ -84,7 +84,7 @@ void CCrossValidationMulticlassStorage::post_init()
 	if (m_compute_conf_matrices)
 	{
 		m_conf_matrices = SG_MALLOC(SGMatrix<int32_t>, m_num_folds*m_num_runs);
-		for (int32_t i=0; i<m_num_folds*m_num_runs; i++)
+		for (index_t i=0; i<m_num_folds*m_num_runs; i++)
 			new (&m_conf_matrices[i]) SGMatrix<int32_t>();
 	}
 
@@ -102,7 +102,7 @@ void CCrossValidationMulticlassStorage::post_update_results()
 	CROCEvaluation eval_ROC;
 	CPRCEvaluation eval_PRC;
 	int32_t n_evals = m_binary_evaluations->get_num_elements();
-	for (int32_t c=0; c<m_num_classes; c++)
+	for (index_t c=0; c<m_num_classes; c++)
 	{
 		SG_DEBUG("Computing ROC for run %d fold %d class %d", m_current_run_index, m_current_fold_index, c)
 		CBinaryLabels* pred_labels_binary = m_pred_labels->get_binary_for_class(c);
@@ -120,7 +120,7 @@ void CCrossValidationMulticlassStorage::post_update_results()
 				eval_PRC.get_PRC();
 		}
 
-		for (int32_t i=0; i<n_evals; i++)
+		for (index_t i=0; i<n_evals; i++)
 		{
 			CBinaryClassEvaluation* evaluator = (CBinaryClassEvaluation*)m_binary_evaluations->get_element_safe(i);
 			m_evaluations_results[m_current_run_index*m_num_folds*m_num_classes*n_evals+m_current_fold_index*m_num_classes*n_evals+c*n_evals+i] =

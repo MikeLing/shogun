@@ -48,7 +48,7 @@ CParameterCombination* CRandomSearchModelSelection::select_model(bool print_stat
 
 	CDynamicObjectArray* combinations=new CDynamicObjectArray();
 
-	for (int32_t i=0; i<combinations_indices.vlen; i++)
+	for (index_t i=0; i<combinations_indices.vlen; i++)
 		combinations->append_element(all_combinations->get_element(i));
 
 	CCrossValidationResult* best_result=new CCrossValidationResult();

@@ -40,7 +40,7 @@ int32_t CPositionalPWM::get_num_model_parameters()
 	return m_pwm.num_rows*m_pwm.num_cols+2;
 }
 
-float64_t CPositionalPWM::get_log_model_parameter(int32_t num_param)
+float64_t CPositionalPWM::get_log_model_parameter(index_t num_param)
 {
 	ASSERT(num_param>0 && num_param<=m_pwm.num_rows*m_pwm.num_cols+2)
 
@@ -54,13 +54,13 @@ float64_t CPositionalPWM::get_log_model_parameter(int32_t num_param)
 		return CMath::log(m_mean);
 }
 
-float64_t CPositionalPWM::get_log_derivative(int32_t num_param, int32_t num_example)
+float64_t CPositionalPWM::get_log_derivative(index_t num_param, index_t num_example)
 {
 	SG_NOTIMPLEMENTED
 	return 0;
 }
 
-float64_t CPositionalPWM::get_log_likelihood_example(int32_t num_example)
+float64_t CPositionalPWM::get_log_likelihood_example(index_t num_example)
 {
 	ASSERT(features)
 	ASSERT(features->get_feature_class() == C_STRING)
@@ -69,7 +69,7 @@ float64_t CPositionalPWM::get_log_likelihood_example(int32_t num_example)
 	CStringFeatures<uint8_t>* strs=(CStringFeatures<uint8_t>*) features;
 
 	float64_t lik=0;
-	int32_t len=0;
+	index_t len=0;
 	bool do_free=false;
 
 	uint8_t* str = strs->get_feature_vector(num_example, len, do_free);
@@ -77,7 +77,7 @@ float64_t CPositionalPWM::get_log_likelihood_example(int32_t num_example)
 	if (!(m_w.num_cols==len))
 		return 0; //TODO
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		lik+=m_w[4*i+str[i]];
 
 	strs->free_feature_vector(str, num_example, do_free);
@@ -90,7 +90,7 @@ float64_t CPositionalPWM::get_log_likelihood_window(uint8_t* window, int32_t len
 	float64_t score = CMath::log(1/(m_sigma*CMath::sqrt(2*M_PI))) -
 			CMath::sq(pos-m_mean)/(2*CMath::sq(m_sigma));
 
-	for (int32_t i=0; i<m_pwm.num_cols; i++)
+	for (index_t i=0; i<m_pwm.num_cols; i++)
 		score+=m_pwm[m_pwm.num_rows*i+window[i]];
 
 	return score;
@@ -109,9 +109,9 @@ void CPositionalPWM::compute_w(int32_t num_pos)
 	SGVector<uint8_t>::fill_vector(window, m_pwm.num_cols, (uint8_t) 0);
 
 	const int32_t last_idx=m_pwm.num_cols-1;
-	for (int32_t i=0; i<m_w_rows; i++)
+	for (index_t i=0; i<m_w_rows; i++)
 	{
-		for (int32_t j=0; j<m_w_cols; j++)
+		for (index_t j=0; j<m_w_cols; j++)
 			m_w[j*m_w_rows+i]=get_log_likelihood_window(window, m_pwm.num_cols, j);
 
 		window[last_idx]++;
@@ -137,36 +137,36 @@ void CPositionalPWM::register_params()
 
 void CPositionalPWM::compute_scoring(int32_t max_degree)
 {
-	int32_t num_feat=m_w.num_cols;
-	int32_t num_sym=0;
-	int32_t order=m_pwm.num_rows;
-	int32_t num_words=m_pwm.num_cols;
+	index_t num_feat=m_w.num_cols;
+	index_t num_sym=0;
+	index_t order=m_pwm.num_rows;
+	index_t num_words=m_pwm.num_cols;
 
 	CAlphabet* alpha=new CAlphabet(DNA);
 	CStringFeatures<uint16_t>* str= new CStringFeatures<uint16_t>(alpha);
 	int32_t num_bits=alpha->get_num_bits();
 	str->compute_symbol_mask_table(num_bits);
 
-	for (int32_t i=0; i<order; i++)
-		num_sym+=CMath::pow((int32_t) num_words,i+1);
+	for (index_t i=0; i<order; i++)
+		num_sym+=CMath::pow(num_words,i+1);
 
 	m_poim = SGVector<float64_t>(num_feat*num_sym);
 	memset(m_poim.vector,0, size_t(num_feat)*size_t(num_sym));
 
 	uint32_t kmer_mask=0;
-	uint32_t words=CMath::pow((int32_t) num_words,(int32_t) order);
+	uint64_t words=CMath::pow(num_words, order);
 	int32_t offset=0;
 
-	for (int32_t o=0; o<max_degree; o++)
+	for (index_t o=0; o<max_degree; o++)
 	{
 		float64_t* contrib=&m_poim[offset];
-		offset+=CMath::pow((int32_t) num_words,(int32_t) o+1);
+		offset+=CMath::pow(num_words, o+1);
 
 		kmer_mask=(kmer_mask<<(num_bits)) | str->get_masked_symbols(0xffff, 1);
 
-		for (int32_t p=-o; p<order; p++)
+		for (index_t p=-o; p<order; p++)
 		{
-			int32_t o_sym=0, m_sym=0, il=0,ir=0, jl=0;
+			index_t o_sym=0, m_sym=0, il=0,ir=0, jl=0;
 			uint32_t imer_mask=kmer_mask;
 			uint32_t jmer_mask=kmer_mask;
 
@@ -192,7 +192,7 @@ void CPositionalPWM::compute_scoring(int32_t max_degree)
 			}
 
 			float64_t marginalizer=
-				1.0/CMath::pow((int32_t) num_words,(int32_t) m_sym);
+				1.0/CMath::pow(num_words, m_sym);
 
 			for (uint32_t i=0; i<words; i++)
 			{
@@ -215,12 +215,12 @@ void CPositionalPWM::compute_scoring(int32_t max_degree)
 	}
 }
 
-SGMatrix<float64_t> CPositionalPWM::get_scoring(int32_t d)
+SGMatrix<float64_t> CPositionalPWM::get_scoring(index_t d)
 {
-	int32_t offs=0;
-	for (int32_t i=0; i<d-1; i++)
-		offs+=CMath::pow((int32_t) m_w.num_rows,i+1);
-	int32_t rows=CMath::pow((int32_t) m_w.num_rows,d);
+	index_t offs=0;
+	for (index_t i=0; i<d-1; i++)
+		offs+=CMath::pow(m_w.num_rows,i+1);
+	int32_t rows=CMath::pow(m_w.num_rows,d);
 	int32_t cols=m_w.num_cols;
 	float64_t* scoring_matrix = SG_MALLOC(float64_t, rows*cols);
 	memcpy(scoring_matrix,m_poim.vector+offs,rows*cols*sizeof(float64_t));

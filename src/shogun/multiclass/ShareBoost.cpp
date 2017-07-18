@@ -68,13 +68,13 @@ bool CShareBoost::train_machine(CFeatures* data)
 	m_activeset.vlen = 0;
 
 	m_machines->reset_array();
-	for (int32_t i=0; i < m_multiclass_strategy->get_num_classes(); ++i)
+	for (index_t i=0; i < m_multiclass_strategy->get_num_classes(); ++i)
 		m_machines->push_back(new CLinearMachine());
 
 	CTime *timer = new CTime();
 
 	float64_t t_compute_pred = 0; // t of 1st round is 0, since no pred to compute
-	for (int32_t t=0; t < m_nonzero_feas; ++t)
+	for (index_t t=0; t < m_nonzero_feas; ++t)
 	{
 		timer->start();
 		compute_rho();
@@ -110,7 +110,7 @@ void CShareBoost::compute_pred()
 	CDenseFeatures<float64_t> *fea = dynamic_cast<CDenseFeatures<float64_t> *>(m_features);
 	CDenseSubsetFeatures<float64_t> *subset_fea = new CDenseSubsetFeatures<float64_t>(fea, m_activeset);
 	SG_REF(subset_fea);
-	for (int32_t i=0; i < m_multiclass_strategy->get_num_classes(); ++i)
+	for (index_t i=0; i < m_multiclass_strategy->get_num_classes(); ++i)
 	{
 		CLinearMachine *machine = dynamic_cast<CLinearMachine *>(m_machines->get_element(i));
 		CRegressionLabels *lab = machine->apply_regression(subset_fea);
@@ -126,7 +126,7 @@ void CShareBoost::compute_pred(const float64_t *W)
 {
 	int32_t w_len = m_activeset.vlen;
 
-	for (int32_t i=0; i < m_multiclass_strategy->get_num_classes(); ++i)
+	for (index_t i=0; i < m_multiclass_strategy->get_num_classes(); ++i)
 	{
 		CLinearMachine *machine = dynamic_cast<CLinearMachine *>(m_machines->get_element(i));
 		SGVector<float64_t> w(w_len);
@@ -140,9 +140,9 @@ void CShareBoost::compute_pred(const float64_t *W)
 void CShareBoost::compute_rho()
 {
 	CMulticlassLabels *lab = dynamic_cast<CMulticlassLabels *>(m_labels);
-	for (int32_t i=0; i < m_rho.num_rows; ++i)
+	for (index_t i=0; i < m_rho.num_rows; ++i)
 	{ // i loop classes
-		for (int32_t j=0; j < m_rho.num_cols; ++j)
+		for (index_t j=0; j < m_rho.num_cols; ++j)
 		{ // j loop samples
 			int32_t label = lab->get_int_label(j);
 
@@ -151,10 +151,10 @@ void CShareBoost::compute_rho()
 	}
 
 	// normalize
-	for (int32_t j=0; j < m_rho.num_cols; ++j)
+	for (index_t j=0; j < m_rho.num_cols; ++j)
 	{
 		m_rho_norm[j] = 0;
-		for (int32_t i=0; i < m_rho.num_rows; ++i)
+		for (index_t i=0; i < m_rho.num_rows; ++i)
 			m_rho_norm[j] += m_rho(i,j);
 	}
 }
@@ -162,7 +162,7 @@ void CShareBoost::compute_rho()
 int32_t CShareBoost::choose_feature()
 {
 	SGVector<float64_t> l1norm(m_fea.num_rows);
-	for (int32_t j=0; j < m_fea.num_rows; ++j)
+	for (index_t j=0; j < m_fea.num_rows; ++j)
 	{
 		if (std::find(&m_activeset[0], &m_activeset[m_activeset.vlen], j) !=
 				&m_activeset[m_activeset.vlen])
@@ -173,10 +173,10 @@ int32_t CShareBoost::choose_feature()
 		{
 			l1norm[j] = 0;
 			CMulticlassLabels *lab = dynamic_cast<CMulticlassLabels *>(m_labels);
-			for (int32_t k=0; k < m_multiclass_strategy->get_num_classes(); ++k)
+			for (index_t k=0; k < m_multiclass_strategy->get_num_classes(); ++k)
 			{
 				float64_t abssum = 0;
-				for (int32_t ii=0; ii < m_fea.num_cols; ++ii)
+				for (index_t ii=0; ii < m_fea.num_cols; ++ii)
 				{
 					abssum += m_fea(j, ii)*(m_rho(k, ii)/m_rho_norm[ii] -
 							(j == lab->get_int_label(ii)));

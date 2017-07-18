@@ -69,7 +69,7 @@ class HyperplaneHashBase {
 
       typename BatchVectorType::FullSequenceIterator iter =
           points.get_full_sequence();
-      for (int_fast64_t ii = 0; ii < nn; ++ii) {
+      for (index_t_fast64_t ii = 0; ii < nn; ++ii) {
         parent_.get_multiplied_vector_single_table(iter.get_point(), l,
                                                    &tmp_vector_);
         (*res)[ii] = compute_hash_single_table(tmp_vector_);
@@ -94,7 +94,7 @@ class HyperplaneHashBase {
 
   static HashType compute_hash_single_table(const TransformedVectorType& v) {
     HashType res = 0;
-    for (int_fast32_t jj = 0; jj < v.size(); ++jj) {
+    for (index_t_fast32_t jj = 0; jj < v.size(); ++jj) {
       res = res << 1;
       res = res | (v[jj] >= 0.0);
     }
@@ -116,9 +116,9 @@ class HyperplaneHashBase {
     if (res.size() != static_cast<size_t>(l_)) {
       res.resize(l_);
     }
-    for (int_fast32_t ii = 0; ii < l_; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
       res[ii] = 0;
-      for (int_fast32_t jj = 0; jj < k_; ++jj) {
+      for (index_t_fast32_t jj = 0; jj < k_; ++jj) {
         res[ii] = res[ii] << 1;
         res[ii] = res[ii] | ((*tmp_hash_vector)[ii * k_ + jj] >= 0.0);
       }
@@ -161,20 +161,20 @@ class HyperplaneHashBase {
 
     std::vector<CoordinateType> row_norms(k_ * l_, 0.0);
 
-    for (int ii = 0; ii < dim_; ++ii) {
-      for (int jj = 0; jj < k_ * l_; ++jj) {
+    for (index_t ii = 0; ii < dim_; ++ii) {
+      for (index_t jj = 0; jj < k_ * l_; ++jj) {
         hyperplanes_(jj, ii) = gauss(gen);
         row_norms[jj] += hyperplanes_(jj, ii) * hyperplanes_(jj, ii);
       }
     }
 
-    for (int plane = 0; plane < k_ * l_; ++plane) {
+    for (index_t plane = 0; plane < k_ * l_; ++plane) {
       row_norms[plane] = std::sqrt(row_norms[plane]);
     }
 
     // Normalize the hyperplanes
-    for (int plane = 0; plane < k_ * l_; ++plane) {
-      for (int ii = 0; ii < dim_; ++ii) {
+    for (index_t plane = 0; plane < k_ * l_; ++plane) {
+      for (index_t ii = 0; ii < dim_; ++ii) {
         hyperplanes_(plane, ii) /= row_norms[plane];
       }
     }
@@ -199,9 +199,9 @@ class HyperplaneHashBase {
           cur_probe_counter_(0),
           sorted_hyperplane_indices_(parent.l_),
           main_table_probe_(parent.l_) {
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
         sorted_hyperplane_indices_[ii].resize(k_);
-        for (int_fast32_t jj = 0; jj < k_; ++jj) {
+        for (index_t_fast32_t jj = 0; jj < k_; ++jj) {
           sorted_hyperplane_indices_[ii][jj] = jj;
         }
       }
@@ -213,9 +213,9 @@ class HyperplaneHashBase {
       num_probes_ = num_probes;
       cur_probe_counter_ = -1;
 
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
         main_table_probe_[ii] = 0;
-        for (int_fast32_t jj = 0; jj < k_; ++jj) {
+        for (index_t_fast32_t jj = 0; jj < k_; ++jj) {
           main_table_probe_[ii] = main_table_probe_[ii] << 1;
           main_table_probe_[ii] =
               main_table_probe_[ii] | (hash_vector[ii * k_ + jj] >= 0.0);
@@ -226,7 +226,7 @@ class HyperplaneHashBase {
         return;
       }
 
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
         HyperplaneComparator comp(hash_vector, ii * k_);
         std::sort(sorted_hyperplane_indices_[ii].begin(),
                   sorted_hyperplane_indices_[ii].end(), comp);
@@ -236,7 +236,7 @@ class HyperplaneHashBase {
         heap_.resize(2 * num_probes_);
       }
       heap_.reset();
-      for (int_fast32_t ii = 0; ii < l_; ++ii) {
+      for (index_t_fast32_t ii = 0; ii < l_; ++ii) {
         int_fast32_t best_index = sorted_hyperplane_indices_[ii][0];
         CoordinateType score = hash_vector[ii * k_ + best_index];
         score = score * score;

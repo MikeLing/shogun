@@ -28,7 +28,7 @@ SGVector<float64_t> create_test_labels(int32_t N)
 {
 	SGVector<float64_t> labs(N);
 
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 	{
 		// labs[i] = float64_t(i/3);
 		labs[i] = float64_t(i%5);
@@ -41,7 +41,7 @@ SGSparseMatrix<float64_t> create_test_features(int32_t N, int32_t feat_dim, int3
 {
 	SGSparseMatrix<float64_t> feats(feat_dim, N);
 
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 	{
 		feats.sparse_matrix[i] = SGSparseVector<float64_t>(num_feat);
 		int32_t f = 0;
@@ -122,7 +122,7 @@ TEST_P(DualLibQPBMSOSVMTestLoopSolvers,train_small_problem_and_predict)
 	//-------------------------------------------------------------------------
 	float64_t error=0.0;
 
-	for (int32_t i=0; i<num_feat; ++i)
+	for (index_t i=0; i<num_feat; ++i)
 	{
 		CRealNumber* rn = CRealNumber::obtain_from_generic( out->get_label(i) );
 		error+=(rn->value==labs.get_element(i)) ? 0.0 : 1.0;

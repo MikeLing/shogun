@@ -44,7 +44,7 @@ TEST(RangeFillVector, eigen3_backend_start0)
 	SGVector<float64_t> v(4);
 	linalg::range_fill<linalg::Backend::EIGEN3>(v,0.0);
 	EXPECT_EQ(v.vlen, 4);
-	for(int32_t i=0;i<4;i++)
+	for(index_t i=0;i<4;i++)
 		EXPECT_NEAR(v[i], i, 1e-9);
 }
 
@@ -54,7 +54,7 @@ TEST(RangeFillVector, eigen3_backend_no_start)
 	SGVector<float64_t> v(4);
 	linalg::range_fill<linalg::Backend::EIGEN3>(v);
 	EXPECT_EQ(v.vlen, 4);
-	for(int32_t i=0;i<4;i++)
+	for(index_t i=0;i<4;i++)
 		EXPECT_NEAR(v[i], i, 1e-9);
 }
 //test when start>0
@@ -63,7 +63,7 @@ TEST(RangeFillVector, eigen3_backend_start_greaterThan_0)
 	SGVector<float64_t> v(4);
 	linalg::range_fill<linalg::Backend::EIGEN3>(v,5.0);
 	EXPECT_EQ(v.vlen, 4);
-	for(int32_t i=0;i<4;i++)
+	for(index_t i=0;i<4;i++)
 		EXPECT_NEAR(v[i], i+5.0, 1e-9);
 }
 
@@ -73,7 +73,7 @@ TEST(RangeFillVector, eigen3_backend_start_lessThan_0)
 	SGVector<float64_t> v(4);
 	linalg::range_fill<linalg::Backend::EIGEN3>(v,-5.0);
 	EXPECT_EQ(v.vlen, 4);
-	for(int32_t i=0;i<4;i++)
+	for(index_t i=0;i<4;i++)
 		EXPECT_NEAR(v[i], i-5.0, 1e-9);
 }
 

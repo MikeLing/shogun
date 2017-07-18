@@ -107,7 +107,7 @@ bool CAutoencoder::train(CFeatures* data)
 		input_layer->gaussian_noise = m_noise_parameter;
 	}
 
-	for (int32_t i=0; i<m_num_layers-1; i++)
+	for (index_t i=0; i<m_num_layers-1; i++)
 	{
 		get_layer(i)->dropout_prop =
 			get_layer(i)->is_input() ? m_dropout_input : m_dropout_hidden;
@@ -115,7 +115,7 @@ bool CAutoencoder::train(CFeatures* data)
 	get_layer(m_num_layers-1)->dropout_prop = 0.0;
 
 	m_is_training = true;
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 		get_layer(i)->is_training = true;
 
 	bool result = false;
@@ -124,7 +124,7 @@ bool CAutoencoder::train(CFeatures* data)
 	else if (m_optimization_method==NNOM_LBFGS)
 		result = train_lbfgs(inputs, inputs);
 
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 		get_layer(i)->is_training = false;
 	m_is_training = false;
 

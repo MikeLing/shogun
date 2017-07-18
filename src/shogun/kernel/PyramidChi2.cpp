@@ -41,11 +41,11 @@ width_computation_type(width_computation_type2), width(width2),
 	weights=SG_MALLOC(float64_t, num_cells);
 	if(weights_foreach_cell2)
 	{
-		for (int32_t i=0; i<num_cells; ++i)
+		for (index_t i=0; i<num_cells; ++i)
 			weights[i]=weights_foreach_cell2[i];
 	}
 	else
-	{	for (int32_t i=0; i<num_cells; ++i)
+	{	for (index_t i=0; i<num_cells; ++i)
 			weights[i]=1;
 	}
 
@@ -94,11 +94,11 @@ width_computation_type(width_computation_type2), width(width2),
 	weights=SG_MALLOC(float64_t, num_cells);
 	if(weights_foreach_cell2)
 	{
-		for (int32_t i=0; i<num_cells; ++i)
+		for (index_t i=0; i<num_cells; ++i)
 			weights[i]=weights_foreach_cell2[i];
 	}
 	else
-	{	for (int32_t i=0; i<num_cells; ++i)
+	{	for (index_t i=0; i<num_cells; ++i)
 			weights[i]=1;
 	}
 
@@ -118,13 +118,13 @@ CPyramidChi2::~CPyramidChi2()
 
 
 
-float64_t CPyramidChi2::compute(int32_t idx_a, int32_t idx_b)
+float64_t CPyramidChi2::compute(index_t idx_a, index_t idx_b)
 {
 
 	if(num_cells<=0)
 		SG_ERROR("CPyramidChi2::compute(...) fatal error: parameter num_cells NOT positive")
 
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool afree, bfree;
 
 	float64_t* avec=((CDenseFeatures<float64_t>*) lhs)->get_feature_vector(idx_a,
@@ -157,12 +157,12 @@ float64_t CPyramidChi2::compute(int32_t idx_a, int32_t idx_b)
 
 			if (num_randfeats_forwidthcomputation >0)
 			{
-				for(int32_t i=0; i< numind;++i)
+				for(index_t i=0; i< numind;++i)
 					featindices[i]=CMath::random(0, ((CDenseFeatures<float64_t>*) lhs)->get_num_vectors()-1);
 			}
 			else
 			{
-				for(int32_t i=0; i< numind;++i)
+				for(index_t i=0; i< numind;++i)
 					featindices[i]=i;
 			}
 
@@ -170,22 +170,22 @@ float64_t CPyramidChi2::compute(int32_t idx_a, int32_t idx_b)
 			width=0;
 
 			//get avec, get bvec	only from lhs, do not free
-			for (int32_t li=0; li < numind;++li)
+			for (index_t li=0; li < numind;++li)
 			{
 				avec=((CDenseFeatures<float64_t>*) lhs)->get_feature_vector(featindices[li],
 					alen, afree);
-				for (int32_t ri=0; ri <=li;++ri)
+				for (index_t ri=0; ri <=li;++ri)
 				{
 					// lhs is right here!!!
 					bvec=((CDenseFeatures<float64_t>*) lhs)->get_feature_vector(featindices[ri],
 							blen, bfree);
 
 					float64_t result=0;
-					for (int32_t histoind=0; histoind<num_cells; ++histoind)
+					for (index_t histoind=0; histoind<num_cells; ++histoind)
 					{
 						float64_t curweight=weights[histoind];
 
-						for (int32_t i=0; i< dims; ++i)
+						for (index_t i=0; i< dims; ++i)
 						{
 							int32_t index= histoind*dims+i;
 							if(avec[index] + bvec[index]>0)
@@ -215,13 +215,13 @@ float64_t CPyramidChi2::compute(int32_t idx_a, int32_t idx_b)
 					blen, bfree);
 
 	float64_t result=0;
-	for (int32_t histoind=0; histoind<num_cells; ++histoind)
+	for (index_t histoind=0; histoind<num_cells; ++histoind)
 	{
 		float64_t curweight=weights[histoind];
 
-		for (int32_t i=0; i< dims; ++i)
+		for (index_t i=0; i< dims; ++i)
 		{
-			int32_t index= histoind*dims+i;
+			index_t index= histoind*dims+i;
 			if(avec[index] + bvec[index]>0)
 			{
 				result+= curweight*(avec[index] - bvec[index])*(avec[index]
@@ -255,11 +255,11 @@ void CPyramidChi2::setparams_pychi2(int32_t num_cells2,
 	weights=SG_MALLOC(float64_t, num_cells);
 	if(weights_foreach_cell2)
 	{
-		for (int32_t i=0; i<num_cells; ++i)
+		for (index_t i=0; i<num_cells; ++i)
 			weights[i]=weights_foreach_cell2[i];
 	}
 	else
-	{	for (int32_t i=0; i<num_cells; ++i)
+	{	for (index_t i=0; i<num_cells; ++i)
 			weights[i]=1;
 	}
 

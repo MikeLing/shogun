@@ -119,7 +119,7 @@ void CVwRegressor::dump_regressor(char* reg_name, bool as_text)
 		int32_t len = env->pairs.get_num_elements();
 		io_temp.write_file((char *)&len, sizeof(len));
 
-		for (int32_t k = 0; k < env->pairs.get_num_elements(); k++)
+		for (index_t k = 0; k < env->pairs.get_num_elements(); k++)
 			io_temp.write_file(env->pairs.get_element(k), 2);
 
 		// ngram and skips information

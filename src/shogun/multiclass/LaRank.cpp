@@ -445,7 +445,7 @@ void LaRankOutput::update (int32_t x_id, float64_t lambda, float64_t gp)
 {
 	int32_t *r2i = larank_kcache_r2i (kernel, l);
 	int64_t xr = l + 1;
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 		if (r2i[r] == x_id)
 		{
 			xr = r;
@@ -469,7 +469,7 @@ void LaRankOutput::update (int32_t x_id, float64_t lambda, float64_t gp)
 
 	// update stored gradients
 	float32_t *row = larank_kcache_query_row (kernel, x_id, l);
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 	{
 		float64_t oldg = g[r];
 		g[r]=oldg - lambda * row[r];
@@ -488,7 +488,7 @@ int32_t LaRankOutput::cleanup ()
 {
 	int32_t count = 0;
 	std::vector < int32_t >idx;
-	for (int32_t x = 0; x < l; x++)
+	for (index_t x = 0; x < l; x++)
 	{
 		if ((beta[x] < FLT_EPSILON) && (beta[x] > -FLT_EPSILON))
 		{
@@ -497,10 +497,10 @@ int32_t LaRankOutput::cleanup ()
 		}
 	}
 	int32_t new_l = l - count;
-	for (int32_t xx = 0; xx < count; xx++)
+	for (index_t xx = 0; xx < count; xx++)
 	{
 		int32_t i = idx[xx] - xx;
-		for (int32_t r = i; r < (l - 1); r++)
+		for (index_t r = i; r < (l - 1); r++)
 		{
 			larank_kcache_swap_rr (kernel, r, int64_t(r) + 1);
 			beta[r]=beta[r + 1];
@@ -521,7 +521,7 @@ float64_t LaRankOutput::getW2 ()
 {
 	float64_t sum = 0;
 	int32_t *r2i = larank_kcache_r2i (kernel, l + 1);
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 	{
 		float32_t *row_r = larank_kcache_query_row (kernel, r2i[r], l);
 		sum += beta[r] * CMath::dot (beta, row_r, l);
@@ -539,7 +539,7 @@ float64_t LaRankOutput::getBeta (int32_t x_id)
 {
 	int32_t *r2i = larank_kcache_r2i (kernel, l);
 	int32_t xr = -1;
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 		if (r2i[r] == x_id)
 		{
 			xr = r;
@@ -553,7 +553,7 @@ float64_t LaRankOutput::getGradient (int32_t x_id)
 {
 	int32_t *r2i = larank_kcache_r2i (kernel, l);
 	int32_t xr = -1;
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 		if (r2i[r] == x_id)
 		{
 			xr = r;
@@ -565,7 +565,7 @@ bool LaRankOutput::isSupportVector (int32_t x_id) const
 {
 	int32_t *r2i = larank_kcache_r2i (kernel, l);
 	int32_t xr = -1;
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 		if (r2i[r] == x_id)
 		{
 			xr = r;
@@ -579,7 +579,7 @@ int32_t LaRankOutput::getSV (float32_t* &sv) const
 {
 	sv=SG_MALLOC(float32_t, l);
 	int32_t *r2i = larank_kcache_r2i (kernel, l);
-	for (int32_t r = 0; r < l; r++)
+	for (index_t r = 0; r < l; r++)
 		sv[r]=r2i[r];
 	return l;
 }
@@ -640,7 +640,7 @@ bool CLaRank::train_machine(CFeatures* data)
 	{
 		float64_t tr_err = 0;
 		int32_t ind = step;
-		for (int32_t i = 0; i < nb_train; i++)
+		for (index_t i = 0; i < nb_train; i++)
 		{
 			int32_t y=((CMulticlassLabels*) m_labels)->get_label(i);
 			if (add (i, y) != y)   // call the add function
@@ -691,7 +691,7 @@ bool CLaRank::train_machine(CFeatures* data)
 
 		CSVM* svm=new CSVM(l);
 
-		for (int32_t j=0; j<l; j++)
+		for (index_t j=0; j<l; j++)
 		{
 			svm->set_alpha(j, beta[j]);
 			svm->set_support_vector(j, r2i[j]);
@@ -1024,7 +1024,7 @@ float64_t CLaRank::reprocess ()
 {
 	if (patterns.size ())
 	{
-		for (int32_t n = 0; n < 10; ++n)
+		for (index_t n = 0; n < 10; ++n)
 		{
 			process_return_t pro_ret = process (patterns.sample (), processOld);
 			if (pro_ret.dual_increase)
@@ -1040,7 +1040,7 @@ float64_t CLaRank::optimize ()
 	float64_t dual_increase = 0;
 	if (patterns.size ())
 	{
-		for (int32_t n = 0; n < 10; ++n)
+		for (index_t n = 0; n < 10; ++n)
 		{
 			process_return_t pro_ret =
 				process (patterns.sample(), processOptimize);

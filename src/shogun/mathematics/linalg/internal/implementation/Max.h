@@ -146,7 +146,7 @@ struct max<Backend::VIENNACL,Matrix>
 					int local_id = get_local_id(0);
 
 					DATATYPE thread_max = -INFINITY;
-					for (int i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
+					for (index_t i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
 					{
 						DATATYPE v = vec[i+offset];
 						thread_max = max(v, thread_max);
@@ -154,7 +154,7 @@ struct max<Backend::VIENNACL,Matrix>
 
 					buffer[local_id] = thread_max;
 
-					for (int j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
+					for (index_t j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
 					{
 						barrier(CLK_LOCAL_MEM_FENCE);
 						if (local_id < j)

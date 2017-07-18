@@ -184,7 +184,7 @@ class CCustomKernel: public CKernel
 			kmatrix=SGMatrix<float32_t>(SG_MALLOC(float32_t, len), cols, cols);
 			upper_diagonal=true;
 
-			for (int64_t i=0; i<len; i++)
+			for (index_t i=0; i<len; i++)
 				kmatrix.matrix[i]=tri_kernel_matrix.vector[i];
 
 			m_is_symmetric=true;
@@ -234,9 +234,9 @@ class CCustomKernel: public CKernel
 			kmatrix=SGMatrix<float32_t>(SG_MALLOC(float32_t, cols*(cols+1)/2), rows, cols);
 			upper_diagonal = true;
 
-			for (int64_t row=0; row<rows; row++)
+			for (index_t row=0; row<rows; row++)
 			{
-				for (int64_t col=row; col<cols; col++)
+				for (index_t col=row; col<cols; col++)
 				{
 					int64_t idx=row * cols - row*(row+1)/2 + col;
 					kmatrix.matrix[idx] = full_kernel_matrix.matrix[col*rows+row];
@@ -308,7 +308,7 @@ class CCustomKernel: public CKernel
 			kmatrix=SGMatrix<float32_t>(rows,cols);
 			upper_diagonal = false;
 
-			for (int64_t i=0; i<int64_t(rows) * cols; i++)
+			for (index_t i=0; i<int64_t(rows) * cols; i++)
 				kmatrix.matrix[i]=full_kernel_matrix.matrix[i];
 
 			if (check_symmetry)
@@ -575,7 +575,7 @@ class CCustomKernel: public CKernel
 		 * @param col col
 		 * @return computed kernel function
 		 */
-		virtual float64_t compute(int32_t row, int32_t col)
+		virtual float64_t  compute(index_t row, index_t col)
 		{
 			REQUIRE(kmatrix.matrix, "%s::compute(%d, %d): No kenrel matrix "
 					"set!\n", get_name(), row, col);

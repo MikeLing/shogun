@@ -108,7 +108,7 @@ bool CDomainAdaptationSVM::train_machine(CFeatures* data)
 	CBinaryLabels* parent_svm_out = presvm->apply_binary(train_data);
 
 	// pre-compute linear term
-	for (int32_t i=0; i<num_training_points; i++)
+	for (index_t i=0; i<num_training_points; i++)
 	{
 		lin_term[i] = train_factor * B * labels->get_label(i) * parent_svm_out->get_label(i) - 1.0;
 	}
@@ -166,7 +166,7 @@ CBinaryLabels* CDomainAdaptationSVM::apply_binary(CFeatures* data)
 
 	// combine outputs
 	SGVector<float64_t> out_combined(num_examples);
-	for (int32_t i=0; i<num_examples; i++)
+	for (index_t i=0; i<num_examples; i++)
 	{
 		out_combined[i] = out_current->get_value(i) + B*out_presvm->get_value(i);
 	}

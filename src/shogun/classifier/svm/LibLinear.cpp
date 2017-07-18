@@ -144,7 +144,7 @@ bool CLibLinear::train_machine(CFeatures* data)
 	double Cp=C1;
 	double Cn=C2;
 
-	for (int32_t i=0; i<prob.l; i++)
+	for (index_t i=0; i<prob.l; i++)
 	{
 		prob.y[i]=((CBinaryLabels*) m_labels)->get_int_label(i);
 		if (prob.y[i] == +1)
@@ -473,13 +473,13 @@ void CLibLinear::solve_l1r_l2_svc(
 	double appxcond, cond;
 
 	int *index = SG_MALLOC(int, w_size);
-	int32_t *y = SG_MALLOC(int32_t, l);
+	index_t *y = SG_MALLOC(index_t, l);
 	double *b = SG_MALLOC(double, l); // b = 1-ywTx
 	double *xj_sq = SG_MALLOC(double, w_size);
 
 	CDotFeatures* x = (CDotFeatures*) prob_col->x;
 	void* iterator;
-	int32_t ind;
+	index_t ind;
 	float64_t val;
 
 	double C[3] = {Cn,0,Cp};
@@ -821,7 +821,7 @@ void CLibLinear::solve_l1r_lr(
 	double cond;
 
 	int *index = SG_MALLOC(int, w_size);
-	int32_t *y = SG_MALLOC(int32_t, l);
+	index_t *y = SG_MALLOC(index_t, l);
 	double *exp_wTx = SG_MALLOC(double, l);
 	double *exp_wTx_new = SG_MALLOC(double, l);
 	double *xj_max = SG_MALLOC(double, w_size);
@@ -831,7 +831,7 @@ void CLibLinear::solve_l1r_lr(
 
 	CDotFeatures* x = prob_col->x;
 	void* iterator;
-	int ind;
+	index_t ind;
 	double val;
 
 	double C[3] = {Cn,0,Cp};

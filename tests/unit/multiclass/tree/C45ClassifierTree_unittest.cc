@@ -417,34 +417,34 @@ TEST(C45ClassifierTree, tree_prune_categorical_attributes)
 	SGMatrix<float64_t> data(4,16);
 	float64_t num=0.0;
 
-	for (int32_t i=0;i<2;i++)
+	for (index_t i=0;i<2;i++)
 	{
-		for (int32_t a=0;a<8;a++)
+		for (index_t a=0;a<8;a++)
 			data(0,i*8+a)=num;
 
 		num++;
 	}
 
 	num=0.0;
-	for (int32_t i=0;i<4;i++)
+	for (index_t i=0;i<4;i++)
 	{
-		for (int32_t a=0;a<4;a++)
+		for (index_t a=0;a<4;a++)
 			data(1,i*4+a)=num;
 
 		num=(num==1.0)?0.0:1.0;
 	}
 
 	num=0.0;
-	for (int32_t i=0;i<8;i++)
+	for (index_t i=0;i<8;i++)
 	{
-		for (int32_t a=0;a<2;a++)
+		for (index_t a=0;a<2;a++)
 			data(2,i*2+a)=num;
 
 		num=(num==1.0)?0.0:1.0;
 	}
 
 	num=0.0;
-	for (int32_t i=0;i<16;i++)
+	for (index_t i=0;i<16;i++)
 	{
 		data(3,i)=num;
 		num=(num==1.0)?0.0:1.0;

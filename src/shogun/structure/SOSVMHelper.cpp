@@ -61,7 +61,7 @@ float64_t CSOSVMHelper::primal_objective(SGVector<float64_t> w, CStructuredModel
 	int32_t N = labels->get_num_labels();
 	SG_UNREF(labels);
 
-	for (int32_t i = 0; i < N; i++)
+	for (index_t i = 0; i < N; i++)
 	{
 		// solve the loss-augmented inference for point i
 		CResultSet* result = model->argmax(w, i);
@@ -92,7 +92,7 @@ float64_t CSOSVMHelper::average_loss(SGVector<float64_t> w, CStructuredModel* mo
 	int32_t N = labels->get_num_labels();
 	SG_UNREF(labels);
 
-	for (int32_t i = 0; i < N; i++)
+	for (index_t i = 0; i < N; i++)
 	{
 		// solve the standard inference for point i
 		CResultSet* result = model->argmax(w, i, is_ub);

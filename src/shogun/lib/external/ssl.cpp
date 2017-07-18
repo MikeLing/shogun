@@ -99,12 +99,12 @@ int32_t CGLS(
 	float64_t *z = SG_MALLOC(float64_t, active);
 	float64_t *q = SG_MALLOC(float64_t, active);
 	int32_t ii=0;
-	for (int32_t i = active ; i-- ;){
+	for (index_t i = active ; i-- ;){
 		ii=J[i];
 		z[i]  = C[ii]*(Y[ii] - o[ii]);
 	}
 	float64_t *r = SG_MALLOC(float64_t, n);
-	for (int32_t i = n ; i-- ;)
+	for (index_t i = n ; i-- ;)
 		r[i] = 0.0;
 	for (register int32_t j=0; j < active; j++)
 	{
@@ -113,7 +113,7 @@ int32_t CGLS(
 	}
 	float64_t *p = SG_MALLOC(float64_t, n);
 	float64_t omega1 = 0.0;
-	for (int32_t i = n ; i-- ;)
+	for (index_t i = n ; i-- ;)
 	{
 		r[i] -= lambda*beta[i];
 		p[i] = r[i];
@@ -223,11 +223,11 @@ int32_t L2_SVM_MFN(
 		Options->epsilon=BIG_EPSILON;
 	}
 	else {epsilon = Options->epsilon;}
-	for (int32_t i=0;i<n;i++) F+=w[i]*w[i];
+	for (index_t i=0;i<n;i++) F+=w[i]*w[i];
 	F=0.5*lambda*F;
 	int32_t active=0;
 	int32_t inactive=m-1; // l-1
-	for (int32_t i=0; i<m ; i++)
+	for (index_t i=0; i<m ; i++)
 	{
 		diff=1-Y[i]*o[i];
 		if(diff>0)
@@ -261,9 +261,9 @@ int32_t L2_SVM_MFN(
 	{
 		iter++;
 		SG_SDEBUG("L2_SVM_MFN Iteration# %d (%d active examples, objective_value = %f)\n", iter, active, F)
-		for (int32_t i=n; i-- ;)
+		for (index_t i=n; i-- ;)
 			w_bar[i]=w[i];
-		for (int32_t i=m; i-- ;)
+		for (index_t i=m; i-- ;)
 			o_bar[i]=o[i];
 
 		opt=CGLS(Data,Options,ActiveSubset,Weights_bar,Outputs_bar);
@@ -278,7 +278,7 @@ int32_t L2_SVM_MFN(
 		}
 		if(ini==0) {Options->cgitermax=CGITERMAX; ini=1;};
 		opt2=1;
-		for (int32_t i=0;i<m;i++)
+		for (index_t i=0;i<m;i++)
 		{
 			ii=ActiveSubset->vec[i];
 			if(i<active)
@@ -298,9 +298,9 @@ int32_t L2_SVM_MFN(
 			}
 			else
 			{
-				for (int32_t i=n; i-- ;)
+				for (index_t i=n; i-- ;)
 					w[i]=w_bar[i];
-				for (int32_t i=m; i-- ;)
+				for (index_t i=m; i-- ;)
 					o[i]=o_bar[i];
 				SG_FREE(ActiveSubset->vec);
 				SG_FREE(ActiveSubset);
@@ -316,14 +316,14 @@ int32_t L2_SVM_MFN(
 		SG_SDEBUG("LINE_SEARCH delta = %f\n", delta)
 		F_old=F;
 		F=0.0;
-		for (int32_t i=n; i-- ;) {
+		for (index_t i=n; i-- ;) {
 			w[i]+=delta*(w_bar[i]-w[i]);
 			F+=w[i]*w[i];
 		}
 		F=0.5*lambda*F;
 		active=0;
 		inactive=m-1;
-		for (int32_t i=0; i<m ; i++)
+		for (index_t i=0; i<m ; i++)
 		{
 			o[i]+=delta*(o_bar[i]-o[i]);
 			diff=1-Y[i]*o[i];
@@ -375,7 +375,7 @@ float64_t line_search(float64_t *w,
 	float64_t omegaL = 0.0;
 	float64_t omegaR = 0.0;
 	float64_t diff=0.0;
-	for(int32_t i=d; i--; )
+	for(index_t i=d; i--; )
 	{
 		diff=w_bar[i]-w[i];
 		omegaL+=w[i]*diff;
@@ -386,7 +386,7 @@ float64_t line_search(float64_t *w,
 	float64_t L=0.0;
 	float64_t R=0.0;
 	int32_t ii=0;
-	for (int32_t i=0;i<l;i++)
+	for (index_t i=0;i<l;i++)
 	{
 		if(Y[i]*o[i]<1)
 		{
@@ -399,7 +399,7 @@ float64_t line_search(float64_t *w,
 	R+=omegaR;
 	Delta* deltas=SG_MALLOC(Delta, l);
 	int32_t p=0;
-	for(int32_t i=0;i<l;i++)
+	for(index_t i=0;i<l;i++)
 	{
 		diff=Y[i]*(o_bar[i]-o[i]);
 
@@ -426,7 +426,7 @@ float64_t line_search(float64_t *w,
 	}
 	std::sort(deltas,deltas+p);
 	float64_t delta_prime=0.0;
-	for (int32_t i=0;i<p;i++)
+	for (index_t i=0;i<p;i++)
 	{
 		delta_prime = L + deltas[i].delta*(R-L);
 		if(delta_prime>=0)
@@ -459,7 +459,7 @@ int32_t TSVM_MFN(
 	int32_t *JU = SG_MALLOC(int32_t, Data->u);
 	float64_t *ou = SG_MALLOC(float64_t, Data->u);
 	float64_t lambda_0 = TSVM_LAMBDA_SMALL;
-	for (int32_t i=0;i<Data->m;i++)
+	for (index_t i=0;i<Data->m;i++)
 	{
 		if(Data->Y[i]==0.0)
 		{
@@ -482,16 +482,16 @@ int32_t TSVM_MFN(
 	std::nth_element(ou,ou+int32_t((1-Options->R)*Data->u-1),ou+Data->u);
 	float64_t thresh=*(ou+int32_t((1-Options->R)*Data->u)-1);
 	SG_FREE(ou);
-	for (int32_t i=0;i<Data->u;i++)
+	for (index_t i=0;i<Data->u;i++)
 	{
 		if(Outputs->vec[JU[i]]>thresh)
 			Data->Y[JU[i]]=1.0;
 		else
 			Data->Y[JU[i]]=-1.0;
 	}
-	for (int32_t i=0;i<Data->n;i++)
+	for (index_t i=0;i<Data->n;i++)
 		Weights->vec[i]=0.0;
-	for (int32_t i=0;i<Data->m;i++)
+	for (index_t i=0;i<Data->m;i++)
 		Outputs->vec[i]=0.0;
 	L2_SVM_MFN(Data,Options,Weights,Outputs,0);
 	int32_t num_switches=0;
@@ -513,7 +513,7 @@ int32_t TSVM_MFN(
 		if(last_round==1) break;
 		lambda_0=TSVM_ANNEALING_RATE*lambda_0;
 		if(lambda_0 >= Options->lambda_u) {lambda_0 = Options->lambda_u; last_round=1;}
-		for (int32_t i=0;i<Data->u;i++)
+		for (index_t i=0;i<Data->u;i++)
 			Data->C[JU[i]]=lambda_0*1.0/Data->u;
 		SG_SDEBUG("****** lambda0 increased to %f%% of lambda_u = %f ************************\n", lambda_0*100/Options->lambda_u, Options->lambda_u)
 		SG_SDEBUG("Optimizing weights\n")
@@ -521,7 +521,7 @@ int32_t TSVM_MFN(
 	}
 	SG_SDEBUG("Total Number of Switches = %d\n", num_switches)
 	/* reset labels */
-	for (int32_t i=0;i<Data->u;i++) Data->Y[JU[i]] = 0.0;
+	for (index_t i=0;i<Data->u;i++) Data->Y[JU[i]] = 0.0;
 	float64_t F = transductive_cost(norm_square(Weights),Data->Y,Outputs->vec,Outputs->d,Options->lambda,Options->lambda_u);
 	SG_SDEBUG("Objective Value = %f\n",F)
 	delete [] JU;
@@ -532,7 +532,7 @@ int32_t switch_labels(float64_t* Y, float64_t* o, int32_t* JU, int32_t u, int32_
 {
 	int32_t npos=0;
 	int32_t nneg=0;
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		if((Y[JU[i]]>0) && (o[JU[i]]<1.0)) npos++;
 		if((Y[JU[i]]<0) && (-o[JU[i]]<1.0)) nneg++;
@@ -542,7 +542,7 @@ int32_t switch_labels(float64_t* Y, float64_t* o, int32_t* JU, int32_t u, int32_
 	int32_t p=0;
 	int32_t n=0;
 	int32_t ii=0;
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		ii=JU[i];
 		if((Y[ii]>0.0) && (o[ii]<1.0)) {
@@ -590,12 +590,12 @@ int32_t DA_S3VM(
 	float64_t kl_divergence = 1.0;
 	/*initialize */
 	SG_SDEBUG("Initializing weights, p")
-	for (int32_t i=0;i<Data->u; i++)
+	for (index_t i=0;i<Data->u; i++)
 		p[i] = Options->R;
 	/* record which examples are unlabeled */
 	int32_t *JU = SG_MALLOC(int32_t, Data->u);
 	int32_t j=0;
-	for(int32_t i=0;i<Data->m;i++)
+	for(index_t i=0;i<Data->m;i++)
 	{
 		if(Data->Y[i]==0.0)
 		{JU[j]=i;j++;}
@@ -604,9 +604,9 @@ int32_t DA_S3VM(
 	optimize_w(Data,p,Options,Weights,Outputs,0);
 	F = transductive_cost(norm_square(Weights),Data->Y,Outputs->vec,Outputs->d,Options->lambda,Options->lambda_u);
 	F_min = F;
-	for (int32_t i=0;i<Weights->d;i++)
+	for (index_t i=0;i<Weights->d;i++)
 		w_min[i]=w[i];
-	for (int32_t i=0;i<Outputs->d;i++)
+	for (index_t i=0;i<Outputs->d;i++)
 		o_min[i]=o[i];
 	while((iter1 < DA_OUTER_ITERMAX) && (H > Options->epsilon))
 	{
@@ -616,7 +616,7 @@ int32_t DA_S3VM(
 		while((iter2 < DA_INNER_ITERMAX) && (kl_divergence > Options->epsilon))
 		{
 			iter2++;
-			for (int32_t i=0;i<Data->u;i++)
+			for (index_t i=0;i<Data->u;i++)
 			{
 				q[i]=p[i];
 				g[i] = Options->lambda_u*((o[JU[i]] > 1 ? 0 : (1 - o[JU[i]])*(1 - o[JU[i]])) - (o[JU[i]]< -1 ? 0 : (1 + o[JU[i]])*(1 + o[JU[i]])));
@@ -630,9 +630,9 @@ int32_t DA_S3VM(
 			if(F < F_min)
 			{
 				F_min = F;
-				for (int32_t i=0;i<Weights->d;i++)
+				for (index_t i=0;i<Weights->d;i++)
 					w_min[i]=w[i];
-				for (int32_t i=0;i<Outputs->d;i++)
+				for (index_t i=0;i<Outputs->d;i++)
 					o_min[i]=o[i];
 			}
 			SG_SDEBUG("***** outer_iter = %d  T = %g  inner_iter = %d  kl = %g  cost = %g *****\n",iter1,T,iter2,kl_divergence,F)
@@ -641,9 +641,9 @@ int32_t DA_S3VM(
 		SG_SDEBUG("***** Finished outer_iter = %d T = %g  Entropy = %g ***\n", iter1,T,H)
 		T = T/DA_ANNEALING_RATE;
 	}
-	for (int32_t i=0;i<Weights->d;i++)
+	for (index_t i=0;i<Weights->d;i++)
 		w[i]=w_min[i];
-	for (int32_t i=0;i<Outputs->d;i++)
+	for (index_t i=0;i<Outputs->d;i++)
 		o[i]=o_min[i];
 	/* may want to reset the original Y */
 	SG_FREE(p);
@@ -943,7 +943,7 @@ void optimize_p(
 	int32_t maxiter=500;
 	float64_t nu_minus=g[0];
 	float64_t nu_plus=g[0];
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		if(g[i]<nu_minus) nu_minus=g[i];
 		if(g[i]>nu_plus) nu_plus=g[i];
@@ -957,7 +957,7 @@ void optimize_p(
 	float64_t BnuPrime=0.0;
 	float64_t s=0.0;
 	float64_t tmp=0.0;
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		s=exp((g[i]-nu)/T);
 		if(!(CMath::is_infinity(s)))
@@ -982,7 +982,7 @@ void optimize_p(
 			nu=nuHat;
 		Bnu=0.0;
 		BnuPrime=0.0;
-		for(int32_t i=0;i<u;i++)
+		for(index_t i=0;i<u;i++)
 		{
 			s=exp((g[i]-nu)/T);
 			if(!(CMath::is_infinity(s)))
@@ -1005,7 +1005,7 @@ void optimize_p(
 	if(CMath::abs(Bnu)>epsilon)
 		SG_SWARNING("Warning (Root): root not found to required precision\n")
 
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		s=exp((g[i]-nu)/T);
 		if(CMath::is_infinity(s)) p[i]=0.0;
@@ -1020,7 +1020,7 @@ float64_t transductive_cost(
 {
 	float64_t F1=0.0,F2=0.0, o=0.0, y=0.0;
 	int32_t u=0,l=0;
-	for (int32_t i=0;i<m;i++)
+	for (index_t i=0;i<m;i++)
 	{
 		o=Outputs[i];
 		y=Y[i];
@@ -1038,7 +1038,7 @@ float64_t entropy(const float64_t *p, int32_t u)
 {
 	float64_t h=0.0;
 	float64_t q=0.0;
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		q=p[i];
 		if(q>0 && q<1)
@@ -1053,7 +1053,7 @@ float64_t KL(const float64_t *p, const float64_t *q, int32_t u)
 	float64_t p1=0.0;
 	float64_t q1=0.0;
 	float64_t g=0.0;
-	for (int32_t i=0;i<u;i++)
+	for (index_t i=0;i<u;i++)
 	{
 		p1=p[i];
 		q1=q[i];
@@ -1072,7 +1072,7 @@ float64_t KL(const float64_t *p, const float64_t *q, int32_t u)
 float64_t norm_square(const vector_double *A)
 {
 	float64_t x=0.0, t=0.0;
-	for(int32_t i=0;i<A->d;i++)
+	for(index_t i=0;i<A->d;i++)
 	{
 		t=A->vec[i];
 		x+=t*t;
@@ -1083,7 +1083,7 @@ float64_t norm_square(const vector_double *A)
 void initialize_ssl(struct vector_double *A, int32_t k, float64_t a)
 {
 	float64_t *vec = SG_MALLOC(float64_t, k);
-	for (int32_t i=0;i<k;i++)
+	for (index_t i=0;i<k;i++)
 		vec[i]=a;
 	A->vec = vec;
 	A->d   = k;
@@ -1093,7 +1093,7 @@ void initialize_ssl(struct vector_double *A, int32_t k, float64_t a)
 void initialize_ssl(struct vector_int *A, int32_t k)
 {
 	int32_t *vec = SG_MALLOC(int32_t, k);
-	for(int32_t i=0;i<k;i++)
+	for(index_t i=0;i<k;i++)
 		vec[i]=i;
 	A->vec = vec;
 	A->d   = k;
@@ -1109,7 +1109,7 @@ void GetLabeledData(struct data *D, const struct data *Data)
 	int32_t nz=0;
 	int32_t k=0;
 	int32_t rowptrs_=Data->l;
-	for(int32_t i=0;i<Data->m;i++)
+	for(index_t i=0;i<Data->m;i++)
 	{
 		if(Data->Y[i]!=0.0)
 		{
@@ -1124,10 +1124,10 @@ void GetLabeledData(struct data *D, const struct data *Data)
 	D->colind = SG_MALLOC(int32_t, nz);
 	D->rowptr = new int32_trowptrs_+1];
 	nz=0;
-	for(int32_t i=0;i<Data->l;i++)
+	for(index_t i=0;i<Data->l;i++)
 	{
 		D->rowptr[i]=nz;
-		for(int32_t j=Data->rowptr[J[i]];j<Data->rowptr[J[i]+1];j++)
+		for(index_t j=Data->rowptr[J[i]];j<Data->rowptr[J[i]+1];j++)
 		{
 			D->val[nz] = Data->val[j];
 			D->colind[nz] = Data->colind[j];

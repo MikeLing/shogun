@@ -101,13 +101,13 @@ bool CKNN::train_machine(CFeatures* data)
 	int32_t max_class=m_train_labels[0];
 	int32_t min_class=m_train_labels[0];
 
-	for (int32_t i=1; i<m_train_labels.vlen; i++)
+	for (index_t i=1; i<m_train_labels.vlen; i++)
 	{
 		max_class=CMath::max(max_class, m_train_labels[i]);
 		min_class=CMath::min(min_class, m_train_labels[i]);
 	}
 
-	for (int32_t i=0; i<m_train_labels.vlen; i++)
+	for (index_t i=0; i<m_train_labels.vlen; i++)
 		m_train_labels[i]-=min_class;
 
 	m_min_label=min_class;
@@ -133,7 +133,7 @@ SGMatrix<index_t> CKNN::nearest_neighbors()
 	distance->precompute_lhs();
 
 	//for each test example
-	for (int32_t i=0; i<n && (!CSignal::cancel_computations()); i++)
+	for (index_t i=0; i<n && (!CSignal::cancel_computations()); i++)
 	{
 		SG_PROGRESS(i, 0, n)
 
@@ -141,7 +141,7 @@ SGMatrix<index_t> CKNN::nearest_neighbors()
 		distances_lhs(dists,0,m_train_labels.vlen-1,i);
 
 		//fill in an array with 0..num train examples-1
-		for (int32_t j=0; j<m_train_labels.vlen; j++)
+		for (index_t j=0; j<m_train_labels.vlen; j++)
 			train_idxs[j]=j;
 
 		//sort the distance vector between test example i and all train examples
@@ -149,13 +149,13 @@ SGMatrix<index_t> CKNN::nearest_neighbors()
 
 #ifdef DEBUG_KNN
 		SG_PRINT("\nQuick sort query %d\n", i)
-		for (int32_t j=0; j<m_k; j++)
+		for (index_t j=0; j<m_k; j++)
 			SG_PRINT("%d ", train_idxs[j])
 		SG_PRINT("\n")
 #endif
 
 		//fill in the output the indices of the nearest neighbors
-		for (int32_t j=0; j<m_k; j++)
+		for (index_t j=0; j<m_k; j++)
 			NN(j,i) = train_idxs[j];
 	}
 
@@ -202,10 +202,10 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 		SGMatrix<index_t> NN = nearest_neighbors();
 
 		//from the indices to the nearest neighbors, compute the class labels
-		for (int32_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
+		for (index_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
 		{
 			//write the labels of the k nearest neighbors from theirs indices
-			for (int32_t j=0; j<m_k; j++)
+			for (index_t j=0; j<m_k; j++)
 				train_lab[j] = m_train_labels[ NN(j,i) ];
 
 			//get the index of the 'nearest' class
@@ -283,10 +283,10 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 		CFeatures* query = distance->get_rhs();
 		kd_tree->query_knn(dynamic_cast<CDenseFeatures<float64_t>*>(query), m_k);
 		SGMatrix<index_t> NN = kd_tree->get_knn_indices();
-		for (int32_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
+		for (index_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
 		{
 			//write the labels of the k nearest neighbors from theirs indices
-			for (int32_t j=0; j<m_k; j++)
+			for (index_t j=0; j<m_k; j++)
 				train_lab[j] = m_train_labels[ NN(j,i) ];
 
 			//get the index of the 'nearest' class
@@ -302,7 +302,7 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 	{
 		CDenseFeatures<float64_t>* features = dynamic_cast<CDenseFeatures<float64_t>*>(distance->get_lhs());
 		std::vector<falconn::DenseVector<double>> feats;
-		for(int32_t i=0; i < features->get_num_vectors(); i++)
+		for(index_t i=0; i < features->get_num_vectors(); i++)
 		{
 			int32_t len;
 			bool free;
@@ -328,7 +328,7 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 		std::vector<falconn::DenseVector<double>> query_feats;
 
 		SGMatrix<index_t> NN (m_k, query_features->get_num_vectors());
-		for(int32_t i=0; i < query_features->get_num_vectors(); i++)
+		for(index_t i=0; i < query_features->get_num_vectors(); i++)
 		{
 			int32_t len;
 			bool free;
@@ -340,10 +340,10 @@ CMulticlassLabels* CKNN::apply_multiclass(CFeatures* data)
 			delete indices;
 		}
 		
-		for (int32_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
+		for (index_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
 		{
 			//write the labels of the k nearest neighbors from theirs indices
-			for (int32_t j=0; j<m_k; j++)
+			for (index_t j=0; j<m_k; j++)
 				train_lab[j] = m_train_labels[ NN(j,i) ];
 
 			//get the index of the 'nearest' class
@@ -380,7 +380,7 @@ CMulticlassLabels* CKNN::classify_NN()
 	distance->precompute_lhs();
 
 	// for each test example
-	for (int32_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
+	for (index_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
 	{
 		SG_PROGRESS(i,0,num_lab)
 
@@ -496,10 +496,10 @@ SGMatrix<int32_t> CKNN::classify_for_multiple_k()
 		CFeatures* data = distance->get_rhs();
 		kd_tree->query_knn(dynamic_cast<CDenseFeatures<float64_t>*>(data), m_k);
 		SGMatrix<index_t> NN = kd_tree->get_knn_indices();
-		for (int32_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
+		for (index_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
 		{
 			//write the labels of the k nearest neighbors from theirs indices
-			for (int32_t j=0; j<m_k; j++)
+			for (index_t j=0; j<m_k; j++)
 			{
 				train_lab[j] = m_train_labels[ NN(j,i) ];
 				dists[j] = distance->distance(i, NN(j,i));
@@ -515,10 +515,10 @@ SGMatrix<int32_t> CKNN::classify_for_multiple_k()
 		//get the k nearest neighbors of each example
 		SGMatrix<index_t> NN = nearest_neighbors();
 
-		for (int32_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
+		for (index_t i=0; i<num_lab && (!CSignal::cancel_computations()); i++)
 		{
 			//write the labels of the k nearest neighbors from theirs indices
-			for (int32_t j=0; j<m_k; j++)
+			for (index_t j=0; j<m_k; j++)
 				train_lab[j] = m_train_labels[ NN(j,i) ];
 
 			choose_class_for_multiple_k(output+i, classes, train_lab, num_lab);
@@ -579,7 +579,7 @@ int32_t CKNN::choose_class(float64_t* classes, int32_t* train_lab)
 	memset(classes, 0, sizeof(float64_t)*m_num_classes);
 
 	float64_t multiplier = m_q;
-	for (int32_t j=0; j<m_k; j++)
+	for (index_t j=0; j<m_k; j++)
 	{
 		classes[train_lab[j]]+= multiplier;
 		multiplier*= multiplier;
@@ -589,7 +589,7 @@ int32_t CKNN::choose_class(float64_t* classes, int32_t* train_lab)
 	int32_t out_idx=0;
 	float64_t out_max=0;
 
-	for (int32_t j=0; j<m_num_classes; j++)
+	for (index_t j=0; j<m_num_classes; j++)
 	{
 		if (out_max< classes[j])
 		{
@@ -606,7 +606,7 @@ void CKNN::choose_class_for_multiple_k(int32_t* output, int32_t* classes, int32_
 	//compute histogram of class outputs of the first k nearest neighbours
 	memset(classes, 0, sizeof(int32_t)*m_num_classes);
 
-	for (int32_t j=0; j<m_k; j++)
+	for (index_t j=0; j<m_k; j++)
 	{
 		classes[train_lab[j]]++;
 
@@ -614,7 +614,7 @@ void CKNN::choose_class_for_multiple_k(int32_t* output, int32_t* classes, int32_
 		int32_t out_idx=0;
 		int32_t out_max=0;
 
-		for (int32_t c=0; c<m_num_classes; c++)
+		for (index_t c=0; c<m_num_classes; c++)
 		{
 			if (out_max< classes[c])
 			{

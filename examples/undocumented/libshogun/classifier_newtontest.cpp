@@ -23,7 +23,7 @@ int main(int argc,char *argv[])
 
 /*Initialising Feature Matrix */
 
-	for (int i=0; i<x_n*x_d; i++)
+	for (index_t i=0; i<x_n*x_d; i++)
 		fmatrix.matrix[i] = i+1;
 	SG_SPRINT("FEATURE MATRIX :\n");
 	CMath::display_matrix(fmatrix.matrix,x_d,x_n);
@@ -58,7 +58,7 @@ int main(int argc,char *argv[])
 	x_n=5;
 	x_d=3;
 	SGMatrix<float64_t> fmatrix2(x_d,x_n);
-	for (int i=0; i<x_n*x_d; i++)
+	for (index_t i=0; i<x_n*x_d; i++)
 		fmatrix2.matrix[i] = i+1;
 	SG_SPRINT("FEATURE MATRIX :\n");
 	CMath::display_matrix(fmatrix2.matrix,x_d,x_n);

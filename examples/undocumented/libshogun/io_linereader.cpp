@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	{
 		tmp_string=reader->read_line();
 		SG_SPRINT("%d %d ", lines_count, tmp_string.vlen);
-		for (int i=0; i<tmp_string.vlen; i++)
+		for (index_t i=0; i<tmp_string.vlen; i++)
 			SG_SPRINT("%c", tmp_string.vector[i]);
 		SG_SPRINT("\n");
 		lines_count++;

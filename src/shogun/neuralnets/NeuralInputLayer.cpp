@@ -65,14 +65,14 @@ void CNeuralInputLayer::compute_activations(SGMatrix< float64_t > inputs)
 	}
 	else
 	{
-		for (int32_t i=0; i<m_num_neurons; i++)
-			for (int32_t j=0; j<m_batch_size; j++)
+		for (index_t i=0; i<m_num_neurons; i++)
+			for (index_t j=0; j<m_batch_size; j++)
 				m_activations(i,j) = inputs(m_start_index+i, j);
 	}
 	if (gaussian_noise > 0)
 	{
 		int32_t len = m_num_neurons*m_batch_size;
-		for (int32_t k=0; k<len; k++)
+		for (index_t k=0; k<len; k++)
 			m_activations[k] += CMath::normal_random(0.0, gaussian_noise);
 	}
 }

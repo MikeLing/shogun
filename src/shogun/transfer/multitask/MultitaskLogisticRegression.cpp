@@ -67,7 +67,7 @@ bool CMultitaskLogisticRegression::train_machine(CFeatures* data)
 	ASSERT(m_labels)
 
 	SGVector<float64_t> y(m_labels->get_num_labels());
-	for (int32_t i=0; i<y.vlen; i++)
+	for (index_t i=0; i<y.vlen; i++)
 		y[i] = ((CBinaryLabels*)m_labels)->get_label(i);
 
 	slep_options options = slep_options::default_options();
@@ -119,7 +119,7 @@ bool CMultitaskLogisticRegression::train_locked_implementation(SGVector<index_t>
 	ASSERT(m_labels)
 
 	SGVector<float64_t> y(m_labels->get_num_labels());
-	for (int32_t i=0; i<y.vlen; i++)
+	for (index_t i=0; i<y.vlen; i++)
 		y[i] = ((CBinaryLabels*)m_labels)->get_label(i);
 
 	slep_options options = slep_options::default_options();
@@ -163,7 +163,7 @@ bool CMultitaskLogisticRegression::train_locked_implementation(SGVector<index_t>
 	return true;
 }
 
-float64_t CMultitaskLogisticRegression::apply_one(int32_t i)
+float64_t CMultitaskLogisticRegression::apply_one(index_t i)
 {
 	float64_t dot = features->dense_dot(i,m_tasks_w.get_column_vector(m_current_task),m_tasks_w.num_rows);
 	//float64_t ep = CMath::exp(-(dot + m_tasks_c[m_current_task]));

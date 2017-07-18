@@ -56,9 +56,9 @@ SGMatrix<int32_t> CECOCRandomDenseEncoder::create_codebook(int32_t num_classes)
     {
         // fill codebook
         codebook.zero();
-        for (int32_t i=0; i < codelen; ++i)
+        for (index_t i=0; i < codelen; ++i)
         {
-            for (int32_t j=0; j < num_classes; ++j)
+            for (index_t j=0; j < num_classes; ++j)
             {
                 float64_t randval = CMath::random(0.0, 1.0);
                 if (randval > m_pposone)
@@ -69,10 +69,10 @@ SGMatrix<int32_t> CECOCRandomDenseEncoder::create_codebook(int32_t num_classes)
         }
 
         bool valid = true;
-        for (int32_t i=0; i < codelen; ++i)
+        for (index_t i=0; i < codelen; ++i)
         {
             bool p1_occur = false, n1_occur = false;
-            for (int32_t j=0; j < num_classes; ++j)
+            for (index_t j=0; j < num_classes; ++j)
                 if (codebook(i, j) == 1)
                     p1_occur = true;
                 else if (codebook(i, j) == -1)
@@ -90,9 +90,9 @@ SGMatrix<int32_t> CECOCRandomDenseEncoder::create_codebook(int32_t num_classes)
             // see if this is a better codebook
             // compute the minimum pairwise code distance
             int32_t min_dist = std::numeric_limits<int32_t>::max();
-            for (int32_t i=0; i < num_classes; ++i)
+            for (index_t i=0; i < num_classes; ++i)
             {
-                for (int32_t j=i+1; j < num_classes; ++j)
+                for (index_t j=i+1; j < num_classes; ++j)
                 {
                     int32_t dist = CECOCUtil::hamming_distance(codebook.get_column_vector(i),
                             codebook.get_column_vector(j), codelen);

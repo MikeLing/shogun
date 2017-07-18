@@ -26,20 +26,20 @@ using namespace shogun;
 struct DF_THREAD_PARAM
 {
 	CDotFeatures* df;
-	int32_t* sub_index;
+	index_t* sub_index;
 	float64_t* output;
-	int32_t start;
-	int32_t stop;
+	index_t start;
+	index_t stop;
 	float64_t* alphas;
 	float64_t* vec;
-	int32_t dim;
+	index_t dim;
 	float64_t bias;
 	bool progress;
 };
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
 
-CDotFeatures::CDotFeatures(int32_t size)
+CDotFeatures::CDotFeatures(index_t size)
 	:CFeatures(size), combined_weight(1.0)
 {
 	init();
@@ -59,12 +59,12 @@ CDotFeatures::CDotFeatures(CFile* loader)
 	init();
 }
 
-float64_t CDotFeatures::dense_dot_sgvec(int32_t vec_idx1, SGVector<float64_t> vec2)
+float64_t CDotFeatures::dense_dot_sgvec(index_t vec_idx1, SGVector<float64_t> vec2)
 {
 	return dense_dot(vec_idx1, vec2.vector, vec2.vlen);
 }
 
-void CDotFeatures::dense_dot_range(float64_t* output, int32_t start, int32_t stop, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
+void CDotFeatures::dense_dot_range(float64_t* output, index_t start, index_t stop, float64_t* alphas, float64_t* vec, index_t dim, float64_t b)
 {
 	ASSERT(output)
 	// write access is internally between output[start..stop] so the following
@@ -74,10 +74,10 @@ void CDotFeatures::dense_dot_range(float64_t* output, int32_t start, int32_t sto
 	ASSERT(start<stop)
 	ASSERT(stop<=get_num_vectors())
 
-	int32_t num_vectors=stop-start;
+	index_t num_vectors=stop-start;
 	ASSERT(num_vectors>0)
 
-	int32_t num_threads=parallel->get_num_threads();
+	index_t num_threads=parallel->get_num_threads();
 	ASSERT(num_threads>0)
 
 	CSignal::clear_cancel();
@@ -104,9 +104,9 @@ void CDotFeatures::dense_dot_range(float64_t* output, int32_t start, int32_t sto
 	{
 		pthread_t* threads = SG_MALLOC(pthread_t, num_threads-1);
 		DF_THREAD_PARAM* params = SG_MALLOC(DF_THREAD_PARAM, num_threads);
-		int32_t step= num_vectors/num_threads;
+		index_t step= num_vectors/num_threads;
 
-		int32_t t;
+		index_t t;
 
 		for (t=0; t<num_threads-1; t++)
 		{
@@ -150,12 +150,12 @@ void CDotFeatures::dense_dot_range(float64_t* output, int32_t start, int32_t sto
 #endif
 }
 
-void CDotFeatures::dense_dot_range_subset(int32_t* sub_index, int32_t num, float64_t* output, float64_t* alphas, float64_t* vec, int32_t dim, float64_t b)
+void CDotFeatures::dense_dot_range_subset(index_t* sub_index, index_t num, float64_t* output, float64_t* alphas, float64_t* vec, index_t dim, float64_t b)
 {
 	ASSERT(sub_index)
 	ASSERT(output)
 
-	int32_t num_threads=parallel->get_num_threads();
+	index_t num_threads=parallel->get_num_threads();
 	ASSERT(num_threads>0)
 
 	CSignal::clear_cancel();
@@ -182,9 +182,9 @@ void CDotFeatures::dense_dot_range_subset(int32_t* sub_index, int32_t num, float
 	{
 		pthread_t* threads = SG_MALLOC(pthread_t, num_threads-1);
 		DF_THREAD_PARAM* params = SG_MALLOC(DF_THREAD_PARAM, num_threads);
-		int32_t step= num/num_threads;
+		index_t step= num/num_threads;
 
-		int32_t t;
+		index_t t;
 
 		for (t=0; t<num_threads-1; t++)
 		{
@@ -232,22 +232,22 @@ void* CDotFeatures::dense_dot_range_helper(void* p)
 {
 	DF_THREAD_PARAM* par=(DF_THREAD_PARAM*) p;
 	CDotFeatures* df=par->df;
-	int32_t* sub_index=par->sub_index;
+	index_t* sub_index=par->sub_index;
 	float64_t* output=par->output;
-	int32_t start=par->start;
-	int32_t stop=par->stop;
+	index_t start=par->start;
+	index_t stop=par->stop;
 	float64_t* alphas=par->alphas;
 	float64_t* vec=par->vec;
-	int32_t dim=par->dim;
+	index_t dim=par->dim;
 	float64_t bias=par->bias;
 	bool progress=par->progress;
 
 	if (sub_index)
 	{
 #ifdef WIN32
-		for (int32_t i=start; i<stop i++)
+		for (index_t i=start; i<stop i++)
 #else
-		for (int32_t i=start; i<stop &&
+		for (index_t i=start; i<stop &&
 				!CSignal::cancel_computations(); i++)
 #endif
 		{
@@ -263,9 +263,9 @@ void* CDotFeatures::dense_dot_range_helper(void* p)
 	else
 	{
 #ifdef WIN32
-		for (int32_t i=start; i<stop i++)
+		for (index_t i=start; i<stop i++)
 #else
-		for (int32_t i=start; i<stop &&
+		for (index_t i=start; i<stop &&
 				!CSignal::cancel_computations(); i++)
 #endif
 		{
@@ -285,15 +285,15 @@ SGMatrix<float64_t> CDotFeatures::get_computed_dot_feature_matrix()
 {
 
 	int64_t offs=0;
-	int32_t num=get_num_vectors();
-	int32_t dim=get_dim_feature_space();
+	index_t num=get_num_vectors();
+	index_t dim=get_dim_feature_space();
 	ASSERT(num>0)
 	ASSERT(dim>0)
 
 	SGMatrix<float64_t> m(dim, num);
 	m.zero();
 
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 	{
 		add_to_dense_vec(1.0, i, &(m.matrix[offs]), dim);
 		offs+=dim;
@@ -302,10 +302,10 @@ SGMatrix<float64_t> CDotFeatures::get_computed_dot_feature_matrix()
 	return m;
 }
 
-SGVector<float64_t> CDotFeatures::get_computed_dot_feature_vector(int32_t num)
+SGVector<float64_t> CDotFeatures::get_computed_dot_feature_vector(index_t num)
 {
 
-	int32_t dim=get_dim_feature_space();
+	index_t dim=get_dim_feature_space();
 	ASSERT(num>=0 && num<=get_num_vectors())
 	ASSERT(dim>0)
 
@@ -315,19 +315,19 @@ SGVector<float64_t> CDotFeatures::get_computed_dot_feature_vector(int32_t num)
 	return v;
 }
 
-void CDotFeatures::benchmark_add_to_dense_vector(int32_t repeats)
+void CDotFeatures::benchmark_add_to_dense_vector(index_t repeats)
 {
-	int32_t num=get_num_vectors();
-	int32_t d=get_dim_feature_space();
+	index_t num=get_num_vectors();
+	index_t d=get_dim_feature_space();
 	float64_t* w= SG_MALLOC(float64_t, d);
 	SGVector<float64_t>::fill_vector(w, d, 0.0);
 
 	CTime t;
 	float64_t start_cpu=t.get_runtime();
 	float64_t start_wall=t.get_curtime();
-	for (int32_t r=0; r<repeats; r++)
+	for (index_t r=0; r<repeats; r++)
 	{
-		for (int32_t i=0; i<num; i++)
+		for (index_t i=0; i<num; i++)
 			add_to_dense_vec(1.172343*(r+1), i, w, d);
 	}
 
@@ -338,10 +338,10 @@ void CDotFeatures::benchmark_add_to_dense_vector(int32_t repeats)
 	SG_FREE(w);
 }
 
-void CDotFeatures::benchmark_dense_dot_range(int32_t repeats)
+void CDotFeatures::benchmark_dense_dot_range(index_t repeats)
 {
-	int32_t num=get_num_vectors();
-	int32_t d=get_dim_feature_space();
+	index_t num=get_num_vectors();
+	index_t d=get_dim_feature_space();
 	float64_t* w= SG_MALLOC(float64_t, d);
 	float64_t* out= SG_MALLOC(float64_t, num);
 	float64_t* alphas= SG_MALLOC(float64_t, num);
@@ -354,21 +354,21 @@ void CDotFeatures::benchmark_dense_dot_range(int32_t repeats)
 	float64_t start_cpu=t.get_runtime();
 	float64_t start_wall=t.get_curtime();
 
-	for (int32_t r=0; r<repeats; r++)
+	for (index_t r=0; r<repeats; r++)
 			dense_dot_range(out, 0, num, alphas, w, d, 23);
 
 #ifdef DEBUG_DOTFEATURES
     CMath::display_vector(out, 40, "dense_dot_range");
 	float64_t* out2= SG_MALLOC(float64_t, num);
 
-	for (int32_t r=0; r<repeats; r++)
+	for (index_t r=0; r<repeats; r++)
     {
         CMath::fill_vector(out2, num, 0.0);
-        for (int32_t i=0; i<num; i++)
+        for (index_t i=0; i<num; i++)
             out2[i]+=dense_dot(i, w, d)*alphas[i]+23;
     }
     CMath::display_vector(out2, 40, "dense_dot");
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		out2[i]-=out[i];
     CMath::display_vector(out2, 40, "diff");
 #endif
@@ -383,17 +383,17 @@ void CDotFeatures::benchmark_dense_dot_range(int32_t repeats)
 
 SGVector<float64_t> CDotFeatures::get_mean()
 {
-	int32_t num=get_num_vectors();
-	int32_t dim=get_dim_feature_space();
+	index_t num=get_num_vectors();
+	index_t dim=get_dim_feature_space();
 	ASSERT(num>0)
 	ASSERT(dim>0)
 
 	SGVector<float64_t> mean(dim);
     memset(mean.vector, 0, sizeof(float64_t)*dim);
 
-	for (int i = 0; i < num; i++)
+	for (index_t i = 0; i < num; i++)
 		add_to_dense_vec(1, i, mean.vector, dim);
-	for (int j = 0; j < dim; j++)
+	for (index_t j = 0; j < dim; j++)
 		mean.vector[j] /= num;
 
 	return mean;
@@ -404,9 +404,9 @@ SGVector<float64_t> CDotFeatures::get_mean(CDotFeatures* lhs, CDotFeatures* rhs)
 	ASSERT(lhs && rhs)
 	ASSERT(lhs->get_dim_feature_space() == rhs->get_dim_feature_space())
 
-	int32_t num_lhs=lhs->get_num_vectors();
-	int32_t num_rhs=rhs->get_num_vectors();
-	int32_t dim=lhs->get_dim_feature_space();
+	index_t num_lhs=lhs->get_num_vectors();
+	index_t num_rhs=rhs->get_num_vectors();
+	index_t dim=lhs->get_dim_feature_space();
 	ASSERT(num_lhs>0)
 	ASSERT(num_rhs>0)
 	ASSERT(dim>0)
@@ -414,11 +414,11 @@ SGVector<float64_t> CDotFeatures::get_mean(CDotFeatures* lhs, CDotFeatures* rhs)
 	SGVector<float64_t> mean(dim);
     memset(mean.vector, 0, sizeof(float64_t)*dim);
 
-	for (int i = 0; i < num_lhs; i++)
+	for (index_t i = 0; i < num_lhs; i++)
 		lhs->add_to_dense_vec(1, i, mean.vector, dim);
-	for (int i = 0; i < num_rhs; i++)
+	for (index_t i = 0; i < num_rhs; i++)
 		rhs->add_to_dense_vec(1, i, mean.vector, dim);
-	for (int j = 0; j < dim; j++)
+	for (index_t j = 0; j < dim; j++)
 		mean.vector[j] /= (num_lhs+num_rhs);
 
 	return mean;
@@ -426,8 +426,8 @@ SGVector<float64_t> CDotFeatures::get_mean(CDotFeatures* lhs, CDotFeatures* rhs)
 
 SGMatrix<float64_t> CDotFeatures::get_cov()
 {
-	int32_t num=get_num_vectors();
-	int32_t dim=get_dim_feature_space();
+	index_t num=get_num_vectors();
+	index_t dim=get_dim_feature_space();
 	ASSERT(num>0)
 	ASSERT(dim>0)
 
@@ -437,28 +437,28 @@ SGMatrix<float64_t> CDotFeatures::get_cov()
 
 	SGVector<float64_t> mean = get_mean();
 
-	for (int i = 0; i < num; i++)
+	for (index_t i = 0; i < num; i++)
 	{
 		SGVector<float64_t> v = get_computed_dot_feature_vector(i);
 		SGVector<float64_t>::add(v.vector, 1, v.vector, -1, mean.vector, v.vlen);
-		for (int m = 0; m < v.vlen; m++)
+		for (index_t m = 0; m < v.vlen; m++)
 		{
-			for (int n = 0; n <= m ; n++)
+			for (index_t n = 0; n <= m ; n++)
 			{
 				(cov.matrix)[m*v.vlen+n] += v.vector[m]*v.vector[n];
 			}
 		}
 	}
-	for (int m = 0; m < dim; m++)
+	for (index_t m = 0; m < dim; m++)
 	{
-		for (int n = 0; n <= m ; n++)
+		for (index_t n = 0; n <= m ; n++)
 		{
 			(cov.matrix)[m*dim+n] /= num;
 		}
 	}
-	for (int m = 0; m < dim-1; m++)
+	for (index_t m = 0; m < dim-1; m++)
 	{
-		for (int n = m+1; n < dim; n++)
+		for (index_t n = m+1; n < dim; n++)
 		{
 			(cov.matrix)[m*dim+n] = (cov.matrix)[n*dim+m];
 		}
@@ -472,9 +472,9 @@ SGMatrix<float64_t> CDotFeatures::compute_cov(CDotFeatures* lhs, CDotFeatures* r
 	feats[0]=lhs;
 	feats[1]=rhs;
 
-	int32_t nums[2], dims[2], num=0;
+	index_t nums[2], dims[2], num=0;
 
-	for (int i = 0; i < 2; i++)
+	for (index_t i = 0; i < 2; i++)
 	{
 		nums[i]=feats[i]->get_num_vectors();
 		dims[i]=feats[i]->get_dim_feature_space();
@@ -484,7 +484,7 @@ SGMatrix<float64_t> CDotFeatures::compute_cov(CDotFeatures* lhs, CDotFeatures* r
 	}
 
 	ASSERT(dims[0]==dims[1])
-	int32_t dim = dims[0];
+	index_t dim = dims[0];
 
 	SGMatrix<float64_t> cov(dim, dim);
 
@@ -492,31 +492,31 @@ SGMatrix<float64_t> CDotFeatures::compute_cov(CDotFeatures* lhs, CDotFeatures* r
 
 	SGVector<float64_t>  mean=get_mean(lhs,rhs);
 
-	for (int i = 0; i < 2; i++)
+	for (index_t i = 0; i < 2; i++)
 	{
-		for (int j = 0; j < nums[i]; j++)
+		for (index_t j = 0; j < nums[i]; j++)
 		{
 			SGVector<float64_t> v = feats[i]->get_computed_dot_feature_vector(j);
 			SGVector<float64_t>::add(v.vector, 1, v.vector, -1, mean.vector, v.vlen);
-			for (int m = 0; m < v.vlen; m++)
+			for (index_t m = 0; m < v.vlen; m++)
 			{
-				for (int n = 0; n <= m; n++)
+				for (index_t n = 0; n <= m; n++)
 				{
 					(cov.matrix)[m*v.vlen+n] += v.vector[m]*v.vector[n];
 				}
 			}
 		}
 	}
-	for (int m = 0; m < dim; m++)
+	for (index_t m = 0; m < dim; m++)
 	{
-		for (int n = 0; n <= m; n++)
+		for (index_t n = 0; n <= m; n++)
 		{
 			(cov.matrix)[m*dim+n] /= num;
 		}
 	}
-	for (int m = 0; m < dim-1; m++)
+	for (index_t m = 0; m < dim-1; m++)
 	{
-		for (int n = m+1; n < dim; n++)
+		for (index_t n = m+1; n < dim; n++)
 		{
 			(cov.matrix[m*dim+n]) = (cov.matrix)[n*dim+m];
 		}
@@ -525,10 +525,10 @@ SGMatrix<float64_t> CDotFeatures::compute_cov(CDotFeatures* lhs, CDotFeatures* r
 	return cov;
 }
 
-void CDotFeatures::display_progress(int32_t start, int32_t stop, int32_t v)
+void CDotFeatures::display_progress(index_t start, index_t stop, index_t v)
 {
-	int32_t num_vectors=stop-start;
-	int32_t i=v-start;
+	index_t num_vectors=stop-start;
+	index_t i=v-start;
 
 	if ( (i% (num_vectors/100+1))== 0)
 		SG_PROGRESS(v, 0.0, num_vectors-1)

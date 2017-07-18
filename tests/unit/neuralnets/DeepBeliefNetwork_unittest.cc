@@ -53,7 +53,7 @@ TEST(DeepBeliefNetwork, convert_to_neural_network)
 	CNeuralNetwork* nn = dbn.convert_to_neural_network();
 
 	SGMatrix<float64_t> x(5, 3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(0.0,1.0);
 
 	CDenseFeatures<float64_t> f(x);
@@ -67,7 +67,7 @@ TEST(DeepBeliefNetwork, convert_to_neural_network)
 	SGMatrix<float64_t> x_transformed_nn =
 		f_transformed_nn->get_feature_matrix();
 
-	for (int32_t i=0; i< x_transformed_dbn.num_rows*x_transformed_dbn.num_cols; i++)
+	for (index_t i=0; i< x_transformed_dbn.num_rows*x_transformed_dbn.num_cols; i++)
 		EXPECT_NEAR(x_transformed_dbn[i], x_transformed_nn[i], 1e-15);
 
 	SG_UNREF(nn);

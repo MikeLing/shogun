@@ -81,7 +81,7 @@ class CDistribution : public CSGObject
 		 *
 		 * @return model parameter (logarithmic)
 		 */
-		virtual float64_t get_log_model_parameter(int32_t num_param)=0;
+		virtual float64_t get_log_model_parameter(index_t num_param)=0;
 
 		/** get partial derivative of likelihood function (logarithmic)
 		 *
@@ -92,7 +92,7 @@ class CDistribution : public CSGObject
 		 * @return derivative of likelihood (logarithmic)
 		 */
 		virtual float64_t get_log_derivative(
-			int32_t num_param, int32_t num_example)=0;
+			index_t num_param, index_t num_example)=0;
 
 		/** compute log likelihood for example
 		 *
@@ -101,7 +101,7 @@ class CDistribution : public CSGObject
 		 * @param num_example which example
 		 * @return log likelihood for example
 		 */
-		virtual float64_t get_log_likelihood_example(int32_t num_example)=0;
+		virtual float64_t get_log_likelihood_example(index_t num_example)=0;
 
 		/** compute log likelihood for whole sample
 		 *
@@ -132,7 +132,7 @@ class CDistribution : public CSGObject
 		 * @return derivative of likelihood function
 		 */
 		virtual float64_t get_derivative(
-			int32_t num_param, int32_t num_example)
+			index_t num_param, index_t num_example)
 		{
 			return exp(get_log_derivative(num_param, num_example));
 		}
@@ -142,7 +142,7 @@ class CDistribution : public CSGObject
 		 * @param num_example which example
 		 * @return likelihood for example
 		 */
-		virtual float64_t get_likelihood_example(int32_t num_example)
+		virtual float64_t get_likelihood_example(index_t num_example)
 		{
 			return exp(get_log_likelihood_example(num_example));
 		}

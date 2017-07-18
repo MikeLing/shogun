@@ -1528,7 +1528,7 @@ void CSGInterface::translate_arg(CSGInterface* source, CSGInterface* target)
 				SGSparseVector<float64_t>* fmatrix=NULL;
 				source->get_sparse_matrix(fmatrix, num_feat, num_vec);
 				int64_t nnz=0;
-				for (int32_t i=0; i<num_vec; i++)
+				for (index_t i=0; i<num_vec; i++)
 					nnz+=fmatrix[i].num_feat_entries;
 				target->set_sparse_matrix(fmatrix, num_feat, num_vec, nnz);
 				SG_FREE(fmatrix);
@@ -1998,12 +1998,12 @@ bool CSGInterface::do_set_features(bool add, bool check_dot, int32_t repetitions
 			ui_features->set_train_features(feat);
 		else if (check_dot)
 		{
-			for (int32_t i=0; i<repetitions; i++)
+			for (index_t i=0; i<repetitions; i++)
 			ui_features->add_train_dotfeatures((CDotFeatures*) feat);
 		}
 		else
 		{
-			for (int32_t i=0; i<repetitions; i++)
+			for (index_t i=0; i<repetitions; i++)
 			ui_features->add_train_features(feat);
 		}
 	}
@@ -2013,12 +2013,12 @@ bool CSGInterface::do_set_features(bool add, bool check_dot, int32_t repetitions
 			ui_features->set_test_features(feat);
 		else if (check_dot)
 		{
-			for (int32_t i=0; i<repetitions; i++)
+			for (index_t i=0; i<repetitions; i++)
 				ui_features->add_test_dotfeatures((CDotFeatures*) feat);
 		}
 		else
 		{
-			for (int32_t i=0; i<repetitions; i++)
+			for (index_t i=0; i<repetitions; i++)
 				ui_features->add_test_features(feat);
 		}
 	}
@@ -2364,7 +2364,7 @@ bool CSGInterface::obtain_from_position_list(CFeatures* features)
 
 	CDynamicArray<int32_t> positions(num_shift+1);
 
-	for (int32_t i=0; i<num_shift; i++)
+	for (index_t i=0; i<num_shift; i++)
 		positions.set_element(shifts[i], i);
 
 	if (features->get_feature_class()!=C_STRING)
@@ -3981,20 +3981,20 @@ bool CSGInterface::cmd_compute_by_subkernels()
 	int32_t num=num_feat*num_vec;
 	float64_t* result=SG_MALLOC(float64_t, num);
 
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		result[i]=0;
 
 	if (ktype==K_WEIGHTEDDEGREE)
 	{
 		CWeightedDegreeStringKernel* k=(CWeightedDegreeStringKernel*) kernel;
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 			k->compute_by_tree(i, &result[i*num_feat]);
 	}
 	else
 	{
 		CWeightedDegreePositionStringKernel* k=
 			(CWeightedDegreePositionStringKernel*) kernel;
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 			k->compute_by_tree(i, &result[i*num_feat]);
 	}
 
@@ -4046,7 +4046,7 @@ bool CSGInterface::cmd_get_kernel_optimization()
 			int32_t num_feat=0;
 			int32_t num_sym=0;
 
-			for (int32_t i=0; i<num_suppvec; i++)
+			for (index_t i=0; i<num_suppvec; i++)
 			{
 				sv_idx[i]=svm->get_support_vector(i);
 				sv_weight[i]=svm->get_alpha(i);
@@ -4201,7 +4201,7 @@ bool CSGInterface::cmd_set_prior_probs_from_labels()
 	get_vector(lab, len);
 
 	CBinaryLabels* labels=new CBinaryLabels(len);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		if (!labels->set_label(i, lab[i]))
 			SG_ERROR("Couldn't set label %d (of %d): %f.\n", i, len, lab[i])
@@ -4358,7 +4358,7 @@ bool CSGInterface::cmd_get_SPEC_consensus()
 	float64_t* sv_weight=SG_MALLOC(float64_t, num_suppvec);
 	int32_t num_feat=0;
 
-	for (int32_t i=0; i<num_suppvec; i++)
+	for (index_t i=0; i<num_suppvec; i++)
 	{
 		sv_idx[i]=svm->get_support_vector(i);
 		sv_weight[i]=svm->get_alpha(i);
@@ -4397,7 +4397,7 @@ bool CSGInterface::cmd_get_SPEC_scoring()
 	int32_t num_feat=0;
 	int32_t num_sym=0;
 
-	for (int32_t i=0; i<num_suppvec; i++)
+	for (index_t i=0; i<num_suppvec; i++)
 	{
 		sv_idx[i]=svm->get_support_vector(i);
 		sv_weight[i]=svm->get_alpha(i);
@@ -4445,7 +4445,7 @@ bool CSGInterface::cmd_get_WD_consensus()
 	float64_t* sv_weight=SG_MALLOC(float64_t, num_suppvec);
 	int32_t num_feat=0;
 
-	for (int32_t i=0; i<num_suppvec; i++)
+	for (index_t i=0; i<num_suppvec; i++)
 	{
 		sv_idx[i]=svm->get_support_vector(i);
 		sv_weight[i]=svm->get_alpha(i);
@@ -4503,7 +4503,7 @@ bool CSGInterface::cmd_compute_POIM_WD()
 		int32_t* sv_idx=SG_MALLOC(int32_t, num_suppvec);
 		float64_t* sv_weight=SG_MALLOC(float64_t, num_suppvec);
 
-		for (int32_t i=0; i<num_suppvec; i++)
+		for (index_t i=0; i<num_suppvec; i++)
 		{
 			sv_idx[i]=svm->get_support_vector(i);
 			sv_weight[i]=svm->get_alpha(i);
@@ -4551,7 +4551,7 @@ bool CSGInterface::cmd_compute_POIM_WD()
 	int32_t num_feat=0;
 	int32_t num_sym=0;
 
-	for (int32_t i=0; i<num_suppvec; i++)
+	for (index_t i=0; i<num_suppvec; i++)
 	{
 		sv_idx[i]=svm->get_support_vector(i);
 		sv_weight[i]=svm->get_alpha(i);
@@ -4597,7 +4597,7 @@ bool CSGInterface::cmd_classify()
 
 	int32_t num_vec=labels->get_num_labels();
 	float64_t* result=SG_MALLOC(float64_t, num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		float64_t value = 0;
 		switch (labels->get_label_type())
@@ -4777,7 +4777,7 @@ bool CSGInterface::cmd_set_svm()
 	svm->set_bias(bias);
 
 	int32_t num_support_vectors=svm->get_num_support_vectors();
-	for (int32_t i=0; i<num_support_vectors; i++)
+	for (index_t i=0; i<num_support_vectors; i++)
 	{
 		svm->set_alpha(i, alphas[i]);
 		svm->set_support_vector(i, (int32_t) alphas[i+num_support_vectors]);
@@ -5447,7 +5447,7 @@ bool CSGInterface::cmd_plugin_estimate_classify()
 	int32_t num_vec=feat->get_num_vectors();
 	float64_t* result=SG_MALLOC(float64_t, num_vec);
 	CLabels* labels=ui_pluginestimate->apply();
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		result[i]=((CRegressionLabels*) labels)->get_label(i);
 	SG_UNREF(labels);
 
@@ -5506,9 +5506,9 @@ bool CSGInterface::cmd_get_plugin_estimate()
 	num_params=seq_length*num_symbols;
 
 	float64_t* result=SG_MALLOC(float64_t, num_params*2);
-	for (int32_t i=0; i<num_params; i++)
+	for (index_t i=0; i<num_params; i++)
 		result[i]=pos_params[i];
-	for (int32_t i=0; i<num_params; i++)
+	for (index_t i=0; i<num_params; i++)
 		result[i+num_params]=neg_params[i];
 
 	set_matrix(result, num_params, 2);
@@ -5641,7 +5641,7 @@ bool CSGInterface::do_hmm_classify(bool linear, bool one_class)
 		return false;
 
 	float64_t* result=SG_MALLOC(float64_t, num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		result[i]=labels->get_label(i);
 	SG_UNREF(labels);
 
@@ -6160,7 +6160,7 @@ void CSGInterface::get_vector(bool*& vector, int32_t& len)
 	ASSERT(len>0)
 	vector= SG_MALLOC(bool, len);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vector[i]= (int_vector[i]!=0);
 
 	SG_FREE(int_vector);
@@ -6169,7 +6169,7 @@ void CSGInterface::get_vector(bool*& vector, int32_t& len)
 void CSGInterface::set_vector(const bool* vector, int32_t len)
 {
 	int32_t* int_vector = SG_MALLOC(int32_t, len);
-	for (int32_t i=0;i<len;i++)
+	for (index_t i=0;i<len;i++)
 	{
 		if (vector[i])
 			int_vector[i]=1;
@@ -6296,14 +6296,14 @@ bool CSGInterface::cmd_get_plif_struct()
 	bool* all_use_cache = SG_MALLOC(bool, N);
 	int32_t* all_use_svm = SG_MALLOC(int32_t, N);
 	bool* all_do_calc = SG_MALLOC(bool, N);
-	for (int32_t i=0;i<N;i++)
+	for (index_t i=0;i<N;i++)
 	{
 		ids[i]=PEN[i]->get_id();
 		names[i].string = PEN[i]->get_plif_name();
 		names[i].slen = strlen(PEN[i]->get_plif_name());
 		SGVector<float64_t> limits = PEN[i]->get_plif_limits();
 		SGVector<float64_t> penalties = PEN[i]->get_plif_penalties();
-		for (int32_t j=0;j<M;j++)
+		for (index_t j=0;j<M;j++)
 		{
 			all_limits[i*M+j]=limits[j];
 			all_penalties[i*M+j]=penalties[j];
@@ -6839,7 +6839,7 @@ bool CSGInterface::cmd_best_path_trans()
 	h->set_content_type_array(SGMatrix<float64_t>(seg_path,Nseg_path,Mseg_path));
 
 	bool segment_loss_non_zero=false;
-	for (int32_t i=0; i<Nloss*Mloss; i++)
+	for (index_t i=0; i<Nloss*Mloss; i++)
 	{
 		if (loss[i]>1e-3)
 			segment_loss_non_zero=true;
@@ -6879,9 +6879,9 @@ bool CSGInterface::cmd_best_path_trans()
 	float64_t* d_my_path= SG_MALLOC(float64_t, (nbest+nother)*M);
 	float64_t* d_my_pos= SG_MALLOC(float64_t, (nbest+nother)*M);
 
-	for (int32_t k=0; k<(nbest+nother); k++)
+	for (index_t k=0; k<(nbest+nother); k++)
 	{
-		for (int32_t i=0; i<M; i++)
+		for (index_t i=0; i<M; i++)
 		{
 			d_my_path[i*(nbest+nother)+k] = states.matrix[i+k*M] ;
 			d_my_pos[i*(nbest+nother)+k] = my_pos.matrix[i+k*M] ;
@@ -6967,7 +6967,7 @@ bool CSGInterface::cmd_best_path_trans_deriv()
 
 	int32_t max_plif_id = 0 ;
 	int32_t max_plif_len = 1 ;
-	for (int32_t i=0; i<Nplif; i++)
+	for (index_t i=0; i<Nplif; i++)
 	{
 		if (i>0 && PEN[i]->get_id()!=i)
 			SG_ERROR("PEN[i]->get_id()!=i; PEN[%i]->get_id():%i  ,\n",i, PEN[i]->get_id())
@@ -6998,7 +6998,7 @@ bool CSGInterface::cmd_best_path_trans_deriv()
 	memset(my_pos, -1, Nmypos_seq*sizeof(int32_t)) ;
 
 	h->set_observation_matrix(SGNDArray<float64_t>(features, feat_dims, 3));
-	for (int32_t i=0; i<Nmypos_seq; i++)
+	for (index_t i=0; i<Nmypos_seq; i++)
 	{
 		my_path[i] = mystate_seq[i] ;
 		my_pos[i]  = mypos_seq[i] ;
@@ -7035,21 +7035,21 @@ bool CSGInterface::cmd_best_path_trans_deriv()
 	int32_t n_losses;
 	h->get_path_losses(&p_my_losses, &n_losses);
 
-	for (int32_t i=0; i<num_states; i++)
+	for (index_t i=0; i<num_states; i++)
 	{
-		for (int32_t j=0; j<num_states; j++)
+		for (index_t j=0; j<num_states; j++)
 			p_A_deriv[i+j*num_states] = h->get_a_deriv(i, j) ;
 
 		p_p_deriv[i]=h->get_p_deriv(i) ;
 		p_q_deriv[i]=h->get_q_deriv(i) ;
 	}
 
-	for (int32_t id=0; id<=max_plif_id; id++)
+	for (index_t id=0; id<=max_plif_id; id++)
 	{
 		int32_t len=0 ;
 		const float64_t * deriv = PEN[id]->get_cum_derivative(len) ;
 		ASSERT(len<=max_plif_len)
-		for (int32_t j=0; j<max_plif_len; j++)
+		for (index_t j=0; j<max_plif_len; j++)
 			a_Plif_deriv.element(id, j)= deriv[j] ;
 	}
 
@@ -7097,7 +7097,7 @@ bool CSGInterface::cmd_crc()
 	ASSERT(string)
 	uint8_t* bstring=SG_MALLOC(uint8_t, slen);
 
-	for (int32_t i=0; i<slen; i++)
+	for (index_t i=0; i<slen; i++)
 		bstring[i]=string[i];
 	SG_FREE(string);
 
@@ -7864,7 +7864,7 @@ void CSGInterface::get_vector_from_int_vector_or_str(int32_t*& vector, int32_t& 
 		vector=SG_MALLOC(int32_t, len);
 		char* str=NULL;
 		int32_t slen=0;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 		{
 			str=get_str_from_str(slen);
 			vector[i]=strtol(str, NULL, 10);
@@ -7891,7 +7891,7 @@ void CSGInterface::get_vector_from_real_vector_or_str(
 		vector=SG_MALLOC(float64_t, len);
 		char* str=NULL;
 		int32_t slen=0;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 		{
 			str=get_str_from_str(slen);
 			vector[i]=strtod(str, NULL);

@@ -175,7 +175,7 @@ CResultSet * CMultilabelModel::argmax(SGVector<float64_t> w, int32_t feat_idx,
 	SGVector<float64_t> y_pred_dense(m_num_classes);
 	y_pred_dense.zero();
 
-	for (int32_t c = 0; c < m_num_classes; c++)
+	for (index_t c = 0; c < m_num_classes; c++)
 	{
 		score = dot_feats->dense_dot(feat_idx, w.vector + c * feats_dim, feats_dim);
 

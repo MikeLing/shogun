@@ -41,7 +41,7 @@ TEST(KMeans, manual_center_initialization_test)
 	CEuclideanDistance* distance=new CEuclideanDistance(features, features);
 	CKMeans* clustering=new CKMeans(2, distance,initial_centers);
 
-	for (int32_t loop=0; loop<10; loop++)
+	for (index_t loop=0; loop<10; loop++)
 	{
 		clustering->train(features);
 
@@ -86,14 +86,14 @@ TEST(KMeans, KMeanspp_center_initialization_test)
 	CEuclideanDistance* distance=new CEuclideanDistance(features, features);
 	CKMeans* clustering=new CKMeans(4, distance,true);
 
-	for (int32_t loop=0; loop<10; loop++)
+	for (index_t loop=0; loop<10; loop++)
 	{
 		clustering->train(features);
 		CDenseFeatures<float64_t>* learnt_centers=CDenseFeatures<float64_t>::obtain_from_generic(distance->get_lhs());
 		SGMatrix<float64_t> learnt_centers_matrix=learnt_centers->get_feature_matrix();
 		SGVector<int32_t> count=SGVector<int32_t>(4);
 		count.zero();
-		for (int32_t c=0; c<4; c++)
+		for (index_t c=0; c<4; c++)
 		{
 			if (learnt_centers_matrix(0,c)==0 && learnt_centers_matrix(1,c)==0)
 			{
@@ -147,7 +147,7 @@ TEST(KMeans, minibatch_training_test)
 	CEuclideanDistance* distance=new CEuclideanDistance(features, features);
 	CKMeansMiniBatch* clustering=new CKMeansMiniBatch(1, distance,initial_centers);
 
-	for (int32_t loop=0; loop<10; loop++)
+	for (index_t loop=0; loop<10; loop++)
 	{
 		clustering->set_mb_params(4,1000);
 		clustering->train(features);

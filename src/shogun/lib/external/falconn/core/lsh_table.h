@@ -88,7 +88,7 @@ class StaticLSHTable
     std::vector<std::future<void>> thread_results;
     int_fast32_t next_table_range_start = 0;
 
-    for (int_fast32_t ii = 0; ii < num_setup_threads; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < num_setup_threads; ++ii) {
       int_fast32_t next_table_range_end =
           next_table_range_start + num_tables_per_thread - 1;
       if (ii < num_leftover_tables) {
@@ -100,7 +100,7 @@ class StaticLSHTable
       next_table_range_start = next_table_range_end + 1;
     }
 
-    for (int_fast32_t ii = 0; ii < num_setup_threads; ++ii) {
+    for (index_t_fast32_t ii = 0; ii < num_setup_threads; ++ii) {
       thread_results[ii].get();
     }
   }
@@ -280,7 +280,7 @@ class StaticLSHTable
                          const DataStorageType& points) {
     typename LSH::template BatchHash<DataStorageType> bh(*(this->lsh_));
     std::vector<HashType> table_hashes;
-    for (int_fast32_t ii = from; ii <= to; ++ii) {
+    for (index_t_fast32_t ii = from; ii <= to; ++ii) {
       bh.batch_hash_single_table(points, ii, &table_hashes);
       this->hash_table_->add_entries_for_table(table_hashes, ii);
     }

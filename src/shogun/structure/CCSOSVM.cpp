@@ -76,13 +76,13 @@ int32_t CCCSOSVM::mosek_qp_optimize(float64_t** G, float64_t* delta, float64_t* 
 
 	/* DEBUG */
 	/*
-	 for (int32_t i=0;i<k;i++)
+	 for (index_t i=0;i<k;i++)
 		 printf("delta: %.4f\n", delta[i]);
 
 	 printf("G:\n");
-	 for (int32_t i=0;i<k;i++)
+	 for (index_t i=0;i<k;i++)
 	 {
-		 for (int32_t j=0;j<k;j++)
+		 for (index_t j=0;j<k;j++)
 		 	printf("%.4f ", G[i][j]);
 		 printf("\n");
 	 }
@@ -90,7 +90,7 @@ int32_t CCCSOSVM::mosek_qp_optimize(float64_t** G, float64_t* delta, float64_t* 
 	*/
 	/* DEBUG */
 
-	for (int32_t i=0; i < k;i++)
+	for (index_t i=0; i < k;i++)
 	{
 		c[i] = -delta[i];
 		aptrb[i] = i;
@@ -130,9 +130,9 @@ int32_t CCCSOSVM::mosek_qp_optimize(float64_t** G, float64_t* delta, float64_t* 
 
 	/* coefficients for the Gram matrix */
 	t = 0;
-	for (int32_t i=0;i<k;i++)
+	for (index_t i=0;i<k;i++)
 	{
-		for (int32_t j=0;j<=i;j++)
+		for (index_t j=0;j<=i;j++)
 		{
 			qsubi[t] = i;
 			qsubj[t] = j;
@@ -148,7 +148,7 @@ int32_t CCCSOSVM::mosek_qp_optimize(float64_t** G, float64_t* delta, float64_t* 
 	/* DEBUG */
 	/*
 	 printf("t: %ld\n", t);
-	 for (int32_t i=0;i<t;i++) {
+	 for (index_t i=0;i<t;i++) {
 	 printf("qsubi: %d, qsubj: %d, qval: %.4f\n", qsubi[i], qsubj[i], qval[i]);
 	 }
 	 fflush(stdout);
@@ -380,7 +380,7 @@ bool CCCSOSVM::train_machine(CFeatures* data)
 		{
 			/* compute dual obj */
 			dual_obj = +0.5*(1+rho)*CMath::dot(m_w.vector, m_w.vector, m_w.vlen);
-			for (int32_t j=0;j<size_active;j++)
+			for (index_t j=0;j<size_active;j++)
 				dual_obj -= proximal_rhs[j]/(1+rho)*alpha[j];
 		}
 

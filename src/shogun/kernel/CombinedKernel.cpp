@@ -253,7 +253,7 @@ void CCombinedKernel::list_kernels()
 	SG_INFO("END COMBINED KERNEL LIST - ")
 }
 
-float64_t CCombinedKernel::compute(int32_t x, int32_t y)
+float64_t CCombinedKernel::compute(index_t x, index_t y)
 {
 	float64_t result=0;
 	for (index_t k_idx=0; k_idx<get_num_kernels(); k_idx++)
@@ -306,7 +306,7 @@ bool CCombinedKernel::init_optimization(
 		sv_idx=SG_MALLOC(int32_t, count);
 		sv_weight=SG_MALLOC(float64_t, count);
 		sv_count=count;
-		for (int32_t i=0; i<count; i++)
+		for (index_t i=0; i<count; i++)
 		{
 			sv_idx[i]=IDX[i];
 			sv_weight[i]=weights[i];
@@ -378,7 +378,7 @@ void* CCombinedKernel::compute_optimized_kernel_helper(void* p)
 	CKernel* k=params->kernel;
 	float64_t* result=params->result;
 
-	for (int32_t i=params->start; i<params->end; i++)
+	for (index_t i=params->start; i<params->end; i++)
 		result[i] += k->get_combined_kernel_weight()*k->compute_optimized(vec_idx[i]);
 
 	return NULL;
@@ -394,10 +394,10 @@ void* CCombinedKernel::compute_kernel_helper(void* p)
 	int32_t* IDX=params->IDX;
 	int32_t num_suppvec=params->num_suppvec;
 
-	for (int32_t i=params->start; i<params->end; i++)
+	for (index_t i=params->start; i<params->end; i++)
 	{
 		float64_t sub_result=0;
-		for (int32_t j=0; j<num_suppvec; j++)
+		for (index_t j=0; j<num_suppvec; j++)
 			sub_result += weights[j] * k->kernel(IDX[j], vec_idx[i]);
 
 		result[i] += k->get_combined_kernel_weight()*sub_result;
@@ -565,7 +565,7 @@ float64_t CCombinedKernel::compute_optimized(int32_t idx)
 			if (k->get_combined_kernel_weight()!=0)
 			{ // compute the usual way for any non-optimized kernel
 				float64_t sub_result=0;
-				for (int32_t j=0; j<sv_count; j++)
+				for (index_t j=0; j<sv_count; j++)
 					sub_result += sv_weight[j] * k->kernel(sv_idx[j], idx);
 
 				result += k->get_combined_kernel_weight()*sub_result;
@@ -654,7 +654,7 @@ const float64_t* CCombinedKernel::get_subkernel_weights(int32_t& num_weights)
 			int32_t num = -1 ;
 			const float64_t *w = k->get_subkernel_weights(num);
 			ASSERT(num==k->get_num_subkernels())
-			for (int32_t j=0; j<num; j++)
+			for (index_t j=0; j<num; j++)
 				subkernel_weights_buffer[i+j]=w[j] ;
 
 			SG_UNREF(k);
@@ -685,7 +685,7 @@ SGVector<float64_t> CCombinedKernel::get_subkernel_weights()
 	const float64_t* w=get_subkernel_weights(num);
 
 	float64_t* weights = SG_MALLOC(float64_t, num);
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		weights[i] = w[i];
 
 	return SGVector<float64_t>(weights, num);

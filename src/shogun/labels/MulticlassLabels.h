@@ -119,7 +119,7 @@ class CMulticlassLabels : public CDenseLabels
 		 *
 		 * @param n_classes number of classes
 		 */
-		void allocate_confidences_for(int32_t n_classes);
+		void allocate_confidences_for(index_t n_classes);
 
 		/** @return object name */
 		virtual const char* get_name() const { return "MulticlassLabels"; }

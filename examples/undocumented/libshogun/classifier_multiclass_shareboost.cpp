@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
 	SGVector<int32_t> activeset = machine->get_activeset();
 	SG_SPRINT("%d out of %d features are selected:\n", activeset.vlen, mat.num_rows);
-	for (int32_t i=0; i < activeset.vlen; ++i)
+	for (index_t i=0; i < activeset.vlen; ++i)
 		SG_SPRINT("activeset[%02d] = %d\n", i, activeset[i]);
 
 	CDenseSubsetFeatures<float64_t> *subset_fea = new CDenseSubsetFeatures<float64_t>(features, machine->get_activeset());
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 	CMulticlassLabels* output = CLabelsFactory::to_multiclass(machine->apply(subset_fea));
 
 	int32_t correct = 0;
-	for (int32_t i=0; i < output->get_num_labels(); ++i)
+	for (index_t i=0; i < output->get_num_labels(); ++i)
 		if (output->get_int_label(i) == labels->get_int_label(i))
 			correct++;
 	SG_SPRINT("Accuracy = %.4f\n", float64_t(correct)/labels->get_num_labels());

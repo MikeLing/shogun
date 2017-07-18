@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	CMulticlassLabels *gnd = new CMulticlassLabels(pred->get_num_labels());
 	SG_REF(gnd);
 	test_features->start_parser();
-	for (int32_t i=0; i < pred->get_num_labels(); ++i)
+	for (index_t i=0; i < pred->get_num_labels(); ++i)
 	{
 		test_features->get_next_example();
 		gnd->set_int_label(i, test_features->get_label());
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 	}
 	test_features->end_parser();
 
-	int32_t n_correct = 0;
+	index_t n_correct = 0;
 	for (index_t i=0; i < pred->get_num_labels(); ++i)
 	{
 		if (pred->get_int_label(i) == gnd->get_int_label(i))

@@ -31,7 +31,7 @@ void ShareBoostOptimizer::optimize()
 	lbfgs(N, W, &objval, &ShareBoostOptimizer::lbfgs_evaluate, progress, this, &param);
 
 	int32_t w_len = m_sb->m_activeset.vlen;
-	for (int32_t i=0; i < m_sb->m_multiclass_strategy->get_num_classes(); ++i)
+	for (index_t i=0; i < m_sb->m_multiclass_strategy->get_num_classes(); ++i)
 	{
 		CLinearMachine *machine = dynamic_cast<CLinearMachine *>(m_sb->m_machines->get_element(i));
 		SGVector<float64_t> w(w_len);
@@ -58,13 +58,13 @@ float64_t ShareBoostOptimizer::lbfgs_evaluate(void *userdata, const float64_t *W
 	CMulticlassLabels *lab = dynamic_cast<CMulticlassLabels *>(optimizer->m_sb->m_labels);
 
 	// compute gradient
-	for (int32_t i=0; i < m; ++i)
+	for (index_t i=0; i < m; ++i)
 	{
-		for (int32_t j=0; j < k; ++j)
+		for (index_t j=0; j < k; ++j)
 		{
 			int32_t idx = j*m + i;
 			float64_t g=0;
-			for (int32_t ii=0; ii < fea.num_cols; ++ii)
+			for (index_t ii=0; ii < fea.num_cols; ++ii)
 				g += fea(optimizer->m_sb->m_activeset[i], ii) *
 					(optimizer->m_sb->m_rho(j,ii)/optimizer->m_sb->m_rho_norm[ii] -
 					 (j == lab->get_int_label(ii)));
@@ -75,7 +75,7 @@ float64_t ShareBoostOptimizer::lbfgs_evaluate(void *userdata, const float64_t *W
 
 	// compute objective function
 	float64_t objval = 0;
-	for (int32_t ii=0; ii < fea.num_cols; ++ii)
+	for (index_t ii=0; ii < fea.num_cols; ++ii)
 	{
 		objval += CMath::log(optimizer->m_sb->m_rho_norm[ii]);
 	}

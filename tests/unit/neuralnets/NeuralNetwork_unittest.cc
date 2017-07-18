@@ -291,7 +291,7 @@ TEST(NeuralNetwork, binary_classification)
 
 	CBinaryLabels* predictions = network->apply_binary(features);
 
-	for (int32_t i=0; i<4; i++)
+	for (index_t i=0; i<4; i++)
 		EXPECT_EQ(predictions->get_label(i), labels->get_label(i));
 
 	EXPECT_NEAR(predictions->get_value(0), 0, 1e-8);
@@ -350,10 +350,10 @@ TEST(NeuralNetwork, multiclass_classification)
 
 	CMulticlassLabels* predictions = network->apply_multiclass(features);
 
-	for (int32_t i=0; i<4; i++)
+	for (index_t i=0; i<4; i++)
 		EXPECT_EQ(predictions->get_label(i), labels->get_label(i));
 
-	for (int32_t i=0; i<4; i++)
+	for (index_t i=0; i<4; i++)
 	{
 		SGVector<float64_t> confidences = predictions->get_multiclass_confidences(i);
 		EXPECT_NEAR(confidences[0], 1.0-targets_vector[i], 1e-8);
@@ -374,7 +374,7 @@ TEST(NeuralNetwork, regression)
 	SGMatrix<float64_t> inputs_matrix(1,N);
 	SGVector<float64_t> targets_vector(N);
 
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 	{
 		inputs_matrix(0,i) = i;
 		targets_vector[i] = i*i;
@@ -401,7 +401,7 @@ TEST(NeuralNetwork, regression)
 
 	CRegressionLabels* predictions = network->apply_regression(features);
 
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 		EXPECT_NEAR(predictions->get_label(i), labels->get_label(i), 0.5);
 
 	SG_UNREF(network);
@@ -458,7 +458,7 @@ TEST(NeuralNetwork, gradient_descent)
 
 	CBinaryLabels* predictions = network->apply_binary(features);
 
-	for (int32_t i=0; i<4; i++)
+	for (index_t i=0; i<4; i++)
 		EXPECT_EQ(predictions->get_label(i), labels->get_label(i));
 
 	SG_UNREF(network);

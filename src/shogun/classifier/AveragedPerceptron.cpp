@@ -56,7 +56,7 @@ bool CAveragedPerceptron::train_machine(CFeatures* data)
 	//start with uniform w, bias=0, tmp_bias=0
 	bias=0;
 	float64_t tmp_bias=0;
-	for (int32_t i=0; i<num_feat; i++)
+	for (index_t i=0; i<num_feat; i++)
 		w[i]=1.0/num_feat;
 
 	//loop till we either get everything classified right or reach max_iter
@@ -64,7 +64,7 @@ bool CAveragedPerceptron::train_machine(CFeatures* data)
 	while (!converged && iter<max_iter)
 	{
 		converged=true;
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 		{
 			output[i]=apply_one(i);
 
@@ -77,7 +77,7 @@ bool CAveragedPerceptron::train_machine(CFeatures* data)
 
 			// Add current w to tmp_w, and current bias to tmp_bias
 			// To calculate the sum of each iteration's w, bias
-			for (int32_t j=0; j<num_feat; j++)
+			for (index_t j=0; j<num_feat; j++)
 				tmp_w[j]+=w[j];
 			tmp_bias+=bias;
 		}
@@ -90,7 +90,7 @@ bool CAveragedPerceptron::train_machine(CFeatures* data)
 		SG_WARNING("Averaged Perceptron algorithm did not converge after %d iterations.\n", max_iter)
 
 	// calculate and set the average paramter of w, bias
-	for (int32_t i=0; i<num_feat; i++)
+	for (index_t i=0; i<num_feat; i++)
 		w[i]=tmp_w[i]/(num_vec*iter);
 	bias=tmp_bias/(num_vec*iter);
 

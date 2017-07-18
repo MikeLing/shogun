@@ -77,7 +77,7 @@ int32_t CAttributeFeatures::get_num_attributes()
 int32_t CAttributeFeatures::find_attr_index(char* attr_name)
 {
 	int32_t n=features.get_num_elements();
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
 		if (!strcmp(features[n].attr_name, attr_name))
 			return i;
@@ -89,6 +89,6 @@ int32_t CAttributeFeatures::find_attr_index(char* attr_name)
 CAttributeFeatures::~CAttributeFeatures()
 {
 	int32_t n=features.get_num_elements();
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		SG_UNREF_NO_NULL(features[i].attr_obj);
 }

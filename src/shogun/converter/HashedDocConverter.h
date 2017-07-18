@@ -142,7 +142,7 @@ protected:
 protected:
 
 	/** the number of bits of the hash */
-	int32_t num_bits;
+	int64_t num_bits;
 
 	/** the tokenizer */
 	CTokenizer* tokenizer;

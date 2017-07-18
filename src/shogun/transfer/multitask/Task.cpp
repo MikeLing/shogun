@@ -27,7 +27,7 @@ CTask::CTask(index_t min_index, index_t max_index,
 
 	REQUIRE(min_index<max_index, "min index should be less than max index")
 	m_indices = SGVector<index_t>(max_index-min_index);
-	for (int32_t i=0; i<m_indices.vlen; i++)
+	for (index_t i=0; i<m_indices.vlen; i++)
 		m_indices[i] = i+min_index;
 	m_weight = weight;
 	m_name = name;
@@ -61,7 +61,7 @@ bool CTask::is_contiguous()
 {
 	REQUIRE(m_indices.vlen>1,"Task indices vector must not be empty or contain only one element")
 	bool result = true;
-	for (int32_t i=0; i<m_indices.vlen-1; i++)
+	for (index_t i=0; i<m_indices.vlen-1; i++)
 	{
 		if (m_indices[i]!=m_indices[i+1]-1)
 		{
@@ -76,10 +76,10 @@ bool CTask::is_contiguous()
 void CTask::add_subtask(CTask* subtask)
 {
 	SGVector<index_t> subtask_indices = subtask->get_indices();
-	for (int32_t i=0; i<subtask_indices.vlen; i++)
+	for (index_t i=0; i<subtask_indices.vlen; i++)
 	{
 		bool found = false;
-		for (int32_t j=0; j<m_indices.vlen; j++)
+		for (index_t j=0; j<m_indices.vlen; j++)
 		{
 			if (subtask_indices[i] == m_indices[j])
 			{

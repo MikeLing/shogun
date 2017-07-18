@@ -107,12 +107,12 @@ SGSparseVector<float64_t> CHashedMultilabelModel::get_sparse_joint_feature_vecto
 	SGSparseVector<float64_t> psi(vec.num_feat_entries * slabel_data.vlen);
 	index_t k = 0;
 
-	for (int32_t i = 0; i < slabel_data.vlen; i++)
+	for (index_t i = 0; i < slabel_data.vlen; i++)
 	{
 		int32_t label = slabel_data[i];
 		uint32_t seed = (uint32_t)m_seeds[label];
 
-		for (int32_t j = 0; j < vec.num_feat_entries; j++)
+		for (index_t j = 0; j < vec.num_feat_entries; j++)
 		{
 			uint32_t hash = CHash::MurmurHash3(
 			                        (uint8_t *)&vec.features[j].feat_index,
@@ -186,7 +186,7 @@ SGSparseVector<float64_t> CHashedMultilabelModel::get_hashed_feature_vector(
 
 	SGSparseVector<float64_t> h_vec(vec.num_feat_entries);
 
-	for (int32_t j = 0; j < vec.num_feat_entries; j++)
+	for (index_t j = 0; j < vec.num_feat_entries; j++)
 	{
 		uint32_t hash = CHash::MurmurHash3(
 		                        (uint8_t *)&vec.features[j].feat_index,
@@ -264,7 +264,7 @@ CResultSet * CHashedMultilabelModel::argmax(SGVector<float64_t> w,
 	y_pred_dense.zero();
 	int32_t count = 0;
 
-	for (int32_t c = 0; c < m_num_classes; c++)
+	for (index_t c = 0; c < m_num_classes; c++)
 	{
 		SGSparseVector<float64_t> phi = get_hashed_feature_vector(feat_idx,
 		                                m_seeds[c]);

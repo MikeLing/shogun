@@ -80,7 +80,7 @@ template<class T> float32_t CStreamingDenseFeatures<T>::dense_dot(
 	ASSERT(vec2_len==current_vector.vlen)
 	float32_t result=0;
 
-	for (int32_t i=0; i<current_vector.vlen; i++)
+	for (index_t i=0; i<current_vector.vlen; i++)
 		result+=current_vector[i]*vec2[i];
 
 	return result;
@@ -92,7 +92,7 @@ template<class T> float64_t CStreamingDenseFeatures<T>::dense_dot(
 	ASSERT(vec2_len==current_vector.vlen)
 	float64_t result=0;
 
-	for (int32_t i=0; i<current_vector.vlen; i++)
+	for (index_t i=0; i<current_vector.vlen; i++)
 		result+=current_vector[i]*vec2[i];
 
 	return result;
@@ -105,12 +105,12 @@ template<class T> void CStreamingDenseFeatures<T>::add_to_dense_vec(
 
 	if (abs_val)
 	{
-		for (int32_t i=0; i<current_vector.vlen; i++)
+		for (index_t i=0; i<current_vector.vlen; i++)
 			vec2[i]+=alpha*CMath::abs(current_vector[i]);
 	}
 	else
 	{
-		for (int32_t i=0; i<current_vector.vlen; i++)
+		for (index_t i=0; i<current_vector.vlen; i++)
 			vec2[i]+=alpha*current_vector[i];
 	}
 }
@@ -122,12 +122,12 @@ template<class T> void CStreamingDenseFeatures<T>::add_to_dense_vec(
 
 	if (abs_val)
 	{
-		for (int32_t i=0; i<current_vector.vlen; i++)
+		for (index_t i=0; i<current_vector.vlen; i++)
 			vec2[i]+=alpha*CMath::abs(current_vector[i]);
 	}
 	else
 	{
-		for (int32_t i=0; i<current_vector.vlen; i++)
+		for (index_t i=0; i<current_vector.vlen; i++)
 			vec2[i]+=alpha*current_vector[i];
 	}
 }
@@ -142,7 +142,7 @@ template<class T> CFeatures* CStreamingDenseFeatures<T>::duplicate() const
 	return new CStreamingDenseFeatures<T>(*this);
 }
 
-template<class T> int32_t CStreamingDenseFeatures<T>::get_num_vectors() const
+template<class T> index_t CStreamingDenseFeatures<T>::get_num_vectors() const
 {
 	return 1;
 }
@@ -251,7 +251,7 @@ void CStreamingDenseFeatures<T>::release_example()
 }
 
 template<class T>
-int32_t CStreamingDenseFeatures<T>::get_dim_feature_space() const
+index_t CStreamingDenseFeatures<T>::get_dim_feature_space() const
 {
 	return current_vector.vlen;
 }

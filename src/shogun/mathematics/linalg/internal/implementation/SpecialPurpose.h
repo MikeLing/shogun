@@ -79,7 +79,7 @@ struct logistic<Backend::EIGEN3, Matrix>
 	static void compute(SGMatrix<T> A, SGMatrix<T> result)
 	{
 		int32_t len = A.num_rows*A.num_cols;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			result[i] = 1.0/(1+CMath::exp(-1*A[i]));
 	}
 };
@@ -137,7 +137,7 @@ struct multiply_by_logistic_derivative<Backend::EIGEN3, Matrix>
 	static void compute(SGMatrix<T> A, SGMatrix<T> C)
 	{
 		int32_t len = A.num_rows*A.num_cols;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			C[i] *= A[i] * (1.0-A[i]);
 	}
 };
@@ -196,7 +196,7 @@ struct rectified_linear<Backend::EIGEN3, Matrix>
 	static void compute(SGMatrix<T> A, SGMatrix<T> result)
 	{
 		int32_t len = A.num_rows*A.num_cols;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			result[i] = CMath::max((T)0, A[i]);
 	}
 };
@@ -254,7 +254,7 @@ struct multiply_by_rectified_linear_derivative<Backend::EIGEN3, Matrix>
 	static void compute(SGMatrix<T> A, SGMatrix<T> C)
 	{
 		int32_t len = A.num_rows*A.num_cols;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			if (A[i]==0)
 				C[i] = 0;
 	}
@@ -324,14 +324,14 @@ struct softmax<Backend::EIGEN3, Matrix>
 
 		float64_t max = A_eig.maxCoeff();
 
-		for (int32_t j=0; j<A.num_cols; j++)
+		for (index_t j=0; j<A.num_cols; j++)
 		{
 			float64_t sum = 0;
-			for (int32_t i=0; i<A.num_rows; i++)
+			for (index_t i=0; i<A.num_rows; i++)
 				sum += CMath::exp(A(i,j)-max);
 
 			float64_t normalizer = CMath::log(sum);
-			for (int32_t k=0; k<A.num_rows; k++)
+			for (index_t k=0; k<A.num_rows; k++)
 				A(k,j) = CMath::exp(A(k,j)-max-normalizer);
 		}
 	}
@@ -368,15 +368,15 @@ struct softmax<Backend::VIENNACL, Matrix>
 						return;
 
 					DATATYPE col_max = -INFINITY;
-					for (int i=0; i<nrows; i++)
+					for (index_t i=0; i<nrows; i++)
 						col_max = max(col_max, A[offset + i+j*nrows]);
 
 					DATATYPE col_sum = 0;
-					for (int i=0; i<nrows; i++)
+					for (index_t i=0; i<nrows; i++)
 						col_sum += exp(A[offset + i+j*nrows]-col_max);
 
 					DATATYPE normalizer = log(col_sum);
-					for (int i=0; i<nrows; i++)
+					for (index_t i=0; i<nrows; i++)
 					{
 						int index = offset + i+j*nrows;
 						A[index] = exp(A[index]-col_max-normalizer);
@@ -475,12 +475,12 @@ struct cross_entropy<Backend::VIENNACL,Matrix>
 					int local_id = get_local_id(0);
 
 					DATATYPE thread_sum = 0;
-					for (int i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
+					for (index_t i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
 						thread_sum += p[i+p_offset]*log(q[i+q_offset]+1e-30);
 
 					buffer[local_id] = thread_sum;
 
-					for (int j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
+					for (index_t j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
 					{
 						barrier(CLK_LOCAL_MEM_FENCE);
 						if (local_id < j)
@@ -590,12 +590,12 @@ struct squared_error<Backend::VIENNACL,Matrix>
 					int local_id = get_local_id(0);
 
 					DATATYPE thread_sum = 0;
-					for (int i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
+					for (index_t i=local_id; i<size; i+=WORK_GROUP_SIZE_1D)
 						thread_sum += pown(p[i+p_offset]-q[i+q_offset], 2);
 
 					buffer[local_id] = thread_sum;
 
-					for (int j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
+					for (index_t j = WORK_GROUP_SIZE_1D/2; j > 0; j = j>>1)
 					{
 						barrier(CLK_LOCAL_MEM_FENCE);
 						if (local_id < j)

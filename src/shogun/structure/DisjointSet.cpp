@@ -121,7 +121,7 @@ int32_t CDisjointSet::get_unique_labeling(SGVector<int32_t> out_labels)
 	SGVector<int32_t>::fill_vector(flags.vector, flags.vlen, -1);
 	int32_t unilabel = 0;
 
-	for (int32_t i = 0; i < m_num_elements; i++)
+	for (index_t i = 0; i < m_num_elements; i++)
 	{
 		roots[i] = find_set(i);
 		// if roots[i] never be found
@@ -129,7 +129,7 @@ int32_t CDisjointSet::get_unique_labeling(SGVector<int32_t> out_labels)
 			flags[roots[i]] = unilabel++;
 	}
 
-	for (int32_t i = 0; i < m_num_elements; i++)
+	for (index_t i = 0; i < m_num_elements; i++)
 		out_labels[i] = flags[roots[i]];
 
 	return unilabel;

@@ -67,7 +67,7 @@ void CNbodyTree::query_knn(CDenseFeatures<float64_t>* data, int32_t k)
 	m_knn_indices=SGMatrix<index_t>(k,qfeats.num_cols);
 	int32_t dim=qfeats.num_rows;
 
-	for (int32_t i=0;i<qfeats.num_cols;i++)
+	for (index_t i=0;i<qfeats.num_cols;i++)
 	{
 		CKNNHeap* heap=new CKNNHeap(k);
 		bnode_t* root=NULL;
@@ -92,7 +92,7 @@ SGVector<float64_t> CNbodyTree::log_kernel_density(SGMatrix<float64_t> test, EKe
 	float64_t log_rtol=CMath::log(rtol);
 	float64_t log_kernel_norm=CKernelDensity::log_norm(kernel,h,dim);
 	SGVector<float64_t> log_density(test.num_cols);
-	for (int32_t i=0;i<test.num_cols;i++)
+	for (index_t i=0;i<test.num_cols;i++)
 	{
 		bnode_t* root=NULL;
 		if (m_root)
@@ -137,7 +137,7 @@ SGVector<float64_t> CNbodyTree::log_kernel_density_dual(SGMatrix<float64_t> test
 	kde_dual(rroot,qroot,qid,test,log_density,kernel,h,log_atol,log_rtol,log_kernel_norm,min_bound,spread,min_bound,spread);
 
 	float64_t log_n=CMath::log(m_data.num_cols);
-	for (int32_t i=0;i<test.num_cols;i++)
+	for (index_t i=0;i<test.num_cols;i++)
 		log_density[i]=log_density[i]+log_kernel_norm-log_n;
 
 	return log_density;
@@ -171,7 +171,7 @@ void CNbodyTree::query_knn_single(CKNNHeap* heap, float64_t mdist, bnode_t* node
 		index_t start=node->data.start_idx;
 		index_t end=node->data.end_idx;
 
-		for (int32_t i=start;i<=end;i++)
+		for (index_t i=start;i<=end;i++)
 			heap->push(m_vec_id[i],distance(m_vec_id[i],arr,dim));
 
 		return;
@@ -201,7 +201,7 @@ void CNbodyTree::query_knn_single(CKNNHeap* heap, float64_t mdist, bnode_t* node
 float64_t CNbodyTree::distance(index_t vec, float64_t* arr, int32_t dim)
 {
 	float64_t ret=0;
-	for (int32_t i=0;i<dim;i++)
+	for (index_t i=0;i<dim;i++)
 		ret+=add_dim_dist(m_data(i,vec)-arr[i]);
 
 	return actual_dists(ret);
@@ -253,7 +253,7 @@ void CNbodyTree::get_kde_single(bnode_t* node,float64_t* data, EKernelType kerne
 		min_bound_global=logdiffexp(min_bound_global,min_bound_node);
 		spread_global=logdiffexp(spread_global,spread_node);
 
-		for (int32_t i=node->data.start_idx;i<=node->data.end_idx;i++)
+		for (index_t i=node->data.start_idx;i<=node->data.end_idx;i++)
 		{
 			float64_t pt_eval=CKernelDensity::log_kernel(kernel,distance(m_vec_id[i],data,m_data.num_rows),h);
 			min_bound_global=logsumexp(pt_eval,min_bound_global);
@@ -308,7 +308,7 @@ void CNbodyTree::kde_dual(bnode_t* refnode, bnode_t* querynode, SGVector<index_t
 	{
 		// log density of all query points in the node is increased by K(mean + spread/2)
 		float64_t center_density=logsumexp(min_bound_node,spread_node-CMath::log(2))-CMath::log(querynode->data.end_idx-querynode->data.start_idx+1);
-		for (int32_t i=querynode->data.start_idx;i<=querynode->data.end_idx;i++)
+		for (index_t i=querynode->data.start_idx;i<=querynode->data.end_idx;i++)
 			log_density[qid[i]]=logsumexp(log_density[qid[i]],center_density);
 
 		return;
@@ -321,10 +321,10 @@ void CNbodyTree::kde_dual(bnode_t* refnode, bnode_t* querynode, SGVector<index_t
 		spread_global=logdiffexp(spread_global,spread_node);
 
 		// point by point evavuation of density
-		for (int32_t i=querynode->data.start_idx;i<=querynode->data.end_idx;i++)
+		for (index_t i=querynode->data.start_idx;i<=querynode->data.end_idx;i++)
 		{
 			float64_t q=-CMath::INFTY;
-			for (int32_t j=refnode->data.start_idx;j<=refnode->data.end_idx;j++)
+			for (index_t j=refnode->data.start_idx;j<=refnode->data.end_idx;j++)
 			{
 				float64_t pt_eval=CKernelDensity::log_kernel(kernel_type,distance(m_vec_id[j],qdata.matrix+dim*qid[i],dim),h);
 				q=logsumexp(q,pt_eval);
@@ -484,7 +484,7 @@ void CNbodyTree::partition(index_t dim, index_t start, index_t end, index_t mid)
 	while (true)
 	{
 		index_t midindex=left;
-		for (int32_t i=left;i<right;i++)
+		for (index_t i=left;i<right;i++)
 		{
 			if (m_data(dim,m_vec_id[i])<m_data(dim,m_vec_id[right]))
 			{
@@ -510,7 +510,7 @@ index_t CNbodyTree::find_split_dim(bnode_t* node)
 
 	index_t max_dim=0;
 	float64_t max_spread=-1;
-	for (int32_t i=0;i<m_data.num_rows;i++)
+	for (index_t i=0;i<m_data.num_rows;i++)
 	{
 		float64_t spread=upper_bounds[i]-lower_bounds[i];
 		if (spread>max_spread)

@@ -28,11 +28,11 @@ struct RelaxedTreeNodeData
 	static void print_data(const RelaxedTreeNodeData &data)
 	{
 		SG_SPRINT("left=(")
-		for (int32_t i=0; i < data.mu.vlen; ++i)
+		for (index_t i=0; i < data.mu.vlen; ++i)
 			if (data.mu[i] == -1 || data.mu[i] == 0)
 				SG_SPRINT("%4d", i)
 		SG_SPRINT("), right=(")
-		for (int32_t i=0; i < data.mu.vlen; ++i)
+		for (index_t i=0; i < data.mu.vlen; ++i)
 			if (data.mu[i] == 1 || data.mu[i] == 0)
 				SG_SPRINT("%4d", i)
 		SG_SPRINT(")\n")

@@ -119,7 +119,7 @@ void CStreamingHashedSparseFeatures<ST>::add_to_dense_vec(float32_t alpha, float
 }
 
 template <class ST>
-int32_t CStreamingHashedSparseFeatures<ST>::get_dim_feature_space() const
+index_t CStreamingHashedSparseFeatures<ST>::get_dim_feature_space() const
 {
 	return dim;
 }
@@ -131,7 +131,7 @@ const char* CStreamingHashedSparseFeatures<ST>::get_name() const
 }
 
 template <class ST>
-int32_t CStreamingHashedSparseFeatures<ST>::get_num_vectors() const
+index_t CStreamingHashedSparseFeatures<ST>::get_num_vectors() const
 {
 	return 1;
 }

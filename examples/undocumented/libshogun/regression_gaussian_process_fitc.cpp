@@ -51,7 +51,7 @@ void build_matrices(SGMatrix<float64_t>& test, SGMatrix<float64_t>& train,
 	train[10] = 2;
 	train[11] = 1;
 
-	for (int32_t i=0; i<num_vectors*dim_vectors; i++)
+	for (index_t i=0; i<num_vectors*dim_vectors; i++)
 	    test[i]=i*sin(i)*.96;
 
 	/* create labels, two classes */

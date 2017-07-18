@@ -31,11 +31,11 @@ TEST(StreamingSparseFeaturesTest, parse_file)
 
   SGSparseVector<float64_t>* data=SG_MALLOC(SGSparseVector<float64_t>, num_vec);
   float64_t* labels=SG_MALLOC(float64_t, num_vec);
-  for (int32_t i=0; i<num_vec; i++)
+  for (index_t i=0; i<num_vec; i++)
   {
     data[i]=SGSparseVector<float64_t>(rand->random(0, max_num_entries));
     labels[i]=(float64_t) rand->random(-max_label_value, max_label_value);
-    for (int32_t j=0; j<data[i].num_feat_entries; j++)
+    for (index_t j=0; j<data[i].num_feat_entries; j++)
     {
       int32_t feat_index=(j+1)*2;
       if (feat_index>num_feat)

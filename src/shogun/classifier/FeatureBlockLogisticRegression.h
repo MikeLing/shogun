@@ -69,7 +69,7 @@ class CFeatureBlockLogisticRegression : public CLinearMachine
 		 */
 		void set_feature_relation(CIndexBlockRelation* feature_relation);
 
-		virtual float64_t apply_one(int32_t vec_idx);
+		virtual float64_t apply_one(index_t vec_idx);
 
 		/** get max iter */
 		int32_t get_max_iter() const;

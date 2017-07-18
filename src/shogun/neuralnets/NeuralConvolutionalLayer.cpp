@@ -106,7 +106,7 @@ void CNeuralConvolutionalLayer::initialize_neural_layer(CDynamicObjectArray* lay
 	CNeuralLayer::initialize_neural_layer(layers, input_indices);
 
 	m_input_num_channels = 0;
-	for (int32_t l=0; l<input_indices.vlen; l++)
+	for (index_t l=0; l<input_indices.vlen; l++)
 	{
 		CNeuralLayer* layer =
 			(CNeuralLayer*)layers->element(input_indices[l]);
@@ -129,13 +129,13 @@ void CNeuralConvolutionalLayer::initialize_parameters(SGVector<float64_t> parame
 	int32_t num_parameters_per_map =
 		1 + m_input_num_channels*(2*m_radius_x+1)*(2*m_radius_y+1);
 
-	for (int32_t m=0; m<m_num_maps; m++)
+	for (index_t m=0; m<m_num_maps; m++)
 	{
 		float64_t* map_params = parameters.vector+m*num_parameters_per_map;
 		bool* map_param_regularizable =
 			parameter_regularizable.vector+m*num_parameters_per_map;
 
-		for (int32_t i=0; i<num_parameters_per_map; i++)
+		for (index_t i=0; i<num_parameters_per_map; i++)
 		{
 			if (m_initialization_mode == NORMAL)
 			{
@@ -161,7 +161,7 @@ void CNeuralConvolutionalLayer::compute_activations(
 	int32_t num_parameters_per_map =
 		1 + m_input_num_channels*(2*m_radius_x+1)*(2*m_radius_y+1);
 
-	for (int32_t m=0; m<m_num_maps; m++)
+	for (index_t m=0; m<m_num_maps; m++)
 	{
 		SGVector<float64_t> map_params(
 			parameters.vector+m*num_parameters_per_map,
@@ -190,21 +190,21 @@ void CNeuralConvolutionalLayer::compute_gradients(
 		// sqaured error measure
 		// local_gradients = activations-targets
 		int32_t length = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 			m_activation_gradients[i] = (m_activations[i]-targets[i])/m_batch_size;
 	}
 
 	if (dropout_prop>0.0)
 	{
 		int32_t len = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			m_activation_gradients[i] *= m_dropout_mask[i];
 	}
 
 	// compute the pre-pooling activation gradients
 	m_convolution_output_gradients.zero();
-	for (int32_t i=0; i<m_num_neurons; i++)
-		for (int32_t j=0; j<m_batch_size; j++)
+	for (index_t i=0; i<m_num_neurons; i++)
+		for (index_t j=0; j<m_batch_size; j++)
 			if (m_max_indices(i,j)!=-1.0)
 				m_convolution_output_gradients(m_max_indices(i,j),j) =
 					m_activation_gradients(i,j);
@@ -212,7 +212,7 @@ void CNeuralConvolutionalLayer::compute_gradients(
 	int32_t num_parameters_per_map =
 		1 + m_input_num_channels*(2*m_radius_x+1)*(2*m_radius_y+1);
 
-	for (int32_t m=0; m<m_num_maps; m++)
+	for (index_t m=0; m<m_num_maps; m++)
 	{
 		SGVector<float64_t> map_params(
 			parameters.vector+m*num_parameters_per_map,
@@ -237,7 +237,7 @@ float64_t CNeuralConvolutionalLayer::compute_error(SGMatrix<float64_t> targets)
 	// error = 0.5*(sum(targets-activations)^2)/batch_size
 	float64_t sum = 0;
 	int32_t length = m_num_neurons*m_batch_size;
-	for (int32_t i=0; i<length; i++)
+	for (index_t i=0; i<length; i++)
 		sum += (targets[i]-m_activations[i])*(targets[i]-m_activations[i]);
 	sum *= (0.5/m_batch_size);
 	return sum;
@@ -250,7 +250,7 @@ void CNeuralConvolutionalLayer::enforce_max_norm(SGVector<float64_t> parameters,
 
 	int32_t num_parameters_per_map = 1 + m_input_num_channels*num_weights;
 
-	for (int32_t offset=1; offset<parameters.vlen; offset+=num_parameters_per_map)
+	for (index_t offset=1; offset<parameters.vlen; offset+=num_parameters_per_map)
 	{
 		float64_t* weights = parameters.vector+offset;
 
@@ -260,7 +260,7 @@ void CNeuralConvolutionalLayer::enforce_max_norm(SGVector<float64_t> parameters,
 		if (norm > max_norm)
 		{
 			float64_t multiplier = max_norm/norm;
-			for (int32_t i=0; i<num_weights; i++)
+			for (index_t i=0; i<num_weights; i++)
 				weights[i] *= multiplier;
 		}
 	}

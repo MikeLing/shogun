@@ -53,7 +53,7 @@ void CExponentialARDKernel::init()
 
 }
 
-SGVector<float64_t> CExponentialARDKernel::get_feature_vector(int32_t idx, CFeatures* hs)
+SGVector<float64_t> CExponentialARDKernel::get_feature_vector(index_t idx, CFeatures* hs)
 {
 	REQUIRE(hs, "Features not set!\n");
 	CDenseFeatures<float64_t> * dense_hs=dynamic_cast<CDenseFeatures<float64_t> *>(hs);
@@ -103,7 +103,7 @@ void CExponentialARDKernel::lazy_update_weights()
 			m_weights_raw=SGMatrix<float64_t>(m_weights_rows,m_weights_cols);
 			m_weights_raw.set_const(0.0);
 			index_t offset=0;
-			for (int i=0;i<m_weights_raw.num_cols && i<m_weights_raw.num_rows;i++)
+			for (index_t i=0;i<m_weights_raw.num_cols && i<m_weights_raw.num_rows;i++)
 			{
 				float64_t* begin=m_weights_raw.get_column_vector(i);
 				std::copy(m_log_weights.vector+offset,m_log_weights.vector+offset+m_weights_raw.num_rows-i,begin+i);
@@ -170,7 +170,7 @@ void CExponentialARDKernel::set_matrix_weights(SGMatrix<float64_t> weights)
 	m_log_weights=SGVector<float64_t>(len);
 		
 	index_t offset=0;
-	for (int i=0; i<weights.num_cols && i<weights.num_rows; i++)
+	for (index_t i=0; i<weights.num_cols && i<weights.num_rows; i++)
 	{
 		float64_t* begin=weights.get_column_vector(i);
 		REQUIRE(begin[i]>0, "The diagonal entry of matrix weight (w(%d,%d)=%f) should be positive\n",
@@ -221,7 +221,7 @@ SGMatrix<float64_t> CExponentialARDKernel::get_weighted_vector(SGVector<float64_
 		res=SGMatrix<float64_t>(m_weights_cols,1);
 		index_t offset=0;
 		//can be done it in parallel
-		for (int i=0;i<m_weights_rows && i<m_weights_cols;i++)
+		for (index_t i=0;i<m_weights_rows && i<m_weights_cols;i++)
 		{
 			SGMatrix<float64_t> weights(m_log_weights.vector+offset,1,m_weights_rows-i,false);
 			weights[0]=CMath::exp(weights[0]);

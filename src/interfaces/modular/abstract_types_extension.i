@@ -50,7 +50,7 @@
 	int32_t num_examples = this->get_num_vectors();
 	int32_t dim = this->get_dim();
 	SGMatrix<float64_t> psi_m(dim, num_examples);
-	for (int32_t i = 0; i < num_examples; ++i)
+	for (index_t i = 0; i < num_examples; ++i)
 	  {
 	    CHOGFeatures* hf = (CHOGFeatures*) m_features->get_sample(i);
 	    CBoundingBox* bb = (CBoundingBox*) m_labels->get_latent_label(i);

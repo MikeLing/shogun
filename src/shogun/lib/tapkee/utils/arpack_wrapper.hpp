@@ -536,8 +536,8 @@ ArpackGeneralizedSelfAdjointEigenSolver<LMatrixType, RMatrixType, MatrixOperatio
 			if (rvec)
 			{
 				m_eivec.resize(A.rows(), nev);
-				for (int i=0; i<nev; i++)
-					for (int j=0; j<n; j++)
+				for (index_t i=0; i<nev; i++)
+					for (index_t j=0; j<n; j++)
 						m_eivec(j,i) = v[i*n+j] / scale;
 
 				// TODO if (mode == 1 && !isBempty && BisSPD)

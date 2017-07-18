@@ -163,7 +163,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	int32_t most_weight=weights[0];
 	int32_t weight=weights[0];
 
-	for (int32_t i=1; i<labels.vlen; i++)
+	for (index_t i=1; i<labels.vlen; i++)
 	{
 		if (labels[i]==labels[i-1])
 		{
@@ -190,7 +190,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	node->data.class_label=most_label;
 	node->data.total_weight=weights.sum(weights.vector,weights.vlen);
 	node->data.weight_minus=0.0;
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 	{
 		if (class_labels->get_label(i)!=most_label)
 			node->data.weight_minus+=weights[i];
@@ -206,9 +206,9 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 
 	// if all remaining attributes are identical
 	bool flag=true;
-	for (int32_t i=1;i<num_vecs;i++)
+	for (index_t i=1;i<num_vecs;i++)
 	{
-		for (int32_t j=0;j<feats->get_num_features();j++)
+		for (index_t j=0;j<feats->get_num_features();j++)
 		{
 			if (feats->get_feature_vector(i)[j]!=feats->get_feature_vector(i-1)[j])
 			{
@@ -228,7 +228,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	float64_t max=0;
 	int32_t best_feature_index=-1;
 	float64_t threshold=0.;
-	for (int32_t i=0; i<feats->get_num_features(); i++)
+	for (index_t i=0; i<feats->get_num_features(); i++)
 	{
 		if (m_nominal[feature_id_vector[i]])
 		{
@@ -243,7 +243,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 		{
 			SGVector<float64_t> feature_values(num_vecs);
 			float64_t max_value=CMath::MIN_REAL_NUMBER;
-			for (int32_t k=0; k<num_vecs; k++)
+			for (index_t k=0; k<num_vecs; k++)
 			{
 				feature_values[k]=(feats->get_feature_vector(k))[i];
 
@@ -251,14 +251,14 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 					max_value=feature_values[k];
 			}
 
-			for (int32_t k=0;k<num_vecs;k++)
+			for (index_t k=0;k<num_vecs;k++)
 			{
 				if (feature_values[k]!=max_value && !CMath::fequals(feature_values[k],MISSING,0))
 				{
 					// form temporary dense features to calculate gain (continuous->nominal conversion)
 					float64_t z=feature_values[k];
 					SGMatrix<float64_t> temp_feat_mat=SGMatrix<float64_t>(1,num_vecs);
-					for (int32_t l=0;l<num_vecs;l++)
+					for (index_t l=0;l<num_vecs;l++)
 					{
 						if (CMath::fequals(feature_values[l],MISSING,0))
 							temp_feat_mat(0,l)=MISSING;
@@ -290,7 +290,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	if (!m_nominal[feature_id_vector[best_feature_index]])
 	{
 		// convert continuous feature to nominal. Store cache for restoration
-		for(int32_t p=0;p<num_vecs;p++)
+		for(index_t p=0;p<num_vecs;p++)
 		{
 			feature_cache[p]=feats->get_feature_vector(p)[best_feature_index];
 			if (CMath::fequals(feature_cache[p],MISSING,0))
@@ -305,13 +305,13 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 
 	// get feature values for the best feature chosen - shorthand for the features values of the best feature chosen
 	SGVector<float64_t> best_feature_values(num_vecs);
-	for (int32_t i=0; i<num_vecs; i++)
+	for (index_t i=0; i<num_vecs; i++)
 		best_feature_values[i]=(feats->get_feature_vector(i))[best_feature_index];
 
 	// prepare vector of unique feature values excluding MISSING , also calculate total weight associated with missing attributes
 	int32_t num_missing=0;
 	float64_t weight_missing=0.;
-	for (int32_t j=0;j<num_vecs;j++)
+	for (index_t j=0;j<num_vecs;j++)
 	{
 		if (CMath::fequals(best_feature_values[j],MISSING,0))
 		{
@@ -322,7 +322,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 
 	SGVector<float64_t> best_features_unique(num_vecs-num_missing);
 	int32_t index=0;
-	for (int32_t j=0;j<num_vecs;j++)
+	for (index_t j=0;j<num_vecs;j++)
 	{
 		if (!CMath::fequals(best_feature_values[j],MISSING,0))
 			best_features_unique[index++]=best_feature_values[j];
@@ -331,13 +331,13 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	int32_t uniques_num=best_features_unique.unique(best_features_unique.vector,best_features_unique.vlen);
 
 	// create child node for each unique value
-	for (int32_t i=0; i<uniques_num; i++)
+	for (index_t i=0; i<uniques_num; i++)
 	{
 		//compute the number of vectors with active attribute value
 		int32_t num_cols=0;
 		float64_t active_feature_value=best_features_unique[i];
 
-		for (int32_t j=0; j<num_vecs; j++)
+		for (index_t j=0; j<num_vecs; j++)
 		{
 			if (active_feature_value==best_feature_values[j] || CMath::fequals(best_feature_values[j],MISSING,0))
 				num_cols++;
@@ -349,13 +349,13 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 
 		int32_t cnt=0;
 		//choose the samples that have the active feature value
-		for (int32_t j=0; j<num_vecs; j++)
+		for (index_t j=0; j<num_vecs; j++)
 		{
 			SGVector<float64_t> sample=feats->get_feature_vector(j);
 			if (active_feature_value==sample[best_feature_index] || CMath::fequals(sample[best_feature_index],MISSING,0))
 			{
 				int32_t idx=-1;
-				for (int32_t k=0; k<sample.size(); k++)
+				for (index_t k=0; k<sample.size(); k++)
 				{
 					if (k!=best_feature_index)
 						mat(++idx, cnt) = sample[k];
@@ -375,7 +375,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 		float64_t numer=new_weights.sum(new_weights.vector,new_weights.vlen);
 		float64_t rec_weight=numer/(node->data.total_weight-weight_missing);
 		cnt=0;
-		for (int32_t j=0;j<num_vecs;j++)
+		for (index_t j=0;j<num_vecs;j++)
 		{
 			if (CMath::fequals(best_feature_values[j],MISSING,0))
 				new_weights[cnt++]=rec_weight;
@@ -386,7 +386,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 		//remove the best_attribute from the remaining attributes index vector
 		SGVector<int32_t> new_feature_id_vector(feature_id_vector.vlen-1);
 		cnt=-1;
-		for (int32_t j=0;j<feature_id_vector.vlen;j++)
+		for (index_t j=0;j<feature_id_vector.vlen;j++)
 		{
 			if (j!=best_feature_index)
 				new_feature_id_vector[++cnt]=feature_id_vector[j];
@@ -414,7 +414,7 @@ CTreeMachineNode<C45TreeNodeData>* CC45ClassifierTree::C45train(CFeatures* data,
 	if (!m_nominal[feature_id_vector[best_feature_index]])
 	{
 		// restore data matrix
-		for(int32_t p=0;p<num_vecs;p++)
+		for(index_t p=0;p<num_vecs;p++)
 			feats->get_feature_vector(p)[best_feature_index]=feature_cache[p];
 	}
 
@@ -433,13 +433,13 @@ void CC45ClassifierTree::prune_tree_from_current_node(CDenseFeatures<float64_t>*
 
 	if (m_nominal[current->data.attribute_id])
 	{
-		for (int32_t i=0; i<children->get_num_elements(); i++)
+		for (index_t i=0; i<children->get_num_elements(); i++)
 		{
 			// count number of feature vectors which transit into the child
 			int32_t count=0;
 			node_t* child=dynamic_cast<node_t*>(children->get_element(i));
 
-			for (int32_t j=0; j<feature_matrix.num_cols; j++)
+			for (index_t j=0; j<feature_matrix.num_cols; j++)
 			{
 				float64_t child_transit=child->data.transit_if_feature_value;
 
@@ -454,7 +454,7 @@ void CC45ClassifierTree::prune_tree_from_current_node(CDenseFeatures<float64_t>*
 			SGVector<index_t> subset=SGVector<index_t>(count);
 			int32_t k=0;
 
-			for (int32_t j=0; j<feature_matrix.num_cols;j++)
+			for (index_t j=0; j<feature_matrix.num_cols;j++)
 			{
 				float64_t child_transit=child->data.transit_if_feature_value;
 
@@ -486,7 +486,7 @@ void CC45ClassifierTree::prune_tree_from_current_node(CDenseFeatures<float64_t>*
 		node_t* right_child=dynamic_cast<node_t*>(children->get_element(1));
 
 		int32_t count_left=0;
-		for (int32_t k=0;k<feature_matrix.num_cols;k++)
+		for (index_t k=0;k<feature_matrix.num_cols;k++)
 		{
 			if (feature_matrix(current->data.attribute_id,k)<=left_child->data.transit_if_feature_value)
 				count_left++;
@@ -496,7 +496,7 @@ void CC45ClassifierTree::prune_tree_from_current_node(CDenseFeatures<float64_t>*
 		SGVector<int32_t> right_subset(feature_matrix.num_cols-count_left);
 		int32_t l=0;
 		int32_t r=0;
-		for (int32_t k=0;k<feature_matrix.num_cols;k++)
+		for (index_t k=0;k<feature_matrix.num_cols;k++)
 		{
 			if (feature_matrix(current->data.attribute_id,k)<=left_child->data.transit_if_feature_value)
 				left_subset[l++]=k;
@@ -534,7 +534,7 @@ void CC45ClassifierTree::prune_tree_from_current_node(CDenseFeatures<float64_t>*
 
 	CMulticlassLabels* predicted_unpruned=apply_multiclass_from_current_node(feats, current);
 	SGVector<float64_t> pruned_labels=SGVector<float64_t>(feature_matrix.num_cols);
-	for (int32_t i=0; i<feature_matrix.num_cols; i++)
+	for (index_t i=0; i<feature_matrix.num_cols; i++)
 		pruned_labels[i]=current->data.class_label;
 
 	CMulticlassLabels* predicted_pruned=new CMulticlassLabels(pruned_labels);
@@ -570,7 +570,7 @@ float64_t CC45ClassifierTree::informational_gain_attribute(int32_t attr_no, CFea
 	CMulticlassLabels* gain_labels=class_labels;
 
 	int32_t num_missing=0;
-	for (int32_t i=0;i<num_vecs;i++)
+	for (index_t i=0;i<num_vecs;i++)
 	{
 		if (CMath::fequals((feats->get_feature_vector(i))[attr_no],MISSING,0))
 			num_missing++;
@@ -579,7 +579,7 @@ float64_t CC45ClassifierTree::informational_gain_attribute(int32_t attr_no, CFea
 	if (num_missing==0)
 	{
 		gain_attribute_values=SGVector<float64_t>(num_vecs);
-		for (int32_t i=0; i<num_vecs; i++)
+		for (index_t i=0; i<num_vecs; i++)
 			gain_attribute_values[i]=(feats->get_feature_vector(i))[attr_no];
 	}
 	else
@@ -588,7 +588,7 @@ float64_t CC45ClassifierTree::informational_gain_attribute(int32_t attr_no, CFea
 		gain_weights=SGVector<float64_t>(num_vecs-num_missing);
 		SGVector<float64_t> label_vector(num_vecs-num_missing);
 		int32_t index=0;
-		for (int32_t i=0; i<num_vecs; i++)
+		for (index_t i=0; i<num_vecs; i++)
 		{
 			if (!CMath::fequals((feats->get_feature_vector(i))[attr_no],MISSING,0))
 			{
@@ -607,13 +607,13 @@ float64_t CC45ClassifierTree::informational_gain_attribute(int32_t attr_no, CFea
 	SGVector<float64_t> attr_val_unique=gain_attribute_values.clone();
 	int32_t uniques_num=attr_val_unique.unique(attr_val_unique.vector,attr_val_unique.vlen);
 
-	for (int32_t i=0; i<uniques_num; i++)
+	for (index_t i=0; i<uniques_num; i++)
 	{
 		//calculate class entropy for the specific attribute_value
 		int32_t attr_count=0;
 		float64_t weight_count=0.;
 
-		for (int32_t j=0; j<num_vecs; j++)
+		for (index_t j=0; j<num_vecs; j++)
 		{
 			if (gain_attribute_values[j]==attr_val_unique[i])
 			{
@@ -626,7 +626,7 @@ float64_t CC45ClassifierTree::informational_gain_attribute(int32_t attr_no, CFea
 		SGVector<float64_t> sub_weights(attr_count);
 		int32_t count=0;
 
-		for (int32_t j=0; j<num_vecs; j++)
+		for (index_t j=0; j<num_vecs; j++)
 		{
 			if (gain_attribute_values[j]==attr_val_unique[i])
 			{
@@ -659,11 +659,11 @@ float64_t CC45ClassifierTree::entropy(CMulticlassLabels* labels, SGVector<float6
 	SGVector<float64_t> log_ratios(labels->get_unique_labels().size());
 	float64_t total_weight=weights.sum(weights.vector,weights.vlen);
 
-	for (int32_t i=0;i<labels->get_unique_labels().size();i++)
+	for (index_t i=0;i<labels->get_unique_labels().size();i++)
 	{
 		int32_t count=0;
 		float64_t weight_count=0.;
-		for (int32_t j=0;j<labels->get_num_labels();j++)
+		for (index_t j=0;j<labels->get_num_labels();j++)
 		{
 			if (labels->get_unique_labels()[i]==labels->get_label(j))
 			{
@@ -691,7 +691,7 @@ CMulticlassLabels* CC45ClassifierTree::apply_multiclass_from_current_node(CDense
 		m_certainty=SGVector<float64_t>(num_vecs);
 
 	// classify vectors in feature matrix taking one at a time
-	for (int32_t i=0; i<num_vecs; i++)
+	for (index_t i=0; i<num_vecs; i++)
 	{
 		// choose the current subtree as the entry point
 		SGVector<float64_t> sample=feats->get_feature_vector(i);
@@ -706,7 +706,7 @@ CMulticlassLabels* CC45ClassifierTree::apply_multiclass_from_current_node(CDense
 			// if nominal attribute check for equality
 			if (m_nominal[node->data.attribute_id])
 			{
-				for (int32_t j=0; j<children->get_num_elements(); j++)
+				for (index_t j=0; j<children->get_num_elements(); j++)
 				{
 					CSGObject* el=children->get_element(j);
 					node_t* child=NULL;

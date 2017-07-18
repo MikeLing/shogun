@@ -191,7 +191,7 @@ void CRInterface::get_vector(int32_t*& vec, int32_t& len)
 	vec=SG_MALLOC(int32_t, len);
 	ASSERT(vec);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]= (int32_t) INTEGER(rvec)[i];
 }
 
@@ -211,7 +211,7 @@ void CRInterface::get_vector(float64_t*& vec, int32_t& len)
 	vec=SG_MALLOC(float64_t, len);
 	ASSERT(vec);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]= (float64_t) REAL(rvec)[i];
 }
 
@@ -255,9 +255,9 @@ void CRInterface::get_matrix(float64_t*& matrix, int32_t& num_feat, int32_t& num
 	matrix=SG_MALLOC(float64_t, num_vec*num_feat);
 	ASSERT(matrix);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
-		for (int32_t j=0; j<num_feat; j++)
+		for (index_t j=0; j<num_feat; j++)
 			matrix[i*num_feat+j]= (float64_t) REAL(feat)[i*num_feat+j];
 	}
 }
@@ -323,10 +323,10 @@ void CRInterface::get_string_list(SGString<char>*& strings, int32_t& num_str, in
 		strings=SG_MALLOC(SGString<char>, num_str);
 		ASSERT(strings);
 
-		for (int32_t i=0; i<num_str; i++)
+		for (index_t i=0; i<num_str; i++)
 		{
 			char* dst=SG_MALLOC(char, max_string_len+1);
-			for (int32_t j=0; j<max_string_len; j++)
+			for (index_t j=0; j<max_string_len; j++)
 			{
 				SEXPREC* s= STRING_ELT(strs,i*max_string_len+j);
 				if (LENGTH(s)!=1)
@@ -345,7 +345,7 @@ void CRInterface::get_string_list(SGString<char>*& strings, int32_t& num_str, in
 		strings=SG_MALLOC(SGString<char>, num_str);
 		ASSERT(strings);
 
-		for (int32_t i=0; i<num_str; i++)
+		for (index_t i=0; i<num_str; i++)
 		{
 			SEXPREC* s= STRING_ELT(strs,i);
 			char* c= (char*) CHAR(s);
@@ -444,7 +444,7 @@ void CRInterface::function_name(const sg_type* vec, int32_t len)	\
 	SEXP feat=NULL;												\
 	PROTECT( feat = allocVector(r_type, len) );					\
 																\
-	for (int32_t i=0; i<len; i++)									\
+	for (index_t i=0; i<len; i++)									\
 		r_cast(feat)[i]=(if_type) vec[i];						\
 																\
 	UNPROTECT(1);												\
@@ -469,9 +469,9 @@ void CRInterface::function_name(const sg_type* matrix, int32_t num_feat, int32_t
 	SEXP feat=NULL;															\
 	PROTECT( feat = allocMatrix(r_type, num_feat, num_vec) );				\
 																			\
-	for (int32_t i=0; i<num_vec; i++)											\
+	for (index_t i=0; i<num_vec; i++)											\
 	{																		\
-		for (int32_t j=0; j<num_feat; j++)										\
+		for (index_t j=0; j<num_feat; j++)										\
 			r_cast(feat)[i*num_feat+j]=(if_type) matrix[i*num_feat+j];		\
 	}																		\
 																			\
@@ -504,7 +504,7 @@ void CRInterface::set_string_list(const SGString<char>* strings, int32_t num_str
 	SEXP feat=NULL;
 	PROTECT( feat = allocVector(STRSXP, num_str) );
 
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
 		int32_t len=strings[i].slen;
 		if (len>0)
@@ -575,7 +575,7 @@ bool CRInterface::run_r_helper(CSGInterface* from_if)
 
 	try
 	{
-		for (int i=0; i<from_if->get_nrhs(); i++)
+		for (index_t i=0; i<from_if->get_nrhs(); i++)
 		{
 			int len=0;
 			char* var_name = from_if->get_string(len);
@@ -646,7 +646,7 @@ bool CRInterface::run_r_helper(CSGInterface* from_if)
 				CRInterface* out = new CRInterface(results, false);
 
 				//process d
-				for (int32_t i=0; i<sz; i++)
+				for (index_t i=0; i<sz; i++)
 					from_if->translate_arg(out, from_if);
 
 				SG_UNREF(out);

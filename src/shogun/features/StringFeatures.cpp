@@ -91,7 +91,7 @@ template<class ST> CStringFeatures<ST>::CStringFeatures(const CStringFeatures & 
 	{
 		features=SG_MALLOC(SGString<ST>, orig.num_vectors);
 
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
 			features[i].string=SG_MALLOC(ST, orig.features[i].slen);
 			features[i].slen=orig.features[i].slen;
@@ -104,7 +104,7 @@ template<class ST> CStringFeatures<ST>::CStringFeatures(const CStringFeatures & 
 		symbol_mask_table=SG_MALLOC(ST, 256);
 		symbol_mask_table_len=256;
 
-		for (int32_t i=0; i<256; i++)
+		for (index_t i=0; i<256; i++)
 			symbol_mask_table[i]=orig.symbol_mask_table[i];
 	}
 
@@ -194,7 +194,7 @@ template<class ST> void CStringFeatures<ST>::cleanup_feature_vectors(int32_t sta
 		ASSERT(start<get_num_vectors())
 		ASSERT(stop<get_num_vectors())
 
-		for (int32_t i=start; i<=stop; i++)
+		for (index_t i=start; i<=stop; i++)
 		{
 			int32_t real_num=m_subset_stack->subset_idx_conversion(i);
 			SG_FREE(features[real_num].string);
@@ -220,7 +220,7 @@ template<class ST> CFeatures* CStringFeatures<ST>::duplicate() const
 	return new CStringFeatures<ST>(*this);
 }
 
-template<class ST> SGVector<ST> CStringFeatures<ST>::get_feature_vector(int32_t num)
+template<class ST> SGVector<ST> CStringFeatures<ST>::get_feature_vector(index_t num)
 {
 	ASSERT(features)
 	if (num>=get_num_vectors())
@@ -229,7 +229,7 @@ template<class ST> SGVector<ST> CStringFeatures<ST>::get_feature_vector(int32_t 
 				"requested %d)\n", get_num_vectors(), num);
 	}
 
-	int32_t l;
+	index_t l;
 	bool free_vec;
 	ST* vec=get_feature_vector(num, l, free_vec);
 	ST* dst=SG_MALLOC(ST, l);
@@ -238,7 +238,7 @@ template<class ST> SGVector<ST> CStringFeatures<ST>::get_feature_vector(int32_t 
 	return SGVector<ST>(dst, l, true);
 }
 
-template<class ST> void CStringFeatures<ST>::set_feature_vector(SGVector<ST> vector, int32_t num)
+template<class ST> void CStringFeatures<ST>::set_feature_vector(SGVector<ST> vector, index_t num)
 {
 	ASSERT(features)
 
@@ -272,7 +272,7 @@ template<class ST> void CStringFeatures<ST>::disable_on_the_fly_preprocessing()
 	preprocess_on_get=false;
 }
 
-template<class ST> ST* CStringFeatures<ST>::get_feature_vector(int32_t num, int32_t& len, bool& dofree)
+template<class ST> ST* CStringFeatures<ST>::get_feature_vector(index_t num, index_t& len, bool& dofree)
 {
 	ASSERT(features)
 	if (num>=get_num_vectors())
@@ -296,7 +296,7 @@ template<class ST> ST* CStringFeatures<ST>::get_feature_vector(int32_t num, int3
 		{
 			ST* tmp_feat_before=feat;
 
-			for (int32_t i=0; i<get_num_preprocessors(); i++)
+			for (index_t i=0; i<get_num_preprocessors(); i++)
 			{
 				CStringPreprocessor<ST>* p=(CStringPreprocessor<ST>*) get_preprocessor(i);
 				feat=p->apply_to_string(tmp_feat_before, len);
@@ -334,19 +334,19 @@ template<class ST> SGString<ST>* CStringFeatures<ST>::get_transposed(int32_t &nu
 
 	SGString<ST>* sf=SG_MALLOC(SGString<ST>, num_vec);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		sf[i].string=SG_MALLOC(ST, num_feat);
 		sf[i].slen=num_feat;
 	}
 
-	for (int32_t i=0; i<num_feat; i++)
+	for (index_t i=0; i<num_feat; i++)
 	{
-		int32_t len=0;
+		index_t len=0;
 		bool free_vec=false;
 		ST* vec=get_feature_vector(i, len, free_vec);
 
-		for (int32_t j=0; j<num_vec; j++)
+		for (index_t j=0; j<num_vec; j++)
 			sf[j].string[i]=vec[j];
 
 		free_feature_vector(vec, i, free_vec);
@@ -387,11 +387,11 @@ template<class ST> void CStringFeatures<ST>::free_feature_vector(SGVector<ST> fe
 		feature_cache->unlock_entry(real_num);
 }
 
-template<class ST> ST CStringFeatures<ST>::get_feature(int32_t vec_num, int32_t feat_num)
+template<class ST> ST CStringFeatures<ST>::get_feature(index_t vec_num, index_t feat_num)
 {
 	ASSERT(vec_num<get_num_vectors())
 
-	int32_t len;
+	index_t len;
 	bool free_vec;
 	ST* vec=get_feature_vector(vec_num, len, free_vec);
 	ASSERT(feat_num<len)
@@ -401,11 +401,11 @@ template<class ST> ST CStringFeatures<ST>::get_feature(int32_t vec_num, int32_t 
 	return result;
 }
 
-template<class ST> int32_t CStringFeatures<ST>::get_vector_length(int32_t vec_num)
+template<class ST> index_t CStringFeatures<ST>::get_vector_length(index_t vec_num)
 {
 	ASSERT(vec_num<get_num_vectors())
 
-	int32_t len;
+	index_t len;
 	bool free_vec;
 	ST* vec=get_feature_vector(vec_num, len, free_vec);
 	free_feature_vector(vec, vec_num, free_vec);
@@ -417,7 +417,7 @@ template<class ST> int32_t CStringFeatures<ST>::get_max_vector_length()
 	return max_string_length;
 }
 
-template<class ST> int32_t CStringFeatures<ST>::get_num_vectors() const
+template<class ST> index_t CStringFeatures<ST>::get_num_vectors() const
 {
 	return m_subset_stack->has_subsets() ? m_subset_stack->get_size() : num_vectors;
 }
@@ -521,25 +521,25 @@ template<class ST> void CStringFeatures<ST>::load_ascii_file(char* fname, bool r
 				{
 					int32_t len=i-old_sz;
 					//SG_PRINT("i:%d len:%d old_sz:%d\n", i, len, old_sz)
-					max_string_length=CMath::max(max_string_length, len+overflow_len);
+					max_string_length=CMath::max(max_string_length, index_t(len+overflow_len));
 
 					features[lines].slen=len;
 					features[lines].string=SG_MALLOC(ST, len);
 
 					if (remap_to_bin)
 					{
-						for (int32_t j=0; j<overflow_len; j++)
+						for (index_t j=0; j<overflow_len; j++)
 							features[lines].string[j]=alpha->remap_to_bin(overflow[j]);
-						for (int32_t j=0; j<len; j++)
+						for (index_t j=0; j<len; j++)
 							features[lines].string[j+overflow_len]=alpha->remap_to_bin(dummy[old_sz+j]);
 						alpha->add_string_to_histogram(&dummy[old_sz], len);
 						alpha_bin->add_string_to_histogram(features[lines].string, features[lines].slen);
 					}
 					else
 					{
-						for (int32_t j=0; j<overflow_len; j++)
+						for (index_t j=0; j<overflow_len; j++)
 							features[lines].string[j]=overflow[j];
-						for (int32_t j=0; j<len; j++)
+						for (index_t j=0; j<len; j++)
 							features[lines].string[j+overflow_len]=dummy[old_sz+j];
 						alpha->add_string_to_histogram(&dummy[old_sz], len);
 						alpha->add_string_to_histogram(features[lines].string, features[lines].slen);
@@ -592,11 +592,11 @@ template<class ST> bool CStringFeatures<ST>::load_fasta_file(const char* fname, 
 {
 	remove_all_subsets();
 
-	int32_t i=0;
+	index_t i=0;
 	uint64_t len=0;
 	uint64_t offs=0;
-	int32_t num=0;
-	int32_t max_len=0;
+	index_t num=0;
+	index_t max_len=0;
 
 	CMemoryMappedFile<char> f(fname);
 
@@ -653,7 +653,7 @@ template<class ST> bool CStringFeatures<ST>::load_fasta_file(const char* fname, 
 				int32_t idx=0;
 				SG_DEBUG("'%.*s', len=%d, spanned_lines=%d\n", (int32_t) id_len, id, (int32_t) len, (int32_t) spanned_lines)
 
-				for (int32_t j=0; j<fasta_len; j++)
+				for (index_t j=0; j<fasta_len; j++)
 				{
 					if (fasta[j]=='\n')
 						continue;
@@ -735,7 +735,7 @@ template<class ST> bool CStringFeatures<ST>::load_fastq_file(const char* fname,
 		{
 			if (len!=(uint64_t) order)
 				SG_ERROR("read in line %d not of length %d (is %d)\n", 4*i+1, order, len)
-			for (int32_t j=0; j<order; j++)
+			for (index_t j=0; j<order; j++)
 				str[j]=(ST) alphabet->remap_to_bin((uint8_t) s[j]);
 
 			strings[0].string[i]=embed_word(str, order);
@@ -803,14 +803,14 @@ template<class ST> bool CStringFeatures<ST>::load_from_directory(char* dirname)
 	{
 		SGString<ST>* strings=NULL;
 
-		int32_t num=0;
-		int32_t max_len=-1;
+		index_t num=0;
+		index_t max_len=-1;
 
 		//usually n==num_vec, but it might not in race conditions
 		//(file perms modified, file erased)
 		strings=SG_MALLOC(SGString<ST>, n);
 
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
 			char* fname=SGIO::concat_filename(namelist[i]->d_name);
 
@@ -867,7 +867,7 @@ template<class ST> bool CStringFeatures<ST>::set_features(SGString<ST>* p_featur
 		CAlphabet* alpha=new CAlphabet(alphabet->get_alphabet());
 
 		//compute histogram for char/byte
-		for (int32_t i=0; i<p_num_vectors; i++)
+		for (index_t i=0; i<p_num_vectors; i++)
 			alpha->add_string_to_histogram( p_features[i].string, p_features[i].slen);
 
 		SG_INFO("max_value_in_histogram:%d\n", alpha->get_max_value_in_histogram())
@@ -906,7 +906,7 @@ template<class ST> bool CStringFeatures<ST>::append_features(CStringFeatures<ST>
 	SGString<ST>* new_features=SG_MALLOC(SGString<ST>, sf->get_num_vectors());
 
 	index_t sf_num_str=sf->get_num_vectors();
-	for (int32_t i=0; i<sf_num_str; i++)
+	for (index_t i=0; i<sf_num_str; i++)
 	{
 		int32_t real_i = sf->m_subset_stack->subset_idx_conversion(i);
 		int32_t length=sf->features[real_i].slen;
@@ -918,7 +918,7 @@ template<class ST> bool CStringFeatures<ST>::append_features(CStringFeatures<ST>
 			sf->max_string_length);
 }
 
-template<class ST> bool CStringFeatures<ST>::append_features(SGString<ST>* p_features, int32_t p_num_vectors, int32_t p_max_string_length)
+template<class ST> bool CStringFeatures<ST>::append_features(SGString<ST>* p_features, index_t p_num_vectors, index_t p_max_string_length)
 {
 	if (m_subset_stack->has_subsets())
 		SG_ERROR("Cannot call set_features() with subset.\n")
@@ -929,7 +929,7 @@ template<class ST> bool CStringFeatures<ST>::append_features(SGString<ST>* p_fea
 	CAlphabet* alpha=new CAlphabet(alphabet->get_alphabet());
 
 	//compute histogram for char/byte
-	for (int32_t i=0; i<p_num_vectors; i++)
+	for (index_t i=0; i<p_num_vectors; i++)
 		alpha->add_string_to_histogram( p_features[i].string, p_features[i].slen);
 
 	SG_INFO("max_value_in_histogram:%d\n", alpha->get_max_value_in_histogram())
@@ -938,14 +938,14 @@ template<class ST> bool CStringFeatures<ST>::append_features(SGString<ST>* p_fea
 	if (alpha->check_alphabet_size() && alpha->check_alphabet())
 	{
 		SG_UNREF(alpha);
-		for (int32_t i=0; i<p_num_vectors; i++)
+		for (index_t i=0; i<p_num_vectors; i++)
 			alphabet->add_string_to_histogram( p_features[i].string, p_features[i].slen);
 
 		int32_t old_num_vectors=num_vectors;
 		num_vectors=old_num_vectors+p_num_vectors;
 		SGString<ST>* new_features=SG_MALLOC(SGString<ST>, num_vectors);
 
-		for (int32_t i=0; i<num_vectors; i++)
+		for (index_t i=0; i<num_vectors; i++)
 		{
 			if (i<old_num_vectors)
 			{
@@ -979,7 +979,7 @@ template<class ST> SGStringList<ST> CStringFeatures<ST>::get_features()
 	return sl;
 }
 
-template<class ST> SGString<ST>* CStringFeatures<ST>::get_features(int32_t& num_str, int32_t& max_str_len)
+template<class ST> SGString<ST>* CStringFeatures<ST>::get_features(index_t& num_str, index_t& max_str_len)
 {
 	if (m_subset_stack->has_subsets())
 		SG_ERROR("get features() is not possible on subset")
@@ -997,9 +997,9 @@ template<class ST> SGString<ST>* CStringFeatures<ST>::copy_features(int32_t& num
 	max_str_len=max_string_length;
 	SGString<ST>* new_feat=SG_MALLOC(SGString<ST>, num_str);
 
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
-		int32_t len;
+		index_t len;
 		bool free_vec;
 		ST* vec=get_feature_vector(i, len, free_vec);
 		new_feat[i].string=SG_MALLOC(ST, len);
@@ -1067,7 +1067,7 @@ template<class ST> bool CStringFeatures<ST>::load_compressed(char* src, bool dec
 	features=SG_MALLOC(SGString<ST>, num_vectors);
 
 	// vectors
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
 		// vector len compressed
 		int32_t len_compressed;
@@ -1145,9 +1145,9 @@ template<class ST> bool CStringFeatures<ST>::save_compressed(char* dest, E_COMPR
 	fwrite(&max_string_length, sizeof(int32_t), 1, file);
 
 	// vectors
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
-		int32_t len=-1;
+		index_t len=-1;
 		bool vfree;
 		ST* vec=get_feature_vector(i, len, vfree);
 
@@ -1178,7 +1178,7 @@ template<class ST> bool CStringFeatures<ST>::apply_preprocessor(bool force_prepr
 {
 	SG_DEBUG("force: %d\n", force_preprocessing)
 
-	for (int32_t i=0; i<get_num_preprocessors(); i++)
+	for (index_t i=0; i<get_num_preprocessors(); i++)
 	{
 		if ( (!is_preprocessed(i) || force_preprocessing) )
 		{
@@ -1221,7 +1221,7 @@ template<class ST> int32_t CStringFeatures<ST>::obtain_by_sliding_window(int32_t
 
 	SGString<ST>* f=SG_MALLOC(SGString<ST>, num_vectors);
 	int32_t offs=0;
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
 		f[i].string=&features[0].string[offs+skip];
 		f[i].slen=window_size-skip;
@@ -1264,7 +1264,7 @@ template<class ST> int32_t CStringFeatures<ST>::obtain_by_position_list(int32_t 
 	}
 
 	SGString<ST>* f=SG_MALLOC(SGString<ST>, num_vectors);
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
 		int32_t p=positions->get_element(i);
 
@@ -1308,7 +1308,7 @@ template<class ST> bool CStringFeatures<ST>::have_same_length(int32_t len)
 	len=max_string_length;
 
 	index_t num_str=get_num_vectors();
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
 		if (get_vector_length(i)!=len)
 			return false;
@@ -1339,10 +1339,10 @@ template<class ST> void CStringFeatures<ST>::embed_features(int32_t p_order)
 		SG_WARNING("symbols did not fit into datatype \"%c\" (%d)\n", (char) max_val, (int) max_val)
 
 	ST mask=0;
-	for (int32_t i=0; i<p_order*max_val; i++)
+	for (index_t i=0; i<p_order*max_val; i++)
 		mask= (mask<<1) | ((ST) 1);
 
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
 		int32_t len=features[i].slen;
 
@@ -1352,13 +1352,13 @@ template<class ST> void CStringFeatures<ST>::embed_features(int32_t p_order)
 		ST* str=features[i].string;
 
 		// convert first word
-		for (int32_t j=0; j<p_order; j++)
+		for (index_t j=0; j<p_order; j++)
 			str[j]=(ST) alphabet->remap_to_bin(str[j]);
 		str[0]=embed_word(&str[0], p_order);
 
 		// convert the rest
 		int32_t idx=0;
-		for (int32_t j=p_order; j<len; j++)
+		for (index_t j=p_order; j<len; j++)
 		{
 			str[j]=(ST) alphabet->remap_to_bin(str[j]);
 			str[idx+1]= ((str[idx]<<max_val) | str[j]) & mask;
@@ -1381,15 +1381,15 @@ template<class ST> void CStringFeatures<ST>::compute_symbol_mask_table(int64_t m
 	symbol_mask_table_len=256;
 
 	uint64_t mask=0;
-	for (int32_t i=0; i< (int64_t) max_val; i++)
+	for (index_t i=0; i< (int64_t) max_val; i++)
 		mask=(mask<<1) | 1;
 
-	for (int32_t i=0; i<256; i++)
+	for (index_t i=0; i<256; i++)
 	{
 		uint8_t bits=(uint8_t) i;
 		symbol_mask_table[i]=0;
 
-		for (int32_t j=0; j<8; j++)
+		for (index_t j=0; j<8; j++)
 		{
 			if (bits & 1)
 				symbol_mask_table[i]|=mask<<(max_val*j);
@@ -1407,7 +1407,7 @@ template<class ST> void CStringFeatures<ST>::unembed_word(ST word, uint8_t* seq,
 	for (uint32_t i=0; i<nbits; i++)
 		mask=(mask<<1) | (ST) 1;
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		ST w=(word & mask);
 		seq[len-i-1]=alphabet->remap_to_char((uint8_t) w);
@@ -1419,7 +1419,7 @@ template<class ST> ST CStringFeatures<ST>::embed_word(ST* seq, int32_t len)
 {
 	ST value=(ST) 0;
 	uint32_t nbits= (uint32_t) alphabet->get_num_bits();
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		value<<=nbits;
 		value|=seq[i];
@@ -1433,7 +1433,7 @@ template<class ST> void CStringFeatures<ST>::determine_maximum_string_length()
 	max_string_length=0;
 	index_t num_str=get_num_vectors();
 
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
 		max_string_length=CMath::max(max_string_length,
 			features[m_subset_stack->subset_idx_conversion(i)].slen);
@@ -1442,14 +1442,14 @@ template<class ST> void CStringFeatures<ST>::determine_maximum_string_length()
 
 template<class ST> ST* CStringFeatures<ST>::get_zero_terminated_string_copy(SGString<ST> str)
 {
-	int32_t l=str.slen;
+	index_t l=str.slen;
 	ST* s=SG_MALLOC(ST, l+1);
 	memcpy(s, str.string, sizeof(ST)*l);
 	s[l]='\0';
 	return s;
 }
 
-template<class ST> void CStringFeatures<ST>::set_feature_vector(int32_t num, ST* string, int32_t len)
+template<class ST> void CStringFeatures<ST>::set_feature_vector(index_t num, ST* string, index_t len)
 {
 	ASSERT(features)
 	ASSERT(num<get_num_vectors())
@@ -1474,12 +1474,12 @@ template<class ST> void CStringFeatures<ST>::get_histogram(float64_t** hist, int
 	float64_t* h_normalizer=SG_MALLOC(float64_t, slen);
 	memset(h_normalizer, 0, slen*sizeof(float64_t));
 	int32_t num_str=get_num_vectors();
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
-		int32_t len;
+		index_t len;
 		bool free_vec;
 		ST* vec=get_feature_vector(i, len, free_vec);
-		for (int32_t j=0; j<len; j++)
+		for (index_t j=0; j<len; j++)
 		{
 			h[int64_t(j)*nsym+alphabet->remap_to_bin(vec[j])]++;
 			h_normalizer[j]++;
@@ -1489,9 +1489,9 @@ template<class ST> void CStringFeatures<ST>::get_histogram(float64_t** hist, int
 
 	if (normalize)
 	{
-		for (int32_t i=0; i<slen; i++)
+		for (index_t i=0; i<slen; i++)
 		{
-			for (int32_t j=0; j<nsym; j++)
+			for (index_t j=0; j<nsym; j++)
 			{
 				if (h_normalizer && h_normalizer[i])
 					h[int64_t(i)*nsym+j]/=h_normalizer[i];
@@ -1512,14 +1512,14 @@ template<class ST> void CStringFeatures<ST>::create_random(float64_t* hist, int3
 	float64_t* randoms=SG_MALLOC(float64_t, cols);
 	SGString<ST>* sf=SG_MALLOC(SGString<ST>, num_vec);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		sf[i].string=SG_MALLOC(ST, cols);
 		sf[i].slen=cols;
 
 		SGVector<float64_t>::random_vector(randoms, cols, 0.0, 1.0);
 
-		for (int32_t j=0; j<cols; j++)
+		for (index_t j=0; j<cols; j++)
 		{
 			float64_t lik=hist[int64_t(j)*rows+0];
 
@@ -1544,11 +1544,11 @@ CStringFeatures<SSKTripleFeature>* obtain_sssk_triple_from_cha(int d1, int d2)
 	int32_t nStr=get_num_vectors();
 
 	int32_t nfeat=0;
-	for (int32_t i=0; i < nStr; ++i)
+	for (index_t i=0; i < nStr; ++i)
 		nfeat += get_vector_length[i] - d1 -d2;
 	SGString<SSKFeature>* F= SG_MALLOC(SGString<SSKFeature>, nfeat);
 	int32_t c=0;
-	for (int32_t i=0; i < nStr; ++i)
+	for (index_t i=0; i < nStr; ++i)
 	{
 	int32_t len;
 	bool free_vec;
@@ -1556,7 +1556,7 @@ CStringFeatures<SSKTripleFeature>* obtain_sssk_triple_from_cha(int d1, int d2)
 	free_feature_vector(vec, vec_num, free_vec);
 		int32_t n=len - d1 - d2;
 		s=S[i];
-		for (int32_t j=0; j < n; ++j)
+		for (index_t j=0; j < n; ++j)
 		{
 			F[c].feature1=s[j];
 			F[c].feature2=s[j+d1];
@@ -1648,7 +1648,7 @@ template<class ST> void CStringFeatures<ST>::subset_changed_post()
 	determine_maximum_string_length();
 }
 
-template<class ST> ST* CStringFeatures<ST>::compute_feature_vector(int32_t num, int32_t& len)
+template<class ST> ST* CStringFeatures<ST>::compute_feature_vector(index_t num, index_t& len)
 {
 	ASSERT(features && num<get_num_vectors())
 
@@ -1994,9 +1994,9 @@ bool CStringFeatures<ST>::obtain_from_char_features(CStringFeatures<CT>* sf, int
 	SG_DEBUG("%1.0llf symbols in StringFeatures<*> %d symbols in histogram\n", sf->get_num_symbols(),
 			alpha->get_num_symbols_in_histogram());
 
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
-		int32_t len=-1;
+		index_t len=-1;
 		bool vfree;
 		CT* c=sf->get_feature_vector(i, len, vfree);
 		ASSERT(!vfree) // won't work when preprocessors are attached
@@ -2005,7 +2005,7 @@ bool CStringFeatures<ST>::obtain_from_char_features(CStringFeatures<CT>* sf, int
 		features[i].slen=len;
 
 		ST* str=features[i].string;
-		for (int32_t j=0; j<len; j++)
+		for (index_t j=0; j<len; j++)
 			str[j]=(ST) alpha->remap_to_bin(c[j]);
 	}
 
@@ -2027,9 +2027,9 @@ bool CStringFeatures<ST>::obtain_from_char_features(CStringFeatures<CT>* sf, int
 	}
 
 	SG_DEBUG("translate: start=%i order=%i gap=%i(size:%i)\n", start, p_order, gap, sizeof(ST))
-	for (int32_t line=0; line<num_vectors; line++)
+	for (index_t line=0; line<num_vectors; line++)
 	{
-		int32_t len=0;
+		index_t len=0;
 		bool vfree;
 		ST* fv=get_feature_vector(line, len, vfree);
 		ASSERT(!vfree) // won't work when preprocessors are attached

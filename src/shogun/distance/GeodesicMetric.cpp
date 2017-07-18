@@ -42,9 +42,9 @@ void CGeodesicMetric::cleanup()
 {
 }
 
-float64_t CGeodesicMetric::compute(int32_t idx_a, int32_t idx_b)
+float64_t CGeodesicMetric::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool afree, bfree;
 
 	float64_t* avec=
@@ -59,7 +59,7 @@ float64_t CGeodesicMetric::compute(int32_t idx_a, int32_t idx_b)
 	float64_t nx=0;
 	float64_t ny=0;
 	{
-		for (int32_t i=0; i<alen; i++)
+		for (index_t i=0; i<alen; i++)
 		{
 			d+=avec[i]*bvec[i];
 			nx+=avec[i]*avec[i];

@@ -31,7 +31,7 @@ public:
         static int32_t hamming_distance(T1 *c1, T2 *c2, int32_t len)
         {
             int32_t dist = 0;
-            for (int32_t i=0; i < len; ++i)
+            for (index_t i=0; i < len; ++i)
                 dist += static_cast<int32_t>(CMath::abs((c1[i]-c2[i])));
             return dist/2;
         }

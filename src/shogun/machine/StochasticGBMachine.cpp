@@ -146,7 +146,7 @@ CRegressionLabels* CStochasticGBMachine::apply_regression(CFeatures* data)
 
 	SGVector<float64_t> retlabs(feats->get_num_vectors());
 	retlabs.fill_vector(retlabs.vector,retlabs.vlen,0);
-	for (int32_t i=0;i<m_num_iter;i++)
+	for (index_t i=0;i<m_num_iter;i++)
 	{
 		float64_t gamma=m_gamma->get_element(i);
 
@@ -157,7 +157,7 @@ CRegressionLabels* CStochasticGBMachine::apply_regression(CFeatures* data)
 		CRegressionLabels* dlabels=machine->apply_regression(feats);
 		SGVector<float64_t> delta=dlabels->get_labels();
 
-		for (int32_t j=0;j<retlabs.vlen;j++)
+		for (index_t j=0;j<retlabs.vlen;j++)
 			retlabs[j]+=delta[j]*gamma*m_learning_rate;
 
 		SG_UNREF(dlabels);
@@ -181,10 +181,10 @@ bool CStochasticGBMachine::train_machine(CFeatures* data)
 	// cache predicted labels for intermediate models
 	CRegressionLabels* interf=new CRegressionLabels(feats->get_num_vectors());
 	SG_REF(interf);
-	for (int32_t i=0;i<interf->get_num_labels();i++)
+	for (index_t i=0;i<interf->get_num_labels();i++)
 		interf->set_label(i,0);
 
-	for (int32_t i=0;i<m_num_iter;i++)
+	for (index_t i=0;i<m_num_iter;i++)
 	{
 		// apply subset
 		if (m_subset_frac!=1.0)
@@ -214,7 +214,7 @@ bool CStochasticGBMachine::train_machine(CFeatures* data)
 		// update intermediate function value
 		CRegressionLabels* dlabels=wlearner->apply_regression(feats);
 		SGVector<float64_t> delta=dlabels->get_labels();
-		for (int32_t j=0;j<interf->get_num_labels();j++)
+		for (index_t j=0;j<interf->get_num_labels();j++)
 			interf->set_label(j,interf->get_label(j)+delta[j]*gamma*m_learning_rate);
 
 		SG_UNREF(dlabels);
@@ -266,7 +266,7 @@ CRegressionLabels* CStochasticGBMachine::compute_pseudo_residuals(CRegressionLab
 	SGVector<float64_t> f=inter_f->get_labels();
 
 	SGVector<float64_t> residuals(f.vlen);
-	for (int32_t i=0;i<residuals.vlen;i++)
+	for (index_t i=0;i<residuals.vlen;i++)
 		residuals[i]=-m_loss->first_derivative(f[i],labels[i]);
 
 	return new CRegressionLabels(residuals);
@@ -333,7 +333,7 @@ float64_t CStochasticGBMachine::lbfgs_evaluate(void *obj, const float64_t *param
 
 		*gradient=0;
 		float64_t ret=0;
-		for (int32_t i=0;i<labels.vlen;i++)
+		for (index_t i=0;i<labels.vlen;i++)
 		{
 			*gradient+=lossf->first_derivative((*parameters),labels[i]);
 			ret+=lossf->loss((*parameters),labels[i]);
@@ -369,7 +369,7 @@ float64_t CStochasticGBMachine::lbfgs_evaluate(void *obj, const float64_t *param
 
 	*gradient=0;
 	float64_t ret=0;
-	for (int32_t i=0;i<labels.vlen;i++)
+	for (index_t i=0;i<labels.vlen;i++)
 	{
 		*gradient+=lossf->first_derivative((*parameters)*hm[i]+f[i],labels[i]);
 		ret+=lossf->loss((*parameters)*hm[i]+f[i],labels[i]);

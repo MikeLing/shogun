@@ -129,7 +129,7 @@ void CTreeMaxProduct::get_message_order(std::vector<MessageEdge*>& order,
 
 	std::fill(is_root.begin(), is_root.end(), false);
 
-	for (int32_t vi = 0; vi < num_vars; vi++)
+	for (index_t vi = 0; vi < num_vars; vi++)
 		is_root[dset->find_set(vi)] = true;
 
 	SG_UNREF(dset);
@@ -140,11 +140,11 @@ void CTreeMaxProduct::get_message_order(std::vector<MessageEdge*>& order,
 	var_factor_map_type vf_map;
 	CDynamicObjectArray* facs = m_fg->get_factors();
 
-	for (int32_t fi = 0; fi < facs->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < facs->get_num_elements(); ++fi)
 	{
 		CFactor* fac = dynamic_cast<CFactor*>(facs->get_element(fi));
 		SGVector<int32_t> vars = fac->get_variables();
-		for (int32_t vi = 0; vi < vars.size(); vi++)
+		for (index_t vi = 0; vi < vars.size(); vi++)
 			vf_map.insert(var_factor_map_type::value_type(vars[vi], fi));
 
 		SG_UNREF(fac);
@@ -192,7 +192,7 @@ void CTreeMaxProduct::get_message_order(std::vector<MessageEdge*>& order,
 			SGVector<int32_t> vars = fac->get_variables();
 			SG_UNREF(fac);
 
-			for (int32_t vi = 0; vi < vars.size(); vi++)
+			for (index_t vi = 0; vi < vars.size(); vi++)
 			{
 				if (vars[vi] == node->parent)
 					continue;
@@ -218,7 +218,7 @@ float64_t CTreeMaxProduct::inference(SGVector<int32_t> assignment)
 	bottom_up_pass();
 	top_down_pass();
 
-	for (int32_t vi = 0; vi < assignment.size(); vi++)
+	for (index_t vi = 0; vi < assignment.size(); vi++)
 		assignment[vi] = m_states[vi];
 
 	SG_DEBUG("fg.evaluate_energy(assignment) = %f\n", m_fg->evaluate_energy(assignment));
@@ -292,11 +292,11 @@ void CTreeMaxProduct::bottom_up_pass()
 			// TODO: optimize with index_from_new_state()
 			// marginalization
 			// r_f2v = max(-fenrg + sum_{j!=var_id} q_v2f[adj_var_state])
-			for (int32_t ei = 0; ei < fenrgs.size(); ei++)
+			for (index_t ei = 0; ei < fenrgs.size(); ei++)
 			{
 				r_f2v[ei] = -fenrgs[ei];
 
-				for (int32_t vi = 0; vi < fvars.size(); vi++)
+				for (index_t vi = 0; vi < fvars.size(); vi++)
 				{
 					if (vi == var_id_index)
 						continue;
@@ -314,7 +314,7 @@ void CTreeMaxProduct::bottom_up_pass()
 			}
 
 			// in max-product, final r_f2v = r_f2v_max
-			for (int32_t si = 0; si < cards[var_id]; si++)
+			for (index_t si = 0; si < cards[var_id]; si++)
 				m_fw_msgs[mi][si] = r_f2v_max[si];
 
 			SG_UNREF(ftype);
@@ -394,7 +394,7 @@ void CTreeMaxProduct::top_down_pass()
 	//   compute marginal of f
 	// else var <- factor edge
 	//   compute r_f2v
-	for (int32_t mi = (int32_t)(m_msg_order.size()-1); mi >= 0; --mi)
+	for (index_t mi = (int32_t)(m_msg_order.size()-1); mi >= 0; --mi)
 	{
 		SG_DEBUG("mi = %d, mtype: %d %d <- %d\n", mi,
 			m_msg_order[mi]->mtype, m_msg_order[mi]->child, m_msg_order[mi]->parent);
@@ -448,7 +448,7 @@ void CTreeMaxProduct::top_down_pass()
 				int32_t nei = ftype->index_from_new_state(ei, var_id_index, m_states[var_id]);
 				marg[ei] = -fenrgs[nei];
 
-				for (int32_t vi = 0; vi < fvars.size(); vi++)
+				for (index_t vi = 0; vi < fvars.size(); vi++)
 				{
 					if (vi == var_id_index)
 					{
@@ -474,7 +474,7 @@ void CTreeMaxProduct::top_down_pass()
 				- marg.begin());
 
 			// infer states of neiboring vars of f
-			for (int32_t vi = 0; vi < fvars.size(); vi++)
+			for (index_t vi = 0; vi < fvars.size(); vi++)
 			{
 				int32_t nvar_id = fvars[vi];
 				// usually parent node has been inferred
@@ -511,11 +511,11 @@ void CTreeMaxProduct::top_down_pass()
 				-std::numeric_limits<float64_t>::infinity());
 
 			// r_f2v = max(-fenrg + sum_{j!=var_id} q_v2f[adj_var_state])
-			for (int32_t ei = 0; ei < fenrgs.size(); ei++)
+			for (index_t ei = 0; ei < fenrgs.size(); ei++)
 			{
 				r_f2v[ei] = -fenrgs[ei];
 
-				for (int32_t vi = 0; vi < fvars.size(); vi++)
+				for (index_t vi = 0; vi < fvars.size(); vi++)
 				{
 					if (vi == var_id_index)
 						continue;
@@ -544,7 +544,7 @@ void CTreeMaxProduct::top_down_pass()
 					r_f2v_max[var_id_state] = r_f2v[ei];
 			}
 
-			for (int32_t si = 0; si < cards[var_id]; si++)
+			for (index_t si = 0; si < cards[var_id]; si++)
 				m_bw_msgs[mi][si] = r_f2v_max[si];
 
 			SG_UNREF(ftype);

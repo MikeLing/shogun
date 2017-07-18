@@ -112,9 +112,9 @@ bool CStochasticSOSVM::train_machine(CFeatures* data)
 
 	// Main loop
 	int32_t k = 0;
-	for (int32_t pi = 0; pi < m_num_iter; ++pi)
+	for (index_t pi = 0; pi < m_num_iter; ++pi)
 	{
-		for (int32_t si = 0; si < N; ++si)
+		for (index_t si = 0; si < N; ++si)
 		{
 			// 1) Picking random example
 			int32_t i = CMath::random(0, N-1);

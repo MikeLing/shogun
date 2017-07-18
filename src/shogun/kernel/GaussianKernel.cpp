@@ -109,10 +109,10 @@ SGMatrix<float64_t> CGaussianKernel::get_parameter_gradient(const TParameter* pa
 	if (!strcmp(param->m_name, "log_width"))
 	{
 		SGMatrix<float64_t> derivative=SGMatrix<float64_t>(num_lhs, num_rhs);
-		for (int k=0; k<num_rhs; k++)
+		for (index_t k=0; k<num_rhs; k++)
 		{
 #pragma omp parallel for
-			for (int j=0; j<num_lhs; j++)
+			for (index_t j=0; j<num_lhs; j++)
 			{
 				float64_t element=distance(j, k);
 				derivative(j, k)=CMath::exp(-element)*element*2.0;
@@ -127,7 +127,7 @@ SGMatrix<float64_t> CGaussianKernel::get_parameter_gradient(const TParameter* pa
 	}
 }
 
-float64_t CGaussianKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CGaussianKernel::compute(index_t idx_a, index_t idx_b)
 {
     float64_t result=distance(idx_a, idx_b);
     return CMath::exp(-result);

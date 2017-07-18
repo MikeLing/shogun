@@ -71,7 +71,7 @@ bool CLibSVM::train_machine(CFeatures* data)
 		// fill with minus ones
 		problem.pv = SG_MALLOC(float64_t, problem.l);
 
-		for (int i=0; i!=problem.l; i++)
+		for (index_t i=0; i!=problem.l; i++)
 			problem.pv[i] = -1.0;
 	}
 
@@ -81,7 +81,7 @@ bool CLibSVM::train_machine(CFeatures* data)
 
 	x_space=SG_MALLOC(struct svm_node, 2*problem.l);
 
-	for (int32_t i=0; i<problem.l; i++)
+	for (index_t i=0; i<problem.l; i++)
 	{
 		problem.y[i]=((CBinaryLabels*) m_labels)->get_label(i);
 		problem.x[i]=&x_space[2*i];
@@ -146,7 +146,7 @@ bool CLibSVM::train_machine(CFeatures* data)
 
 		set_bias(-sgn*model->rho[0]);
 
-		for (int32_t i=0; i<num_sv; i++)
+		for (index_t i=0; i<num_sv; i++)
 		{
 			set_support_vector(i, (model->SV[i])->index);
 			set_alpha(i, sgn*model->sv_coef[0][i]);

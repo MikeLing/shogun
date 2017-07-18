@@ -61,9 +61,9 @@ void CHammingWordDistance::cleanup()
 {
 }
 
-float64_t CHammingWordDistance::compute(int32_t idx_a, int32_t idx_b)
+float64_t CHammingWordDistance::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_avec, free_bvec;
 
 	uint16_t* avec=((CStringFeatures<uint16_t>*) lhs)->
@@ -71,10 +71,10 @@ float64_t CHammingWordDistance::compute(int32_t idx_a, int32_t idx_b)
 	uint16_t* bvec=((CStringFeatures<uint16_t>*) rhs)->
 		get_feature_vector(idx_b, blen, free_bvec);
 
-	int32_t result=0;
+	index_t result=0;
 
-	int32_t left_idx=0;
-	int32_t right_idx=0;
+	index_t left_idx=0;
+	index_t right_idx=0;
 
 	if (use_sign)
 	{

@@ -136,7 +136,7 @@ bool CSVMLightOneClass::train_machine(CFeatures* data)
 	// brain damaged svm light work around
 	create_new_model(model->sv_num-1);
 	set_bias(-model->b);
-	for (int32_t i=0; i<model->sv_num-1; i++)
+	for (index_t i=0; i<model->sv_num-1; i++)
 	{
 		set_alpha(i, model->alpha[i+1]);
 		set_support_vector(i, model->supvec[i+1]);

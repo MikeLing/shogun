@@ -20,7 +20,7 @@ TEST(ProtobufFileTest, vector_int32)
 
 	int32_t len=1024*1024;
 	SGVector<int32_t> data(len);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		data[i]=(int32_t) rand->random(0, len);
 
 	CProtobufFile* fin;
@@ -35,7 +35,7 @@ TEST(ProtobufFileTest, vector_int32)
 	fin->get_vector(data_from_file.vector, data_from_file.vlen);
 	EXPECT_EQ(data_from_file.vlen, len);
 
-	for (int32_t i=0; i<data_from_file.vlen; i++)
+	for (index_t i=0; i<data_from_file.vlen; i++)
 	{
 		EXPECT_EQ(data_from_file[i], data[i]);
 	}
@@ -50,7 +50,7 @@ TEST(ProtobufFileTest, vector_float64)
 
 	int32_t len=1024*1024;
 	SGVector<float64_t> data(len);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		data[i]=(float64_t) rand->random(0, 1);
 
 	CProtobufFile* fin;
@@ -65,7 +65,7 @@ TEST(ProtobufFileTest, vector_float64)
 	fin->get_vector(data_from_file.vector, data_from_file.vlen);
 	EXPECT_EQ(data_from_file.vlen, len);
 
-	for (int32_t i=0; i<data_from_file.vlen; i++)
+	for (index_t i=0; i<data_from_file.vlen; i++)
 	{
 		EXPECT_NEAR(data_from_file[i], data[i], 1E-14);
 	}
@@ -81,9 +81,9 @@ TEST(ProtobufFileTest, matrix_int32)
 	int32_t num_rows=1024;
 	int32_t num_cols=512;
 	SGMatrix<int32_t> data(num_rows, num_cols);
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			data(i, j)=(int32_t) rand->random(0, num_rows);
 	}
 
@@ -100,9 +100,9 @@ TEST(ProtobufFileTest, matrix_int32)
 	EXPECT_EQ(data_from_file.num_rows, num_rows);
 	EXPECT_EQ(data_from_file.num_cols, num_cols);
 
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			EXPECT_EQ(data_from_file(i, j), data(i, j));
 	}
 
@@ -118,9 +118,9 @@ TEST(ProtobufFileTest, matrix_float64)
 	int32_t num_rows=1024;
 	int32_t num_cols=512;
 	SGMatrix<float64_t> data(num_rows, num_cols);
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			data(i, j)=(float64_t) rand->random(0, 1);
 	}
 
@@ -137,9 +137,9 @@ TEST(ProtobufFileTest, matrix_float64)
 	EXPECT_EQ(data_from_file.num_rows, num_rows);
 	EXPECT_EQ(data_from_file.num_cols, num_cols);
 
-	for (int32_t i=0; i<num_rows; i++)
+	for (index_t i=0; i<num_rows; i++)
 	{
-		for (int32_t j=0; j<num_cols; j++)
+		for (index_t j=0; j<num_cols; j++)
 			EXPECT_NEAR(data_from_file(i, j), data(i, j), 1E-14);
 	}
 
@@ -158,10 +158,10 @@ TEST(ProtobufFileTest, sparse_matrix_int32)
 	int32_t num_feat=0;
 
 	SGSparseVector<int32_t>* data=SG_MALLOC(SGSparseVector<int32_t>, num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		data[i]=SGSparseVector<int32_t>(rand->random(0, max_num_entries));
-		for (int32_t j=0; j<data[i].num_feat_entries; j++)
+		for (index_t j=0; j<data[i].num_feat_entries; j++)
 		{
 			int32_t feat_index=(j+1)*2;
 			if (feat_index>num_feat)
@@ -185,9 +185,9 @@ TEST(ProtobufFileTest, sparse_matrix_int32)
 
 	EXPECT_EQ(num_vec_from_file, num_vec);
 	EXPECT_EQ(num_feat_from_file, num_feat);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
-		for (int32_t j=0; j<data[i].num_feat_entries; j++)
+		for (index_t j=0; j<data[i].num_feat_entries; j++)
 		{
 			EXPECT_EQ(data[i].features[j].feat_index,
 					data_from_file[i].features[j].feat_index);
@@ -215,10 +215,10 @@ TEST(ProtobufFileTest, sparse_matrix_float64)
 	int32_t num_feat=0;
 
 	SGSparseVector<float64_t>* data=SG_MALLOC(SGSparseVector<float64_t>, num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		data[i]=SGSparseVector<float64_t>(rand->random(0, max_num_entries));
-		for (int32_t j=0; j<data[i].num_feat_entries; j++)
+		for (index_t j=0; j<data[i].num_feat_entries; j++)
 		{
 			int32_t feat_index=(j+1)*2;
 			if (feat_index>num_feat)
@@ -242,9 +242,9 @@ TEST(ProtobufFileTest, sparse_matrix_float64)
 
 	EXPECT_EQ(num_vec_from_file, num_vec);
 	EXPECT_EQ(num_feat_from_file, num_feat);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
-		for (int32_t j=0; j<data[i].num_feat_entries; j++)
+		for (index_t j=0; j<data[i].num_feat_entries; j++)
 		{
 			EXPECT_EQ(data[i].features[j].feat_index,
 					data_from_file[i].features[j].feat_index);
@@ -270,10 +270,10 @@ TEST(ProtobufFileTest, DISABLED_string_list_char)
 	int32_t num_str=1024;
 	int32_t max_string_len=1024;
 	SGString<char>* strings=SG_MALLOC(SGString<char>, num_str);
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
 		strings[i]=SGString<char>((int32_t) rand->random(1, max_string_len));
-		for (int32_t j=0; j<strings[i].slen; j++)
+		for (index_t j=0; j<strings[i].slen; j++)
 			strings[i].string[j]=(char) rand->random(0, 255);
 	}
 
@@ -291,9 +291,9 @@ TEST(ProtobufFileTest, DISABLED_string_list_char)
 	fin->get_string_list(data_from_file, num_str_from_file, max_string_len_from_file);
 	EXPECT_EQ(num_str_from_file, num_str);
 
-	for (int32_t i=0; i<num_str; i++)
+	for (index_t i=0; i<num_str; i++)
 	{
-		for (int32_t j=0; j<strings[i].slen; j++)
+		for (index_t j=0; j<strings[i].slen; j++)
 			EXPECT_EQ(strings[i].string[j], data_from_file[i].string[j]);
 	}
 

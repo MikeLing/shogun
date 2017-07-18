@@ -78,7 +78,7 @@ SGVector<float64_t> CBaggingMachine::apply_get_outputs(CFeatures* data)
 
 	
 	#pragma omp parallel for
-	for (int32_t i = 0; i < m_num_bags; ++i)
+	for (index_t i = 0; i < m_num_bags; ++i)
 	{
 		CMachine* m = dynamic_cast<CMachine*>(m_bags->get_element(i));
 		CLabels* l = m->apply(data);
@@ -132,7 +132,7 @@ bool CBaggingMachine::train_machine(CFeatures* data)
 	  TODO: enable multi-threaded learning. This requires views support
 		on CFeatures*/
 	#pragma omp parallel for	
-	for (int32_t i = 0; i < m_num_bags; ++i)
+	for (index_t i = 0; i < m_num_bags; ++i)
 	{
 		CMachine* c=dynamic_cast<CMachine*>(m_machine->clone());
 		ASSERT(c != NULL);
@@ -327,7 +327,7 @@ float64_t CBaggingMachine::get_oob_error(CEvaluation* eval) const
 
 	SGVector<float64_t> combined = m_combination_rule->combine(output);
 	SGVector<float64_t> lab(idx.get_num_elements());
-	for (int32_t i=0;i<lab.vlen;i++)
+	for (index_t i=0;i<lab.vlen;i++)
 		lab[i]=combined[idx.get_element(i)];
 
 	CLabels* predicted = NULL;

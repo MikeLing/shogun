@@ -277,7 +277,7 @@ class Model
 #endif
 			fix_pos_state[pos*num_states+state]=value;
 			if (value==FIX_ALLOWED)
-				for (int32_t i=0; i<num_states; i++)
+				for (index_t i=0; i<num_states; i++)
 					if (get_fix_pos_state(pos,i,num_states)==FIX_DEFAULT)
 						set_fix_pos_state(pos,i,num_states,FIX_DISALLOWED) ;
 		}
@@ -508,9 +508,9 @@ class CHMM : public CDistribution
 		 */
 		virtual bool train(CFeatures* data=NULL);
 		virtual int32_t get_num_model_parameters() { return N*(N+M+2); }
-		virtual float64_t get_log_model_parameter(int32_t num_param);
-		virtual float64_t get_log_derivative(int32_t num_param, int32_t num_example);
-		virtual float64_t get_log_likelihood_example(int32_t num_example)
+		virtual float64_t get_log_model_parameter(index_t num_param);
+		virtual float64_t get_log_derivative(index_t num_param, index_t num_example);
+		virtual float64_t get_log_likelihood_example(index_t num_example)
 		{
 			return model_probability(num_example);
 		}
@@ -590,17 +590,17 @@ class CHMM : public CDistribution
 		 * @param dimension dimension for which probability is calculated
 		 * @return model probability
 		 */
-		inline float64_t linear_model_probability(int32_t dimension)
+		inline float64_t linear_model_probability(index_t dimension)
 		{
 			float64_t lik=0;
-			int32_t len=0;
+			index_t len=0;
 			bool free_vec;
 			uint16_t* o=p_observations->get_feature_vector(dimension, len, free_vec);
 			float64_t* obs_b=observation_matrix_b;
 
 			ASSERT(N==len)
 
-			for (int32_t i=0; i<N; i++)
+			for (index_t i=0; i<N; i++)
 			{
 				lik+=obs_b[*o++];
 				obs_b+=M;
@@ -611,7 +611,7 @@ class CHMM : public CDistribution
 			// sorry, the above code is the speed optimized version of :
 			/*	float64_t lik=0;
 
-				for (int32_t i=0; i<N; i++)
+				for (index_t i=0; i<N; i++)
 				lik+=get_b(i, p_observations->get_feature(dimension, i));
 				return lik;
 				*/
@@ -1395,7 +1395,7 @@ inline float64_t linear_model_derivative(
 {
 	float64_t der=0;
 
-	for (int32_t k=0; k<N; k++)
+	for (index_t k=0; k<N; k++)
 	{
 		if (k!=i || p_observations->get_feature(dimension, k) != j)
 			der+=get_b(k, p_observations->get_feature(dimension, k));
@@ -1424,7 +1424,7 @@ inline float64_t model_derivative_q(T_STATES i, int32_t dimension)
 inline float64_t model_derivative_a(T_STATES i, T_STATES j, int32_t dimension)
 {
 	float64_t sum=-CMath::INFTY;
-	for (int32_t t=0; t<p_observations->get_vector_length(dimension)-1; t++)
+	for (index_t t=0; t<p_observations->get_vector_length(dimension)-1; t++)
 		sum= CMath::logarithmic_sum(sum, forward(t, i, dimension) + backward(t+1, j, dimension) + get_b(j, p_observations->get_feature(dimension,t+1)));
 
 	return sum;
@@ -1435,7 +1435,7 @@ inline float64_t model_derivative_a(T_STATES i, T_STATES j, int32_t dimension)
 inline float64_t model_derivative_b(T_STATES i, uint16_t j, int32_t dimension)
 {
 	float64_t sum=-CMath::INFTY;
-	for (int32_t t=0; t<p_observations->get_vector_length(dimension); t++)
+	for (index_t t=0; t<p_observations->get_vector_length(dimension); t++)
 	{
 		if (p_observations->get_feature(dimension,t)==j)
 			sum= CMath::logarithmic_sum(sum, forward(t,i,dimension)+backward(t,i,dimension)-get_b(i,p_observations->get_feature(dimension,t)));

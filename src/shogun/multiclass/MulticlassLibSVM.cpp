@@ -59,7 +59,7 @@ bool CMulticlassLibSVM::train_machine(CFeatures* data)
 
 	x_space=SG_MALLOC(struct svm_node, 2*problem.l);
 
-	for (int32_t i=0; i<problem.l; i++)
+	for (index_t i=0; i<problem.l; i++)
 	{
 		problem.pv[i]=-1.0;
 		problem.y[i]=((CMulticlassLabels*) m_labels)->get_label(i);
@@ -108,13 +108,13 @@ bool CMulticlassLibSVM::train_machine(CFeatures* data)
 		int32_t* offsets=SG_MALLOC(int32_t, num_classes);
 		offsets[0]=0;
 
-		for (int32_t i=1; i<num_classes; i++)
+		for (index_t i=1; i<num_classes; i++)
 			offsets[i] = offsets[i-1]+model->nSV[i-1];
 
 		int32_t s=0;
-		for (int32_t i=0; i<num_classes; i++)
+		for (index_t i=0; i<num_classes; i++)
 		{
-			for (int32_t j=i+1; j<num_classes; j++)
+			for (index_t j=i+1; j<num_classes; j++)
 			{
 				int32_t k, l;
 

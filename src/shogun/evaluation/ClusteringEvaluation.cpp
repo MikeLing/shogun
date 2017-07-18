@@ -23,7 +23,7 @@ using namespace std;
 int32_t CClusteringEvaluation::find_match_count(SGVector<int32_t> l1, int32_t m1, SGVector<int32_t> l2, int32_t m2)
 {
 	int32_t match_count=0;
-	for (int32_t i=l1.vlen-1; i >= 0; --i)
+	for (index_t i=l1.vlen-1; i >= 0; --i)
 	{
 		if (l1[i] == m1 && l2[i] == m2)
 			match_count++;
@@ -53,9 +53,9 @@ void CClusteringEvaluation::best_map(CLabels* predicted, CLabels* ground_truth)
 	SGMatrix<float64_t> G(n_class, n_class);
 	G.zero();
 
-	for (int32_t i=0; i < label_g.vlen; ++i)
+	for (index_t i=0; i < label_g.vlen; ++i)
 	{
-		for (int32_t j=0; j < label_p.vlen; ++j)
+		for (index_t j=0; j < label_p.vlen; ++j)
 		{
 			G(i, j)=find_mismatch_count(groundtruth_ilabels, static_cast<int32_t>(label_g[i]),
 				predicted_ilabels, static_cast<int32_t>(label_p[j]));
@@ -66,9 +66,9 @@ void CClusteringEvaluation::best_map(CLabels* predicted, CLabels* ground_truth)
 	munkres_solver.solve();
 
 	std::map<int32_t, int32_t> label_map;
-	for (int32_t i=0; i < label_p.vlen; ++i)
+	for (index_t i=0; i < label_p.vlen; ++i)
 	{
-		for (int32_t j=0; j < label_g.vlen; ++j)
+		for (index_t j=0; j < label_g.vlen; ++j)
 		{
 			if (G(j, i) == 0)
 			{
@@ -79,6 +79,6 @@ void CClusteringEvaluation::best_map(CLabels* predicted, CLabels* ground_truth)
 		}
 	}
 
-	for (int32_t i= 0; i < predicted_ilabels.vlen; ++i)
+	for (index_t i= 0; i < predicted_ilabels.vlen; ++i)
 		((CMulticlassLabels*) predicted)->set_int_label(i, label_map[predicted_ilabels[i]]);
 }

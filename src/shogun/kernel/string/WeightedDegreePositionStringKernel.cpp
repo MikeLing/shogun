@@ -91,7 +91,7 @@ CWeightedDegreePositionStringKernel::CWeightedDegreePositionStringKernel(
 	weights_degree=degree;
 	weights_length=(1+max_mismatch);
 
-	for (int32_t i=0; i<d*(1+max_mismatch); i++)
+	for (index_t i=0; i<d*(1+max_mismatch); i++)
 		weights[i]=w[i];
 
 	set_shifts(s);
@@ -192,7 +192,7 @@ bool CWeightedDegreePositionStringKernel::init(CFeatures* l, CFeatures* r)
 	if (shift_len==0) {
 		shift_len=sf_l->get_vector_length(0);
 		int32_t *shifts=SG_MALLOC(int32_t, shift_len);
-		for (int32_t i=0; i<shift_len; i++) {
+		for (index_t i=0; i<shift_len; i++) {
 			shifts[i]=1;
 		}
 		set_shifts(SGVector<int32_t>(shifts, shift_len, false));
@@ -268,7 +268,7 @@ bool CWeightedDegreePositionStringKernel::init_optimization(
 	if (tree_num<0)
 		SG_DEBUG("initializing CWeightedDegreePositionStringKernel optimization\n")
 
-	for (int32_t i=0; i<p_count; i++)
+	for (index_t i=0; i<p_count; i++)
 	{
 		if (tree_num<0)
 		{
@@ -278,7 +278,7 @@ bool CWeightedDegreePositionStringKernel::init_optimization(
 		}
 		else
 		{
-			for (int32_t t=tree_num; t<=upto_tree; t++)
+			for (index_t t=tree_num; t<=upto_tree; t++)
 				add_example_to_single_tree(IDX[i], alphas[i], t);
 		}
 	}
@@ -320,18 +320,18 @@ float64_t CWeightedDegreePositionStringKernel::compute_with_mismatch(
 {
 	float64_t* max_shift_vec= SG_MALLOC(float64_t, max_shift);
     float64_t sum0=0 ;
-    for (int32_t i=0; i<max_shift; i++)
+    for (index_t i=0; i<max_shift; i++)
 		max_shift_vec[i]=0 ;
 
     // no shift
-    for (int32_t i=0; i<alen; i++)
+    for (index_t i=0; i<alen; i++)
     {
 		if ((position_weights!=NULL) && (position_weights[i]==0.0))
 			continue ;
 
 		int32_t mismatches=0;
 		float64_t sumi = 0.0 ;
-		for (int32_t j=0; (j<degree) && (i+j<alen); j++)
+		for (index_t j=0; (j<degree) && (i+j<alen); j++)
 		{
 			if (avec[i+j]!=bvec[i+j])
 			{
@@ -347,9 +347,9 @@ float64_t CWeightedDegreePositionStringKernel::compute_with_mismatch(
 			sum0 += sumi ;
     } ;
 
-    for (int32_t i=0; i<alen; i++)
+    for (index_t i=0; i<alen; i++)
     {
-		for (int32_t k=1; (k<=shift[i]) && (i+k<alen); k++)
+		for (index_t k=1; (k<=shift[i]) && (i+k<alen); k++)
 		{
 			if ((position_weights!=NULL) && (position_weights[i]==0.0) && (position_weights[i+k]==0.0))
 				continue ;
@@ -357,7 +357,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_with_mismatch(
 			float64_t sumi1 = 0.0 ;
 			// shift in sequence a
 			int32_t mismatches=0;
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				if (avec[i+j+k]!=bvec[i+j])
 				{
@@ -370,7 +370,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_with_mismatch(
 			float64_t sumi2 = 0.0 ;
 			// shift in sequence b
 			mismatches=0;
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				if (avec[i+j]!=bvec[i+j+k])
 				{
@@ -388,7 +388,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_with_mismatch(
     }
 
     float64_t result = sum0 ;
-    for (int32_t i=0; i<max_shift; i++)
+    for (index_t i=0; i<max_shift; i++)
 		result += max_shift_vec[i]/(2*(i+1)) ;
 
 	SG_FREE(max_shift_vec);
@@ -400,17 +400,17 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch(
 {
 	float64_t* max_shift_vec = SG_MALLOC(float64_t, max_shift);
 	float64_t sum0=0 ;
-	for (int32_t i=0; i<max_shift; i++)
+	for (index_t i=0; i<max_shift; i++)
 		max_shift_vec[i]=0 ;
 
 	// no shift
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
 		if ((position_weights!=NULL) && (position_weights[i]==0.0))
 			continue ;
 
 		float64_t sumi = 0.0 ;
-		for (int32_t j=0; (j<degree) && (i+j<alen); j++)
+		for (index_t j=0; (j<degree) && (i+j<alen); j++)
 		{
 			if (avec[i+j]!=bvec[i+j])
 				break ;
@@ -422,16 +422,16 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch(
 			sum0 += sumi ;
 	} ;
 
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
-		for (int32_t k=1; (k<=shift[i]) && (i+k<alen); k++)
+		for (index_t k=1; (k<=shift[i]) && (i+k<alen); k++)
 		{
 			if ((position_weights!=NULL) && (position_weights[i]==0.0) && (position_weights[i+k]==0.0))
 				continue ;
 
 			float64_t sumi1 = 0.0 ;
 			// shift in sequence a
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				if (avec[i+j+k]!=bvec[i+j])
 					break ;
@@ -439,7 +439,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch(
 			}
 			float64_t sumi2 = 0.0 ;
 			// shift in sequence b
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				if (avec[i+j]!=bvec[i+j+k])
 					break ;
@@ -453,7 +453,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch(
 	}
 
 	float64_t result = sum0 ;
-	for (int32_t i=0; i<max_shift; i++)
+	for (index_t i=0; i<max_shift; i++)
 		result += max_shift_vec[i]/(2*(i+1)) ;
 
 	SG_FREE(max_shift_vec);
@@ -466,16 +466,16 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_matrix(
 {
 	float64_t* max_shift_vec = SG_MALLOC(float64_t, max_shift);
 	float64_t sum0=0 ;
-	for (int32_t i=0; i<max_shift; i++)
+	for (index_t i=0; i<max_shift; i++)
 		max_shift_vec[i]=0 ;
 
 	// no shift
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
 		if ((position_weights!=NULL) && (position_weights[i]==0.0))
 			continue ;
 		float64_t sumi = 0.0 ;
-		for (int32_t j=0; (j<degree) && (i+j<alen); j++)
+		for (index_t j=0; (j<degree) && (i+j<alen); j++)
 		{
 			if (avec[i+j]!=bvec[i+j])
 				break ;
@@ -487,16 +487,16 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_matrix(
 			sum0 += sumi ;
 	} ;
 
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
-		for (int32_t k=1; (k<=shift[i]) && (i+k<alen); k++)
+		for (index_t k=1; (k<=shift[i]) && (i+k<alen); k++)
 		{
 			if ((position_weights!=NULL) && (position_weights[i]==0.0) && (position_weights[i+k]==0.0))
 				continue ;
 
 			float64_t sumi1 = 0.0 ;
 			// shift in sequence a
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				if (avec[i+j+k]!=bvec[i+j])
 					break ;
@@ -504,7 +504,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_matrix(
 			}
 			float64_t sumi2 = 0.0 ;
 			// shift in sequence b
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				if (avec[i+j]!=bvec[i+j+k])
 					break ;
@@ -518,7 +518,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_matrix(
 	}
 
 	float64_t result = sum0 ;
-	for (int32_t i=0; i<max_shift; i++)
+	for (index_t i=0; i<max_shift; i++)
 		result += max_shift_vec[i]/(2*(i+1)) ;
 
 	SG_FREE(max_shift_vec);
@@ -531,11 +531,11 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 {
 	float64_t* max_shift_vec = SG_MALLOC(float64_t, max_shift);
 	float64_t sum0=0 ;
-	for (int32_t i=0; i<max_shift; i++)
+	for (index_t i=0; i<max_shift; i++)
 		max_shift_vec[i]=0 ;
 
 	// no shift
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
 		if ((position_weights!=NULL) && (position_weights[i]==0.0))
 			continue ;
@@ -543,7 +543,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 		float64_t sumi = 0.0 ;
 	    float64_t posweight_lhs = 0.0 ;
 	    float64_t posweight_rhs = 0.0 ;
-		for (int32_t j=0; (j<degree) && (i+j<alen); j++)
+		for (index_t j=0; (j<degree) && (i+j<alen); j++)
 		{
 			posweight_lhs += pos_weights_lhs[i+j] ;
 			posweight_rhs += pos_weights_rhs[i+j] ;
@@ -558,9 +558,9 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 			sum0 += sumi ;
 	} ;
 
-	for (int32_t i=0; i<alen; i++)
+	for (index_t i=0; i<alen; i++)
 	{
-		for (int32_t k=1; (k<=shift[i]) && (i+k<alen); k++)
+		for (index_t k=1; (k<=shift[i]) && (i+k<alen); k++)
 		{
 			if ((position_weights!=NULL) && (position_weights[i]==0.0) && (position_weights[i+k]==0.0))
 				continue ;
@@ -569,7 +569,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 			float64_t sumi1 = 0.0 ;
 			float64_t posweight_lhs = 0.0 ;
 			float64_t posweight_rhs = 0.0 ;
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				posweight_lhs += pos_weights_lhs[i+j+k] ;
 				posweight_rhs += pos_weights_rhs[i+j] ;
@@ -581,7 +581,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 			float64_t sumi2 = 0.0 ;
 			posweight_lhs = 0.0 ;
 			posweight_rhs = 0.0 ;
-			for (int32_t j=0; (j<degree) && (i+j+k<alen); j++)
+			for (index_t j=0; (j<degree) && (i+j+k<alen); j++)
 			{
 				posweight_lhs += pos_weights_lhs[i+j] ;
 				posweight_rhs += pos_weights_rhs[i+j+k] ;
@@ -597,7 +597,7 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 	}
 
 	float64_t result = sum0 ;
-	for (int32_t i=0; i<max_shift; i++)
+	for (index_t i=0; i<max_shift; i++)
 		result += max_shift_vec[i]/(2*(i+1)) ;
 
 	SG_FREE(max_shift_vec);
@@ -606,9 +606,9 @@ float64_t CWeightedDegreePositionStringKernel::compute_without_mismatch_position
 
 
 float64_t CWeightedDegreePositionStringKernel::compute(
-	int32_t idx_a, int32_t idx_b)
+	index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_avec, free_bvec;
 
 	char* avec=((CStringFeatures<char>*) lhs)->get_feature_vector(idx_a, alen, free_avec);
@@ -642,20 +642,20 @@ float64_t CWeightedDegreePositionStringKernel::compute(
 
 
 void CWeightedDegreePositionStringKernel::add_example_to_tree(
-	int32_t idx, float64_t alpha)
+	index_t idx, float64_t alpha)
 {
 	ASSERT(position_weights_lhs==NULL)
 	ASSERT(position_weights_rhs==NULL)
 	ASSERT(alphabet)
 	ASSERT(alphabet->get_alphabet()==DNA || alphabet->get_alphabet()==RNA)
 
-	int32_t len=0;
+	index_t len=0;
 	bool free_vec;
 	char* char_vec=((CStringFeatures<char>*) lhs)->get_feature_vector(idx, len, free_vec);
 	ASSERT(max_mismatch==0)
 	int32_t *vec = SG_MALLOC(int32_t, len);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]=alphabet->remap_to_bin(char_vec[i]);
 	((CStringFeatures<char>*) lhs)->free_feature_vector(char_vec, idx, free_vec);
 
@@ -665,7 +665,7 @@ void CWeightedDegreePositionStringKernel::add_example_to_tree(
 		ASSERT(!TRIES(get_use_compact_terminal_nodes()))
 	}
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		int32_t max_s=-1;
 
@@ -677,7 +677,7 @@ void CWeightedDegreePositionStringKernel::add_example_to_tree(
 			SG_ERROR("unknown optimization type\n")
 		}
 
-		for (int32_t s=max_s; s>=0; s--)
+		for (index_t s=max_s; s>=0; s--)
 		{
 			float64_t alpha_pw = normalizer->normalize_lhs((s==0) ? (alpha) : (alpha/(2.0*s)), idx);
 			TRIES(add_to_trie(i, s, vec, alpha_pw, weights, (length!=0))) ;
@@ -693,14 +693,14 @@ void CWeightedDegreePositionStringKernel::add_example_to_tree(
 }
 
 void CWeightedDegreePositionStringKernel::add_example_to_single_tree(
-	int32_t idx, float64_t alpha, int32_t tree_num)
+	index_t idx, float64_t alpha, int32_t tree_num)
 {
 	ASSERT(position_weights_lhs==NULL)
 	ASSERT(position_weights_rhs==NULL)
 	ASSERT(alphabet)
 	ASSERT(alphabet->get_alphabet()==DNA || alphabet->get_alphabet()==RNA)
 
-	int32_t len=0;
+	index_t len=0;
 	bool free_vec;
 	char* char_vec=((CStringFeatures<char>*) lhs)->get_feature_vector(idx, len, free_vec);
 	ASSERT(max_mismatch==0)
@@ -717,14 +717,14 @@ void CWeightedDegreePositionStringKernel::add_example_to_single_tree(
 	else {
 		SG_ERROR("unknown optimization type\n")
 	}
-	for (int32_t i=CMath::max(0,tree_num-max_shift);
+	for (index_t i=CMath::max(0,tree_num-max_shift);
 			i<CMath::min(len,tree_num+degree+max_shift); i++)
 	{
 		vec[i]=alphabet->remap_to_bin(char_vec[i]);
 	}
 	((CStringFeatures<char>*) lhs)->free_feature_vector(char_vec, idx, free_vec);
 
-	for (int32_t s=max_s; s>=0; s--)
+	for (index_t s=max_s; s>=0; s--)
 	{
 		float64_t alpha_pw = normalizer->normalize_lhs((s==0) ? (alpha) : (alpha/(2.0*s)), idx);
 		tries.add_to_trie(tree_num, s, vec, alpha_pw, weights, (length!=0)) ;
@@ -732,7 +732,7 @@ void CWeightedDegreePositionStringKernel::add_example_to_single_tree(
 
 	if (opt_type==FASTBUTMEMHUNGRY)
 	{
-		for (int32_t i=CMath::max(0,tree_num-max_shift); i<CMath::min(len,tree_num+max_shift+1); i++)
+		for (index_t i=CMath::max(0,tree_num-max_shift); i<CMath::min(len,tree_num+max_shift+1); i++)
 		{
 			int32_t s=tree_num-i;
 			if ((i+s<len) && (s>=1) && (s<=shift[i]))
@@ -746,7 +746,7 @@ void CWeightedDegreePositionStringKernel::add_example_to_single_tree(
 	tree_initialized=true ;
 }
 
-float64_t CWeightedDegreePositionStringKernel::compute_by_tree(int32_t idx)
+float64_t CWeightedDegreePositionStringKernel::compute_by_tree(index_t idx)
 {
 	ASSERT(position_weights_lhs==NULL)
 	ASSERT(position_weights_rhs==NULL)
@@ -754,25 +754,25 @@ float64_t CWeightedDegreePositionStringKernel::compute_by_tree(int32_t idx)
 	ASSERT(alphabet->get_alphabet()==DNA || alphabet->get_alphabet()==RNA)
 
 	float64_t sum=0;
-	int32_t len=0;
+	index_t len=0;
 	bool free_vec;
 	char* char_vec=((CStringFeatures<char>*) rhs)->get_feature_vector(idx, len, free_vec);
 	ASSERT(max_mismatch==0)
 	int32_t *vec=SG_MALLOC(int32_t, len);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]=alphabet->remap_to_bin(char_vec[i]);
 
 	((CStringFeatures<char>*) rhs)->free_feature_vector(char_vec, idx, free_vec);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		sum += tries.compute_by_tree_helper(vec, len, i, i, i, weights, (length!=0)) ;
 
 	if (opt_type==SLOWBUTMEMEFFICIENT)
 	{
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 		{
-			for (int32_t s=1; (s<=shift[i]) && (i+s<len); s++)
+			for (index_t s=1; (s<=shift[i]) && (i+s<len); s++)
 			{
 				sum+=tries.compute_by_tree_helper(vec, len, i, i+s, i, weights, (length!=0))/(2*s) ;
 				sum+=tries.compute_by_tree_helper(vec, len, i+s, i, i+s, weights, (length!=0))/(2*s) ;
@@ -786,25 +786,25 @@ float64_t CWeightedDegreePositionStringKernel::compute_by_tree(int32_t idx)
 }
 
 void CWeightedDegreePositionStringKernel::compute_by_tree(
-	int32_t idx, float64_t* LevelContrib)
+	index_t idx, float64_t* LevelContrib)
 {
 	ASSERT(position_weights_lhs==NULL)
 	ASSERT(position_weights_rhs==NULL)
 	ASSERT(alphabet)
 	ASSERT(alphabet->get_alphabet()==DNA || alphabet->get_alphabet()==RNA)
 
-	int32_t len=0;
+	index_t len=0;
 	bool free_vec;
 	char* char_vec=((CStringFeatures<char>*) rhs)->get_feature_vector(idx, len, free_vec);
 	ASSERT(max_mismatch==0)
 	int32_t *vec=SG_MALLOC(int32_t, len);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		vec[i]=alphabet->remap_to_bin(char_vec[i]);
 
 	((CStringFeatures<char>*) rhs)->free_feature_vector(char_vec, idx, free_vec);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		tries.compute_by_tree_helper(vec, len, i, i, i, LevelContrib,
 				normalizer->normalize_rhs(1.0, idx), mkl_stepsize, weights,
@@ -813,8 +813,8 @@ void CWeightedDegreePositionStringKernel::compute_by_tree(
 
 	if (opt_type==SLOWBUTMEMEFFICIENT)
 	{
-		for (int32_t i=0; i<len; i++)
-			for (int32_t k=1; (k<=shift[i]) && (i+k<len); k++)
+		for (index_t i=0; i<len; i++)
+			for (index_t k=1; (k<=shift[i]) && (i+k<len); k++)
 			{
 				tries.compute_by_tree_helper(vec, len, i, i+k, i, LevelContrib,
 						normalizer->normalize_rhs(1.0/(2*k), idx), mkl_stepsize,
@@ -845,7 +845,7 @@ void CWeightedDegreePositionStringKernel::set_shifts(SGVector<int32_t> shifts)
 	{
 		max_shift = 0 ;
 
-		for (int32_t i=0; i<shift_len; i++)
+		for (index_t i=0; i<shift_len; i++)
 		{
 			shift[i] = shifts.vector[i] ;
 			max_shift = CMath::max(shift[i], max_shift);
@@ -878,7 +878,7 @@ bool CWeightedDegreePositionStringKernel::set_wd_weights()
 
 		for (i=0; i<degree; i++)
 		{
-			for (int32_t j=1; j<=max_mismatch; j++)
+			for (index_t j=1; j<=max_mismatch; j++)
 			{
 				if (j<i+1)
 				{
@@ -919,7 +919,7 @@ bool CWeightedDegreePositionStringKernel::set_weights(SGMatrix<float64_t> new_we
 	SG_FREE(weights);
 	weights=SG_MALLOC(float64_t, num_weights);
 
-	for (int32_t i=0; i<degree*len; i++)
+	for (index_t i=0; i<degree*len; i++)
 		weights[i]=ws[i];
 
 	return true;
@@ -938,7 +938,7 @@ void CWeightedDegreePositionStringKernel::set_position_weights(SGVector<float64_
 	position_weights_len=pws.vlen;
 	tries.set_position_weights(position_weights);
 
-	for (int32_t i=0; i<pws.vlen; i++)
+	for (index_t i=0; i<pws.vlen; i++)
 		position_weights[i]=pws.vector[i];
 }
 
@@ -964,7 +964,7 @@ bool CWeightedDegreePositionStringKernel::set_position_weights_lhs(float64_t* pw
 	position_weights_lhs=SG_MALLOC(float64_t, len*num);
 	position_weights_lhs_len=len*num;
 
-	for (int32_t i=0; i<len*num; i++)
+	for (index_t i=0; i<len*num; i++)
 		position_weights_lhs[i]=pws[i];
 
 	return true;
@@ -993,7 +993,7 @@ bool CWeightedDegreePositionStringKernel::set_position_weights_rhs(
 	position_weights_rhs=SG_MALLOC(float64_t, len*num);
 	position_weights_rhs_len=len*num;
 
-	for (int32_t i=0; i<len*num; i++)
+	for (index_t i=0; i<len*num; i++)
 		position_weights_rhs[i]=pws[i];
 
 	return true;
@@ -1037,7 +1037,7 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_from_wd_external()
 			block_weights[i]=block_weights[i-1];
 
 			float64_t contrib=0;
-			for (int32_t j=0; j<CMath::min(degree,i+1); j++)
+			for (index_t j=0; j<CMath::min(degree,i+1); j++)
 				contrib+=weights[j];
 
 			block_weights[i]+=contrib;
@@ -1054,7 +1054,7 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_const()
 
 	if (block_weights)
 	{
-		for (int32_t i=1; i<seq_length+1 ; i++)
+		for (index_t i=1; i<seq_length+1 ; i++)
 			block_weights[i-1]=1.0/seq_length;
 	}
 
@@ -1068,7 +1068,7 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_linear()
 
 	if (block_weights)
 	{
-		for (int32_t i=1; i<seq_length+1 ; i++)
+		for (index_t i=1; i<seq_length+1 ; i++)
 			block_weights[i-1]=degree*i;
 	}
 
@@ -1082,10 +1082,10 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_sqpoly()
 
 	if (block_weights)
 	{
-		for (int32_t i=1; i<degree+1 ; i++)
+		for (index_t i=1; i<degree+1 ; i++)
 			block_weights[i-1]=((float64_t) i)*i;
 
-		for (int32_t i=degree+1; i<seq_length+1 ; i++)
+		for (index_t i=degree+1; i<seq_length+1 ; i++)
 			block_weights[i-1]=i;
 	}
 
@@ -1099,10 +1099,10 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_cubicpoly()
 
 	if (block_weights)
 	{
-		for (int32_t i=1; i<degree+1 ; i++)
+		for (index_t i=1; i<degree+1 ; i++)
 			block_weights[i-1]=((float64_t) i)*i*i;
 
-		for (int32_t i=degree+1; i<seq_length+1 ; i++)
+		for (index_t i=degree+1; i<seq_length+1 ; i++)
 			block_weights[i-1]=i;
 	}
 
@@ -1116,10 +1116,10 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_exp()
 
 	if (block_weights)
 	{
-		for (int32_t i=1; i<degree+1 ; i++)
+		for (index_t i=1; i<degree+1 ; i++)
 			block_weights[i-1]=exp(((float64_t) i/10.0));
 
-		for (int32_t i=degree+1; i<seq_length+1 ; i++)
+		for (index_t i=degree+1; i<seq_length+1 ; i++)
 			block_weights[i-1]=i;
 	}
 
@@ -1133,10 +1133,10 @@ bool CWeightedDegreePositionStringKernel::init_block_weights_log()
 
 	if (block_weights)
 	{
-		for (int32_t i=1; i<degree+1 ; i++)
+		for (index_t i=1; i<degree+1 ; i++)
 			block_weights[i-1]=CMath::pow(CMath::log((float64_t) i),2);
 
-		for (int32_t i=degree+1; i<seq_length+1 ; i++)
+		for (index_t i=degree+1; i<seq_length+1 ; i++)
 			block_weights[i-1]=i-degree+1+CMath::pow(CMath::log(degree+1.0),2);
 	}
 
@@ -1184,7 +1184,7 @@ void* CWeightedDegreePositionStringKernel::compute_batch_helper(void* p)
 	int32_t* shift=params->shift;
 	int32_t* vec_idx=params->vec_idx;
 
-	for (int32_t i=params->start; i<params->end; i++)
+	for (index_t i=params->start; i<params->end; i++)
 	{
 		int32_t len=0;
 		CStringFeatures<char>* rhs_feat=((CStringFeatures<char>*) wd->get_rhs());
@@ -1192,7 +1192,7 @@ void* CWeightedDegreePositionStringKernel::compute_batch_helper(void* p)
 
 		bool free_vec;
 		char* char_vec=rhs_feat->get_feature_vector(vec_idx[i], len, free_vec);
-		for (int32_t k=CMath::max(0,j-max_shift); k<CMath::min(len,j+wd->get_degree()+max_shift); k++)
+		for (index_t k=CMath::max(0,j-max_shift); k<CMath::min(len,j+wd->get_degree()+max_shift); k++)
 			vec[k]=alpha->remap_to_bin(char_vec[k]);
 		rhs_feat->free_feature_vector(char_vec, vec_idx[i], free_vec);
 
@@ -1202,7 +1202,7 @@ void* CWeightedDegreePositionStringKernel::compute_batch_helper(void* p)
 
 		if (wd->get_optimization_type()==SLOWBUTMEMEFFICIENT)
 		{
-			for (int32_t q=CMath::max(0,j-max_shift); q<CMath::min(len,j+max_shift+1); q++)
+			for (index_t q=CMath::max(0,j-max_shift); q<CMath::min(len,j+max_shift+1); q++)
 			{
 				int32_t s=j-q ;
 				if ((s>=1) && (s<=shift[q]) && (q+s<len))
@@ -1214,7 +1214,7 @@ void* CWeightedDegreePositionStringKernel::compute_batch_helper(void* p)
 				}
 			}
 
-			for (int32_t s=1; (s<=shift[j]) && (j+s<len); s++)
+			for (index_t s=1; (s<=shift[j]) && (j+s<len); s++)
 			{
 				result[i] +=
 					wd->normalizer->normalize_rhs(tries->compute_by_tree_helper(vec,
@@ -1251,10 +1251,10 @@ void CWeightedDegreePositionStringKernel::compute_batch(
 	if (num_threads < 2)
 	{
 #ifdef WIN32
-	   for (int32_t j=0; j<num_feat; j++)
+	   for (index_t j=0; j<num_feat; j++)
 #else
        CSignal::clear_cancel();
-	   for (int32_t j=0; j<num_feat && !CSignal::cancel_computations(); j++)
+	   for (index_t j=0; j<num_feat && !CSignal::cancel_computations(); j++)
 #endif
 			{
 				init_optimization(num_suppvec, IDX, alphas, j);
@@ -1282,7 +1282,7 @@ void CWeightedDegreePositionStringKernel::compute_batch(
 	{
 
 		CSignal::clear_cancel();
-		for (int32_t j=0; j<num_feat && !CSignal::cancel_computations(); j++)
+		for (index_t j=0; j<num_feat && !CSignal::cancel_computations(); j++)
 		{
 			init_optimization(num_suppvec, IDX, alphas, j);
 			pthread_t* threads = SG_MALLOC(pthread_t, num_threads-1);
@@ -1430,11 +1430,11 @@ float64_t* CWeightedDegreePositionStringKernel::compute_scoring(
 		info.R_k = R[k];
 
 		// --- run over all trees
-		for(int32_t p = 0; p < num_feat; ++p )
+		for(index_t p = 0; p < num_feat; ++p )
 		{
 			init_optimization( num_suppvec, IDX, alphas, p );
 			int32_t tree = p ;
-			for(int32_t j = 0; j < degree+1; j++ ) {
+			for(index_t j = 0; j < degree+1; j++ ) {
 				x[j] = -1;
 			}
 			tries.traverse( tree, p, info, 0, x, k );
@@ -1445,7 +1445,7 @@ float64_t* CWeightedDegreePositionStringKernel::compute_scoring(
 		if( k > 0 ) {
 			const int32_t j = k - 1;
 			const int32_t nofJmers = (int32_t) CMath::pow( num_sym, j+1 );
-			for(int32_t p = 0; p < num_feat; ++p ) {
+			for(index_t p = 0; p < num_feat; ++p ) {
 				const int32_t offsetJ = nofJmers * p;
 				const int32_t offsetJ1 = nofJmers * (p+1);
 				const int32_t offsetK = nofKmers * p;
@@ -1516,11 +1516,11 @@ char* CWeightedDegreePositionStringKernel::compute_consensus(
 	int32_t num_tables=CMath::max(1,num_feat-degree+1);
 	DynArray<ConsensusEntry>** table=SG_MALLOC(DynArray<ConsensusEntry>*, num_tables);
 
-	for (int32_t i=0; i<num_tables; i++)
+	for (index_t i=0; i<num_tables; i++)
 		table[i]=new DynArray<ConsensusEntry>(num_suppvec/10);
 
 	//compute consensus via dynamic programming
-	for (int32_t i=0; i<num_tables; i++)
+	for (index_t i=0; i<num_tables; i++)
 	{
 		bool cumulative=false;
 
@@ -1543,20 +1543,20 @@ char* CWeightedDegreePositionStringKernel::compute_consensus(
 
 	//int32_t n=table[0]->get_num_elements();
 
-	//for (int32_t i=0; i<n; i++)
+	//for (index_t i=0; i<n; i++)
 	//{
 	//	ConsensusEntry e= table[0]->get_element(i);
 	//	SG_PRint32_t("first: str:0%0llx sc:%f bt:%d\n",e.string,e.score,e.bt);
 	//}
 
 	//n=table[num_tables-1]->get_num_elements();
-	//for (int32_t i=0; i<n; i++)
+	//for (index_t i=0; i<n; i++)
 	//{
 	//	ConsensusEntry e= table[num_tables-1]->get_element(i);
 	//	SG_PRint32_t("last: str:0%0llx sc:%f bt:%d\n",e.string,e.score,e.bt);
 	//}
 	//n=table[num_tables-2]->get_num_elements();
-	//for (int32_t i=0; i<n; i++)
+	//for (index_t i=0; i<n; i++)
 	//{
 	//	ConsensusEntry e= table[num_tables-2]->get_element(i);
 	//	SG_PRINT("second last: str:0%0llx sc:%f bt:%d\n",e.string,e.score,e.bt)
@@ -1569,7 +1569,7 @@ char* CWeightedDegreePositionStringKernel::compute_consensus(
 	float32_t max_score=0;
 	int32_t num_elements=table[num_tables-1]->get_num_elements();
 
-	for (int32_t i=0; i<num_elements; i++)
+	for (index_t i=0; i<num_elements; i++)
 	{
 		float64_t sc=table[num_tables-1]->get_element(i).score;
 		if (sc>max_score || max_idx==-1)
@@ -1582,12 +1582,12 @@ char* CWeightedDegreePositionStringKernel::compute_consensus(
 
 	SG_INFO("max_idx:%d num_el:%d num_feat:%d num_tables:%d max_score:%f\n", max_idx, num_elements, num_feat, num_tables, max_score)
 
-	for (int32_t i=0; i<degree; i++)
+	for (index_t i=0; i<degree; i++)
 		result[num_feat-1-i]=acgt[(endstr >> (2*i)) & 3];
 
 	if (num_tables>1)
 	{
-		for (int32_t i=num_tables-1; i>=0; i--)
+		for (index_t i=num_tables-1; i>=0; i--)
 		{
 			//SG_PRINT("max_idx: %d, i:%d\n", max_idx, i)
 			result[i]=acgt[table[i]->get_element(max_idx).string >> (2*(degree-1)) & 3];
@@ -1595,17 +1595,17 @@ char* CWeightedDegreePositionStringKernel::compute_consensus(
 		}
 	}
 
-	//for (int32_t t=0; t<num_tables; t++)
+	//for (index_t t=0; t<num_tables; t++)
 	//{
 	//	n=table[t]->get_num_elements();
-	//	for (int32_t i=0; i<n; i++)
+	//	for (index_t i=0; i<n; i++)
 	//	{
 	//		ConsensusEntry e= table[t]->get_element(i);
 	//		SG_PRINT("table[%d,%d]: str:0%0llx sc:%+f bt:%d\n",t,i, e.string,e.score,e.bt)
 	//	}
 	//}
 
-	for (int32_t i=0; i<num_tables; i++)
+	for (index_t i=0; i<num_tables; i++)
 		delete table[i];
 
 	SG_FREE(table);
@@ -1831,7 +1831,7 @@ void CWeightedDegreePositionStringKernel::compute_POIM2(
 	int32_t* sv_idx=SG_MALLOC(int32_t, num_suppvec);
 	float64_t* sv_weight=SG_MALLOC(float64_t, num_suppvec);
 
-	for (int32_t i=0; i<num_suppvec; i++)
+	for (index_t i=0; i<num_suppvec; i++)
 	{
 		sv_idx[i]=svm->get_support_vector(i);
 		sv_weight[i]=svm->get_alpha(i);

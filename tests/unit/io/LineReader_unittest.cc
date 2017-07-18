@@ -70,7 +70,7 @@ TEST(LineReaderTest, read_yourself)
 	lines_count=0;
 	while (fgets(temp_string.vector, temp_string.vlen, fin)!=NULL)
 	{
-		for (int i=0; i<strings[lines_count].vlen; i++)
+		for (index_t i=0; i<strings[lines_count].vlen; i++)
 		{
 			EXPECT_EQ(temp_string.vector[i], strings[lines_count].vector[i]);
 		}

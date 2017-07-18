@@ -44,7 +44,7 @@ SGMatrix<float64_t> get_sinusoid_samples(int32_t num_samples, SGVector<float64_t
 	SGMatrix<float64_t> ret(1,num_samples);
 	SGVector<float64_t>::random_vector(ret.matrix,num_samples,0,15);
 
-	for (int32_t i=0;i<num_samples;i++)
+	for (index_t i=0;i<num_samples;i++)
 		labels[i]=CMath::sin(ret(0,i));
 
 	return ret;

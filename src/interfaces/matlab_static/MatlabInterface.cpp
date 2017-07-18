@@ -193,7 +193,7 @@ char* CMatlabInterface::get_string(int32_t& len)
 		string=SG_MALLOC(char, len);
 	mxChar* c=mxGetChars(s);
 	ASSERT(c);
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		string[i]= (char) (c[i]);
 
 	if (zero_terminate)
@@ -215,7 +215,7 @@ void CMatlabInterface::function_name(sg_type*& vector, int32_t& len)	\
 	vector=SG_MALLOC(sg_type, len);										\
 	if_type* data=(if_type*) mxGetData(mx_vec);						\
 																	\
-	for (int32_t i=0; i<len; i++)										\
+	for (index_t i=0; i<len; i++)										\
 			vector[i]=data[i];										\
 }
 
@@ -241,8 +241,8 @@ void CMatlabInterface::function_name(sg_type*& matrix, int32_t& num_feat, int32_
 	matrix=SG_MALLOC(sg_type, num_vec*num_feat);										\
 	if_type* data=(if_type*) mxGetData(mx_mat);								\
 																				\
-	for (int32_t i=0; i<num_vec; i++)												\
-		for (int32_t j=0; j<num_feat; j++)											\
+	for (index_t i=0; i<num_vec; i++)												\
+		for (index_t j=0; j<num_feat; j++)											\
 			matrix[i*num_feat+j]=data[i*num_feat+j];							\
 }
 
@@ -269,7 +269,7 @@ void CMatlabInterface::function_name(sg_type*& array, int32_t*& dims, int32_t& n
 	if_type* data=(if_type*) mxGetData(mx_array);								\
 																				\
 	dims=SG_MALLOC(int32_t, num_dims);														\
-	for (int32_t d=0; d<num_dims; d++)												\
+	for (index_t d=0; d<num_dims; d++)												\
 		dims[d]=(int32_t) mw_dims[d];												\
 																				\
 	array=SG_MALLOC(sg_type, total_size);												\
@@ -306,7 +306,7 @@ void CMatlabInterface::function_name(SGSparseVector<sg_type>*& matrix, int32_t& 
 	mwIndex* ir=mxGetIr(mx_mat);														\
 	mwIndex* jc=mxGetJc(mx_mat);														\
 	int64_t offset=0;																		\
-	for (int32_t i=0; i<num_vec; i++)														\
+	for (index_t i=0; i<num_vec; i++)														\
 	{																					\
 		int32_t len=jc[i+1]-jc[i];															\
 		matrix[i].num_feat_entries=len;												\
@@ -315,7 +315,7 @@ void CMatlabInterface::function_name(SGSparseVector<sg_type>*& matrix, int32_t& 
 		{																				\
 			matrix[i].features=SG_MALLOC(SGSparseVectorEntry<sg_type>, len);							\
 																						\
-			for (int32_t j=0; j<len; j++)													\
+			for (index_t j=0; j<len; j++)													\
 			{																			\
 				matrix[i].features[j].entry=data[offset];								\
 				matrix[i].features[j].feat_index=ir[offset];							\
@@ -352,7 +352,7 @@ void CMatlabInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		ASSERT(num_str>=1);																\
 																						\
 		strings=SG_MALLOC(SGString<sg_type>, num_str);											\
-		for (int32_t i=0; i<num_str; i++)													\
+		for (index_t i=0; i<num_str; i++)													\
 		{																				\
 			mxArray* str=mxGetCell(mx_str, i);											\
 			if (!str)					\
@@ -387,7 +387,7 @@ void CMatlabInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		int32_t len=mxGetM(mx_str);														\
 		strings=SG_MALLOC(SGString<sg_type>, num_str);										\
 																						\
-		for (int32_t i=0; i<num_str; i++)													\
+		for (index_t i=0; i<num_str; i++)													\
 		{																				\
 			if (len>0)																	\
 			{																			\
@@ -476,7 +476,7 @@ void CMatlabInterface::function_name(const sg_type* vector, int32_t len)		\
 																			\
 	if_type* data=(if_type*) mxGetData(mx_vec);								\
 																			\
-	for (int32_t i=0; i<len; i++)												\
+	for (index_t i=0; i<len; i++)												\
 		data[i]=vector[i];													\
 																			\
 	set_arg_increment(mx_vec);												\
@@ -504,8 +504,8 @@ void CMatlabInterface::function_name(const sg_type* matrix, int32_t num_feat, in
 																				\
 	if_type* data=(if_type*) mxGetData(mx_mat);								\
 																				\
-	for (int32_t i=0; i<num_vec; i++)												\
-		for (int32_t j=0; j<num_feat; j++)											\
+	for (index_t i=0; i<num_vec; i++)												\
+		for (index_t j=0; j<num_feat; j++)											\
 			data[i*num_feat+j]=matrix[i*num_feat+j];							\
 																				\
 	set_arg_increment(mx_mat);													\
@@ -535,11 +535,11 @@ void CMatlabInterface::function_name(const SGSparseVector<sg_type>* matrix, int3
 	mwIndex* ir=mxGetIr(mx_mat);											\
 	mwIndex* jc=mxGetJc(mx_mat);											\
 	int64_t offset=0;															\
-	for (int32_t i=0; i<num_vec; i++)											\
+	for (index_t i=0; i<num_vec; i++)											\
 	{																		\
 		int32_t len=matrix[i].num_feat_entries;									\
 		jc[i]=offset;														\
-		for (int32_t j=0; j<len; j++)											\
+		for (index_t j=0; j<len; j++)											\
 		{																	\
 			data[offset]=matrix[i].features[j].entry;						\
 			ir[offset]=matrix[i].features[j].feat_index;					\
@@ -572,7 +572,7 @@ void CMatlabInterface::function_name(const SGString<sg_type>* strings, int32_t n
 	if (!mx_str)																	\
 		SG_ERROR("Couldn't create Cell Array of %d strings.\n", num_str);			\
 																					\
-	for (int32_t i=0; i<num_str; i++)												\
+	for (index_t i=0; i<num_str; i++)												\
 	{																				\
 		int32_t len=strings[i].slen;												\
 		if (len>0)																	\
@@ -583,7 +583,7 @@ void CMatlabInterface::function_name(const SGString<sg_type>* strings, int32_t n
 																					\
 			if_type* data=(if_type*) mxGetData(str);								\
 																					\
-			for (int32_t j=0; j<len; j++)											\
+			for (index_t j=0; j<len; j++)											\
 				data[j]=strings[i].string[j];										\
 			mxSetCell(mx_str, i, str);												\
 		}																			\

@@ -16,7 +16,7 @@ using namespace shogun;
 SGVector<float64_t> CECOCDecoder::binarize(const SGVector<float64_t> query)
 {
     SGVector<float64_t> bquery(query.vlen);
-    for (int32_t i=0; i < query.vlen; ++i)
+    for (index_t i=0; i < query.vlen; ++i)
     {
         if (query.vector[i] >= 0)
             bquery.vector[i] = +1.0;

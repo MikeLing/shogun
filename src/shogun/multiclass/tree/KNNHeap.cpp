@@ -41,7 +41,7 @@ CKNNHeap::CKNNHeap(int32_t k)
 	m_inds=SGVector<index_t>(m_capacity);
 	m_sorted=false;
 
-	for (int32_t i=0;i<m_capacity;i++)
+	for (index_t i=0;i<m_capacity;i++)
 	{
 		m_dists[i]=CMath::MAX_REAL_NUMBER;
 		m_inds[i]=0;
@@ -107,7 +107,7 @@ SGVector<float64_t> CKNNHeap::get_dists()
 	SGVector<index_t> new_inds(m_capacity);
 
 	// O(nlogn) heap-sort
-	for (int32_t i=m_capacity-1;i>-1;i--)
+	for (index_t i=m_capacity-1;i>-1;i--)
 	{
 		new_dists[i]=m_dists[0];
 		new_inds[i]=m_inds[0];
@@ -130,7 +130,7 @@ SGVector<index_t> CKNNHeap::get_indices()
 	SGVector<index_t> new_inds(m_capacity);
 
 	// O(nlogn) heap-sort
-	for (int32_t i=m_capacity-1;i>-1;i--)
+	for (index_t i=m_capacity-1;i>-1;i--)
 	{
 		new_dists[i]=m_dists[0];
 		new_inds[i]=m_inds[0];

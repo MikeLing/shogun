@@ -59,7 +59,7 @@ void CPeriodicKernel::precompute_squared_helper(SGVector<float64_t>& buf,
 	int32_t num_vec=df->get_num_vectors();
 	buf=SGVector<float64_t>(num_vec);
 
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		buf[i]=df->dot(i,df, i);
 }
 
@@ -70,7 +70,7 @@ bool CPeriodicKernel::init(CFeatures* l, CFeatures* r)
 	return init_normalizer();
 }
 
-float64_t CPeriodicKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CPeriodicKernel::compute(index_t idx_a, index_t idx_b)
 {
 	/* Periodic kernel defined as by David Duvenaud in
 	 http://mlg.eng.cam.ac.uk/duvenaud/cookbook/index.html
@@ -112,9 +112,9 @@ SGMatrix<float64_t> CPeriodicKernel::get_parameter_gradient(
 	{
 		SGMatrix<float64_t> derivative=SGMatrix<float64_t>(num_lhs, num_rhs);
 
-		for (int j=0; j<num_lhs; j++)
+		for (index_t j=0; j<num_lhs; j++)
 		{
-			for (int k=0; k<num_rhs; k++)
+			for (index_t k=0; k<num_rhs; k++)
 			{
 				float64_t dist=distance(j,k);
 				float64_t trig_arg=M_PI*dist/m_period;
@@ -130,9 +130,9 @@ SGMatrix<float64_t> CPeriodicKernel::get_parameter_gradient(
 	{
 		SGMatrix<float64_t> derivative=SGMatrix<float64_t>(num_lhs, num_rhs);
 
-		for (int j=0; j<num_lhs; j++)
+		for (index_t j=0; j<num_lhs; j++)
 		{
-			for (int k=0; k<num_rhs; k++)
+			for (index_t k=0; k<num_rhs; k++)
 			{
 				float64_t dist=distance(j,k);
 				float64_t trig_arg=M_PI*dist/m_period;

@@ -265,7 +265,7 @@ class CKernel : public CSGObject
 
 			SGVector<float64_t> col = SGVector<float64_t>(num_rhs);
 
-			for (int32_t i=0; i!=num_rhs; i++)
+			for (index_t i=0; i!=num_rhs; i++)
 				col[i] = kernel(i,j);
 
 			return col;
@@ -281,7 +281,7 @@ class CKernel : public CSGObject
 		{
 			SGVector<float64_t> row = SGVector<float64_t>(num_lhs);
 
-			for (int32_t j=0; j!=num_lhs; j++)
+			for (index_t j=0; j!=num_lhs; j++)
 				row[j] = kernel(i,j);
 
 			return row;
@@ -909,7 +909,7 @@ class CKernel : public CSGObject
 		 * @param y index b
 		 * @return computed kernel function at indices a,b
 		 */
-		virtual float64_t compute(int32_t x, int32_t y)=0;
+		virtual float64_t compute(index_t x, index_t y)=0;
 
 		/** compute row start offset for parallel kernel matrix computation
 		 *

@@ -21,10 +21,10 @@ TEST(MulticlassLabelsTest,confidences)
 
 	EXPECT_NO_THROW(labels->allocate_confidences_for(n_classes));
 
-	for (int i=0; i<n_labels; i++)
+	for (index_t i=0; i<n_labels; i++)
 		EXPECT_EQ(labels->get_multiclass_confidences(i).size(),n_classes);
 
-	for (int i=0; i<n_labels; i++)
+	for (index_t i=0; i<n_labels; i++)
 	{
 		SGVector<float64_t> confs(n_classes);
 		confs.zero();
@@ -33,7 +33,7 @@ TEST(MulticlassLabelsTest,confidences)
 		labels->set_multiclass_confidences(i,confs);
 
 		SGVector<float64_t> obtained_confs = labels->get_multiclass_confidences(i);
-		for (int j=0; j<n_classes; j++)
+		for (index_t j=0; j<n_classes; j++)
 		{
 			if (j==i%n_classes)
 				EXPECT_NEAR(obtained_confs[j],1.0,1e-9);

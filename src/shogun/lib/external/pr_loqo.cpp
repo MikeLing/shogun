@@ -61,21 +61,21 @@ bool choldc(float64_t* a, int32_t n, float64_t* p)
 
 	float64_t* a2=SG_MALLOC(float64_t, n*n);
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
-		for (int32_t j=0; j<n; j++)
+		for (index_t j=0; j<n; j++)
 			a2[n*i+j]=a[n*i+j];
 	}
 
 	/* int for calling external lib */
 	int result=clapack_dpotrf(CblasRowMajor, CblasUpper, (int) n, a2, (int) n);
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		p[i]=a2[(n+1)*i];
 
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
-		for (int32_t j=i+1; j<n; j++)
+		for (index_t j=i+1; j<n; j++)
 		{
 			a[n*j+i]=a2[n*i+j];
 		}

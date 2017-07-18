@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 	/* create some random data */
 	SGMatrix<float64_t> matrix(n,n);
 
-	for(int32_t i=0; i<n*n; ++i)
+	for(index_t i=0; i<n*n; ++i)
 		matrix.matrix[i]=CMath::random((float64_t)-n,(float64_t)n);
 
 	SGMatrix<float64_t>::display_matrix(matrix.matrix, n, n);
@@ -47,14 +47,14 @@ int main(int argc, char** argv)
 
 	/* create n labels (+1,-1,+1,-1,...) */
 	CBinaryLabels* labels=new CBinaryLabels(n);
-	for (int32_t i=0; i<n; ++i)
+	for (index_t i=0; i<n; ++i)
 		labels->set_label(i, i%2==0 ? +1 : -1);
 
 	/* create libsvm with C=10 and produced labels */
 	CLibSVM* svm=new CLibSVM(10, kernel, labels);
 
 	/* iterate over different width parameters */
-	for (int32_t k=0; k<10; ++k)
+	for (index_t k=0; k<10; ++k)
 	{
 
 		float64_t width=CMath::pow(2.0,k);
@@ -69,9 +69,9 @@ int main(int argc, char** argv)
 		SG_SPRINT("\n\ncurrent kernel width: 2^%d=%f\n", k, kernel->get_width());
 
 		/* print kernel matrix */
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
-			for (int32_t j=0; j<n; j++)
+			for (index_t j=0; j<n; j++)
 				SG_SPRINT("%f ", kernel->kernel(i,j));
 
 			SG_SPRINT("\n");
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 
 		/* train and classify */
 		svm->train();
-		for (int32_t i=0; i<n; ++i)
+		for (index_t i=0; i<n; ++i)
 			SG_SPRINT("output[%d]=%f\treal[%d]=%f\n", i,
 					svm->apply_one(i), i, labels->get_label(i));
 

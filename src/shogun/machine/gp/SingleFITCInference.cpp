@@ -230,7 +230,7 @@ SGVector<float64_t> CSingleFITCInference::get_derivative_related_inducing_featur
 	//A = (Kpu.*BdK)*diag(e);
 	//Kpu=1 in our setting
 	MatrixXd A=CMath::exp(m_log_scale*2.0)*eigen_BdK;
-	for(int32_t lat_idx=0; lat_idx<A.rows(); lat_idx++)
+	for(index_t lat_idx=0; lat_idx<A.rows(); lat_idx++)
 	{
 		Map<VectorXd> deriv_lat_col_vec(deriv_lat.vector+lat_idx*dim,dim);
 		SGMatrix<float64_t> deriv_mat=m_kernel->get_parameter_gradient(param, lat_idx);
@@ -243,7 +243,7 @@ SGVector<float64_t> CSingleFITCInference::get_derivative_related_inducing_featur
 	//C = (Kpuu.*(BdK*B'))*diag(e);
 	//Kpuu=1 in our setting
 	MatrixXd C=CMath::exp(m_log_scale*2.0)*(eigen_BdK*eigen_B.transpose());
-	for(int32_t lat_lidx=0; lat_lidx<C.rows(); lat_lidx++)
+	for(index_t lat_lidx=0; lat_lidx<C.rows(); lat_lidx++)
 	{
 		Map<VectorXd> deriv_lat_col_vec(deriv_lat.vector+lat_lidx*dim,dim);
 		SGMatrix<float64_t> deriv_mat=m_kernel->get_parameter_gradient(param, lat_lidx);

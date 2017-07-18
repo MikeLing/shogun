@@ -52,7 +52,7 @@ void CImplicitWeightedSpecFeatures::compute_normalization_const()
 {
 	float64_t* factors=SG_MALLOC(float64_t, num_strings);
 
-	for (int32_t i=0; i<num_strings; i++)
+	for (index_t i=0; i<num_strings; i++)
 		factors[i]=1.0/CMath::sqrt(dot(i, this, i));
 
 	normalization_factors=factors;
@@ -64,7 +64,7 @@ bool CImplicitWeightedSpecFeatures::set_wd_weights()
 	SG_FREE(spec_weights);
 	spec_weights=SG_MALLOC(float64_t, degree);
 
-	int32_t i;
+	index_t i;
 	float64_t sum=0;
 	spec_size=0;
 
@@ -86,7 +86,7 @@ bool CImplicitWeightedSpecFeatures::set_weights(float64_t* w, int32_t d)
 
 	SG_FREE(spec_weights);
 	spec_weights=SG_MALLOC(float64_t, degree);
-	for (int32_t i=0; i<degree; i++)
+	for (index_t i=0; i<degree; i++)
 		spec_weights[i]=CMath::sqrt(w[i]);
 	return true;
 }
@@ -106,7 +106,7 @@ CImplicitWeightedSpecFeatures::~CImplicitWeightedSpecFeatures()
 	SG_FREE(normalization_factors);
 }
 
-float64_t CImplicitWeightedSpecFeatures::dot(int32_t vec_idx1, CDotFeatures* df, int32_t vec_idx2)
+float64_t CImplicitWeightedSpecFeatures::dot(index_t vec_idx1, CDotFeatures* df, index_t vec_idx2)
 {
 	ASSERT(df)
 	ASSERT(df->get_feature_type() == get_feature_type())
@@ -116,8 +116,8 @@ float64_t CImplicitWeightedSpecFeatures::dot(int32_t vec_idx1, CDotFeatures* df,
 	ASSERT(vec_idx1 < num_strings)
 	ASSERT(vec_idx2 < sf->get_num_vectors())
 
-	int32_t len1=-1;
-	int32_t len2=-1;
+	index_t len1=-1;
+	index_t len2=-1;
 	bool free_vec1;
 	bool free_vec2;
 	uint16_t* vec1=strings->get_feature_vector(vec_idx1, len1, free_vec1);
@@ -126,13 +126,13 @@ float64_t CImplicitWeightedSpecFeatures::dot(int32_t vec_idx1, CDotFeatures* df,
 	float64_t result=0;
 	uint8_t mask=0;
 
-	for (int32_t d=0; d<degree; d++)
+	for (index_t d=0; d<degree; d++)
 	{
 		mask = mask | (1 << (degree-d-1));
 		uint16_t masked=strings->get_masked_symbols(0xffff, mask);
 
-		int32_t left_idx=0;
-		int32_t right_idx=0;
+		index_t left_idx=0;
+		index_t right_idx=0;
 		float64_t weight=spec_weights[d]*spec_weights[d];
 
 		while (left_idx < len1 && right_idx < len2)
@@ -142,8 +142,8 @@ float64_t CImplicitWeightedSpecFeatures::dot(int32_t vec_idx1, CDotFeatures* df,
 
 			if (lsym == rsym)
 			{
-				int32_t old_left_idx=left_idx;
-				int32_t old_right_idx=right_idx;
+				index_t old_left_idx=left_idx;
+				index_t old_right_idx=right_idx;
 
 				while (left_idx<len1 && (vec1[left_idx] & masked) ==lsym)
 					left_idx++;
@@ -169,28 +169,28 @@ float64_t CImplicitWeightedSpecFeatures::dot(int32_t vec_idx1, CDotFeatures* df,
 		return result;
 }
 
-float64_t CImplicitWeightedSpecFeatures::dense_dot(int32_t vec_idx1, const float64_t* vec2, int32_t vec2_len)
+float64_t CImplicitWeightedSpecFeatures::dense_dot(index_t vec_idx1, const float64_t* vec2, index_t vec2_len)
 {
 	ASSERT(vec2_len == spec_size)
 	ASSERT(vec_idx1 < num_strings)
 
 	float64_t result=0;
-	int32_t len1=-1;
+	index_t len1=-1;
 	bool free_vec1;
 	uint16_t* vec1=strings->get_feature_vector(vec_idx1, len1, free_vec1);
 
 	if (vec1 && len1>0)
 	{
-		for (int32_t j=0; j<len1; j++)
+		for (index_t j=0; j<len1; j++)
 		{
 			uint8_t mask=0;
-			int32_t offs=0;
+			index_t offs=0;
 			uint16_t v=*vec1++;
 
-			for (int32_t d=0; d<degree; d++)
+			for (index_t d=0; d<degree; d++)
 			{
 				mask = mask | (1 << (degree-d-1));
-				int32_t idx=strings->get_masked_symbols(v, mask);
+				index_t idx=strings->get_masked_symbols(v, mask);
 				idx=strings->shift_symbol(idx, degree-d-1);
 				result += vec2[offs + idx]*spec_weights[d];
 				offs+=strings->shift_offset(1,d+1);
@@ -208,9 +208,9 @@ float64_t CImplicitWeightedSpecFeatures::dense_dot(int32_t vec_idx1, const float
 	return result;
 }
 
-void CImplicitWeightedSpecFeatures::add_to_dense_vec(float64_t alpha, int32_t vec_idx1, float64_t* vec2, int32_t vec2_len, bool abs_val)
+void CImplicitWeightedSpecFeatures::add_to_dense_vec(float64_t alpha, index_t vec_idx1, float64_t* vec2, index_t vec2_len, bool abs_val)
 {
-	int32_t len1=-1;
+	index_t len1=-1;
 	bool free_vec1;
 	uint16_t* vec=strings->get_feature_vector(vec_idx1, len1, free_vec1);
 
@@ -219,14 +219,14 @@ void CImplicitWeightedSpecFeatures::add_to_dense_vec(float64_t alpha, int32_t ve
 
 	if (vec && len1>0)
 	{
-		for (int32_t j=0; j<len1; j++)
+		for (index_t j=0; j<len1; j++)
 		{
 			uint8_t mask=0;
-			int32_t offs=0;
-			for (int32_t d=0; d<degree; d++)
+			index_t offs=0;
+			for (index_t d=0; d<degree; d++)
 			{
 				mask = mask | (1 << (degree-d-1));
-				int32_t idx=strings->get_masked_symbols(vec[j], mask);
+				index_t idx=strings->get_masked_symbols(vec[j], mask);
 				idx=strings->shift_symbol(idx, degree-d-1);
 				if (abs_val)
 					vec2[offs + idx] += CMath::abs(alpha*spec_weights[d]);
@@ -245,12 +245,12 @@ CFeatures* CImplicitWeightedSpecFeatures::duplicate() const
 	return new CImplicitWeightedSpecFeatures(*this);
 }
 
-int32_t CImplicitWeightedSpecFeatures::get_dim_feature_space() const
+index_t CImplicitWeightedSpecFeatures::get_dim_feature_space() const
 {
 	return spec_size;
 }
 
-void* CImplicitWeightedSpecFeatures::get_feature_iterator(int32_t vector_index)
+void* CImplicitWeightedSpecFeatures::get_feature_iterator(index_t vector_index)
 {
 	if (vector_index>=num_strings)
 	{
@@ -271,7 +271,7 @@ void* CImplicitWeightedSpecFeatures::get_feature_iterator(int32_t vector_index)
 	return it;
 }
 
-bool CImplicitWeightedSpecFeatures::get_next_feature(int32_t& index, float64_t& value, void* iterator)
+bool CImplicitWeightedSpecFeatures::get_next_feature(index_t& index, float64_t& value, void* iterator)
 {
 	wspec_feature_iterator* it=(wspec_feature_iterator*) iterator;
 
@@ -291,7 +291,7 @@ bool CImplicitWeightedSpecFeatures::get_next_feature(int32_t& index, float64_t& 
 	int32_t d=it->d;
 
 	it->mask = it->mask | (1 << (degree-d-1));
-	int32_t idx=strings->get_masked_symbols(it->vec[it->j], it->mask);
+	index_t idx=strings->get_masked_symbols(it->vec[it->j], it->mask);
 	idx=strings->shift_symbol(idx, degree-d-1);
 	value=it->alpha*spec_weights[d];
 	index=it->offs + idx;
@@ -310,14 +310,14 @@ void CImplicitWeightedSpecFeatures::free_feature_iterator(void* iterator)
 }
 
 
-int32_t CImplicitWeightedSpecFeatures::get_nnz_features_for_vector(int32_t num)
+index_t CImplicitWeightedSpecFeatures::get_nnz_features_for_vector(index_t num)
 {
-	int32_t vlen=-1;
+	index_t vlen=-1;
 	bool free_vec;
 	uint16_t* vec1=strings->get_feature_vector(num, vlen, free_vec);
 	strings->free_feature_vector(vec1, num, free_vec);
-	int32_t nnz=0;
-	for (int32_t i=1; i<=degree; i++)
+	index_t nnz=0;
+	for (index_t i=1; i<=degree; i++)
 		nnz+=CMath::min(CMath::pow(alphabet_size,i), vlen);
 	return nnz;
 }
@@ -332,7 +332,7 @@ EFeatureClass CImplicitWeightedSpecFeatures::get_feature_class() const
 	return C_WEIGHTEDSPEC;
 }
 
-int32_t CImplicitWeightedSpecFeatures::get_num_vectors() const
+index_t CImplicitWeightedSpecFeatures::get_num_vectors() const
 {
 	return num_strings;
 }

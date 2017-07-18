@@ -37,9 +37,9 @@ CCustomDistance::CCustomDistance(CDistance* d) : CDistance()
 		num_rows=cols;
 		num_cols=cols;
 
-		for (int32_t row=0; row<num_rows; row++)
+		for (index_t row=0; row<num_rows; row++)
 		{
-			for (int32_t col=row; col<num_cols; col++)
+			for (index_t col=row; col<num_cols; col++)
 				dmatrix[int64_t(row) * num_cols - int64_t(row)*(row+1)/2 + col]=d->distance(row,col);
 		}
 	}
@@ -53,9 +53,9 @@ CCustomDistance::CCustomDistance(CDistance* d) : CDistance()
 		num_rows=rows;
 		num_cols=cols;
 
-		for (int32_t row=0; row<num_rows; row++)
+		for (index_t row=0; row<num_rows; row++)
 		{
-			for (int32_t col=0; col<num_cols; col++)
+			for (index_t col=0; col<num_cols; col++)
 				dmatrix[int64_t(row) * num_cols + col]=d->distance(row,col);
 		}
 	}
@@ -134,7 +134,7 @@ void CCustomDistance::cleanup()
 	cleanup_custom();
 }
 
-float64_t CCustomDistance::compute(int32_t row, int32_t col)
+float64_t CCustomDistance:: compute(index_t row, index_t col)
 {
 	ASSERT(dmatrix)
 

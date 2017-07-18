@@ -89,10 +89,10 @@ bool CKernelPCA::init(CFeatures* features)
 
 		float64_t* eigenvalues=SGMatrix<float64_t>::compute_eigenvectors(kernel_matrix.matrix, n, n);
 
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
 			//normalize and trap divide by zero and negative eigenvalues
-			for (int32_t j=0; j<n; j++)
+			for (index_t j=0; j<n; j++)
 				kernel_matrix.matrix[i*n+j]/=CMath::sqrt(CMath::max(1e-16,eigenvalues[i]));
 		}
 
@@ -110,9 +110,9 @@ bool CKernelPCA::init(CFeatures* features)
 		float64_t* rowsum = SGMatrix<float64_t>::get_row_sum(m_transformation_matrix.matrix, n, n);
 		SGVector<float64_t>::scale_vector(1.0/n, rowsum, n);
 
-		for (int32_t i=0; i<n; i++)
+		for (index_t i=0; i<n; i++)
 		{
-			for (int32_t j=0; j<n; j++)
+			for (index_t j=0; j<n; j++)
 				m_transformation_matrix.matrix[j+n*i] -= rowsum[i];
 		}
 		SG_FREE(rowsum);

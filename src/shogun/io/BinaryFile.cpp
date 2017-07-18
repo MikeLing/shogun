@@ -117,7 +117,7 @@ void CBinaryFile::fname(sg_type *& array, int32_t *& dims,int32_t & num_dims)\
 	if (fread(dims,sizeof(int32_t),num_dims,file) != (size_t)num_dims)		\
 		SG_ERROR("Failed to read sizes of dimensions!")					\
 																			\
-	for (int32_t i = 0;i < num_dims;i++)									\
+	for (index_t i = 0;i < num_dims;i++)									\
 		total *= dims[i];													\
 																			\
 	array = SG_MALLOC(sg_type, total);												\
@@ -149,7 +149,7 @@ void CBinaryFile::fname(SGSparseVector<sg_type>*& matrix, int32_t& num_feat, int
 																						\
 	matrix=SG_MALLOC(SGSparseVector<sg_type>, num_vec);												\
 																						\
-	for (int32_t i=0; i<num_vec; i++)													\
+	for (index_t i=0; i<num_vec; i++)													\
 	{																					\
 		new (&matrix[i]) SGSparseVector<sg_type>();										\
 		int32_t len=0;																	\
@@ -198,7 +198,7 @@ void CBinaryFile::fname(SGString<sg_type>*& strings, int32_t& num_str, int32_t& 
 																								\
 	strings=SG_MALLOC(SGString<sg_type>, num_str);														\
 																								\
-	for (int32_t i=0; i<num_str; i++)															\
+	for (index_t i=0; i<num_str; i++)															\
 	{																							\
 		int32_t len=0;																			\
 		if (fread(&len, sizeof(int32_t), 1, file)!=1)											\
@@ -300,7 +300,7 @@ void CBinaryFile::fname(const sg_type * array, int32_t * dims,int32_t num_dims)	
 	if (fwrite(dims,sizeof(int32_t),num_dims,file) != (size_t)num_dims)		\
 		SG_ERROR("Failed to write sizes of dimensions!\n")					\
 																			\
-	for (int32_t i = 0;i < num_dims;i++)										\
+	for (index_t i = 0;i < num_dims;i++)										\
 		total *= dims[i];													\
 																			\
 	if (fwrite(array,sizeof(sg_type),total,file) != (size_t)total)			\
@@ -328,7 +328,7 @@ void CBinaryFile::fname(const SGSparseVector<sg_type>* matrix,	\
 	if (fwrite(&num_vec, sizeof(int32_t), 1, file)!=1)		\
 		SG_ERROR("Failed to write Sparse Matrix\n")		\
 															\
-	for (int32_t i=0; i<num_vec; i++)						\
+	for (index_t i=0; i<num_vec; i++)						\
 	{														\
 		SGSparseVectorEntry<sg_type>* vec = matrix[i].features;	\
 		int32_t len=matrix[i].num_feat_entries;				\
@@ -359,7 +359,7 @@ void CBinaryFile::fname(const SGString<sg_type>* strings, int32_t num_str)	\
 		SG_ERROR("File or strings invalid.\n")											\
 																						\
 	TSGDataType t dtype; write_header(&t);								                \
-	for (int32_t i=0; i<num_str; i++)													\
+	for (index_t i=0; i<num_str; i++)													\
 	{																					\
 		int32_t len = strings[i].slen;												\
 		if ((fwrite(&len, sizeof(int32_t), 1, file)!=1) ||								\

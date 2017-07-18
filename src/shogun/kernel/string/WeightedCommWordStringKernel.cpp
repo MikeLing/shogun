@@ -88,15 +88,15 @@ bool CWeightedCommWordStringKernel::set_weights(SGVector<float64_t> w)
 
 	SG_FREE(weights);
 	weights = w.vector;
-	for (int32_t i=0; i<degree; i++)
+	for (index_t i=0; i<degree; i++)
 		weights[i]=CMath::sqrt(weights[i]);
 	return true;
 }
 
 float64_t CWeightedCommWordStringKernel::compute_helper(
-	int32_t idx_a, int32_t idx_b, bool do_sort)
+	index_t idx_a, index_t idx_b, bool do_sort)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_avec, free_bvec;
 
 	CStringFeatures<uint16_t>* l = (CStringFeatures<uint16_t>*) lhs;
@@ -142,7 +142,7 @@ float64_t CWeightedCommWordStringKernel::compute_helper(
 	float64_t result=0;
 	uint8_t mask=0;
 
-	for (int32_t d=0; d<degree; d++)
+	for (index_t d=0; d<degree; d++)
 	{
 		mask = mask | (1 << (degree-d-1));
 		uint16_t masked=((CStringFeatures<uint16_t>*) lhs)->get_masked_symbols(0xffff, mask);
@@ -198,11 +198,11 @@ void CWeightedCommWordStringKernel::add_to_normal(
 
 	if (len>0)
 	{
-		for (int32_t j=0; j<len; j++)
+		for (index_t j=0; j<len; j++)
 		{
 			uint8_t mask=0;
 			int32_t offs=0;
-			for (int32_t d=0; d<degree; d++)
+			for (index_t d=0; d<degree; d++)
 			{
 				mask = mask | (1 << (degree-d-1));
 				int32_t idx=s->get_masked_symbols(vec[j], mask);
@@ -234,7 +234,7 @@ void CWeightedCommWordStringKernel::merge_normal()
 		float64_t result=0;
 		uint8_t mask=0;
 		int32_t offs=0;
-		for (int32_t d=0; d<degree; d++)
+		for (index_t d=0; d<degree; d++)
 		{
 			mask = mask | (1 << (degree-d-1));
 			int32_t idx=s->get_masked_symbols(sym, mask);
@@ -265,11 +265,11 @@ float64_t CWeightedCommWordStringKernel::compute_optimized(int32_t i)
 
 	if (vec && len>0)
 	{
-		for (int32_t j=0; j<len; j++)
+		for (index_t j=0; j<len; j++)
 		{
 			uint8_t mask=0;
 			int32_t offs=0;
-			for (int32_t d=0; d<degree; d++)
+			for (index_t d=0; d<degree; d++)
 			{
 				mask = mask | (1 << (degree-d-1));
 				int32_t idx=s->get_masked_symbols(vec[j], mask);

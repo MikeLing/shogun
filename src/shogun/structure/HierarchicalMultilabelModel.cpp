@@ -91,7 +91,7 @@ void CHierarchicalMultilabelModel::init(SGVector<int32_t> taxonomy,
 	// storing all the children of all the nodes in form of array of vectors
 	m_children = SG_MALLOC(SGVector<int32_t>, num_classes);
 
-	for (int32_t i = 0; i < num_classes; i++)
+	for (index_t i = 0; i < num_classes; i++)
 	{
 		SGVector<int32_t> child_id = m_taxonomy.find(i);
 		m_children[i] = child_id;
@@ -120,7 +120,7 @@ SGVector<int32_t> CHierarchicalMultilabelModel::get_label_vector(
 		int32_t node_id = sparse_label[i];
 		label_vector[node_id] = 1;
 
-		for (int32_t parent_id = m_taxonomy[node_id]; parent_id != -1;
+		for (index_t parent_id = m_taxonomy[node_id]; parent_id != -1;
 		                parent_id = m_taxonomy[parent_id])
 		{
 			label_vector[parent_id] = 1;

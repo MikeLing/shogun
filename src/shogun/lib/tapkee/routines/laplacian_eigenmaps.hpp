@@ -96,7 +96,7 @@ DenseSymmetricMatrixPair construct_locality_preserving_eigenproblem(SparseWeight
 		rhs.selfadjointView<Eigen::Upper>().rankUpdate(rank_update_vector_i,D.diagonal()(iter-begin));
 	}
 
-	for (int i=0; i<L.outerSize(); ++i)
+	for (index_t i=0; i<L.outerSize(); ++i)
 	{
 		for (SparseWeightMatrix::InnerIterator it(L,i); it; ++it)
 		{

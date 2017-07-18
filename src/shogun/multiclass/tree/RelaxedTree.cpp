@@ -49,7 +49,7 @@ CMulticlassLabels* CRelaxedTree::apply_multiclass(CFeatures* data)
 	}
 
 	// init kernels for all sub-machines
-	for (int32_t i=0; i<m_machines->get_num_elements(); i++)
+	for (index_t i=0; i<m_machines->get_num_elements(); i++)
 	{
 		CSVM *machine = (CSVM*)m_machines->get_element(i);
 		CKernel *kernel = machine->get_kernel();
@@ -62,7 +62,7 @@ CMulticlassLabels* CRelaxedTree::apply_multiclass(CFeatures* data)
 
 	CMulticlassLabels *lab = new CMulticlassLabels(m_feats->get_num_vectors());
 	SG_REF(lab);
-	for (int32_t i=0; i < lab->get_num_labels(); ++i)
+	for (index_t i=0; i < lab->get_num_labels(); ++i)
 	{
 		lab->set_int_label(i, int32_t(apply_one(i)));
 	}
@@ -70,7 +70,7 @@ CMulticlassLabels* CRelaxedTree::apply_multiclass(CFeatures* data)
 	return lab;
 }
 
-float64_t CRelaxedTree::apply_one(int32_t idx)
+float64_t CRelaxedTree::apply_one(index_t idx)
 {
 	bnode_t *node = (bnode_t*) m_root;
 	int32_t klass = -1;
@@ -88,7 +88,7 @@ float64_t CRelaxedTree::apply_one(int32_t idx)
 			}
 			else // stop here
 			{
-				for (int32_t i=0; i < node->data.mu.vlen; ++i)
+				for (index_t i=0; i < node->data.mu.vlen; ++i)
 				{
 					if (node->data.mu[i] <= 0 && node->data.mu[i] > -2)
 					{
@@ -108,7 +108,7 @@ float64_t CRelaxedTree::apply_one(int32_t idx)
 			}
 			else
 			{
-				for (int32_t i=0; i <node->data.mu.vlen; ++i)
+				for (index_t i=0; i <node->data.mu.vlen; ++i)
 				{
 					if (node->data.mu[i] >= 0)
 					{
@@ -150,7 +150,7 @@ bool CRelaxedTree::train_machine(CFeatures* data)
 	// train root
 	SGVector<int32_t> classes(m_num_classes);
 
-	for (int32_t i=0; i < m_num_classes; ++i)
+	for (index_t i=0; i < m_num_classes; ++i)
 		classes[i] = i;
 
 	SG_UNREF(m_root);
@@ -166,7 +166,7 @@ bool CRelaxedTree::train_machine(CFeatures* data)
 		// left node
 		SGVector <int32_t> left_classes(m_num_classes);
 		int32_t k=0;
-		for (int32_t i=0; i < m_num_classes; ++i)
+		for (index_t i=0; i < m_num_classes; ++i)
 		{
 			// active classes are labeled as -1 or 0
 			// -2 indicate classes that are already pruned away
@@ -186,7 +186,7 @@ bool CRelaxedTree::train_machine(CFeatures* data)
 		// right node
 		SGVector <int32_t> right_classes(m_num_classes);
 		k=0;
-		for (int32_t i=0; i < m_num_classes; ++i)
+		for (index_t i=0; i < m_num_classes; ++i)
 		{
 			// active classes are labeled as 0 or +1
 			if (node->data.mu[i] >= 0)
@@ -247,7 +247,7 @@ CRelaxedTree::bnode_t *CRelaxedTree::train_node(const SGMatrix<float64_t> &conf_
 
 	SGVector<int32_t> long_mu(m_num_classes);
 	std::fill(&long_mu[0], &long_mu[m_num_classes], -2);
-	for (int32_t i=0; i < best_mu.vlen; ++i)
+	for (index_t i=0; i < best_mu.vlen; ++i)
 	{
 		if (best_mu[i] == 1)
 			long_mu[classes[i]] = 1;
@@ -264,7 +264,7 @@ CRelaxedTree::bnode_t *CRelaxedTree::train_node(const SGMatrix<float64_t> &conf_
 float64_t CRelaxedTree::compute_score(SGVector<int32_t> mu, CSVM *svm)
 {
 	float64_t num_pos=0, num_neg=0;
-	for (int32_t i=0; i < mu.vlen; ++i)
+	for (index_t i=0; i < mu.vlen; ++i)
 	{
 		if (mu[i] == 1)
 			num_pos++;
@@ -289,10 +289,10 @@ SGVector<int32_t> CRelaxedTree::train_node_with_initialization(const CRelaxedTre
 	svm->set_C(m_svm_C, m_svm_C);
 	svm->set_epsilon(m_svm_epsilon);
 
-	for (int32_t iiter=0; iiter < m_max_num_iter; ++iiter)
+	for (index_t iiter=0; iiter < m_max_num_iter; ++iiter)
 	{
 		long_mu.zero();
-		for (int32_t i=0; i < classes.vlen; ++i)
+		for (index_t i=0; i < classes.vlen; ++i)
 		{
 			if (mu[i] == 1)
 				long_mu[classes[i]] = 1;
@@ -305,7 +305,7 @@ SGVector<int32_t> CRelaxedTree::train_node_with_initialization(const CRelaxedTre
 		int32_t k=0;
 
 		CMulticlassLabels *labs = dynamic_cast<CMulticlassLabels *>(m_labels);
-		for (int32_t i=0; i < binlab.vlen; ++i)
+		for (index_t i=0; i < binlab.vlen; ++i)
 		{
 			int32_t lab = labs->get_int_label(i);
 			binlab[i] = long_mu[lab];
@@ -335,7 +335,7 @@ SGVector<int32_t> CRelaxedTree::train_node_with_initialization(const CRelaxedTre
 		mu = color_label_space(svm, classes);
 
 		bool bbreak = true;
-		for (int32_t i=0; i < mu.vlen; ++i)
+		for (index_t i=0; i < mu.vlen; ++i)
 		{
 			if (mu[i] != prev_mu[i])
 			{
@@ -407,11 +407,11 @@ SGVector<int32_t> CRelaxedTree::color_label_space(CSVM *svm, SGVector<int32_t> c
 	SGVector<float64_t> xi_pos_class(classes.vlen), xi_neg_class(classes.vlen);
 	SGVector<float64_t> delta_pos(classes.vlen), delta_neg(classes.vlen);
 
-	for (int32_t i=0; i < classes.vlen; ++i)
+	for (index_t i=0; i < classes.vlen; ++i)
 	{
 		// find number of instances from this class
 		int32_t ni=0;
-		for (int32_t j=0; j < labels->get_num_labels(); ++j)
+		for (index_t j=0; j < labels->get_num_labels(); ++j)
 		{
 			if (labels->get_int_label(j) == classes[i])
 			{
@@ -421,7 +421,7 @@ SGVector<int32_t> CRelaxedTree::color_label_space(CSVM *svm, SGVector<int32_t> c
 
 		xi_pos_class[i] = 0;
 		xi_neg_class[i] = 0;
-		for (int32_t j=0; j < resp.vlen; ++j)
+		for (index_t j=0; j < resp.vlen; ++j)
 		{
 			if (labels->get_int_label(j) == classes[i])
 			{
@@ -449,7 +449,7 @@ SGVector<int32_t> CRelaxedTree::color_label_space(CSVM *svm, SGVector<int32_t> c
 
 	// enforce balance constraints
 	int32_t B_prime = 0;
-	for (int32_t i=0; i < mu.vlen; ++i)
+	for (index_t i=0; i < mu.vlen; ++i)
 		B_prime += mu[i];
 
 	if (B_prime > m_B)
@@ -549,7 +549,7 @@ void CRelaxedTree::enforce_balance_constraints_upper(SGVector<int32_t> &mu, SGVe
 	for (index_t i=0; i < num_zero; ++i)
 		S_delta[i] = delta_neg[index_zero[i]];
 
-	for (int32_t i=0; i < num_pos; ++i)
+	for (index_t i=0; i < num_pos; ++i)
 	{
 		float64_t delta_k = delta_neg[index_pos[i]];
 		float64_t delta_k_0 = -delta_pos[index_pos[i]];
@@ -630,7 +630,7 @@ void CRelaxedTree::enforce_balance_constraints_upper(SGVector<int32_t> &mu, SGVe
 				// find the next smallest Delta_j or Delta_{j,0}
 				float64_t Delta_j_min=0;
 				int32_t j=0;
-				for (int32_t itr=ctr+1; itr < S_delta_sorted.vlen; ++itr)
+				for (index_t itr=ctr+1; itr < S_delta_sorted.vlen; ++itr)
 				{
 					if (valid_flag[itr] == 0)
 						continue;
@@ -645,7 +645,7 @@ void CRelaxedTree::enforce_balance_constraints_upper(SGVector<int32_t> &mu, SGVe
 				// find the largest Delta_i or Delta_{i,0}
 				float64_t Delta_i_max = 0;
 				int32_t i=-1;
-				for (int32_t itr=ctr-1; itr >= 0; --itr)
+				for (index_t itr=ctr-1; itr >= 0; --itr)
 				{
 					if (delta_steps[itr] == 1 && valid_flag[itr] == 1)
 					{
@@ -657,7 +657,7 @@ void CRelaxedTree::enforce_balance_constraints_upper(SGVector<int32_t> &mu, SGVe
 				// find the l with the largest Delta_l_minus - Delta_l_0
 				float64_t Delta_l_max = std::numeric_limits<float64_t>::min();
 				int32_t l=-1;
-				for (int32_t itr=ctr-1; itr >= 0; itr--)
+				for (index_t itr=ctr-1; itr >= 0; itr--)
 				{
 					if (delta_steps[itr] == 2)
 					{
@@ -738,7 +738,7 @@ void CRelaxedTree::enforce_balance_constraints_lower(SGVector<int32_t> &mu, SGVe
 	for (index_t i=0; i < num_zero; ++i)
 		S_delta[i] = delta_pos[index_zero[i]];
 
-	for (int32_t i=0; i < num_neg; ++i)
+	for (index_t i=0; i < num_neg; ++i)
 	{
 		float64_t delta_k = delta_pos[index_neg[i]];
 		float64_t delta_k_0 = -delta_neg[index_neg[i]];
@@ -820,7 +820,7 @@ void CRelaxedTree::enforce_balance_constraints_lower(SGVector<int32_t> &mu, SGVe
 				// find the next smallest Delta_j or Delta_{j,0}
 				float64_t Delta_j_min=0;
 				int32_t j=0;
-				for (int32_t itr=ctr+1; itr < S_delta_sorted.vlen; ++itr)
+				for (index_t itr=ctr+1; itr < S_delta_sorted.vlen; ++itr)
 				{
 					if (valid_flag[itr] == 0)
 						continue;
@@ -835,7 +835,7 @@ void CRelaxedTree::enforce_balance_constraints_lower(SGVector<int32_t> &mu, SGVe
 				// find the largest Delta_i or Delta_{i,0}
 				float64_t Delta_i_max = 0;
 				int32_t i=-1;
-				for (int32_t itr=ctr-1; itr >= 0; --itr)
+				for (index_t itr=ctr-1; itr >= 0; --itr)
 				{
 					if (delta_steps[itr] == 1 && valid_flag[itr] == 1)
 					{
@@ -847,7 +847,7 @@ void CRelaxedTree::enforce_balance_constraints_lower(SGVector<int32_t> &mu, SGVe
 				// find the l with the largest Delta_l_minus - Delta_l_0
 				float64_t Delta_l_max = std::numeric_limits<float64_t>::min();
 				int32_t l=-1;
-				for (int32_t itr=ctr-1; itr >= 0; itr--)
+				for (index_t itr=ctr-1; itr >= 0; itr--)
 				{
 					if (delta_steps[itr] == 2)
 					{
@@ -902,7 +902,7 @@ SGVector<float64_t> CRelaxedTree::eval_binary_model_K(CSVM *svm)
 {
 	CRegressionLabels *lab = svm->apply_regression(m_feats);
 	SGVector<float64_t> resp(lab->get_num_labels());
-	for (int32_t i=0; i < resp.vlen; ++i)
+	for (index_t i=0; i < resp.vlen; ++i)
 		resp[i] = lab->get_label(i) - m_A/m_svm_C;
 	SG_UNREF(lab);
 	return resp;

@@ -19,13 +19,13 @@ int main(int argc, char** argv)
 
 	CSet<double>* set = new CSet<double>(SIZE/2, SIZE/2);
 
-	for (int i=0; i<SIZE; i++)
+	for (index_t i=0; i<SIZE; i++)
 		set->add(v[i]);
 
 	set->remove(0.2);
 
 	//SG_SPRINT("Num of elements: %d\n", set->get_num_elements());
-	for (int i=0; i<SIZE; i++)
+	for (index_t i=0; i<SIZE; i++)
 	{
 		if (set->contains(v[i]))
 			;

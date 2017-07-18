@@ -58,7 +58,7 @@ CLabels* CAUCKernel::setup_auc_maximization(CLabels* labels)
 	int32_t num_pos=0;
 	int32_t num_neg=0;
 
-	for (int32_t i=0; i<int_labels.vlen; i++)
+	for (index_t i=0; i<int_labels.vlen; i++)
 	{
 		if (int_labels.vector[i]==1)
 			num_pos++;
@@ -74,12 +74,12 @@ CLabels* CAUCKernel::setup_auc_maximization(CLabels* labels)
 	int32_t* labels_auc = SG_MALLOC(int32_t, num_auc);
 	int32_t n=0 ;
 
-	for (int32_t i=0; i<int_labels.vlen; i++)
+	for (index_t i=0; i<int_labels.vlen; i++)
 	{
 		if (int_labels.vector[i]!=1)
 			continue;
 
-		for (int32_t j=0; j<int_labels.vlen; j++)
+		for (index_t j=0; j<int_labels.vlen; j++)
 		{
 			if (int_labels.vector[j]!=-1)
 				continue;
@@ -128,9 +128,9 @@ bool CAUCKernel::init(CFeatures* l, CFeatures* r)
 	return true;
 }
 
-float64_t CAUCKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CAUCKernel::compute(index_t idx_a, index_t idx_b)
 {
-  int32_t alen, blen;
+  index_t alen, blen;
   bool afree, bfree;
 
   uint16_t* avec=((CDenseFeatures<uint16_t>*) lhs)->get_feature_vector(idx_a, alen, afree);
@@ -142,7 +142,7 @@ float64_t CAUCKernel::compute(int32_t idx_a, int32_t idx_b)
   ASSERT(subkernel && subkernel->has_features())
 
   float64_t k11,k12,k21,k22;
-  int32_t idx_a1=avec[0], idx_a2=avec[1], idx_b1=bvec[0], idx_b2=bvec[1];
+  index_t idx_a1=avec[0], idx_a2=avec[1], idx_b1=bvec[0], idx_b2=bvec[1];
 
   k11 = subkernel->kernel(idx_a1,idx_b1);
   k12 = subkernel->kernel(idx_a1,idx_b2);

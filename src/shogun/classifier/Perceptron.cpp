@@ -58,7 +58,7 @@ bool CPerceptron::train_machine(CFeatures* data)
 		//start with uniform w, bias=0
 		w=SGVector<float64_t>(num_feat);
 		bias=0;
-		for (int32_t i=0; i<num_feat; i++)
+		for (index_t i=0; i<num_feat; i++)
 			w.vector[i]=1.0/num_feat;
 	}
 
@@ -66,7 +66,7 @@ bool CPerceptron::train_machine(CFeatures* data)
 	while (!converged && iter<max_iter)
 	{
 		converged=true;
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 		{
 			output[i]=apply_one(i);
 

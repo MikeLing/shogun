@@ -299,7 +299,7 @@ void SGIO::set_target(FILE* t)
 
 const char* SGIO::get_msg_intro(EMessageType prio) const
 {
-	for (int32_t i=NUM_LOG_LEVELS-1; i>=0; i--)
+	for (index_t i=NUM_LOG_LEVELS-1; i>=0; i--)
 	{
 		// ignore msg if prio's level is under loglevel,
 		// but not if prio's level higher than MSG_WARN

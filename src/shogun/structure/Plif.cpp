@@ -83,7 +83,7 @@ void CPlif::init_penalty_struct_cache()
 
 	if (local_cache)
 	{
-		for (int32_t i=0; i<=max_value; i++)
+		for (index_t i=0; i<=max_value; i++)
 		{
 			if (i<min_value)
 				local_cache[i] = -CMath::INFTY ;
@@ -114,7 +114,7 @@ char* CPlif::get_plif_name() const
 
 void CPlif::delete_penalty_struct(CPlif** PEN, int32_t P)
 {
-	for (int32_t i=0; i<P; i++)
+	for (index_t i=0; i<P; i++)
 		delete PEN[i] ;
 	SG_FREE(PEN);
 }
@@ -153,7 +153,7 @@ float64_t CPlif::lookup_penalty_svm(
 
 	int32_t idx = 0 ;
 	float64_t ret ;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		if (limits[i]<=d_value)
 			idx++ ;
 		else
@@ -249,7 +249,7 @@ float64_t CPlif::lookup_penalty(float64_t p_value, float64_t* svm_values) const
 
 	int32_t idx = 0 ;
 	float64_t ret ;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		if (limits[i]<=d_value)
 			idx++ ;
 		else
@@ -282,7 +282,7 @@ float64_t CPlif::lookup_penalty(float64_t p_value, float64_t* svm_values) const
 
 void CPlif::penalty_clear_derivative()
 {
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		cum_derivatives[i]=0.0 ;
 }
 
@@ -321,7 +321,7 @@ void CPlif::penalty_add_derivative(float64_t p_value, float64_t* svm_values, flo
 	}
 
 	int32_t idx = 0 ;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		if (limits[i]<=d_value)
 			idx++ ;
 		else
@@ -368,7 +368,7 @@ void CPlif::penalty_add_derivative_svm(float64_t p_value, float64_t *d_values, f
 	}
 
 	int32_t idx = 0 ;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		if (limits[i]<=d_value)
 			idx++ ;
 		else

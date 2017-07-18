@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 
 	// create some data
 	SGMatrix<float64_t> matrix(2,3);
-	for (int32_t i=0; i<6; i++)
+	for (index_t i=0; i<6; i++)
 		matrix.matrix[i]=i;
 
 	// create three 2-dimensional vectors
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 	svm->train();
 
 	// classify on training examples
-	for (int32_t i=0; i<3; i++)
+	for (index_t i=0; i<3; i++)
 		SG_SPRINT("output[%d]=%f\n", i, svm->apply_one(i));
 
 	// free up memory

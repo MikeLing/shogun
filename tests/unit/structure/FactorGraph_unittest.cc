@@ -67,13 +67,13 @@ TEST(FactorGraph, compute_energies_data_indep)
 	fg.compute_energies();
 
 	CDynamicObjectArray* allfac = fg.get_factors();
-	for (int32_t fi = 0; fi < 3; fi++)
+	for (index_t fi = 0; fi < 3; fi++)
 	{
 		CFactor* ft = dynamic_cast<CFactor*>(allfac->get_element(fi));
 		SGVector<float64_t> energies = ft->get_energies();
 		SG_UNREF(ft);
 
-		for (int32_t ei = 0; ei < energies.size(); ei++)
+		for (index_t ei = 0; ei < energies.size(); ei++)
 			EXPECT_NEAR(w[ei], energies[ei], 1E-10);
 	}
 
@@ -318,7 +318,7 @@ TEST(FactorGraph, evaluate_energy_param_data)
 	SGVector<float64_t> gradients(8);
 	gradients.zero();
 	CDynamicObjectArray* allfac = fg.get_factors();
-	//for (int32_t fi = 0; fi < allfac->get_num_elements(); fi++)
+	//for (index_t fi = 0; fi < allfac->get_num_elements(); fi++)
 	int32_t fi = 0;
 	{
 		CFactor* ft = dynamic_cast<CFactor*>(allfac->get_element(fi));
@@ -422,7 +422,7 @@ TEST(FactorGraph, evaluate_energy_param_data_sparse)
 	SGVector<float64_t> gradients(8);
 	gradients.zero();
 	CDynamicObjectArray* allfac = fg.get_factors();
-	for (int32_t fi = 0; fi < allfac->get_num_elements(); fi++)
+	for (index_t fi = 0; fi < allfac->get_num_elements(); fi++)
 	{
 		CFactor* ft = dynamic_cast<CFactor*>(allfac->get_element(fi));
 		ft->compute_gradients(marginals, gradients);
@@ -468,9 +468,9 @@ TEST(FactorGraph, structure_analysis)
 	CFactorGraph fg(vc);
 
 	// Add factors
-	for (int32_t x = 0; x < ww; x++)
+	for (index_t x = 0; x < ww; x++)
 	{
-		for (int32_t y = 0; y < hh; y++)
+		for (index_t y = 0; y < hh; y++)
 		{
 			if (x > 0)
 			{
@@ -525,9 +525,9 @@ TEST(FactorGraph, structure_analysis_loopy)
 	CFactorGraph fg(vc);
 
 	// Add factors
-	for (int32_t x = 0; x < ww; x++)
+	for (index_t x = 0; x < ww; x++)
 	{
-		for (int32_t y = 0; y < hh; y++)
+		for (index_t y = 0; y < hh; y++)
 		{
 			if (x > 0)
 			{
@@ -582,9 +582,9 @@ TEST(FactorGraph, structure_analysis_disconnected)
 	CFactorGraph fg(vc);
 
 	// Add factors
-	for (int32_t x = 0; x < ww; x++)
+	for (index_t x = 0; x < ww; x++)
 	{
-		for (int32_t y = 0; y < hh; y++)
+		for (index_t y = 0; y < hh; y++)
 		{
 			if (x > 0)
 			{

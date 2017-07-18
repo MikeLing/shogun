@@ -29,7 +29,7 @@ CBinaryLabels::CBinaryLabels(int32_t num_labels) : CDenseLabels(num_labels)
 CBinaryLabels::CBinaryLabels(SGVector<int32_t> src) : CDenseLabels()
 {
 	SGVector<float64_t> values(src.vlen);
-	for (int32_t i = 0; i < values.vlen; i++)
+	for (index_t i = 0; i < values.vlen; i++)
 	{
 		values[i] = src[i];
 	}
@@ -40,7 +40,7 @@ CBinaryLabels::CBinaryLabels(SGVector<int32_t> src) : CDenseLabels()
 CBinaryLabels::CBinaryLabels(SGVector<int64_t> src) : CDenseLabels()
 {
 	SGVector<float64_t> values(src.vlen);
-	for (int32_t i = 0; i < values.vlen; i++)
+	for (index_t i = 0; i < values.vlen; i++)
 	{
 		values[i] = src[i];
 	}
@@ -52,7 +52,7 @@ CBinaryLabels::CBinaryLabels(SGVector<int64_t> src) : CDenseLabels()
 CBinaryLabels::CBinaryLabels(SGVector<float64_t> src, float64_t threshold) : CDenseLabels()
 {
 	SGVector<float64_t> labels(src.vlen);
-	for (int32_t i = 0; i < labels.vlen; i++)
+	for (index_t i = 0; i < labels.vlen; i++)
 	{
 		labels[i] = src[i] + threshold >= 0 ? +1.0 : -1.0;
 	}
@@ -71,7 +71,7 @@ void CBinaryLabels::ensure_valid(const char * context)
 	bool found_minus_one = false;
 
 	int32_t subset_size = get_num_labels();
-	for (int32_t i = 0; i < subset_size; i++)
+	for (index_t i = 0; i < subset_size; i++)
 	{
 		int32_t real_i = m_subset_stack->subset_idx_conversion(i);
 		if (m_labels[real_i] == +1.0)

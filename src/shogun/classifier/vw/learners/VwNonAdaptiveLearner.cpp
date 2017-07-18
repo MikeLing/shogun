@@ -46,7 +46,7 @@ void CVwNonAdaptiveLearner::train(VwExample* &ex, float32_t update)
 			weights[f->weight_index & thread_mask] += update * f->x;
 	}
 
-	for (int32_t k = 0; k < env->pairs.get_num_elements(); k++)
+	for (index_t k = 0; k < env->pairs.get_num_elements(); k++)
 	{
 		char* i = env->pairs.get_element(k);
 

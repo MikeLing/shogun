@@ -43,7 +43,7 @@ TEST(PrimalMosekSOSVM, mosek_init_sosvm_w_bounds)
 	CFactorGraphLabels* labels = new CFactorGraphLabels(num_samples);
 	SG_REF(labels);
 
-	for (int32_t n = 0; n < num_samples; ++n)
+	for (index_t n = 0; n < num_samples; ++n)
 	{
 		// factor graph
 		SGVector<int32_t> vc(3);
@@ -112,7 +112,7 @@ TEST(PrimalMosekSOSVM, mosek_init_sosvm_w_bounds)
 	w = primcp->get_w();
 
 	//w = dummy_mosek_sosvm(model, lb, ub, 0);
-	for (int32_t i = 0; i < w.vlen; i++)
+	for (index_t i = 0; i < w.vlen; i++)
 	{
 		EXPECT_LE(w[i], ub[i]);
 		EXPECT_GE(w[i], lb[i]);
@@ -127,7 +127,7 @@ TEST(PrimalMosekSOSVM, mosek_init_sosvm_w_bounds)
 	w = primcp->get_w();
 
 	//w = dummy_mosek_sosvm(model, lb, ub, 0);
-	for (int32_t i = 0; i < w.vlen; i++)
+	for (index_t i = 0; i < w.vlen; i++)
 		EXPECT_NEAR(w[i], ub[i], 1e-10);
 
 	// lb case
@@ -139,7 +139,7 @@ TEST(PrimalMosekSOSVM, mosek_init_sosvm_w_bounds)
 	w = primcp->get_w();
 
 	//w = dummy_mosek_sosvm(model, lb, ub, 0);
-	for (int32_t i = 0; i < w.vlen; i++)
+	for (index_t i = 0; i < w.vlen; i++)
 		EXPECT_GE(w[i], lb[i]);
 
 	// ub case
@@ -151,7 +151,7 @@ TEST(PrimalMosekSOSVM, mosek_init_sosvm_w_bounds)
 	w = primcp->get_w();
 
 	//w = dummy_mosek_sosvm(model, lb, ub, 0);
-	for (int32_t i = 0; i < w.vlen; i++)
+	for (index_t i = 0; i < w.vlen; i++)
 		EXPECT_LE(w[i], ub[i]);
 
 	SG_UNREF(primcp);

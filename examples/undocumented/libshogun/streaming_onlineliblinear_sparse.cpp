@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
         FILE* fh = fopen(test_labels_file_name, "wb");
         ASSERT(fh);
 
-        for (int32_t j = 0; j < test_binary_labels->get_num_labels(); j++)
+        for (index_t j = 0; j < test_binary_labels->get_num_labels(); j++)
             fprintf(fh, "%d\n", test_binary_labels->get_int_label(j));
 
         fclose(fh);

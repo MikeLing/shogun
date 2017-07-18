@@ -153,7 +153,7 @@ bool CFeatureBlockLogisticRegression::train_machine(CFeatures* data)
 
 	int32_t n_vecs = m_labels->get_num_labels();
 	SGVector<float64_t> y(n_vecs);
-	for (int32_t i=0; i<n_vecs; i++)
+	for (index_t i=0; i<n_vecs; i++)
 		y[i] = ((CBinaryLabels*)m_labels)->get_label(i);
 
 	slep_options options = slep_options::default_options();
@@ -177,7 +177,7 @@ bool CFeatureBlockLogisticRegression::train_machine(CFeatures* data)
 				SG_ERROR("Group of features covers more features than available\n")
 
 			options.gWeight = SG_MALLOC(double, options.n_feature_blocks);
-			for (int32_t i=0; i<options.n_feature_blocks; i++)
+			for (index_t i=0; i<options.n_feature_blocks; i++)
 				options.gWeight[i] = 1.0;
 			options.mode = FEATURE_GROUP;
 			options.loss = LOGISTIC;
@@ -187,7 +187,7 @@ bool CFeatureBlockLogisticRegression::train_machine(CFeatures* data)
 			SG_FREE(options.gWeight);
 			int32_t n_feats = features->get_dim_feature_space();
 			SGVector<float64_t> new_w(n_feats);
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 				new_w[i] = result.w[i];
 			set_bias(result.c[0]);
 
@@ -216,7 +216,7 @@ bool CFeatureBlockLogisticRegression::train_machine(CFeatures* data)
 
 			int32_t n_feats = features->get_dim_feature_space();
 			SGVector<float64_t> new_w(n_feats);
-			for (int i=0; i<n_feats; i++)
+			for (index_t i=0; i<n_feats; i++)
 				new_w[i] = result.w[i];
 
 			set_bias(result.c[0]);
@@ -231,7 +231,7 @@ bool CFeatureBlockLogisticRegression::train_machine(CFeatures* data)
 	return true;
 }
 
-float64_t CFeatureBlockLogisticRegression::apply_one(int32_t vec_idx)
+float64_t CFeatureBlockLogisticRegression::apply_one(index_t vec_idx)
 {
 	return CMath::exp(-(features->dense_dot(vec_idx, w.vector, w.vlen) + bias));
 }
@@ -255,7 +255,7 @@ SGVector<float64_t> CFeatureBlockLogisticRegression::apply_get_outputs(CFeatures
 
 	float64_t* out=SG_MALLOC(float64_t, num);
 	features->dense_dot_range(out, 0, num, NULL, w.vector, w.vlen, bias);
-	for (int32_t i=0; i<num; i++)
+	for (index_t i=0; i<num; i++)
 		out[i] = 2.0/(1.0+CMath::exp(-out[i])) - 1.0;
 	return SGVector<float64_t>(out,num);
 }

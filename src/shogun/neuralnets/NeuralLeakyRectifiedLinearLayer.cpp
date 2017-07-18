@@ -55,7 +55,7 @@ void CNeuralLeakyRectifiedLinearLayer::compute_activations(
 	CNeuralLinearLayer::compute_activations(parameters, layers);
 
 	int32_t len = m_num_neurons*m_batch_size;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 	{
 		m_activations[i] = CMath::max<float64_t>(m_alpha*m_activations[i], m_activations[i]);
 	}

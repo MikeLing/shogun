@@ -76,7 +76,7 @@ public:
             CNode *current_node = grey_nodes.front();
             grey_nodes.pop_front();
 
-            for(int32_t i = 0; i!=int32_t(current_node->children.size()); i++){
+            for(index_t i = 0; i!=int32_t(current_node->children.size()); i++){
                 grey_nodes.push_back(current_node->children[i]);
             }
 
@@ -309,7 +309,7 @@ public:
 	{
 		int32_t num_leaves = 0;
 
-		for (int32_t i=0; i!=get_num_nodes(); i++)
+		for (index_t i=0; i!=get_num_nodes(); i++)
 		{
 			if (get_node(i)->is_leaf()==true)
 			{
@@ -420,9 +420,9 @@ public:
 	{
 
 
-		for (int32_t i=0; i!=num_nodes; i++)
+		for (index_t i=0; i!=num_nodes; i++)
 		{
-			for (int32_t j=0; j!=num_nodes; j++)
+			for (index_t j=0; j!=num_nodes; j++)
 			{
 
 				float64_t similarity = taxonomy.compute_node_similarity(i, j);
@@ -484,7 +484,7 @@ public:
 
 		task_vector_lhs.clear();
 
-		for (int32_t i = 0; i != (int32_t)(vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(vec.size()); ++i)
 		{
 			task_vector_lhs.push_back(taxonomy.get_id(vec[i]));
 		}
@@ -500,7 +500,7 @@ public:
 
 		task_vector_rhs.clear();
 
-		for (int32_t i = 0; i != (int32_t)(vec.size()); ++i)
+		for (index_t i = 0; i != (int32_t)(vec.size()); ++i)
 		{
 			task_vector_rhs.push_back(taxonomy.get_id(vec[i]));
 		}

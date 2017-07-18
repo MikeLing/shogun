@@ -65,13 +65,13 @@ class MappedSparseMatrix
         data.clear();
 
         // deep copy sparse matrix
-        for (int32_t i=0; i!=sgm.num_vectors; i++)
+        for (index_t i=0; i!=sgm.num_vectors; i++)
         {
 
             SGSparseVector<float64_t> ts_row = sgm.sparse_matrix[i];
             data.push_back(std::map<index_t, float64_t>());
 
-            for (int32_t k=0; k!=ts_row.num_feat_entries; k++)
+            for (index_t k=0; k!=ts_row.num_feat_entries; k++)
             {
 				// get data from sparse matrix
 				SGSparseVectorEntry<float64_t> e = ts_row.features[k];
@@ -240,18 +240,18 @@ class CLibLinearMTL : public CLinearMachine
             int32_t w_size = V.num_rows;
 
             SGMatrix<float64_t> W = SGMatrix<float64_t>(w_size, num_tasks);
-            for(int32_t k=0; k<w_size*num_tasks; k++)
+            for(index_t k=0; k<w_size*num_tasks; k++)
             {
                 W.matrix[k] = 0;
             }
 
-            for (int32_t s=0; s<num_tasks; s++)
+            for (index_t s=0; s<num_tasks; s++)
             {
                 float64_t* v_s = V.get_column_vector(s);
-                for (int32_t t=0; t<num_tasks; t++)
+                for (index_t t=0; t<num_tasks; t++)
                 {
                     float64_t sim_ts = task_similarity_matrix(s,t);
-                    for(int32_t i=0; i<w_size; i++)
+                    for(index_t i=0; i<w_size; i++)
                     {
                         W.matrix[t*w_size + i] += sim_ts * v_s[i];
                     }

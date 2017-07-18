@@ -54,7 +54,7 @@ IGNORE_IN_CLASSLIST template <class T> class CGCArray : public CSGObject
 		/** Destructor */
 		virtual ~CGCArray()
 		{
-			for (int32_t i=0; i<size; i++)
+			for (index_t i=0; i<size; i++)
 				SG_UNREF(array[i]);
 			SG_FREE(array);
 		}

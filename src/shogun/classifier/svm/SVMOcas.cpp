@@ -71,7 +71,7 @@ bool CSVMOcas::train_machine(CFeatures* data)
 
 	int32_t num_vec=features->get_num_vectors();
 	lab = SGVector<float64_t>(num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		lab[i] = ((CBinaryLabels*)m_labels)->get_label(i);
 
 	w=SGVector<float64_t>(features->get_dim_feature_space());
@@ -278,7 +278,7 @@ int CSVMOcas::compute_output(float64_t *output, void* ptr)
 
 	f->dense_dot_range(output, 0, nData, y, o->w.vector, o->w.vlen, 0.0);
 
-	for (int32_t i=0; i<nData; i++)
+	for (index_t i=0; i<nData; i++)
 		output[i]+=y[i]*o->bias;
 	//CMath::display_vector(o->w, o->w.vlen, "w");
 	//CMath::display_vector(output, nData, "out");

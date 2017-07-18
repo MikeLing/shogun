@@ -167,10 +167,10 @@ SGMatrix<float64_t> CHomogeneousKernelMap::apply_to_feature_matrix (CFeatures* f
 	int32_t num_features = simple_features->get_num_features ();
 
 	SGMatrix<float64_t> feature_matrix(num_features*(2*m_order+1),num_vectors);
-	for (int i = 0; i < num_vectors; ++i)
+	for (index_t i = 0; i < num_vectors; ++i)
 	{
 		SGVector<float64_t> transformed = apply_to_vector(simple_features->get_feature_vector(i));
-		for (int j=0; j<transformed.vlen; j++)
+		for (index_t j=0; j<transformed.vlen; j++)
 			feature_matrix(j,i) = transformed[j];
 	}
 
@@ -305,7 +305,7 @@ SGVector<float64_t> CHomogeneousKernelMap::apply_to_vector(const SGVector<float6
 
 	SGVector<float64_t> out_v(featureDimension*in_v.vlen);
 
-	for (int k = 0; k < in_v.vlen; ++k) {
+	for (index_t k = 0; k < in_v.vlen; ++k) {
 		/* break value into exponent and mantissa */
 		int exponent;
 		int unsigned j;

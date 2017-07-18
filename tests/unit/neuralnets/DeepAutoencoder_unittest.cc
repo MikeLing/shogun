@@ -50,7 +50,7 @@ TEST(DeepAutoencoder, pre_train)
 	int32_t num_examples = 100;
 
 	SGMatrix<float64_t> data(num_features, num_examples);
-	for (int32_t i=0; i<num_features*num_examples; i++)
+	for (index_t i=0; i<num_features*num_examples; i++)
 		data[i] = CMath::random(-1.0,1.0);
 
 	CDynamicObjectArray* layers = new CDynamicObjectArray();
@@ -72,7 +72,7 @@ TEST(DeepAutoencoder, pre_train)
 	SGMatrix<float64_t> reconstructed_data = reconstructed->get_feature_matrix();
 
 	float64_t avg_diff = 0;
-	for (int32_t i=0; i<num_features*num_examples; i++)
+	for (index_t i=0; i<num_features*num_examples; i++)
 		avg_diff += CMath::abs(reconstructed_data[i]-data[i])/(num_examples*num_features);
 
 	EXPECT_NEAR(0.0, avg_diff, 0.01);
@@ -97,7 +97,7 @@ TEST(DeepAutoencoder, convert_to_neural_network)
 	CNeuralNetwork* nn = ae.convert_to_neural_network();
 
 	SGMatrix<float64_t> x(10, 3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(0.0,1.0);
 
 	CDenseFeatures<float64_t> f(x);
@@ -113,7 +113,7 @@ TEST(DeepAutoencoder, convert_to_neural_network)
 		f_transformed_nn->get_feature_matrix();
 
 
-	for (int32_t i=0; i< x_transformed_ae.num_rows*x_transformed_ae.num_cols; i++)
+	for (index_t i=0; i< x_transformed_ae.num_rows*x_transformed_ae.num_cols; i++)
 		EXPECT_NEAR(x_transformed_ae[i], x_transformed_nn[i], 1e-15);
 
 	SG_UNREF(nn);

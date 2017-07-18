@@ -39,7 +39,7 @@ void CGaussianARDKernel::init()
 #endif
 }
 
-float64_t CGaussianARDKernel::distance(int32_t idx_a, int32_t idx_b)
+float64_t CGaussianARDKernel::distance(index_t idx_a, index_t idx_b)
 {
 	float64_t result=0.0;
 #ifdef HAVE_LINALG_LIB
@@ -94,7 +94,7 @@ SGVector<float64_t> CGaussianARDKernel::precompute_squared_helper(CDotFeatures* 
 	REQUIRE(df, "Features not set\n")
 	int32_t num_vec=df->get_num_vectors();
 	SGVector<float64_t> sq(num_vec);
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 		sq[i]=df->dot(i,df, i);
 	return sq;
 }

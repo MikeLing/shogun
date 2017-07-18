@@ -137,7 +137,7 @@ void CCARTree::prune_using_test_dataset(CDenseFeatures<float64_t>* feats, CLabel
 
 	int32_t min_index=0;
 	float64_t min_error=CMath::MAX_REAL_NUMBER;
-	for (int32_t i=0;i<m_alphas->get_num_elements();i++)
+	for (index_t i=0;i<m_alphas->get_num_elements();i++)
 	{
 		CSGObject* element=pruned_trees->get_element(i);
 		bnode_t* root=NULL;
@@ -299,8 +299,8 @@ void CCARTree::pre_sort_features(CFeatures* data, SGMatrix<float64_t>& sorted_fe
 	SGMatrix<float64_t> mat=(dynamic_cast<CDenseFeatures<float64_t>*>(data))->get_feature_matrix();
 	sorted_feats = SGMatrix<float64_t>(mat.num_cols, mat.num_rows);
 	sorted_indices = SGMatrix<index_t>(mat.num_cols, mat.num_rows);
-	for(int32_t i=0; i<sorted_indices.num_cols; i++)
-		for(int32_t j=0; j<sorted_indices.num_rows; j++)
+	for(index_t i=0; i<sorted_indices.num_cols; i++)
+		for(index_t j=0; j<sorted_indices.num_rows; j++)
 			sorted_indices(j,i)=j;
 
 	Map<MatrixXd> map_sorted_feats(sorted_feats.matrix, mat.num_cols, mat.num_rows);
@@ -309,7 +309,7 @@ void CCARTree::pre_sort_features(CFeatures* data, SGMatrix<float64_t>& sorted_fe
 	map_sorted_feats=map_data.transpose();
 
 	#pragma omp parallel for
-	for(int32_t i=0; i<sorted_feats.num_cols; i++)
+	for(index_t i=0; i<sorted_feats.num_cols; i++)
 		CMath::qsort_index(sorted_feats.get_column_vector(i), sorted_indices.get_column_vector(i), sorted_feats.num_rows);
 
 }
@@ -331,7 +331,7 @@ CBinaryTreeMachineNode<CARTreeNodeData>* CCARTree::CARTtrain(CFeatures* data, SG
 		case PT_REGRESSION:
 			{
 				float64_t sum=0;
-				for (int32_t i=0;i<labels_vec.vlen;i++)
+				for (index_t i=0;i<labels_vec.vlen;i++)
 					sum+=labels_vec[i]*weights[i];
 
 				// lsd*total_weight=sum_of_squared_deviation
@@ -351,7 +351,7 @@ CBinaryTreeMachineNode<CARTreeNodeData>* CCARTree::CARTtrain(CFeatures* data, SG
 				// stores one of the indices having max total weight
 				int32_t maxi=0;
 				int32_t c=weights[0];
-				for (int32_t i=1;i<lab.vlen;i++)
+				for (index_t i=1;i<lab.vlen;i++)
 				{
 					if (lab[i]==lab[i-1])
 					{
@@ -445,7 +445,7 @@ CBinaryTreeMachineNode<CARTreeNodeData>* CCARTree::CARTtrain(CFeatures* data, SG
 	{
 		SGVector<bool> is_left_final(num_vecs-num_missing_final);
 		int32_t ilf=0;
-		for (int32_t i=0;i<num_vecs;i++)
+		for (index_t i=0;i<num_vecs;i++)
 		{
 			if (mat(best_attribute,i)!=MISSING)
 				is_left_final[ilf++]=left_final[i];
@@ -455,7 +455,7 @@ CBinaryTreeMachineNode<CARTreeNodeData>* CCARTree::CARTtrain(CFeatures* data, SG
 	}
 
 	int32_t count_left=0;
-	for (int32_t c=0;c<num_vecs;c++)
+	for (index_t c=0;c<num_vecs;c++)
 		count_left=(left_final[c])?count_left+1:count_left;
 
 	SGVector<index_t> subsetl(count_left);
@@ -464,7 +464,7 @@ CBinaryTreeMachineNode<CARTreeNodeData>* CCARTree::CARTtrain(CFeatures* data, SG
 	SGVector<float64_t> weightsr(num_vecs-count_left);
 	index_t l=0;
 	index_t r=0;
-	for (int32_t c=0;c<num_vecs;c++)
+	for (index_t c=0;c<num_vecs;c++)
 	{
 		if (left_final[c])
 		{
@@ -515,7 +515,7 @@ SGVector<float64_t> CCARTree::get_unique_labels(SGVector<float64_t> labels_vec, 
 	ulabels[0]=labels_vec[sidx[0]];
 	n_ulabels=1;
 	int32_t start=0;
-	for (int32_t i=1;i<sidx.vlen;i++)
+	for (index_t i=1;i<sidx.vlen;i++)
 	{
 		if (labels_vec[sidx[i]]<=labels_vec[sidx[start]]+delta)
 			continue;
@@ -555,9 +555,9 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 	total_wclasses.zero();
 
 	SGVector<int32_t> simple_labels(num_vecs);
-	for (int32_t i=0;i<num_vecs;i++)
+	for (index_t i=0;i<num_vecs;i++)
 	{
-		for (int32_t j=0;j<n_ulabels;j++)
+		for (index_t j=0;j<n_ulabels;j++)
 		{
 			if (CMath::abs(labels_vec[i]-ulabels[j])<=delta)
 			{
@@ -589,7 +589,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 	{
 		indices_mask = SGVector<int64_t>(mat.num_rows);
 		indices_mask.set_const(-1);
-		for(int32_t j=0;j<active_indices.size();j++)
+		for(index_t j=0;j<active_indices.size();j++)
 		{
 			if (indices_mask[active_indices[j]]>=0)
 				dupes[indices_mask[active_indices[j]]]=j;
@@ -599,7 +599,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 		}
 	}
 
-	for (int32_t i=0;i<num_feats;i++)
+	for (index_t i=0;i<num_feats;i++)
 	{
 		SGVector<float64_t> feats(num_vecs);
 		SGVector<index_t> sorted_args(num_vecs);
@@ -609,7 +609,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			SGVector<float64_t> temp_col(mat.get_column_vector(idx[i]), mat.num_rows, false);
 			SGVector<index_t> sorted_indices(m_sorted_indices.get_column_vector(idx[i]), mat.num_rows, false);
 			int32_t count=0;
-			for(int32_t j=0;j<mat.num_rows;j++)
+			for(index_t j=0;j<mat.num_rows;j++)
 			{
 				if (indices_mask[sorted_indices[j]]>=0)
 				{
@@ -628,7 +628,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 		}
 		else
 		{
-			for (int32_t j=0;j<num_vecs;j++)
+			for (index_t j=0;j<num_vecs;j++)
 				feats[j]=mat(idx[i],j);
 
 			// O(N*logN)
@@ -655,7 +655,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			// convert to simple values
 			simple_feats[0]=0;
 			int32_t c=0;
-			for (int32_t j=1;j<n_nm_vecs;j++)
+			for (index_t j=1;j<n_nm_vecs;j++)
 			{
 				if (feats[j]==feats[j-1])
 					simple_feats[j]=c;
@@ -666,7 +666,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			SGVector<float64_t> ufeats(c+1);
 			ufeats[0]=feats[0];
 			int32_t u=0;
-			for (int32_t j=1;j<n_nm_vecs;j++)
+			for (index_t j=1;j<n_nm_vecs;j++)
 			{
 				if (feats[j]==feats[j-1])
 					continue;
@@ -676,7 +676,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 
 			// test all 2^(I-1)-1 possible division between two nodes
 			int32_t num_cases=CMath::pow(2,c);
-			for (int32_t k=1;k<num_cases;k++)
+			for (index_t k=1;k<num_cases;k++)
 			{
 				SGVector<float64_t> wleft(n_ulabels);
 				SGVector<float64_t> wright(n_ulabels);
@@ -691,11 +691,11 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 				SGVector<bool> feats_left(c+1);
 
 				// fill feats_left in a unique way corresponding to the case
-				for (int32_t p=0;p<c+1;p++)
+				for (index_t p=0;p<c+1;p++)
 					feats_left[p]=((k/CMath::pow(2,p))%(CMath::pow(2,p+1))==1);
 
 				// form is_left
-				for (int32_t j=0;j<n_nm_vecs;j++)
+				for (index_t j=0;j<n_nm_vecs;j++)
 				{
 					is_left[sorted_args[j]]=feats_left[simple_feats[j]];
 					if (is_left[sorted_args[j]])
@@ -703,7 +703,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 					else
 						wright[simple_labels[sorted_args[j]]]+=weights[sorted_args[j]];
 				}
-				for (int32_t j=n_nm_vecs-1;j>=0;j--)
+				for (index_t j=n_nm_vecs-1;j>=0;j--)
 				{
 					if(dupes[j]!=j)
 						is_left[j]=is_left[dupes[j]];
@@ -725,14 +725,14 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 					num_missing_final=num_vecs-n_nm_vecs;
 
 					count_left=0;
-					for (int32_t l=0;l<c+1;l++)
+					for (index_t l=0;l<c+1;l++)
 						count_left=(feats_left[l])?count_left+1:count_left;
 
 					count_right=c+1-count_left;
 
 					int32_t l=0;
 					int32_t r=0;
-					for (int32_t w=0;w<c+1;w++)
+					for (index_t w=0;w<c+1;w++)
 					{
 						if (feats_left[w])
 							left[l++]=ufeats[w];
@@ -754,7 +754,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			float64_t z=feats[0];
 			right_wclasses[simple_labels[sorted_args[0]]]-=weights[sorted_args[0]];
 			left_wclasses[simple_labels[sorted_args[0]]]+=weights[sorted_args[0]];
-			for (int32_t j=1;j<n_nm_vecs;j++)
+			for (index_t j=1;j<n_nm_vecs;j++)
 			{
 				if (feats[j]<=z+EQ_DELTA)
 				{
@@ -809,7 +809,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 			SGVector<float64_t> temp_vec(mat.get_column_vector(best_attribute), mat.num_rows, false);			
 			SGVector<index_t> sorted_indices(m_sorted_indices.get_column_vector(best_attribute), mat.num_rows, false);
 			int32_t count=0;
-			for(int32_t i=0;i<mat.num_rows;i++)
+			for(index_t i=0;i<mat.num_rows;i++)
 			{
 				if (indices_mask[sorted_indices[i]]>=0)
 				{
@@ -819,7 +819,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 						break;
 				}
 			}
-			for (int32_t i=num_vecs-1;i>=0;i--)
+			for (index_t i=num_vecs-1;i>=0;i--)
 			{
 				if(dupes[i]!=i)
 					is_left_final[i]=is_left_final[dupes[i]];
@@ -828,7 +828,7 @@ int32_t CCARTree::compute_best_attribute(const SGMatrix<float64_t>& mat, const S
 		}	
 		else
 		{
-			for (int32_t i=0;i<num_vecs;i++)
+			for (index_t i=0;i<num_vecs;i++)
 				is_left_final[i]=(mat(best_attribute,i)<=best_threshold);
 		}
 	}
@@ -849,7 +849,7 @@ SGVector<bool> CCARTree::surrogate_split(SGMatrix<float64_t> m,SGVector<float64_
 	CDynamicArray<int32_t>* missing_vecs=new CDynamicArray<int32_t>();
 	// stores lambda values corresponding to missing vectors - initialized all with 0
 	CDynamicArray<float64_t>* association_index=new CDynamicArray<float64_t>();
-	for (int32_t i=0;i<m.num_cols;i++)
+	for (index_t i=0;i<m.num_cols;i++)
 	{
 		if (!CMath::fequals(m(attr,i),MISSING,0))
 		{
@@ -871,14 +871,14 @@ SGVector<bool> CCARTree::surrogate_split(SGMatrix<float64_t> m,SGVector<float64_
 	float64_t p=CMath::min(p_r,p_l);
 
 	// for each attribute (X') alternative to best split (X)
-	for (int32_t i=0;i<m.num_rows;i++)
+	for (index_t i=0;i<m.num_rows;i++)
 	{
 		if (i==attr)
 			continue;
 
 		// find set of vectors with non-missing values for both X and X'
 		CDynamicArray<int32_t>* intersect_vecs=new CDynamicArray<int32_t>();
-		for (int32_t j=0;j<m.num_cols;j++)
+		for (index_t j=0;j<m.num_cols;j++)
 		{
 			if (!(CMath::fequals(m(i,j),MISSING,0) || CMath::fequals(m(attr,j),MISSING,0)))
 				intersect_vecs->push_back(j);
@@ -900,7 +900,7 @@ SGVector<bool> CCARTree::surrogate_split(SGMatrix<float64_t> m,SGVector<float64_
 	}
 
 	// if some missing attribute vectors are yet not addressed, use majority rule
-	for (int32_t i=0;i<association_index->get_num_elements();i++)
+	for (index_t i=0;i<association_index->get_num_elements();i++)
 	{
 		if (association_index->get_element(i)==0.)
 			ret[missing_vecs->get_element(i)]=(p_l>=p_r);
@@ -918,7 +918,7 @@ void CCARTree::handle_missing_vecs_for_continuous_surrogate(SGMatrix<float64_t> 
 	// for lambda calculation - total weight of all vectors in X intersect X'
 	float64_t denom=0.;
 	SGVector<float64_t> feats(intersect_vecs->get_num_elements());
-	for (int32_t j=0;j<intersect_vecs->get_num_elements();j++)
+	for (index_t j=0;j<intersect_vecs->get_num_elements();j++)
 	{
 		feats[j]=m(attr,intersect_vecs->get_element(j));
 		denom+=weights[intersect_vecs->get_element(j)];
@@ -929,12 +929,12 @@ void CCARTree::handle_missing_vecs_for_continuous_surrogate(SGMatrix<float64_t> 
 
 
 	// all possible splits for chosen attribute
-	for (int32_t j=0;j<num_unique-1;j++)
+	for (index_t j=0;j<num_unique-1;j++)
 	{
 		float64_t z=feats[j];
 		float64_t numer=0.;
 		float64_t numerc=0.;
-		for (int32_t k=0;k<intersect_vecs->get_num_elements();k++)
+		for (index_t k=0;k<intersect_vecs->get_num_elements();k++)
 		{
 			// if both go left or both go right
 			if ((m(attr,intersect_vecs->get_element(k))<=z) && is_left[intersect_vecs->get_element(k)])
@@ -953,7 +953,7 @@ void CCARTree::handle_missing_vecs_for_continuous_surrogate(SGMatrix<float64_t> 
 			lambda=(p-(1-numer/denom))/p;
 		else
 			lambda=(p-(1-numerc/denom))/p;
-		for (int32_t k=0;k<missing_vecs->get_num_elements();k++)
+		for (index_t k=0;k<missing_vecs->get_num_elements();k++)
 		{
 			if ((lambda>association_index->get_element(k)) &&
 			(!CMath::fequals(m(attr,missing_vecs->get_element(k)),MISSING,0)))
@@ -975,7 +975,7 @@ void CCARTree::handle_missing_vecs_for_nominal_surrogate(SGMatrix<float64_t> m, 
 	// for lambda calculation - total weight of all vectors in X intersect X'
 	float64_t denom=0.;
 	SGVector<float64_t> feats(intersect_vecs->get_num_elements());
-	for (int32_t j=0;j<intersect_vecs->get_num_elements();j++)
+	for (index_t j=0;j<intersect_vecs->get_num_elements();j++)
 	{
 		feats[j]=m(attr,intersect_vecs->get_element(j));
 		denom+=weights[intersect_vecs->get_element(j)];
@@ -986,16 +986,16 @@ void CCARTree::handle_missing_vecs_for_nominal_surrogate(SGMatrix<float64_t> m, 
 
 	// scan all splits for chosen alternative attribute X'
 	int32_t num_cases=CMath::pow(2,(num_unique-1));
-	for (int32_t j=1;j<num_cases;j++)
+	for (index_t j=1;j<num_cases;j++)
 	{
 		SGVector<bool> feats_left(num_unique);
-		for (int32_t k=0;k<num_unique;k++)
+		for (index_t k=0;k<num_unique;k++)
 			feats_left[k]=((j/CMath::pow(2,k))%(CMath::pow(2,k+1))==1);
 
 		SGVector<bool> intersect_vecs_left(intersect_vecs->get_num_elements());
-		for (int32_t k=0;k<intersect_vecs->get_num_elements();k++)
+		for (index_t k=0;k<intersect_vecs->get_num_elements();k++)
 		{
-			for (int32_t q=0;q<num_unique;q++)
+			for (index_t q=0;q<num_unique;q++)
 			{
 				if (feats[q]==m(attr,intersect_vecs->get_element(k)))
 				{
@@ -1007,7 +1007,7 @@ void CCARTree::handle_missing_vecs_for_nominal_surrogate(SGMatrix<float64_t> m, 
 
 		float64_t numer=0.;
 		float64_t numerc=0.;
-		for (int32_t k=0;k<intersect_vecs->get_num_elements();k++)
+		for (index_t k=0;k<intersect_vecs->get_num_elements();k++)
 		{
 			// if both go left or both go right
 			if (intersect_vecs_left[k]==is_left[intersect_vecs->get_element(k)])
@@ -1024,14 +1024,14 @@ void CCARTree::handle_missing_vecs_for_nominal_surrogate(SGMatrix<float64_t> m, 
 			lambda=(p-(1-numerc/denom))/p;
 
 		// address missing value vectors not yet addressed or addressed using worse split
-		for (int32_t k=0;k<missing_vecs->get_num_elements();k++)
+		for (index_t k=0;k<missing_vecs->get_num_elements();k++)
 		{
 			if ((lambda>association_index->get_element(k)) &&
 			(!CMath::fequals(m(attr,missing_vecs->get_element(k)),MISSING,0)))
 			{
 				association_index->set_element(lambda,k);
 				// decide left/right based on which feature value the chosen data point has
-				for (int32_t q=0;q<num_unique;q++)
+				for (index_t q=0;q<num_unique;q++)
 				{
 					if (feats[q]==m(attr,missing_vecs->get_element(k)))
 					{
@@ -1094,7 +1094,7 @@ float64_t CCARTree::least_squares_deviation(const SGVector<float64_t>& feats, co
 
 	mean/=total_weight;
 	float64_t dev=0;
-	for (int32_t i=0;i<weights.vlen;i++)
+	for (index_t i=0;i<weights.vlen;i++)
 		dev+=weights[i]*(feats[i]-mean)*(feats[i]-mean);
 
 	return dev/total_weight;
@@ -1106,7 +1106,7 @@ CLabels* CCARTree::apply_from_current_node(CDenseFeatures<float64_t>* feats, bno
 	REQUIRE(num_vecs>0, "No data provided in apply\n");
 	
 	SGVector<float64_t> labels(num_vecs);
-	for (int32_t i=0;i<num_vecs;i++)
+	for (index_t i=0;i<num_vecs;i++)
 	{
 		SGVector<float64_t> sample=feats->get_feature_vector(i);
 		bnode_t* node=current;
@@ -1121,7 +1121,7 @@ CLabels* CCARTree::apply_from_current_node(CDenseFeatures<float64_t>* feats, bno
 			{
 				SGVector<float64_t> comp=leftchild->data.transit_into_values;
 				bool flag=false;
-				for (int32_t k=0;k<comp.vlen;k++)
+				for (index_t k=0;k<comp.vlen;k++)
 				{
 					if (comp[k]==sample[node->data.attribute_id])
 					{
@@ -1197,12 +1197,12 @@ void CCARTree::prune_by_cross_validation(CDenseFeatures<float64_t>* data, int32_
 	CDynamicArray<float64_t>* r_cv=new CDynamicArray<float64_t>();
 	CDynamicArray<float64_t>* alphak=new CDynamicArray<float64_t>();
 	SGVector<int32_t> num_alphak(folds);
-	for (int32_t i=0;i<folds;i++)
+	for (index_t i=0;i<folds;i++)
 	{
 		// for chosen fold, create subset for training parameters
 		CDynamicArray<int32_t>* test_indices=new CDynamicArray<int32_t>();
 		CDynamicArray<int32_t>* train_indices=new CDynamicArray<int32_t>();
-		for (int32_t j=0;j<num_vecs;j++)
+		for (index_t j=0;j<num_vecs;j++)
 		{
 			if (subid[j]==i)
 				test_indices->push_back(j);
@@ -1220,7 +1220,7 @@ void CCARTree::prune_by_cross_validation(CDenseFeatures<float64_t>* data, int32_
 		data->add_subset(subset);
 		m_labels->add_subset(subset);
 		SGVector<float64_t> subset_weights(train_indices->get_num_elements());
-		for (int32_t j=0;j<train_indices->get_num_elements();j++)
+		for (index_t j=0;j<train_indices->get_num_elements();j++)
 			subset_weights[j]=m_weights[train_indices->get_element(j)];
 
 		// train with training subset
@@ -1237,12 +1237,12 @@ void CCARTree::prune_by_cross_validation(CDenseFeatures<float64_t>* data, int32_
 		data->add_subset(subset);
 		m_labels->add_subset(subset);
 		subset_weights=SGVector<float64_t>(test_indices->get_num_elements());
-		for (int32_t j=0;j<test_indices->get_num_elements();j++)
+		for (index_t j=0;j<test_indices->get_num_elements();j++)
 			subset_weights[j]=m_weights[test_indices->get_element(j)];
 
 		// calculate R_CV values for each alpha_k using test subset and store them
 		num_alphak[i]=m_alphas->get_num_elements();
-		for (int32_t j=0;j<m_alphas->get_num_elements();j++)
+		for (index_t j=0;j<m_alphas->get_num_elements();j++)
 		{
 			alphak->push_back(m_alphas->get_element(j));
 			CSGObject* jth_element=pruned_trees->get_element(j);
@@ -1273,7 +1273,7 @@ void CCARTree::prune_by_cross_validation(CDenseFeatures<float64_t>* data, int32_
 	// find subtree with minimum R_cv
 	int32_t min_index=-1;
 	float64_t min_r_cv=CMath::MAX_REAL_NUMBER;
-	for (int32_t i=0;i<m_alphas->get_num_elements();i++)
+	for (index_t i=0;i<m_alphas->get_num_elements();i++)
 	{
 		float64_t alpha=0.;
 		if (i==m_alphas->get_num_elements()-1)
@@ -1283,10 +1283,10 @@ void CCARTree::prune_by_cross_validation(CDenseFeatures<float64_t>* data, int32_
 
 		float64_t rv=0.;
 		int32_t base=0;
-		for (int32_t j=0;j<folds;j++)
+		for (index_t j=0;j<folds;j++)
 		{
 			bool flag=false;
-			for (int32_t k=base;k<num_alphak[j]+base-1;k++)
+			for (index_t k=base;k<num_alphak[j]+base-1;k++)
 			{
 				if (alphak->get_element(k)<=alpha && alphak->get_element(k+1)>alpha)
 				{
@@ -1338,7 +1338,7 @@ float64_t CCARTree::compute_error(CLabels* labels, CLabels* reference, SGVector<
 	{
 		case PT_MULTICLASS:
 		{
-			for (int32_t i=0;i<weights.vlen;i++)
+			for (index_t i=0;i<weights.vlen;i++)
 			{
 				if (gnd_truth->get_label(i)!=result->get_label(i))
 					numer+=weights[i];
@@ -1349,7 +1349,7 @@ float64_t CCARTree::compute_error(CLabels* labels, CLabels* reference, SGVector<
 
 		case PT_REGRESSION:
 		{
-			for (int32_t i=0;i<weights.vlen;i++)
+			for (index_t i=0;i<weights.vlen;i++)
 				numer+=weights[i]*CMath::pow((gnd_truth->get_label(i)-result->get_label(i)),2);
 
 			return numer/denom;

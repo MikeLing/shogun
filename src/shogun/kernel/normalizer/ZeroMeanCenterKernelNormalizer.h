@@ -89,7 +89,7 @@ class CZeroMeanCenterKernelNormalizer : public CKernelNormalizer
 
 			/* compute train kernel matrix mean */
 			ktrain_mean=0;
-			for (int32_t i=0;i<num_lhs;i++)
+			for (index_t i=0;i<num_lhs;i++)
 				ktrain_mean += (ktrain_row_means[i]/num_lhs);
 
 			k->lhs=old_lhs;
@@ -139,10 +139,10 @@ class CZeroMeanCenterKernelNormalizer : public CKernelNormalizer
 			SG_FREE(v);
 			v=SG_MALLOC(float64_t, num_rhs);
 
-			for (int32_t i=0; i<num_rhs; i++)
+			for (index_t i=0; i<num_rhs; i++)
 			{
 				v[i]=0;
-				for (int32_t j=0; j<num_lhs; j++)
+				for (index_t j=0; j<num_lhs; j++)
 					v[i] += ( k->compute(j,i)/num_lhs );
 			}
 			return (v!=NULL);
@@ -156,13 +156,13 @@ class CZeroMeanCenterKernelNormalizer : public CKernelNormalizer
 		float64_t* ktrain_row_means;
 
 		/** num k train */
-		int32_t num_ktrain;
+		index_t num_ktrain;
 
 		/** test row means */
 		float64_t* ktest_row_means;
 
 		/** num k test */
-		int32_t num_ktest;
+		index_t num_ktest;
 
 		/** train mean */
 		float64_t ktrain_mean;

@@ -50,16 +50,16 @@ TEST(RBM, gibbs_sampling)
 	rbm.initialize_neural_network();
 	rbm.set_batch_size(1);
 
-	for (int32_t i=0; i<rbm.get_weights().num_rows*rbm.get_weights().num_cols; i++)
+	for (index_t i=0; i<rbm.get_weights().num_rows*rbm.get_weights().num_cols; i++)
 		rbm.get_weights()[i] = i*1.0e-2;
 
-	for (int32_t i=0; i<rbm.get_hidden_bias().vlen; i++)
+	for (index_t i=0; i<rbm.get_hidden_bias().vlen; i++)
 		rbm.get_hidden_bias()[i] = i*1.0e-1;
 
-	for (int32_t i=0; i<rbm.get_visible_bias().vlen; i++)
+	for (index_t i=0; i<rbm.get_visible_bias().vlen; i++)
 		rbm.get_visible_bias()[i] = i*1.0e-1;
 
-	for (int32_t i=0; i<num_visible; i++)
+	for (index_t i=0; i<num_visible; i++)
 		rbm.visible_state[i] = i*1.0e-3;
 
 	SGVector<float64_t> probs(num_visible);
@@ -67,18 +67,18 @@ TEST(RBM, gibbs_sampling)
 
 	rbm.sample(1000);
 
-	for (int32_t i=0; i<1000; i++)
+	for (index_t i=0; i<1000; i++)
 	{
 		rbm.sample(100);
 
-		for (int32_t j=0; j<num_visible; j++)
+		for (index_t j=0; j<num_visible; j++)
 			probs[j] += rbm.visible_state[j]/1000;
 	}
 
 	// generated using scikit-learn
 	float64_t probs_ref[] = {0.5347, 0.6105, 0.6857, 0.7561, 0.8132};
 
-	for (int32_t i=0; i<num_visible; i++)
+	for (index_t i=0; i<num_visible; i++)
 		EXPECT_NEAR(probs_ref[i], probs[i], 0.02);
 }
 
@@ -93,17 +93,17 @@ TEST(RBM, free_energy_binary)
 	CRBM rbm(num_hidden, num_visible, RBMVUT_BINARY);
 	rbm.initialize_neural_network();
 
-	for (int32_t i=0; i<rbm.get_weights().num_rows*rbm.get_weights().num_cols; i++)
+	for (index_t i=0; i<rbm.get_weights().num_rows*rbm.get_weights().num_cols; i++)
 		rbm.get_weights()[i] = i*1.0e-2;
 
-	for (int32_t i=0; i<rbm.get_hidden_bias().vlen; i++)
+	for (index_t i=0; i<rbm.get_hidden_bias().vlen; i++)
 		rbm.get_hidden_bias()[i] = i*1.0e-1;
 
-	for (int32_t i=0; i<rbm.get_visible_bias().vlen; i++)
+	for (index_t i=0; i<rbm.get_visible_bias().vlen; i++)
 		rbm.get_visible_bias()[i] = i*1.0e-1;
 
 	SGMatrix<float64_t> V(num_visible, batch_size);
-	for (int32_t i=0; i<V.num_rows*V.num_cols; i++)
+	for (index_t i=0; i<V.num_rows*V.num_cols; i++)
 		V[i] = i*1e-3;
 
 	// generated using scikit-learn
@@ -125,7 +125,7 @@ TEST(RBM, free_energy_gradients)
 	rbm.initialize_neural_network();
 
 	SGMatrix<float64_t> V(num_visible, batch_size);
-	for (int32_t i=0; i<V.num_rows*V.num_cols; i++)
+	for (index_t i=0; i<V.num_rows*V.num_cols; i++)
 		V[i] = CMath::random() < 0.7;
 
 	SGVector<float64_t> gradients(rbm.get_num_parameters());
@@ -134,7 +134,7 @@ TEST(RBM, free_energy_gradients)
 	SGVector<float64_t> params = rbm.get_parameters();
 	SGVector<float64_t> gradients_numerical(rbm.get_num_parameters());
 	float64_t epsilon = 1e-9;
-	for (int32_t i=0; i<rbm.get_num_parameters(); i++)
+	for (index_t i=0; i<rbm.get_num_parameters(); i++)
 	{
 		params[i] += epsilon;
 		float64_t energy_plus =rbm.free_energy(V);
@@ -147,7 +147,7 @@ TEST(RBM, free_energy_gradients)
 		gradients_numerical[i] = (energy_plus-energy_minus)/(2*epsilon);
 	}
 
-	for (int32_t i=0; i<gradients.vlen; i++)
+	for (index_t i=0; i<gradients.vlen; i++)
 		EXPECT_NEAR(gradients_numerical[i], gradients[i], 1e-6);
 }
 
@@ -162,21 +162,21 @@ TEST(RBM, pseudo_likelihood_binary)
 	CRBM rbm(num_hidden, num_visible, RBMVUT_BINARY);
 	rbm.initialize_neural_network();
 
-	for (int32_t i=0; i<rbm.get_weights().num_rows*rbm.get_weights().num_cols; i++)
+	for (index_t i=0; i<rbm.get_weights().num_rows*rbm.get_weights().num_cols; i++)
 		rbm.get_weights()[i] = i*1.0e-2;
 
-	for (int32_t i=0; i<rbm.get_hidden_bias().vlen; i++)
+	for (index_t i=0; i<rbm.get_hidden_bias().vlen; i++)
 		rbm.get_hidden_bias()[i] = i*1.0e-1;
 
-	for (int32_t i=0; i<rbm.get_visible_bias().vlen; i++)
+	for (index_t i=0; i<rbm.get_visible_bias().vlen; i++)
 		rbm.get_visible_bias()[i] = i*1.0e-1;
 
 	SGMatrix<float64_t> V(num_visible, batch_size);
-	for (int32_t i=0; i<V.num_rows*V.num_cols; i++)
+	for (index_t i=0; i<V.num_rows*V.num_cols; i++)
 		V[i] = i > 2;
 
 	float64_t pl = 0;
-	for (int32_t i=0; i<10000; i++)
+	for (index_t i=0; i<10000; i++)
 		pl += rbm.pseudo_likelihood(V)/10000;
 
 	// generated using scikit-learn

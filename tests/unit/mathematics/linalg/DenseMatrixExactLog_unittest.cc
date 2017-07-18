@@ -73,7 +73,7 @@ TEST(DenseMatrixExactLog, dense_log_det)
 	int32_t num_aggregates=aggregators.get_num_elements();
 	float64_t result=0.0;
 
-	for (int32_t i=0; i<num_aggregates; ++i)
+	for (index_t i=0; i<num_aggregates; ++i)
 	{
 		CJobResultAggregator* agg=dynamic_cast<CJobResultAggregator*>
 			(aggregators.get_element(i));

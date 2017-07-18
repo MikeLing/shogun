@@ -22,7 +22,7 @@ void CMultitaskROCEvaluation::set_indices(SGVector<index_t> indices)
 	ASSERT(m_task_relation)
 
 	std::set<index_t> indices_set;
-	for (int32_t i=0; i<indices.vlen; i++)
+	for (index_t i=0; i<indices.vlen; i++)
 		indices_set.insert(indices[i]);
 
 	if (m_num_tasks>0)
@@ -33,12 +33,12 @@ void CMultitaskROCEvaluation::set_indices(SGVector<index_t> indices)
 	m_tasks_indices = SG_MALLOC(SGVector<index_t>, m_num_tasks);
 
 	SGVector<index_t>* tasks_indices = m_task_relation->get_tasks_indices();
-	for (int32_t t=0; t<m_num_tasks; t++)
+	for (index_t t=0; t<m_num_tasks; t++)
 	{
 		vector<index_t> task_indices_cut;
 		SGVector<index_t> task_indices = tasks_indices[t];
 		//task_indices.display_vector("task indices");
-		for (int32_t i=0; i<task_indices.vlen; i++)
+		for (index_t i=0; i<task_indices.vlen; i++)
 		{
 			if (indices_set.count(task_indices[i]))
 			{
@@ -48,7 +48,7 @@ void CMultitaskROCEvaluation::set_indices(SGVector<index_t> indices)
 		}
 
 		SGVector<index_t> cutted(task_indices_cut.size());
-		for (int32_t i=0; i<cutted.vlen; i++)
+		for (index_t i=0; i<cutted.vlen; i++)
 			cutted[i] = task_indices_cut[i];
 		//cutted.display_vector("cutted");
 		m_tasks_indices[t] = cutted;
@@ -62,7 +62,7 @@ float64_t CMultitaskROCEvaluation::evaluate(CLabels* predicted, CLabels* ground_
 	predicted->remove_all_subsets();
 	ground_truth->remove_all_subsets();
 	float64_t result = 0.0;
-	for (int32_t t=0; t<m_num_tasks; t++)
+	for (index_t t=0; t<m_num_tasks; t++)
 	{
 		//SG_SPRINT("%d task", t)
 		//m_tasks_indices[t].display_vector();

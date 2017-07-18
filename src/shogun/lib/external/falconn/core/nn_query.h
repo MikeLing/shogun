@@ -130,7 +130,7 @@ class NearestNeighborQuery {
     res.resize(initially_inserted);
     std::sort(heap_.get_data().begin(),
               heap_.get_data().begin() + initially_inserted);
-    for (int_fast64_t ii = 0; ii < initially_inserted; ++ii) {
+    for (index_t_fast64_t ii = 0; ii < initially_inserted; ++ii) {
       res[ii] = heap_.get_data()[initially_inserted - ii - 1].data;
     }
 

@@ -203,7 +203,7 @@ void CSpectrumMismatchRBFKernel::compute_helper_all(const char *joint_seq,
 				}
 
 				std::vector<int> idx;
-				for (int r=0; r<feats.get_array_size(); r++)
+				for (index_t r=0; r<feats.get_array_size(); r++)
 					if (feats[r]!=0.0)
 						idx.push_back(r);
 
@@ -240,18 +240,18 @@ void CSpectrumMismatchRBFKernel::compute_all()
 	assert(lhs->get_num_vectors()==rhs->get_num_vectors());
 	kernel_matrix->resize_array(lhs->get_num_vectors(), lhs->get_num_vectors());
 	kernel_matrix_length=lhs->get_num_vectors()*rhs->get_num_vectors();
-	for (int i=0; i<lhs->get_num_vectors(); i++)
-		for (int j=0; j<lhs->get_num_vectors(); j++)
+	for (index_t i=0; i<lhs->get_num_vectors(); i++)
+		for (index_t j=0; j<lhs->get_num_vectors(); j++)
 			kernel_matrix->set_element(0, i, j);
 
-	for (int i=0; i<lhs->get_num_vectors(); i++)
+	for (index_t i=0; i<lhs->get_num_vectors(); i++)
 	{
 		int32_t alen;
 		bool free_avec;
 		char* avec=((CStringFeatures<char>*)lhs)->get_feature_vector(i, alen,
 				free_avec);
 
-		for (int apos=0; apos+degree-1<alen; apos++)
+		for (index_t apos=0; apos+degree-1<alen; apos++)
 		{
 			struct joint_list_struct list_item;
 			list_item.ex_index=i;
@@ -268,7 +268,7 @@ void CSpectrumMismatchRBFKernel::compute_all()
 	compute_helper_all(joint_seq.c_str(), joint_list, "", 0);
 }
 
-float64_t CSpectrumMismatchRBFKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CSpectrumMismatchRBFKernel::compute(index_t idx_a, index_t idx_b)
 {
 	return kernel_matrix->element(idx_a, idx_b);
 }

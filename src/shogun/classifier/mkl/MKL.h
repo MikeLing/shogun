@@ -334,7 +334,7 @@ class CMKL : public CSVM
 		/** helper function to compute the elastic-net sub-kernel weights */
 		inline void elasticnet_transform(float64_t *beta, float64_t lmd, int32_t len)
 		{
-			for (int32_t i=0;i <len;i++)
+			for (index_t i=0;i <len;i++)
 				beta[i]=beta[i]/(1.0-lmd+lmd*beta[i]);
 		}
 

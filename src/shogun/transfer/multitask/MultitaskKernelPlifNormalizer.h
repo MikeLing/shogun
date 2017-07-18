@@ -48,7 +48,7 @@ public:
 
 		// init support points values with constant function
 		betas = std::vector<float64_t>(num_betas);
-		for (int i=0; i!=num_betas; i++)
+		for (index_t i=0; i!=num_betas; i++)
 		{
 			betas[i] = 1;
 		}
@@ -125,9 +125,9 @@ public:
 	{
 
 
-		for (int32_t i=0; i!=num_tasks; i++)
+		for (index_t i=0; i!=num_tasks; i++)
 		{
-			for (int32_t j=0; j!=num_tasks; j++)
+			for (index_t j=0; j!=num_tasks; j++)
 			{
 
 				float64_t similarity = compute_task_similarity(i, j);
@@ -150,7 +150,7 @@ public:
 
 
 		// determine interval
-		for (int i=1; i!=num_betas; i++)
+		for (index_t i=1; i!=num_betas; i++)
 		{
 			if (distance <= support[i])
 			{
@@ -341,7 +341,7 @@ protected:
 	/** number of tasks **/
 	int32_t num_tasks;
 	/** square of num_tasks -- for registration purpose**/
-	int32_t num_tasksqr;
+	index_t num_tasksqr;
 
 	/** task vector indicating to which task each example on the left hand side belongs **/
 	std::vector<int32_t> task_vector_lhs;
@@ -356,7 +356,7 @@ protected:
 	std::vector<float64_t> similarity_matrix;
 
 	/** number of weights **/
-	int32_t num_betas;
+	index_t num_betas;
 
 	/** weights **/
 	std::vector<float64_t> betas;

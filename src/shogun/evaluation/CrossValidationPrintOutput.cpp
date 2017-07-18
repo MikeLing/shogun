@@ -80,7 +80,7 @@ void CCrossValidationPrintOutput::update_trained_machine(
 		char* new_prefix=append_tab_to_string(prefix);
 
 		CMulticlassMachine* mc_machine=(CMulticlassMachine*)machine;
-		for (int i=0; i<mc_machine->get_num_machines(); i++)
+		for (index_t i=0; i<mc_machine->get_num_machines(); i++)
 		{
 			CMachine* sub_machine=mc_machine->get_machine(i);
             //SG_PRINT("%smulti-class machine %d:\n", i, sub_machine)

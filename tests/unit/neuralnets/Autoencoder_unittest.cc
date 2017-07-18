@@ -51,7 +51,7 @@ TEST(Autoencoder, train)
 	int32_t num_hid = 10;
 
 	SGMatrix<float64_t> data(num_features, num_examples);
-	for (int32_t i=0; i<num_features*num_examples; i++)
+	for (index_t i=0; i<num_features*num_examples; i++)
 		data[i] = CMath::random(-1.0,1.0);
 
 	CAutoencoder ae(num_features, new CNeuralRectifiedLinearLayer(num_hid));
@@ -64,7 +64,7 @@ TEST(Autoencoder, train)
 	SGMatrix<float64_t> reconstructed_data = reconstructed->get_feature_matrix();
 
 	float64_t avg_diff = 0;
-	for (int32_t i=0; i<num_features*num_examples; i++)
+	for (index_t i=0; i<num_features*num_examples; i++)
 		avg_diff += CMath::abs(reconstructed_data[i]-data[i])/(num_examples*num_features);
 
 	EXPECT_NEAR(0.0, avg_diff, 1e-6);

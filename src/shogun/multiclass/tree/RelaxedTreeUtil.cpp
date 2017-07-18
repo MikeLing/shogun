@@ -26,7 +26,7 @@ SGMatrix<float64_t> RelaxedTreeUtil::estimate_confusion_matrix(CBaseMulticlassMa
 	machine->set_labels(Y);
 	machine->set_store_model_features(true);
 
-	for (int32_t i=0; i < N_splits; ++i)
+	for (index_t i=0; i < N_splits; ++i)
 	{
 		// subset for training
 		SGVector<index_t> inverse_subset_indices = split->generate_subset_inverse(i);

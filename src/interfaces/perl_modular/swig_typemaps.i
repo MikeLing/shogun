@@ -151,7 +151,7 @@ fail:
                 AV* data_av = newAV();
                 AV* idx_av = newAV();
 
-                for (int32_t j = 0; j < sg_vector.num_feat_entries; j++) {
+                for (index_t j = 0; j < sg_vector.num_feat_entries; j++) {
                     av_store(idx_av,  j, newSViv((IV) sg_vector.features[j].feat_index));
                     av_store(data_av, j, newSVuv((NV) sg_vector.features[j].entry     ));
 
@@ -336,7 +336,7 @@ fail:
                     int l_sz = av_len(l_av) + 1;
                     shogun::SGString<type>* l_ss = SG_MALLOC(shogun::SGString<type>, l_sz);
                     sg_strings.strings = l_ss;
-                    for (int32_t i = 0; i <= l_sz; i++) {
+                    for (index_t i = 0; i <= l_sz; i++) {
                         STRLEN el_len;
                         SV** el_psv = av_fetch(l_av, i, 0);
                         const char* el_str = SvPV(*el_psv, el_len);
@@ -404,7 +404,7 @@ fail:
                     num_i_prev = num_i;
                     if(num > 0) {
                         shogun::SGSparseVectorEntry<type>* features = SG_MALLOC(shogun::SGSparseVectorEntry<type>, num);
-                        for (int32_t j = 0; j < num; j++) {
+                        for (index_t j = 0; j < num; j++) {
                             features[j].feat_index = SvIV( *(av_fetch(idx_av, ij, 0)) );
                             features[j].entry      = SvNV( *(av_fetch(data_av, ij, 0)) );
                             ij++;

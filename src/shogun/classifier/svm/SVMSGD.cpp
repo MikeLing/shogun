@@ -116,10 +116,10 @@ bool CSVMSGD::train_machine(CFeatures* data)
 	if ((loss_type == L_LOGLOSS) || (loss_type == L_LOGLOSSMARGIN))
 		is_log_loss = true;
 
-	for(int32_t e=0; e<epochs && (!CSignal::cancel_computations()); e++)
+	for(index_t e=0; e<epochs && (!CSignal::cancel_computations()); e++)
 	{
 		count = skip;
-		for (int32_t i=0; i<num_vec; i++)
+		for (index_t i=0; i<num_vec; i++)
 		{
 			float64_t eta = 1.0 / (lambda * t);
 			float64_t y = ((CBinaryLabels*) m_labels)->get_label(i);
@@ -175,7 +175,7 @@ void CSVMSGD::calibrate()
 	float64_t m = 0;
 	float64_t r = 0;
 
-	for (int32_t j=0; j<num_vec && m<=1000; j++, n++)
+	for (index_t j=0; j<num_vec && m<=1000; j++, n++)
 	{
 		r += features->get_nnz_features_for_vector(j);
 		features->add_to_dense_vec(1, j, c, c_dim, true);

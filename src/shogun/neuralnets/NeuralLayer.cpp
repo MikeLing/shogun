@@ -64,7 +64,7 @@ void CNeuralLayer::initialize_neural_layer(CDynamicObjectArray* layers,
 	m_input_indices = input_indices;
 	m_input_sizes = SGVector<int32_t>(input_indices.vlen);
 
-	for (int32_t i=0; i<m_input_sizes.vlen; i++)
+	for (index_t i=0; i<m_input_sizes.vlen; i++)
 	{
 		CNeuralLayer* layer = (CNeuralLayer*)layers->element(m_input_indices[i]);
 		m_input_sizes[i] = layer->get_num_neurons();
@@ -94,7 +94,7 @@ void CNeuralLayer::dropout_activations()
 	if (is_training)
 	{
 		int32_t len = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 		{
 			m_dropout_mask[i] = CMath::random(0.0,1.0) >= dropout_prop;
 			m_activations[i] *= m_dropout_mask[i];
@@ -103,7 +103,7 @@ void CNeuralLayer::dropout_activations()
 	else
 	{
 		int32_t len = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			m_activations[i] *= (1.0-dropout_prop);
 	}
 }

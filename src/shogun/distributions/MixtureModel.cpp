@@ -73,7 +73,7 @@ bool CMixtureModel::train(CFeatures* data)
 	}
 
 	// set training points in all components of the mixture
-	for (int32_t i=0;i<m_components->get_num_elements();i++)
+	for (index_t i=0;i<m_components->get_num_elements();i++)
 	{
 		CDistribution* comp=CDistribution::obtain_from_generic(m_components->get_element(i));
 		comp->set_features(features);
@@ -100,7 +100,7 @@ bool CMixtureModel::train(CFeatures* data)
 	return true;
 }
 
-float64_t CMixtureModel::get_log_model_parameter(int32_t num_param)
+float64_t CMixtureModel::get_log_model_parameter(index_t num_param)
 {
 	REQUIRE(num_param==1,"number of parameters in mixture model is 1"
 	" (i.e. number of components). num_components should be 1. %d supplied\n",num_param)
@@ -108,20 +108,20 @@ float64_t CMixtureModel::get_log_model_parameter(int32_t num_param)
 	return CMath::log(get_num_components());
 }
 
-float64_t CMixtureModel::get_log_derivative(int32_t num_param, int32_t num_example)
+float64_t CMixtureModel::get_log_derivative(index_t num_param, index_t num_example)
 {
 	SG_NOTIMPLEMENTED
 	return 0;
 }
 
-float64_t CMixtureModel::get_log_likelihood_example(int32_t num_example)
+float64_t CMixtureModel::get_log_likelihood_example(index_t num_example)
 {
 	REQUIRE(features,"features not set\n")
 	REQUIRE(features->get_feature_class() == C_DENSE,"Dense features required\n")
 	REQUIRE(features->get_feature_type() == F_DREAL,"Real features required\n")
 
 	SGVector<float64_t> log_likelihood_component(m_components->get_num_elements());
-	for (int32_t i=0;i<m_components->get_num_elements();i++)
+	for (index_t i=0;i<m_components->get_num_elements();i++)
 	{
 		CDistribution* ith_comp=CDistribution::obtain_from_generic(m_components->get_element(i));
 		log_likelihood_component[i]=ith_comp->get_log_likelihood_example(num_example)+CMath::log(m_weights[i]);

@@ -112,6 +112,28 @@ void CStreamingVwFeatures::expand_if_required(float64_t*& vec, int32_t& len)
 	}
 }
 
+void CStreamingVwFeatures::expand_if_required(float32_t*& vec, int64_t& len)
+{
+	int32_t dim = 1 << env->num_bits;
+	if (dim > len)
+	{
+		vec = SG_REALLOC(float32_t, vec, len, dim);
+		memset(&vec[len], 0, (dim-len) * sizeof(float32_t));
+		len = dim;
+	}
+}
+
+void CStreamingVwFeatures::expand_if_required(float64_t*& vec, int64_t& len)
+{
+	int32_t dim = 1 << env->num_bits;
+	if (dim > len)
+	{
+		vec = SG_REALLOC(float64_t, vec, len, dim);
+		memset(&vec[len], 0, (dim-len) * sizeof(float64_t));
+		len = dim;
+	}
+}
+
 float32_t CStreamingVwFeatures::real_weight(float32_t w, float32_t gravity)
 {
 	float32_t wprime = 0;
@@ -125,7 +147,7 @@ int32_t CStreamingVwFeatures::get_nnz_features_for_vector()
 	return current_length;
 }
 
-int32_t CStreamingVwFeatures::get_num_vectors() const
+index_t CStreamingVwFeatures::get_num_vectors() const
 {
 	if (current_example)
 		return 1;
@@ -223,7 +245,7 @@ void CStreamingVwFeatures::setup_example(VwExample* ae)
 	}
 
 	// For quadratic features
-	for (int32_t k = 0; k < env->pairs.get_num_elements(); k++)
+	for (index_t k = 0; k < env->pairs.get_num_elements(); k++)
 	{
 		char* i = env->pairs.get_element(k);
 
@@ -295,7 +317,7 @@ void CStreamingVwFeatures::release_example()
 	parser.finalize_example();
 }
 
-int32_t CStreamingVwFeatures::get_dim_feature_space() const
+index_t CStreamingVwFeatures::get_dim_feature_space() const
 {
 	return current_length;
 }
@@ -325,7 +347,7 @@ float32_t CStreamingVwFeatures::dense_dot(const float32_t* vec2, int32_t vec2_le
 float32_t CStreamingVwFeatures::dense_dot(SGSparseVector<float32_t>* vec1, const float32_t* vec2)
 {
 	float32_t ret = 0.;
-	for (int32_t i = 0; i < vec1->num_feat_entries; i++)
+	for (index_t i = 0; i < vec1->num_feat_entries; i++)
 		ret += vec1->features[i].entry * vec2[vec1->features[i].feat_index & env->mask];
 
 	return ret;

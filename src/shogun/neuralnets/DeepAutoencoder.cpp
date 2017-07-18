@@ -58,7 +58,7 @@ CAutoencoder()
 	quick_connect();
 
 	int32_t num_encoding_layers = (m_num_layers-1)/2;
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 	{
 		if (i<= num_encoding_layers)
 			get_layer(i)->autoencoder_position = NLAP_ENCODING;
@@ -68,7 +68,7 @@ CAutoencoder()
 
 	initialize_neural_network(m_sigma);
 
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 	{
 		REQUIRE(get_layer(i)->get_num_neurons()==get_layer(m_num_layers-i-1)->get_num_neurons(),
 			"Layer %i (%i neurons) must have the same number of neurons "
@@ -82,7 +82,7 @@ void CDeepAutoencoder::pre_train(CFeatures* data)
 	SGMatrix<float64_t> data_matrix = features_to_matrix(data);
 
 	int32_t num_encoding_layers = (m_num_layers-1)/2;
-	for (int32_t i=1; i<=num_encoding_layers; i++)
+	for (index_t i=1; i<=num_encoding_layers; i++)
 	{
 		SG_INFO("Pre-training Layer %i\n", i);
 
@@ -128,11 +128,11 @@ void CDeepAutoencoder::pre_train(CFeatures* data)
 
 		// forward propagate the data to obtain the training data for the
 		// current autoencoder
-		for (int32_t j=0; j<i; j++)
+		for (index_t j=0; j<i; j++)
 			get_layer(j)->set_batch_size(data_matrix.num_cols);
 		SGMatrix<float64_t> ae_input_matrix = forward_propagate(data_matrix, i-1);
 		CDenseFeatures<float64_t> ae_input_features(ae_input_matrix);
-		for (int32_t j=0; j<i-1; j++)
+		for (index_t j=0; j<i-1; j++)
 			get_layer(j)->set_batch_size(1);
 
 		ae->train(&ae_input_features);
@@ -141,7 +141,7 @@ void CDeepAutoencoder::pre_train(CFeatures* data)
 		SGVector<float64_t> encoding_layer_params = get_section(m_params, i);
 		SGVector<float64_t> decoding_layer_params = get_section(m_params, m_num_layers-i);
 
-		for (int32_t j=0; j<ae_params.vlen;j++)
+		for (index_t j=0; j<ae_params.vlen;j++)
 		{
 			if (j<encoding_layer_params.vlen)
 				encoding_layer_params[j] = ae_params[j];
@@ -172,7 +172,7 @@ CNeuralNetwork* CDeepAutoencoder::convert_to_neural_network(
 	CNeuralLayer* output_layer, float64_t sigma)
 {
 	CDynamicObjectArray* layers = new CDynamicObjectArray;
-	for (int32_t i=0; i<=(m_num_layers-1)/2; i++)
+	for (index_t i=0; i<=(m_num_layers-1)/2; i++)
 	{
 		CNeuralLayer* layer = (CNeuralLayer*)get_layer(i)->clone();
 		layer->autoencoder_position = NLAP_NONE;
@@ -192,7 +192,7 @@ CNeuralNetwork* CDeepAutoencoder::convert_to_neural_network(
 	int32_t len = m_index_offsets[(m_num_layers-1)/2]
 		+ get_layer((m_num_layers-1)/2)->get_num_parameters();
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		net_params[i] = m_params[i];
 
 	return net;
@@ -204,7 +204,7 @@ float64_t CDeepAutoencoder::compute_error(SGMatrix< float64_t > targets)
 
 	if (m_contraction_coefficient != 0.0)
 
-	for (int32_t i=1; i<=(m_num_layers-1)/2; i++)
+	for (index_t i=1; i<=(m_num_layers-1)/2; i++)
 		error +=
 			get_layer(i)->compute_contraction_term(get_section(m_params,i));
 
@@ -214,7 +214,7 @@ float64_t CDeepAutoencoder::compute_error(SGMatrix< float64_t > targets)
 void CDeepAutoencoder::set_contraction_coefficient(float64_t coeff)
 {
 	m_contraction_coefficient = coeff;
-	for (int32_t i=1; i<=(m_num_layers-1)/2; i++)
+	for (index_t i=1; i<=(m_num_layers-1)/2; i++)
 		get_layer(i)->contraction_coefficient = coeff;
 }
 

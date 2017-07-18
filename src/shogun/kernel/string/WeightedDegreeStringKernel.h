@@ -276,13 +276,13 @@ class CWeightedDegreeStringKernel: public CStringKernel<char>
 			weights_buffer = SG_MALLOC(float64_t, num_weights);
 
 			if (normalizer && normalizer->get_normalizer_type()==N_MULTITASK)
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 					weights_buffer[i] = ((CMultitaskKernelMklNormalizer*)normalizer)->get_beta(i);
 			else if (position_weights!=NULL)
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 					weights_buffer[i] = position_weights[i*mkl_stepsize];
 			else
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 					weights_buffer[i] = weights[i*mkl_stepsize];
 
 			return weights_buffer;
@@ -302,13 +302,13 @@ class CWeightedDegreeStringKernel: public CStringKernel<char>
 
 
 			if (normalizer && normalizer->get_normalizer_type()==N_MULTITASK)
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 					((CMultitaskKernelMklNormalizer*)normalizer)->set_beta(i, weights2[i]);
 			else if (position_weights!=NULL)
 			{
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 				{
-					for (int32_t j=0; j<mkl_stepsize; j++)
+					for (index_t j=0; j<mkl_stepsize; j++)
 					{
 						if (i*mkl_stepsize+j<seq_length)
 							position_weights[i*mkl_stepsize+j] = weights2[i];
@@ -317,9 +317,9 @@ class CWeightedDegreeStringKernel: public CStringKernel<char>
 			}
 			else if (length==0)
 			{
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 				{
-					for (int32_t j=0; j<mkl_stepsize; j++)
+					for (index_t j=0; j<mkl_stepsize; j++)
 					{
 						if (i*mkl_stepsize+j<get_degree())
 							weights[i*mkl_stepsize+j] = weights2[i];
@@ -328,9 +328,9 @@ class CWeightedDegreeStringKernel: public CStringKernel<char>
 			}
 			else
 			{
-				for (int32_t i=0; i<num_weights; i++)
+				for (index_t i=0; i<num_weights; i++)
 				{
-					for (int32_t j=0; j<mkl_stepsize; j++)
+					for (index_t j=0; j<mkl_stepsize; j++)
 					{
 						if (i*mkl_stepsize+j<get_degree()*length)
 							weights[i*mkl_stepsize+j] = weights2[i];
@@ -655,7 +655,7 @@ class CWeightedDegreeStringKernel: public CStringKernel<char>
 		 * @param idx_b index b
 		 * @return computed kernel function at indices a,b
 		 */
-		float64_t compute(int32_t idx_a, int32_t idx_b);
+		float64_t compute(index_t idx_a, index_t idx_b);
 
 		/** compute with mismatch
 		 *
@@ -723,7 +723,7 @@ class CWeightedDegreeStringKernel: public CStringKernel<char>
 		/** position weights */
 		float64_t* position_weights;
 		/** position weights */
-		int32_t position_weights_len;
+		index_t position_weights_len;
 		/** weights buffer */
 		float64_t* weights_buffer;
 		/** MKL step size */

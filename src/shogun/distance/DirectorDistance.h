@@ -209,7 +209,7 @@ IGNORE_IN_CLASSLIST class CDirectorDistance : public CDistance
 		/// compute distance function for features a and b
 		/// idx_{a,b} denote the index of the feature vectors
 		/// in the corresponding feature object
-		virtual float64_t compute(int32_t x, int32_t y)
+		virtual float64_t compute(index_t x, index_t y)
 		{
 			return distance_function(x, y);
 		}

@@ -128,7 +128,7 @@ void CFactorType::init_card()
 {
 	m_num_assignments = 1;
 	m_cumprod_cards.resize_vector(m_cards.size());
-	for (int32_t n = 0; n < m_cards.size(); ++n)
+	for (index_t n = 0; n < m_cards.size(); ++n)
 	{
 		m_cumprod_cards[n] = m_num_assignments;
 		m_num_assignments *= m_cards[n];
@@ -161,7 +161,7 @@ int32_t CTableFactorType::state_from_index(int32_t ei, int32_t var_index) const
 SGVector<int32_t> CTableFactorType::assignment_from_index(int32_t ei) const
 {
 	SGVector<int32_t> assig(get_cardinalities().size());
-	for (int32_t vi = 0; vi < get_cardinalities().size(); ++vi)
+	for (index_t vi = 0; vi < get_cardinalities().size(); ++vi)
 		assig[vi] = state_from_index(ei, vi);
 
 	return assig;
@@ -171,7 +171,7 @@ int32_t CTableFactorType::index_from_assignment(const SGVector<int32_t> assig) c
 {
 	ASSERT(assig.size() == get_cardinalities().size());
 	int32_t index = 0;
-	for (int32_t vi = 0; vi < get_cardinalities().size(); ++vi)
+	for (index_t vi = 0; vi < get_cardinalities().size(); ++vi)
 		index += assig[vi] * m_cumprod_cards[vi];
 
 	return index;
@@ -193,7 +193,7 @@ int32_t CTableFactorType::index_from_universe_assignment(
 {
 	ASSERT(var_index.size() == m_cards.size());
 	int32_t index = 0;
-	for (int32_t vi = 0; vi < var_index.size(); vi++)
+	for (index_t vi = 0; vi < var_index.size(); vi++)
 	{
 		int32_t cur_var = var_index[vi];
 		ASSERT(assig[cur_var] <= m_cards[vi]);
@@ -224,10 +224,10 @@ void CTableFactorType::compute_energies(
 	{
 		ASSERT(m_data_size * m_num_assignments == m_w.size());
 		ASSERT(m_data_size == factor_data.size());
-		for (int32_t ei = 0; ei < m_num_assignments; ++ei)
+		for (index_t ei = 0; ei < m_num_assignments; ++ei)
 		{
 			float64_t energy_cur = 0.0;
-			for (int32_t di = 0; di < m_data_size; ++di)
+			for (index_t di = 0; di < m_data_size; ++di)
 				energy_cur += factor_data[di] * m_w[di + ei*m_data_size];
 
 			energies[ei] = energy_cur;
@@ -252,7 +252,7 @@ void CTableFactorType::compute_energies(
 		ASSERT(m_num_assignments == m_data_size);
 		energies.zero();
 		SGSparseVectorEntry<float64_t>* data_ptr = factor_data_sparse.features;
-		for (int32_t n = 0; n < factor_data_sparse.num_feat_entries; ++n)
+		for (index_t n = 0; n < factor_data_sparse.num_feat_entries; ++n)
 			energies[data_ptr[n].feat_index] = data_ptr[n].entry;
 	}
 	else
@@ -260,10 +260,10 @@ void CTableFactorType::compute_energies(
 		ASSERT((m_data_size * m_num_assignments) == m_w.size());
 		SGSparseVectorEntry<float64_t>* data_ptr = factor_data_sparse.features;
 
-		for (int32_t ei = 0; ei < m_num_assignments; ++ei)
+		for (index_t ei = 0; ei < m_num_assignments; ++ei)
 		{
 			float64_t energy_cur = 0.0;
-			for (int32_t n = 0; n < factor_data_sparse.num_feat_entries; ++n)
+			for (index_t n = 0; n < factor_data_sparse.num_feat_entries; ++n)
 			{
 				energy_cur += data_ptr[n].entry
 					* m_w[data_ptr[n].feat_index + ei*m_data_size];
@@ -283,7 +283,7 @@ void CTableFactorType::compute_gradients(
 	{
 		ASSERT(m_num_assignments == parameter_gradient.size());
 		// Parameters are a simple table, gradient is simply the marginal
-		for (int32_t ei = 0; ei < m_num_assignments; ++ei)
+		for (index_t ei = 0; ei < m_num_assignments; ++ei)
 			parameter_gradient[ei] = mult * marginals[ei];
 	}
 	else if (m_w.size() == 0)
@@ -295,9 +295,9 @@ void CTableFactorType::compute_gradients(
 		ASSERT((m_data_size * m_num_assignments) == parameter_gradient.size());
 		ASSERT(m_data_size == factor_data.size());
 		// Perform tensor outer product
-		for (int32_t ei = 0; ei < m_num_assignments; ++ei)
+		for (index_t ei = 0; ei < m_num_assignments; ++ei)
 		{
-			for (int32_t di = 0; di < m_data_size; ++di)
+			for (index_t di = 0; di < m_data_size; ++di)
 			{
 				parameter_gradient[di + ei*m_data_size] +=
 					mult * factor_data[di] * marginals[ei];
@@ -317,7 +317,7 @@ void CTableFactorType::compute_gradients(
 	{
 		ASSERT(m_num_assignments == parameter_gradient.size());
 		// Parameters are a simple table, gradient is simply the marginal
-		for (int32_t ei = 0; ei < m_num_assignments; ++ei)
+		for (index_t ei = 0; ei < m_num_assignments; ++ei)
 			parameter_gradient[ei] = mult * marginals[ei];
 	}
 	else if (m_w.size() == 0)
@@ -330,8 +330,8 @@ void CTableFactorType::compute_gradients(
 		SGSparseVectorEntry<float64_t>* data_ptr = factor_data_sparse.features;
 
 		// Perform tensor outer product
-		for (int32_t ei = 0; ei < m_num_assignments; ++ei) {
-			for (int32_t n = 0; n < factor_data_sparse.num_feat_entries; ++n) {
+		for (index_t ei = 0; ei < m_num_assignments; ++ei) {
+			for (index_t n = 0; n < factor_data_sparse.num_feat_entries; ++n) {
 				int32_t di = data_ptr[n].feat_index;
 				parameter_gradient[di + ei*m_data_size] +=
 					mult * data_ptr[n].entry * marginals[ei];

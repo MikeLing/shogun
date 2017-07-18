@@ -50,13 +50,13 @@ TEST(SetRowsConst, eigen3_backend)
 	SGMatrix<float64_t> A(3,4);
 	SGVector<float64_t> v(A.num_rows);
 
-	for (int32_t i=0; i<v.vlen; i++)
+	for (index_t i=0; i<v.vlen; i++)
 		v[i] = i;
 
 	linalg::set_rows_const<linalg::Backend::EIGEN3>(A, v);
 
-	for (int32_t i=0; i<A.num_rows; i++)
-		for (int32_t j=0; j<A.num_cols; j++)
+	for (index_t i=0; i<A.num_rows; i++)
+		for (index_t j=0; j<A.num_cols; j++)
 			EXPECT_EQ(A(i,j), v[i]);
 }
 
@@ -66,13 +66,13 @@ TEST(SetRowsConst, viennacl_backend)
 	CGPUMatrix<float64_t> A(3,4);
 	CGPUVector<float64_t> v(A.num_rows);
 
-	for (int32_t i=0; i<v.vlen; i++)
+	for (index_t i=0; i<v.vlen; i++)
 		v[i] = i;
 
 	linalg::set_rows_const<linalg::Backend::VIENNACL>(A, v);
 
-	for (int32_t i=0; i<A.num_rows; i++)
-		for (int32_t j=0; j<A.num_cols; j++)
+	for (index_t i=0; i<A.num_rows; i++)
+		for (index_t j=0; j<A.num_cols; j++)
 			EXPECT_EQ(A(i,j), v[i]);
 }
 #endif // HAVE_VIENNACL

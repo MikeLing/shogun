@@ -50,7 +50,7 @@ TEST(NeuralRectifiedLinearLayer, compute_activations)
 	// initialize some random inputs
 	CMath::init_random(100);
 	SGMatrix<float64_t> x(12,3);
-	for (int32_t i=0; i<x.num_rows*x.num_cols; i++)
+	for (index_t i=0; i<x.num_rows*x.num_cols; i++)
 		x[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input = new CNeuralInputLayer (x.num_rows);
@@ -80,13 +80,13 @@ TEST(NeuralRectifiedLinearLayer, compute_activations)
 	float64_t* biases = params.vector;
 	float64_t* weights = biases + layer.get_num_neurons();
 
-	for (int32_t i=0; i<A_ref.num_rows; i++)
+	for (index_t i=0; i<A_ref.num_rows; i++)
 	{
-		for (int32_t j=0; j<A_ref.num_cols; j++)
+		for (index_t j=0; j<A_ref.num_cols; j++)
 		{
 			A_ref(i,j) = biases[i];
 
-			for (int32_t k=0; k<x.num_rows; k++)
+			for (index_t k=0; k<x.num_rows; k++)
 				A_ref(i,j) += weights[i+k*A_ref.num_rows]*x(k,j);
 
 			A_ref(i,j) = CMath::max<float64_t>(0, A_ref(i,j));
@@ -96,7 +96,7 @@ TEST(NeuralRectifiedLinearLayer, compute_activations)
 	// compare
 	EXPECT_EQ(A_ref.num_rows, A.num_rows);
 	EXPECT_EQ(A_ref.num_cols, A.num_cols);
-	for (int32_t i=0; i<A.num_rows*A.num_cols; i++)
+	for (index_t i=0; i<A.num_rows*A.num_cols; i++)
 		EXPECT_NEAR(A_ref[i], A[i], 1e-12);
 
 	SG_UNREF(layers);
@@ -109,14 +109,14 @@ TEST(NeuralRectifiedLinearLayer, compute_activations)
 TEST(NeuralRectifiedLinearLayer, compute_parameter_gradients_hidden)
 {
 	SGMatrix<float64_t> x1(12,3);
-	for (int32_t i=0; i<x1.num_rows*x1.num_cols; i++)
+	for (index_t i=0; i<x1.num_rows*x1.num_cols; i++)
 		x1[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input1 = new CNeuralInputLayer (x1.num_rows);
 	input1->set_batch_size(x1.num_cols);
 
 	SGMatrix<float64_t> x2(7,3);
-	for (int32_t i=0; i<x2.num_rows*x2.num_cols; i++)
+	for (index_t i=0; i<x2.num_rows*x2.num_cols; i++)
 		x2[i] = CMath::random(-10.0,10.0);
 
 	CNeuralInputLayer* input2 = new CNeuralInputLayer (x2.num_rows);
@@ -138,7 +138,7 @@ TEST(NeuralRectifiedLinearLayer, compute_parameter_gradients_hidden)
 	input_indices_out[0] = 2;
 
 	SGMatrix<float64_t> y(9,3);
-	for (int32_t i=0; i<y.num_rows*y.num_cols; i++)
+	for (index_t i=0; i<y.num_rows*y.num_cols; i++)
 		y[i] = CMath::random(0.0,1.0);
 
 	// initialize the hidden layer
@@ -174,7 +174,7 @@ TEST(NeuralRectifiedLinearLayer, compute_parameter_gradients_hidden)
 	// manually compute parameter gradients
 	SGVector<float64_t> gradients_hid_numerical(layer_hid->get_num_parameters());
 	float64_t epsilon = 1e-9;
-	for (int32_t i=0; i<layer_hid->get_num_parameters(); i++)
+	for (index_t i=0; i<layer_hid->get_num_parameters(); i++)
 	{
 		param_hid[i] += epsilon;
 		input1->compute_activations(x1);
@@ -195,7 +195,7 @@ TEST(NeuralRectifiedLinearLayer, compute_parameter_gradients_hidden)
 	}
 
 	// compare
-	for (int32_t i=0; i<gradients_hid_numerical.vlen; i++)
+	for (index_t i=0; i<gradients_hid_numerical.vlen; i++)
 		EXPECT_NEAR(gradients_hid_numerical[i], gradients_hid[i], 1e-6);
 
 	SG_UNREF(layers);

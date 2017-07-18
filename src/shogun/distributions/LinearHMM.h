@@ -77,7 +77,7 @@ class CLinearHMM : public CDistribution
 		 * @return if training was successful
 		 */
 		bool train(
-			const int32_t* indizes, int32_t num_indizes,
+			const index_t* indizes, index_t num_indizes,
 			float64_t pseudo_count);
 
 		/** get logarithm of one example's likelihood
@@ -94,21 +94,21 @@ class CLinearHMM : public CDistribution
 		 * @param len length of vector
 		 * @return likelihood
 		 */
-		float64_t get_likelihood_example(uint16_t* vector, int32_t len);
+		float64_t get_likelihood_example(uint16_t* vector, index_t len);
 
 		/** compute likelihood for example
 		 *
 		 * @param num_example which example
 		 * @return likelihood for example
 		 */
-		float64_t get_likelihood_example(int32_t num_example);
+		float64_t get_likelihood_example(index_t num_example);
 
 		/** get logarithm of one example's likelihood
 		 *
 		 * @param num_example which example
 		 * @return logarithm of example's likelihood
 		 */
-		virtual float64_t get_log_likelihood_example(int32_t num_example);
+		virtual float64_t get_log_likelihood_example(index_t num_example);
 
 		/** get logarithm of one example's derivative's likelihood
 		 *
@@ -117,7 +117,7 @@ class CLinearHMM : public CDistribution
 		 * @return logarithm of example's derivative
 		 */
 		virtual float64_t get_log_derivative(
-			int32_t num_param, int32_t num_example);
+			index_t num_param, index_t num_example);
 
 		/** obsolete get logarithm of one example's derivative's
 		 *  likelihood
@@ -179,7 +179,7 @@ class CLinearHMM : public CDistribution
 		 * @param num_param which param
 		 * @result logarithm of given model parameter
 		 */
-		virtual float64_t get_log_model_parameter(int32_t num_param)
+		virtual float64_t get_log_model_parameter(index_t num_param)
 		{
 			ASSERT(log_transition_probs)
 			ASSERT(num_param<num_params)
@@ -224,9 +224,9 @@ class CLinearHMM : public CDistribution
 
 	protected:
 		/** examples' sequence length */
-		int32_t sequence_length;
+		index_t sequence_length;
 		/** number of symbols in examples */
-		int32_t num_symbols;
+		index_t num_symbols;
 		/** number of parameters */
 		int32_t num_params;
 		/** transition probs */

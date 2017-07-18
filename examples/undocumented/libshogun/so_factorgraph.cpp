@@ -44,9 +44,9 @@ void create_tree_graph(int hh, int ww)
 	SG_REF(fg);
 
 	// Add factors
-	for (int32_t x = 0; x < ww; x++)
+	for (index_t x = 0; x < ww; x++)
 	{
-		for (int32_t y = 0; y < hh; y++)
+		for (index_t y = 0; y < hh; y++)
 		{
 			if (x > 0)
 			{

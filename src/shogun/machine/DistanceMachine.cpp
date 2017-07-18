@@ -183,7 +183,7 @@ void* CDistanceMachine::run_distance_thread_lhs(void* p)
     int32_t idx_stop=params->idx_stop;
     int32_t idx_c=params->idx_comp;
 
-    for (int32_t i=idx_res_start; idx_act<idx_stop; i++,idx_act++)
+    for (index_t i=idx_res_start; idx_act<idx_stop; i++,idx_act++)
         res[i] =distance->distance(idx_act,idx_c);
 
     return NULL;
@@ -199,7 +199,7 @@ void* CDistanceMachine::run_distance_thread_rhs(void* p)
     int32_t idx_stop=params->idx_stop;
     int32_t idx_c=params->idx_comp;
 
-    for (int32_t i=idx_res_start; idx_act<idx_stop; i++,idx_act++)
+    for (index_t i=idx_res_start; idx_act<idx_stop; i++,idx_act++)
         res[i] =distance->distance(idx_c,idx_act);
 
     return NULL;
@@ -231,7 +231,7 @@ CMulticlassLabels* CDistanceMachine::apply_multiclass(CFeatures* data)
 	return NULL;
 }
 
-float64_t CDistanceMachine::apply_one(int32_t num)
+float64_t CDistanceMachine::apply_one(index_t num)
 {
 	/* number of clusters */
 	CFeatures* lhs=distance->get_lhs();

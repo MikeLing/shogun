@@ -186,15 +186,15 @@ template<class T> SGSparseMatrix<T> SGSparseMatrix<T>::get_transposed()
 	int32_t* hist=SG_CALLOC(int32_t, num_features);
 
 	// count the lengths of future feature vectors
-	for (int32_t v=0; v<num_vectors; v++)
+	for (index_t v=0; v<num_vectors; v++)
 	{
 		SGSparseVector<T> sv=sparse_matrix[v];
 
-		for (int32_t i=0; i<sv.num_feat_entries; i++)
+		for (index_t i=0; i<sv.num_feat_entries; i++)
 			hist[sv.features[i].feat_index]++;
 	}
 
-	for (int32_t v=0; v<num_features; v++)
+	for (index_t v=0; v<num_features; v++)
 		sfm[v]=SGSparseVector<T>(hist[v]);
 
 	SG_FREE(hist);
@@ -202,11 +202,11 @@ template<class T> SGSparseMatrix<T> SGSparseMatrix<T>::get_transposed()
 	int32_t* index=SG_CALLOC(int32_t, num_features);
 
 	// fill future feature vectors with content
-	for (int32_t v=0; v<num_vectors; v++)
+	for (index_t v=0; v<num_vectors; v++)
 	{
 		SGSparseVector<T> sv=sparse_matrix[v];
 
-		for (int32_t i=0; i<sv.num_feat_entries; i++)
+		for (index_t i=0; i<sv.num_feat_entries; i++)
 		{
 			int32_t vidx=sv.features[i].feat_index;
 			int32_t fidx=v;
@@ -223,7 +223,7 @@ template<class T> SGSparseMatrix<T> SGSparseMatrix<T>::get_transposed()
 
 template<class T> void SGSparseMatrix<T>::sort_features()
 {
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
 		sparse_matrix[i].sort_features();
 	}
@@ -244,10 +244,10 @@ template<class T> void SGSparseMatrix<T>::from_dense(SGMatrix<T> full)
 	int64_t num_total_entries=0;
 
 	// count nr of non sparse features
-	for (int32_t i=0; i<num_vec; i++)
+	for (index_t i=0; i<num_vec; i++)
 	{
 		num_feat_entries[i]=0;
-		for (int32_t j=0; j<num_feat; j++)
+		for (index_t j=0; j<num_feat; j++)
 		{
 			if (src[i*((int64_t) num_feat) + j] != static_cast<T>(0))
 				num_feat_entries[i]++;
@@ -258,12 +258,12 @@ template<class T> void SGSparseMatrix<T>::from_dense(SGMatrix<T> full)
 	num_vectors=num_vec;
 	sparse_matrix=SG_MALLOC(SGSparseVector<T>,num_vec);
 
-	for (int32_t i=0; i< num_vec; i++)
+	for (index_t i=0; i< num_vec; i++)
 	{
 		sparse_matrix[i]=SGSparseVector<T>(num_feat_entries[i]);
 		int32_t sparse_feat_idx=0;
 
-		for (int32_t j=0; j< num_feat; j++)
+		for (index_t j=0; j< num_feat; j++)
 		{
 			int64_t pos= i*num_feat + j;
 

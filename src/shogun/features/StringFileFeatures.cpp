@@ -20,7 +20,7 @@ template <class ST> CStringFileFeatures<ST>::~CStringFileFeatures()
 	CStringFileFeatures<ST>::cleanup();
 }
 
-template <class ST> ST* CStringFileFeatures<ST>::get_line(uint64_t& len, uint64_t& offs, int32_t& line_nr, uint64_t file_length)
+template <class ST> ST* CStringFileFeatures<ST>::get_line(uint64_t& len, uint64_t& offs, index_t& line_nr, uint64_t file_length)
 {
 	ST* s = file->get_map();
 	for (uint64_t i=offs; i<file_length; i++)
@@ -103,7 +103,7 @@ template <class ST> void CStringFileFeatures<ST>::fetch_meta_info_from_file(int3
 
 			CStringFeatures<ST>::features[CStringFeatures<ST>::num_vectors-1].string=line;
 			CStringFeatures<ST>::features[CStringFeatures<ST>::num_vectors-1].slen=len;
-			CStringFeatures<ST>::max_string_length=CMath::max(CStringFeatures<ST>::max_string_length, (int32_t) len);
+			CStringFeatures<ST>::max_string_length=CMath::max(CStringFeatures<ST>::max_string_length, (index_t)len);
 		}
 		else
 			break;

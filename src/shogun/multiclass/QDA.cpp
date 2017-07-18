@@ -130,10 +130,10 @@ CMulticlassLabels* CQDA::apply_multiclass(CFeatures* data)
 	int32_t vlen;
 	bool vfree;
 	float64_t* vec;
-	for (int k = 0; k < m_num_classes; k++)
+	for (index_t k = 0; k < m_num_classes; k++)
 	{
 		// X = features - means
-		for (int i = 0; i < num_vecs; i++)
+		for (index_t i = 0; i < num_vecs; i++)
 		{
 			vec = rf->get_feature_vector(i, vlen, vfree);
 			ASSERT(vec)
@@ -149,7 +149,7 @@ CMulticlassLabels* CQDA::apply_multiclass(CFeatures* data)
 		Map< MatrixXd > Em_M(m_M.get_matrix(k), m_dim, m_dim);
 		A = X*Em_M;
 
-		for (int i = 0; i < num_vecs; i++)
+		for (index_t i = 0; i < num_vecs; i++)
 			norm2(i + k*num_vecs) = A.row(i).array().square().sum();
 
 #ifdef DEBUG_QDA
@@ -158,8 +158,8 @@ CMulticlassLabels* CQDA::apply_multiclass(CFeatures* data)
 #endif
 	}
 
-	for (int i = 0; i < num_vecs; i++)
-		for (int k = 0; k < m_num_classes; k++)
+	for (index_t i = 0; i < num_vecs; i++)
+		for (index_t k = 0; k < m_num_classes; k++)
 		{
 			norm2[i + k*num_vecs] += m_slog[k];
 			norm2[i + k*num_vecs] *= -0.5;
@@ -172,7 +172,7 @@ CMulticlassLabels* CQDA::apply_multiclass(CFeatures* data)
 
 	CMulticlassLabels* out = new CMulticlassLabels(num_vecs);
 
-	for (int i = 0 ; i < num_vecs; i++)
+	for (index_t i = 0 ; i < num_vecs; i++)
 		out->set_label(i, CMath::arg_max(norm2.data()+i, num_vecs, m_num_classes));
 
 	return out;
@@ -213,7 +213,7 @@ bool CQDA::train_machine(CFeatures* data)
 	memset(class_nums, 0, m_num_classes*sizeof(int32_t));
 	int32_t class_idx;
 
-	for (int i = 0; i < train_labels.vlen; i++)
+	for (index_t i = 0; i < train_labels.vlen; i++)
 	{
 		class_idx = train_labels.vector[i];
 
@@ -228,7 +228,7 @@ bool CQDA::train_machine(CFeatures* data)
 		}
 	}
 
-	for (int i = 0; i < m_num_classes; i++)
+	for (index_t i = 0; i < m_num_classes; i++)
 	{
 		if (class_nums[i] <= 0)
 		{
@@ -264,11 +264,11 @@ bool CQDA::train_machine(CFeatures* data)
 	int32_t vlen;
 	bool vfree;
 	float64_t* vec;
-	for (int k = 0; k < m_num_classes; k++)
+	for (index_t k = 0; k < m_num_classes; k++)
 	{
 		MatrixXd buffer(class_nums[k], m_dim);
 		Map< VectorXd > Em_means(m_means.get_column_vector(k), m_dim);
-		for (int i = 0; i < class_nums[k]; i++)
+		for (index_t i = 0; i < class_nums[k]; i++)
 		{
 			vec = rf->get_feature_vector(class_idxs[k*num_vec + i], vlen, vfree);
 			ASSERT(vec)
@@ -282,7 +282,7 @@ bool CQDA::train_machine(CFeatures* data)
 
 		Em_means /= class_nums[k];
 
-		for (int i = 0; i < class_nums[k]; i++)
+		for (index_t i = 0; i < class_nums[k]; i++)
 			buffer.row(i) -= Em_means;
 
 		// SVD
@@ -301,8 +301,8 @@ bool CQDA::train_machine(CFeatures* data)
 		{
 			SGMatrix< float64_t > M(m_dim ,m_dim);
 			MatrixXd MEig = Map<MatrixXd>(rot_mat,m_dim,m_dim);
-			for (int i = 0; i < m_dim; i++)
-				for (int j = 0; j < m_dim; j++)
+			for (index_t i = 0; i < m_dim; i++)
+				for (index_t j = 0; j < m_dim; j++)
 					M(i,j)*=scalings[k*m_dim + j];
 			MatrixXd rotE = Map<MatrixXd>(rot_mat,m_dim,m_dim);
 			MatrixXd resE(m_dim,m_dim);
@@ -325,16 +325,16 @@ bool CQDA::train_machine(CFeatures* data)
 	m_slog.zero();
 
 	index_t idx = 0;
-	for (int k = 0; k < m_num_classes; k++)
+	for (index_t k = 0; k < m_num_classes; k++)
 	{
-		for (int j = 0; j < m_dim; j++)
+		for (index_t j = 0; j < m_dim; j++)
 		{
 			sinvsqrt[j] = 1.0 / CMath::sqrt(scalings[k*m_dim + j]);
 			m_slog[k]  += CMath::log(scalings[k*m_dim + j]);
 		}
 
-		for (int i = 0; i < m_dim; i++)
-			for (int j = 0; j < m_dim; j++)
+		for (index_t i = 0; i < m_dim; i++)
+			for (index_t j = 0; j < m_dim; j++)
 			{
 				idx = k*m_dim*m_dim + i + j*m_dim;
 				m_M[idx] = rotations[idx] * sinvsqrt[j];
@@ -351,14 +351,14 @@ bool CQDA::train_machine(CFeatures* data)
 	SGMatrix< float64_t >::display_matrix(scalings.matrix, m_dim, m_num_classes);
 
 	SG_PRINT("\n>>> Displaying rotations ... \n")
-	for (int k = 0; k < m_num_classes; k++)
+	for (index_t k = 0; k < m_num_classes; k++)
 		SGMatrix< float64_t >::display_matrix(rotations.get_matrix(k), m_dim, m_dim);
 
 	SG_PRINT("\n>>> Displaying sinvsqrt ... \n")
 	sinvsqrt.display_vector();
 
 	SG_PRINT("\n>>> Diplaying m_M matrices ... \n")
-	for (int k = 0; k < m_num_classes; k++)
+	for (index_t k = 0; k < m_num_classes; k++)
 		SGMatrix< float64_t >::display_matrix(m_M.get_matrix(k), m_dim, m_dim);
 
 	SG_PRINT("\n>>> Exit DEBUG_QDA\n")

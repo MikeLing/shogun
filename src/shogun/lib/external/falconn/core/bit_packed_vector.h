@@ -40,7 +40,7 @@ class BitPackedVector {
       num_data_packets_ += 1;
     }
     data_.resize(num_data_packets_);
-    for (int_fast64_t ii = 0; ii < num_data_packets_; ++ii) {
+    for (index_t_fast64_t ii = 0; ii < num_data_packets_; ++ii) {
       data_[ii] = 0;
     }
   }

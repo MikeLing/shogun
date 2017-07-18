@@ -112,8 +112,8 @@ TEST(LMNNImpl,sum_outer_products)
 	EXPECT_EQ(sop.rows(), d);
 	EXPECT_EQ(sop.cols(), d);
 	// check output contents
-	for (int32_t i=0; i<d; i++)
-		for (int32_t j=0; j<d; j++)
+	for (index_t i=0; i<d; i++)
+		for (index_t j=0; j<d; j++)
 			EXPECT_EQ(sop(i,j), 0);
 
 	// input an empty matrix of target neighbors
@@ -123,8 +123,8 @@ TEST(LMNNImpl,sum_outer_products)
 	EXPECT_EQ(sop.rows(), d);
 	EXPECT_EQ(sop.cols(), d);
 	// check output contents
-	for (int32_t i=0; i<d; i++)
-		for (int32_t j=0; j<d; j++)
+	for (index_t i=0; i<d; i++)
+		for (index_t j=0; j<d; j++)
 			EXPECT_EQ(sop(i,j), 0);
 
 	SG_UNREF(features);

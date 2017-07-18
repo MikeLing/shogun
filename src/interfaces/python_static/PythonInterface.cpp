@@ -207,7 +207,7 @@ void CPythonInterface::function_name(sg_type*& vector, int32_t& len)		\
 	char* data=(char*) py_vec->data;										\
 	npy_intp offs=0;														\
 																			\
-	for (int32_t i=0; i<len; i++)											\
+	for (index_t i=0; i<len; i++)											\
 	{																		\
 		vector[i]=*((if_type*)(data+offs));									\
 		offs+=stride_offs;													\
@@ -241,10 +241,10 @@ void CPythonInterface::function_name(sg_type*& matrix, int32_t& num_feat, int32_
 	char* data=py_mat->data;												\
 	npy_intp* strides= py_mat->strides;									\
 	npy_intp d2_offs=0;														\
-	for (int32_t i=0; i<num_feat; i++)										\
+	for (index_t i=0; i<num_feat; i++)										\
 	{																		\
 		npy_intp offs=d2_offs;												\
-		for (int32_t j=0; j<num_vec; j++)									\
+		for (index_t j=0; j<num_vec; j++)									\
 		{																	\
 			matrix[i+j*num_feat]=*((if_type*)(data+offs));					\
 			offs+=strides[1];												\
@@ -277,7 +277,7 @@ void CPythonInterface::function_name(sg_type*& array, int32_t*& dims, int32_t& n
 	int64_t total_size=0;														\
 																			\
 	dims=SG_MALLOC(int32_t, num_dims);													\
-	for (int32_t d=0; d<num_dims; d++)											\
+	for (index_t d=0; d<num_dims; d++)											\
 	{																		\
 		dims[d]=(int32_t) py_mat->dimensions[d];								\
 		total_size+=dims[d];												\
@@ -286,7 +286,7 @@ void CPythonInterface::function_name(sg_type*& array, int32_t*& dims, int32_t& n
 	array=SG_MALLOC(sg_type, total_size);											\
 																			\
 	char* data=py_mat->data;												\
-	for (int64_t i=0; i<total_size; i++)										\
+	for (index_t i=0; i<total_size; i++)										\
 		array[i]=*(((if_type*)(data))+i);									\
 }
 
@@ -324,7 +324,7 @@ void CPythonInterface::function_name(SGSparseVector<sg_type>*& matrix, int32_t& 
 	mwIndex* ir=mxGetIr(mx_mat);											\
 	mwIndex* jc=mxGetJc(mx_mat);											\
 	int64_t offset=0;															\
-	for (int32_t i=0; i<num_vec; i++)											\
+	for (index_t i=0; i<num_vec; i++)											\
 	{																		\
 		int32_t len=jc[i+1]-jc[i];												\
 		matrix[i].num_feat_entries=len;										\
@@ -332,7 +332,7 @@ void CPythonInterface::function_name(SGSparseVector<sg_type>*& matrix, int32_t& 
 		if (len>0)															\
 		{																	\
 			matrix[i].features=SG_MALLOC(SGSparseVectorEntry<sg_type>, len);				\
-			for (int32_t j=0; j<len; j++)										\
+			for (index_t j=0; j<len; j++)										\
 			{																\
 				matrix[i].features[j].entry=data[offset];					\
 				matrix[i].features[j].feat_index=ir[offset];				\
@@ -377,7 +377,7 @@ void CPythonInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		strings=SG_MALLOC(SGString<sg_type>, num_str);								\
 		ASSERT(strings);													\
 																			\
-		for (int32_t i=0; i<num_str; i++)										\
+		for (index_t i=0; i<num_str; i++)										\
 		{																	\
 			PyObject *o = PyList_GetItem((PyObject*) py_str,i);				\
 			if (PyUnicode_Check(o))											\
@@ -398,7 +398,7 @@ void CPythonInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 			}																\
 			else															\
 			{																\
-				for (int32_t j=0; j<i; j++)										\
+				for (index_t j=0; j<i; j++)										\
 					SG_FREE(strings[i].string);								\
 				SG_FREE(strings);											\
 				SG_ERROR("All elements in list must be strings, error in line %d.\n", i);\
@@ -413,7 +413,7 @@ void CPythonInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		int32_t len=py_array_str->dimensions[1];								\
 		strings=SG_MALLOC(SGString<sg_type>, num_str);							\
 																			\
-		for (int32_t i=0; i<num_str; i++)										\
+		for (index_t i=0; i<num_str; i++)										\
 		{																	\
 			if (len>0)														\
 			{																\
@@ -458,7 +458,7 @@ void CPythonInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		strings=SG_MALLOC(SGString<sg_type>, num_str);								\
 		ASSERT(strings);													\
 																			\
-		for (int32_t i=0; i<num_str; i++)										\
+		for (index_t i=0; i<num_str; i++)										\
 		{																	\
 			PyObject *o = PyList_GetItem((PyObject*) py_str,i);				\
 			if (PyString_Check(o))											\
@@ -479,7 +479,7 @@ void CPythonInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 			}																\
 			else															\
 			{																\
-				for (int32_t j=0; j<i; j++)										\
+				for (index_t j=0; j<i; j++)										\
 					SG_FREE(strings[i].string);								\
 				SG_FREE(strings);											\
 				SG_ERROR("All elements in list must be strings, error in line %d.\n", i);\
@@ -494,7 +494,7 @@ void CPythonInterface::function_name(SGString<sg_type>*& strings, int32_t& num_s
 		int32_t len=py_array_str->dimensions[1];								\
 		strings=SG_MALLOC(SGString<sg_type>, num_str);							\
 																			\
-		for (int32_t i=0; i<num_str; i++)										\
+		for (index_t i=0; i<num_str; i++)										\
 		{																	\
 			if (len>0)														\
 			{																\
@@ -578,7 +578,7 @@ void CPythonInterface::function_name(const sg_type* vector, int32_t len)		\
 																			\
 	if_type* data=(if_type*) ((PyArrayObject *) py_vec)->data;				\
 																			\
-	for (int32_t i=0; i<len; i++)												\
+	for (index_t i=0; i<len; i++)												\
 		data[i]=vector[i];													\
 																			\
 	set_arg_increment(py_vec);												\
@@ -609,8 +609,8 @@ void CPythonInterface::function_name(const sg_type* matrix, int32_t num_feat, in
 																			\
 	if_type* data=(if_type*) ((PyArrayObject *) py_mat)->data;				\
 																			\
-	for (int32_t j=0; j<num_feat; j++)											\
-		for (int32_t i=0; i<num_vec; i++)										\
+	for (index_t j=0; j<num_feat; j++)											\
+		for (index_t i=0; i<num_vec; i++)										\
 			data[i+j*num_vec]=matrix[i*num_feat+j];						\
 																			\
 	set_arg_increment(py_mat);												\
@@ -643,11 +643,11 @@ void CPythonInterface::function_name(const SGSparseVector<sg_type>* matrix, int3
 	mwIndex* ir=mxGetIr(mx_mat);											\
 	mwIndex* jc=mxGetJc(mx_mat);											\
 	int64_t offset=0;															\
-	for (int32_t i=0; i<num_vec; i++)											\
+	for (index_t i=0; i<num_vec; i++)											\
 	{																		\
 		int32_t len=matrix[i].num_feat_entries;									\
 		jc[i]=offset;														\
-		for (int32_t j=0; j<len; j++)											\
+		for (index_t j=0; j<len; j++)											\
 		{																	\
 			data[offset]=matrix[i].features[j].entry;						\
 			ir[offset]=matrix[i].features[j].feat_index;					\
@@ -686,7 +686,7 @@ void CPythonInterface::function_name(const SGString<sg_type>* strings, int32_t n
 	if (!py_str || PyTuple_GET_SIZE(py_str)!=num_str)							\
 		SG_ERROR("Couldn't create Cell Array of %d strings.\n", num_str);		\
 																				\
-	for (int32_t i=0; i<num_str; i++)											\
+	for (index_t i=0; i<num_str; i++)											\
 	{																			\
 		int32_t len=strings[i].slen;											\
 		if (len>0)																\
@@ -718,7 +718,7 @@ void CPythonInterface::function_name(const SGString<sg_type>* strings, int32_t n
 	if (!py_str || PyTuple_GET_SIZE(py_str)!=num_str)							\
 		SG_ERROR("Couldn't create Cell Array of %d strings.\n", num_str);		\
 																				\
-	for (int32_t i=0; i<num_str; i++)											\
+	for (index_t i=0; i<num_str; i++)											\
 	{																			\
 		int32_t len=strings[i].slen;											\
 		if (len>0)																\
@@ -788,7 +788,7 @@ bool CPythonInterface::run_python_helper(CSGInterface* from_if)
 	PyDict_SetItemString(globals,"__builtins__", builtins);
 	char* python_code=NULL;
 
-	for (int i=0; i<from_if->get_nrhs(); i++)
+	for (index_t i=0; i<from_if->get_nrhs(); i++)
 	{
 		int len=0;
 		char* var_name = from_if->get_string(len);
@@ -857,7 +857,7 @@ bool CPythonInterface::run_python_helper(CSGInterface* from_if)
 		CPythonInterface* out = new CPythonInterface(results);
 
 		//process d
-		for (int32_t i=0; i<sz; i++)
+		for (index_t i=0; i<sz; i++)
 			from_if->translate_arg(out, from_if);
 
 		Py_DECREF(results);

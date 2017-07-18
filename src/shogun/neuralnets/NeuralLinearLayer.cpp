@@ -54,7 +54,7 @@ void CNeuralLinearLayer::initialize_neural_layer(CDynamicObjectArray* layers,
 	CNeuralLayer::initialize_neural_layer(layers, input_indices);
 
 	m_num_parameters = m_num_neurons;
-	for (int32_t i=0; i<input_indices.vlen; i++)
+	for (index_t i=0; i<input_indices.vlen; i++)
 		m_num_parameters += m_num_neurons*m_input_sizes[i];
 }
 
@@ -62,7 +62,7 @@ void CNeuralLinearLayer::initialize_parameters(SGVector<float64_t> parameters,
 		SGVector<bool> parameter_regularizable,
 		float64_t sigma)
 {
-	for (int32_t i=0; i<m_num_parameters; i++)
+	for (index_t i=0; i<m_num_parameters; i++)
 	{
 		// random the parameters
 		parameters[i] = CMath::normal_random(0.0, sigma);
@@ -86,7 +86,7 @@ void CNeuralLinearLayer::compute_activations(SGVector<float64_t> parameters,
 	A.colwise() = B;
 
 	int32_t weights_index_offset = m_num_neurons;
-	for (int32_t l=0; l<m_input_indices.vlen; l++)
+	for (index_t l=0; l<m_input_indices.vlen; l++)
 	{
 		CNeuralLayer* layer =
 			(CNeuralLayer*)layers->element(m_input_indices[l]);
@@ -125,12 +125,12 @@ void CNeuralLinearLayer::compute_gradients(
 	if (dropout_prop>0.0)
 	{
 		int32_t len = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			m_local_gradients[i] *= m_dropout_mask[i];
 	}
 
 	int32_t weights_index_offset = m_num_neurons;
-	for (int32_t l=0; l<m_input_indices.vlen; l++)
+	for (index_t l=0; l<m_input_indices.vlen; l++)
 	{
 		CNeuralLayer* layer =
 			(CNeuralLayer*)layers->element(m_input_indices[l]);
@@ -171,13 +171,13 @@ void CNeuralLinearLayer::compute_local_gradients(SGMatrix<float64_t> targets)
 		// sqaured error measure
 		// local_gradients = activations-targets
 		int32_t length = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 			m_local_gradients[i] = (m_activations[i]-targets[i])/m_batch_size;
 	}
 	else
 	{
 		int32_t length = m_num_neurons*m_batch_size;
-		for (int32_t i=0; i<length; i++)
+		for (index_t i=0; i<length; i++)
 			m_local_gradients[i] = m_activation_gradients[i];
 	}
 }
@@ -187,7 +187,7 @@ float64_t CNeuralLinearLayer::compute_error(SGMatrix<float64_t> targets)
 	// error = 0.5*(sum(targets-activations)^2)/batch_size
 	float64_t sum = 0;
 	int32_t length = m_num_neurons*m_batch_size;
-	for (int32_t i=0; i<length; i++)
+	for (index_t i=0; i<length; i++)
 		sum += (targets[i]-m_activations[i])*(targets[i]-m_activations[i]);
 	sum *= (0.5/m_batch_size);
 	return sum;
@@ -197,12 +197,12 @@ void CNeuralLinearLayer::enforce_max_norm(SGVector<float64_t> parameters,
 		float64_t max_norm)
 {
 	int32_t weights_index_offset = m_num_neurons;
-	for (int32_t l=0; l<m_input_indices.vlen; l++)
+	for (index_t l=0; l<m_input_indices.vlen; l++)
 	{
 		float64_t* weights = parameters.vector + weights_index_offset;
 
 		int32_t length = m_num_neurons*m_input_sizes[l];
-		for (int32_t i=0; i<length; i+=m_input_sizes[l])
+		for (index_t i=0; i<length; i+=m_input_sizes[l])
 		{
 			float64_t norm =
 				SGVector<float64_t>::twonorm(parameters.vector+i, m_num_neurons);
@@ -210,7 +210,7 @@ void CNeuralLinearLayer::enforce_max_norm(SGVector<float64_t> parameters,
 			if (norm > max_norm)
 			{
 				float64_t multiplier = max_norm/norm;
-				for (int32_t j=0; j<m_input_sizes[l]; j++)
+				for (index_t j=0; j<m_input_sizes[l]; j++)
 					weights[i+j] *= multiplier;
 			}
 		}
@@ -220,7 +220,7 @@ void CNeuralLinearLayer::enforce_max_norm(SGVector<float64_t> parameters,
 float64_t CNeuralLinearLayer::compute_contraction_term(SGVector<float64_t> parameters)
 {
 	float64_t contraction_term = 0;
-	for (int32_t i=m_num_neurons; i<parameters.vlen; i++)
+	for (index_t i=m_num_neurons; i<parameters.vlen; i++)
 		contraction_term += parameters[i]*parameters[i];
 
 	return contraction_coefficient*contraction_term;
@@ -229,7 +229,7 @@ float64_t CNeuralLinearLayer::compute_contraction_term(SGVector<float64_t> param
 void CNeuralLinearLayer::compute_contraction_term_gradients(
 	SGVector< float64_t > parameters, SGVector< float64_t > gradients)
 {
-	for (int32_t i=m_num_neurons; i<parameters.vlen; i++)
+	for (index_t i=m_num_neurons; i<parameters.vlen; i++)
 			gradients[i] += 2*contraction_coefficient*parameters[i];
 }
 

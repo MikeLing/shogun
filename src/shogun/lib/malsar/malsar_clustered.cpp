@@ -47,7 +47,7 @@ malsar_result_t malsar_clustered(
 	SG_SDEBUG("n tasks = %d\n", n_tasks)
 
 	H_diag_matrix = SG_CALLOC(double, n_tasks*n_tasks);
-	for (int i=0; i<n_tasks; i++)
+	for (index_t i=0; i<n_tasks; i++)
 		H_diag_matrix[i*n_tasks+i] = 2.0;
 	H_diag_matrix_ld = n_tasks;
 
@@ -110,7 +110,7 @@ malsar_result_t malsar_clustered(
 		{
 			SGVector<index_t> task_idx = options.tasks_indices[task];
 			int n_vecs_task = task_idx.vlen;
-			for (int i=0; i<n_vecs_task; i++)
+			for (index_t i=0; i<n_vecs_task; i++)
 			{
 				double aa = -y[task_idx[i]]*(features->dense_dot(task_idx[i], Ws.col(task).data(), n_feats)+Cs[task]);
 				double bb = CMath::max(aa,0.0);
@@ -145,7 +145,7 @@ malsar_result_t malsar_clustered(
 
 			// solve problem
 			// min sum_i (s_i - s*_i)^2 s.t. sum_i s_i = k, 0<=s_i<=1
-			for (int i=0; i<n_tasks; i++)
+			for (index_t i=0; i<n_tasks; i++)
 			{
 				diag_H[i] = 2.0;
 				// TODO fails with C++11
@@ -169,7 +169,7 @@ malsar_result_t malsar_clustered(
 			SG_SDEBUG("Exit code = %d\n",problem_state.exitflag)
 			SG_SDEBUG("%d iteration passed\n",problem_state.nIter)
 			SG_SDEBUG("Solution is \n [ ")
-			for (int i=0; i<n_tasks; i++)
+			for (index_t i=0; i<n_tasks; i++)
 				SG_SDEBUG("%f ", x[i])
 			SG_SDEBUG("]\n")
 			Map<VectorXd> Mzp_DiagSigz(x,n_tasks);
@@ -177,7 +177,7 @@ malsar_result_t malsar_clustered(
 			Mzp = Mzp_Pz*Mzp_DiagSigz.asDiagonal()*Mzp_Pz.transpose();
 			//internal::set_is_malloc_allowed(false);
 			// walk in direction of antigradient
-			for (int i=0; i<n_tasks; i++)
+			for (index_t i=0; i<n_tasks; i++)
 				Mzp_DiagSigz[i] += eta;
 			//internal::set_is_malloc_allowed(true);
 			invEtaMWt = (Mzp_Pz*
@@ -191,7 +191,7 @@ malsar_result_t malsar_clustered(
 			{
 				SGVector<index_t> task_idx = options.tasks_indices[task];
 				int n_vecs_task = task_idx.vlen;
-				for (int i=0; i<n_vecs_task; i++)
+				for (index_t i=0; i<n_vecs_task; i++)
 				{
 					double aa = -y[task_idx[i]]*(features->dense_dot(task_idx[i], Wzp.col(task).data(), n_feats)+Cs[task]);
 					double bb = CMath::max(aa,0.0);
@@ -303,14 +303,14 @@ malsar_result_t malsar_clustered(
 	SG_FREE(x);
 
 	SGMatrix<float64_t> tasks_w(n_feats, n_tasks);
-	for (int i=0; i<n_feats; i++)
+	for (index_t i=0; i<n_feats; i++)
 	{
 		for (task=0; task<n_tasks; task++)
 			tasks_w(i,task) = Wzp(i,task);
 	}
 	//tasks_w.display_matrix();
 	SGVector<float64_t> tasks_c(n_tasks);
-	for (int i=0; i<n_tasks; i++) tasks_c[i] = Czp[i];
+	for (index_t i=0; i<n_tasks; i++) tasks_c[i] = Czp[i];
 	return malsar_result_t(tasks_w, tasks_c);
 };
 };

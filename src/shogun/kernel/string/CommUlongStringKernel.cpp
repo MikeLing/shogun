@@ -77,17 +77,17 @@ void CCommUlongStringKernel::cleanup()
 	CKernel::cleanup();
 }
 
-float64_t CCommUlongStringKernel::compute(int32_t idx_a, int32_t idx_b)
+float64_t CCommUlongStringKernel::compute(index_t idx_a, index_t idx_b)
 {
-	int32_t alen, blen;
+	index_t alen, blen;
 	bool free_avec, free_bvec;
 	uint64_t* avec=((CStringFeatures<uint64_t>*) lhs)->get_feature_vector(idx_a, alen, free_avec);
 	uint64_t* bvec=((CStringFeatures<uint64_t>*) rhs)->get_feature_vector(idx_b, blen, free_bvec);
 
 	float64_t result=0;
 
-	int32_t left_idx=0;
-	int32_t right_idx=0;
+	index_t left_idx=0;
+	index_t right_idx=0;
 
 	if (use_sign)
 	{
@@ -231,7 +231,7 @@ bool CCommUlongStringKernel::init_optimization(
 
 	SG_DEBUG("initializing CCommUlongStringKernel optimization\n")
 
-	for (int32_t i=0; i<count; i++)
+	for (index_t i=0; i<count; i++)
 	{
 		if ( (i % (count/10+1)) == 0)
 			SG_PROGRESS(i, 0, count)

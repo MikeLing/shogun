@@ -86,7 +86,7 @@ CFeatures* CHashedDocConverter::apply(CFeatures* features)
 
 	CStringFeatures<char>* s_features = (CStringFeatures<char>*) features;
 
-	int32_t dim = CMath::pow(2, num_bits);
+	int64_t dim = CMath::pow(int64_t(2), num_bits);
 	SGSparseMatrix<float64_t> matrix(dim,features->get_num_vectors());
 	for (index_t vec_idx=0; vec_idx<s_features->get_num_vectors(); vec_idx++)
 	{

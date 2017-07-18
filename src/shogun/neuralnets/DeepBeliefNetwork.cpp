@@ -78,7 +78,7 @@ void CDeepBeliefNetwork::initialize_neural_network(float64_t sigma)
 	m_weights_index_offsets = SGVector<int32_t>(m_num_layers-1);
 
 	m_num_params = 0;
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 	{
 		m_bias_index_offsets[i] = m_num_params;
 		m_num_params += m_layer_sizes->element(i);
@@ -91,7 +91,7 @@ void CDeepBeliefNetwork::initialize_neural_network(float64_t sigma)
 	}
 
 	m_params = SGVector<float64_t>(m_num_params);
-	for (int32_t i=0; i<m_num_params; i++)
+	for (index_t i=0; i<m_num_params; i++)
 		m_params[i] = CMath::normal_random(0.0,sigma);
 
 	pt_cd_num_steps = SGVector<int32_t>(m_num_layers-1);
@@ -139,7 +139,7 @@ void CDeepBeliefNetwork::set_batch_size(int32_t batch_size)
 
 	m_states = SGMatrixList<float64_t>(m_num_layers);
 
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 		m_states.set_matrix(i, SGMatrix<float64_t>(m_layer_sizes->element(i), m_batch_size));
 
 	reset_chain();
@@ -147,7 +147,7 @@ void CDeepBeliefNetwork::set_batch_size(int32_t batch_size)
 
 void CDeepBeliefNetwork::pre_train(CDenseFeatures< float64_t >* features)
 {
-	for (int32_t k=0; k<m_num_layers-1; k++)
+	for (index_t k=0; k<m_num_layers-1; k++)
 	{
 		SG_INFO("Pre-training RBM %i\n",k);
 		pre_train(k, features);
@@ -196,13 +196,13 @@ void CDeepBeliefNetwork::pre_train(int32_t index,
 	SGVector<float64_t> dbn_c = get_biases(index+1);
 	SGMatrix<float64_t> dbn_w = get_weights(index);
 
-	for (int32_t i=0; i<dbn_b.vlen; i++)
+	for (index_t i=0; i<dbn_b.vlen; i++)
 		dbn_b[i] = rbm_b[i];
 
-	for (int32_t i=0; i<dbn_c.vlen; i++)
+	for (index_t i=0; i<dbn_c.vlen; i++)
 		dbn_c[i] = rbm_c[i];
 
-	for (int32_t i=0; i<dbn_w.num_rows*dbn_w.num_cols; i++)
+	for (index_t i=0; i<dbn_w.num_rows*dbn_w.num_cols; i++)
 		dbn_w[i] = rbm_w[i];
 }
 
@@ -220,7 +220,7 @@ void CDeepBeliefNetwork::train(CDenseFeatures<float64_t>* features)
 	set_batch_size(gd_mini_batch_size);
 
 	SGVector<float64_t> rec_params(m_num_params);
-	for (int32_t i=0; i<rec_params.vlen; i++)
+	for (index_t i=0; i<rec_params.vlen; i++)
 		rec_params[i] = m_params[i];
 
 	SGVector<float64_t> gradients(m_num_params);
@@ -238,7 +238,7 @@ void CDeepBeliefNetwork::train(CDenseFeatures<float64_t>* features)
 	SGMatrixList<float64_t> psleep_states(m_num_layers);
 	SGMatrixList<float64_t> pwake_states(m_num_layers);
 
-	for (int32_t i=0; i<m_num_layers; i++)
+	for (index_t i=0; i<m_num_layers; i++)
 	{
 		wake_states.set_matrix(i, SGMatrix<float64_t>(m_layer_sizes->element(i), m_batch_size));
 		psleep_states.set_matrix(i, SGMatrix<float64_t>(m_layer_sizes->element(i), m_batch_size));
@@ -263,9 +263,9 @@ void CDeepBeliefNetwork::train(CDenseFeatures<float64_t>* features)
 	float64_t alpha = gd_learning_rate;
 
 	int32_t counter = 0;
-	for (int32_t i=0; i<max_num_epochs; i++)
+	for (index_t i=0; i<max_num_epochs; i++)
 	{
-		for (int32_t j=0; j < training_set_size; j += gd_mini_batch_size)
+		for (index_t j=0; j < training_set_size; j += gd_mini_batch_size)
 		{
 			alpha = gd_learning_rate_decay*alpha;
 
@@ -275,7 +275,7 @@ void CDeepBeliefNetwork::train(CDenseFeatures<float64_t>* features)
 			SGMatrix<float64_t> inputs_batch(inputs.matrix+j*inputs.num_rows,
 				inputs.num_rows, gd_mini_batch_size, false);
 
-			for (int32_t k=0; k<m_num_params; k++)
+			for (index_t k=0; k<m_num_params; k++)
 			{
 				m_params[k] += gd_momentum*param_updates[k];
 				rec_params[k] += gd_momentum*rec_param_updates[k];
@@ -285,7 +285,7 @@ void CDeepBeliefNetwork::train(CDenseFeatures<float64_t>* features)
 				psleep_states, pwake_states, m_params,
 				rec_params, gradients, rec_gradients);
 
-			for (int32_t k=0; k<m_num_params; k++)
+			for (index_t k=0; k<m_num_params; k++)
 			{
 				param_updates[k] = gd_momentum*param_updates[k]
 						-alpha*gradients[k];
@@ -300,7 +300,7 @@ void CDeepBeliefNetwork::train(CDenseFeatures<float64_t>* features)
 			{
 				SGMatrix<float64_t> reconstruction = sleep_states[0];
 				float64_t error = 0;
-				for (int32_t k=0; k<inputs_batch.num_rows*inputs_batch.num_cols; k++)
+				for (index_t k=0; k<inputs_batch.num_rows*inputs_batch.num_cols; k++)
 					error += CMath::pow(reconstruction[k]-inputs_batch[k],2);
 
 				error /= m_batch_size;
@@ -319,7 +319,7 @@ CDenseFeatures< float64_t >* CDeepBeliefNetwork::transform(
 		i = m_num_layers-1;
 
 	SGMatrix<float64_t> transformed_feature_matrix = features->get_feature_matrix();
-	for (int32_t h=1; h<=i; h++)
+	for (index_t h=1; h<=i; h++)
 	{
 		SGMatrix<float64_t> m(m_layer_sizes->element(h), features->get_num_vectors());
 		up_step(h, m_params, transformed_feature_matrix, m, false);
@@ -334,7 +334,7 @@ CDenseFeatures<float64_t>* CDeepBeliefNetwork::sample(
 {
 	set_batch_size(batch_size);
 
-	for (int32_t i=0; i<num_gibbs_steps; i++)
+	for (index_t i=0; i<num_gibbs_steps; i++)
 	{
 		up_step(m_num_layers-1, m_params, m_states[m_num_layers-2],
 			m_states[m_num_layers-1]);
@@ -342,7 +342,7 @@ CDenseFeatures<float64_t>* CDeepBeliefNetwork::sample(
 			m_states[m_num_layers-2]);
 	}
 
-	for (int32_t i=m_num_layers-3; i>=0; i--)
+	for (index_t i=m_num_layers-3; i>=0; i--)
 		down_step(i, m_params, m_states[i+1], m_states[i]);
 
 	return new CDenseFeatures<float64_t>(m_states[0]);
@@ -352,7 +352,7 @@ void CDeepBeliefNetwork::reset_chain()
 {
 	SGMatrix<float64_t> s = m_states[m_num_layers-2];
 
-	for (int32_t i=0; i<s.num_rows*s.num_cols; i++)
+	for (index_t i=0; i<s.num_rows*s.num_cols; i++)
 		s[i] = CMath::random(0.0,1.0) > 0.5;
 }
 
@@ -363,7 +363,7 @@ CNeuralNetwork* CDeepBeliefNetwork::convert_to_neural_network(
 
 	layers->append_element(new CNeuralInputLayer(m_layer_sizes->element(0)));
 
-	for (int32_t i=1; i<m_num_layers; i++)
+	for (index_t i=1; i<m_num_layers; i++)
 		layers->append_element(new CNeuralLogisticLayer(m_layer_sizes->element(i)));
 
 	if (output_layer!=NULL)
@@ -374,15 +374,15 @@ CNeuralNetwork* CDeepBeliefNetwork::convert_to_neural_network(
 	network->quick_connect();
 	network->initialize_neural_network(sigma);
 
-	for (int32_t i=1; i<m_num_layers; i++)
+	for (index_t i=1; i<m_num_layers; i++)
 	{
 		SGMatrix<float64_t> W = get_weights(i-1);
 		SGVector<float64_t> b = get_biases(i);
 
-		for (int32_t j=0; j<b.vlen; j++)
+		for (index_t j=0; j<b.vlen; j++)
 			network->m_params[j+network->m_index_offsets[i]] = b[j];
 
-		for (int32_t j=0; j<W.num_rows*W.num_cols; j++)
+		for (index_t j=0; j<W.num_rows*W.num_cols; j++)
 			network->m_params[j+network->m_index_offsets[i]+b.vlen] = W[j];
 	}
 
@@ -411,7 +411,7 @@ void CDeepBeliefNetwork::down_step(int32_t index, SGVector< float64_t > params,
 	if (index > 0 || (index==0 && m_visible_units_type==RBMVUT_BINARY))
 	{
 		int32_t len = m_layer_sizes->element(index)*m_batch_size;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 				result[i] = 1.0/(1.0+CMath::exp(-1.0*result[i]));
 	}
 
@@ -419,14 +419,14 @@ void CDeepBeliefNetwork::down_step(int32_t index, SGVector< float64_t > params,
 	{
 		float64_t max = Out.maxCoeff();
 
-		for (int32_t j=0; j<m_batch_size; j++)
+		for (index_t j=0; j<m_batch_size; j++)
 		{
 			float64_t sum = 0;
-			for (int32_t i=0; i<m_layer_sizes->element(0); i++)
+			for (index_t i=0; i<m_layer_sizes->element(0); i++)
 				sum += CMath::exp(Out(i,j)-max);
 
 			float64_t normalizer = CMath::log(sum);
-			for (int32_t k=0; k<m_layer_sizes->element(0); k++)
+			for (index_t k=0; k<m_layer_sizes->element(0); k++)
 				Out(k,j) = CMath::exp(Out(k,j)-max-normalizer);
 		}
 	}
@@ -434,7 +434,7 @@ void CDeepBeliefNetwork::down_step(int32_t index, SGVector< float64_t > params,
 	if (sample_states && index>0)
 	{
 		int32_t len = m_layer_sizes->element(index)*m_batch_size;
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			result[i] = CMath::random(0.0,1.0) < result[i];
 	}
 }
@@ -459,12 +459,12 @@ void CDeepBeliefNetwork::up_step(int32_t index, SGVector< float64_t > params,
 	}
 
 	int32_t len = result.num_rows*result.num_cols;
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		result[i] = 1.0/(1.0+CMath::exp(-1.0*result[i]));
 
 	if (sample_states && index>0)
 	{
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 			result[i] = CMath::random(0.0,1.0) < result[i];
 	}
 }
@@ -481,10 +481,10 @@ void CDeepBeliefNetwork::wake_sleep(SGMatrix< float64_t > data, CRBM* top_rbm,
 	typedef Eigen::Map<Eigen::VectorXd> EVector;
 
 	// Wake phase
-	for (int32_t i=0; i<data.num_rows*data.num_cols; i++)
+	for (index_t i=0; i<data.num_rows*data.num_cols; i++)
 		wake_states[0][i] = data[i];
 
-	for (int32_t i=1; i<m_num_layers-1; i++)
+	for (index_t i=1; i<m_num_layers-1; i++)
 		up_step(i, rec_params, wake_states[i-1], wake_states[i]);
 
 	// Contrastive divergence in the top RBM
@@ -495,17 +495,17 @@ void CDeepBeliefNetwork::wake_sleep(SGMatrix< float64_t > data, CRBM* top_rbm,
 
 	// Sleep phase
 	sleep_states.set_matrix(m_num_layers-2, top_rbm->visible_state);
-	for (int32_t i=m_num_layers-3; i>=0; i--)
+	for (index_t i=m_num_layers-3; i>=0; i--)
 		down_step(i, gen_params, sleep_states[i+1], sleep_states[i]);
 
 	// Predictions
-	for (int32_t i=1; i<m_num_layers-1; i++)
+	for (index_t i=1; i<m_num_layers-1; i++)
 		up_step(i, rec_params, sleep_states[i-1], psleep_states[i]);
-	for (int32_t i=0; i<m_num_layers-2; i++)
+	for (index_t i=0; i<m_num_layers-2; i++)
 		down_step(i, gen_params, wake_states[i+1], pwake_states[i]);
 
 	// Gradients for generative parameters
-	for (int32_t i=0; i<m_num_layers-2; i++)
+	for (index_t i=0; i<m_num_layers-2; i++)
 	{
 		EMatrix wake_i(wake_states[i].matrix,
 			wake_states[i].num_rows, wake_states[i].num_cols);
@@ -524,7 +524,7 @@ void CDeepBeliefNetwork::wake_sleep(SGMatrix< float64_t > data, CRBM* top_rbm,
 	}
 
 	// Gradients for reconstruction parameters
-	for (int32_t i=1; i<m_num_layers-1; i++)
+	for (index_t i=1; i<m_num_layers-1; i++)
 	{
 		EMatrix sleep_i(sleep_states[i].matrix,
 			sleep_states[i].num_rows, sleep_states[i].num_cols);

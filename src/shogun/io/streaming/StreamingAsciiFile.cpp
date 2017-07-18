@@ -97,7 +97,7 @@ void CStreamingAsciiFile::get_vector(sg_type*& vector, int32_t& num_feat)	\
 		if (old_len < num_feat)												\
 				vector=SG_REALLOC(sg_type, vector, old_len, num_feat);		\
 																			\
-		for (int32_t i=0; i<num_feat; i++)									\
+		for (index_t i=0; i<num_feat; i++)									\
 		{																	\
 				char* item=items->get_element(i);							\
 				vector[i]=conv(item);										\
@@ -221,7 +221,7 @@ GET_FLOAT_VECTOR(float64_t)
 				if (old_len < num_feat - 1)								\
 						vector=SG_REALLOC(sg_type, vector, old_len, num_feat-1);	\
 																		\
-				for (int32_t i=1; i<num_feat; i++)						\
+				for (index_t i=1; i<num_feat; i++)						\
 				{														\
 						char* item=items->get_element(i);				\
 						vector[i-1]=conv(item);							\
@@ -352,7 +352,7 @@ void CStreamingAsciiFile::get_string_and_label(sg_type*& vector, int32_t& len, f
 																		\
 		int32_t str_start_pos=-1;										\
 																		\
-		for (int32_t i=0; i<bytes_read; i++)							\
+		for (index_t i=0; i<bytes_read; i++)							\
 		{																\
 				if (buffer[i] == ' ')									\
 				{														\
@@ -428,7 +428,7 @@ void CStreamingAsciiFile::get_sparse_vector(SGSparseVectorEntry<sg_type>*& vecto
 		  num_chars=bytes_read;											\
 																		\
 		int32_t num_dims=0;												\
-		for (int32_t i=0; i<num_chars; i++)								\
+		for (index_t i=0; i<num_chars; i++)								\
 		{																\
 				if (buffer[i]==':')										\
 				{														\
@@ -441,7 +441,7 @@ void CStreamingAsciiFile::get_sparse_vector(SGSparseVectorEntry<sg_type>*& vecto
 		int32_t current_feat=0;											\
 		if (len < num_dims)												\
 			vector=SG_REALLOC(SGSparseVectorEntry<sg_type>, vector, len, num_dims);	\
-		for (int32_t i=0; i<num_chars; i++)								\
+		for (index_t i=0; i<num_chars; i++)								\
 		{																\
 				if (buffer[i]==':')										\
 				{														\
@@ -522,7 +522,7 @@ void CStreamingAsciiFile::get_sparse_vector_and_label(SGSparseVectorEntry<sg_typ
 				num_chars=bytes_read;									\
 																		\
 		int32_t num_dims=0;												\
-		for (int32_t i=0; i<num_chars; i++)								\
+		for (index_t i=0; i<num_chars; i++)								\
 		{																\
 				if (buffer[i]==':')										\
 				{														\
@@ -537,7 +537,7 @@ void CStreamingAsciiFile::get_sparse_vector_and_label(SGSparseVectorEntry<sg_typ
 		if (len < num_dims)												\
 			vector=SG_REALLOC(SGSparseVectorEntry<sg_type>, vector, len, num_dims); \
 																		\
-		for (int32_t i=1; i<num_chars; i++)								\
+		for (index_t i=1; i<num_chars; i++)								\
 		{																\
 				if (buffer[i]==':')										\
 				{														\
@@ -557,7 +557,7 @@ void CStreamingAsciiFile::get_sparse_vector_and_label(SGSparseVectorEntry<sg_typ
 																		\
 		buffer+=label_pos+1;											\
 		num_chars-=label_pos+1;											\
-		for (int32_t i=0; i<num_chars; i++)								\
+		for (index_t i=0; i<num_chars; i++)								\
 		{																\
 				if (buffer[i]==':')										\
 				{														\

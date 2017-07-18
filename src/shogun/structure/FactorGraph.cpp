@@ -152,7 +152,7 @@ int32_t CFactorGraph::get_num_vars() const
 
 void CFactorGraph::compute_energies()
 {
-	for (int32_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
 	{
 		CFactor* fac = dynamic_cast<CFactor*>(m_factors->get_element(fi));
 		fac->compute_energies();
@@ -165,7 +165,7 @@ float64_t CFactorGraph::evaluate_energy(const SGVector<int32_t> state) const
 	ASSERT(state.size() == m_cardinalities.size());
 
 	float64_t energy = 0.0;
-	for (int32_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
 	{
 		CFactor* fac = dynamic_cast<CFactor*>(m_factors->get_element(fi));
 		energy += fac->evaluate_energy(state);
@@ -183,22 +183,22 @@ SGVector<float64_t> CFactorGraph::evaluate_energies() const
 {
 	int num_assig = 1;
 	SGVector<int32_t> cumprod_cards(m_cardinalities.size());
-	for (int32_t n = 0; n < m_cardinalities.size(); ++n)
+	for (index_t n = 0; n < m_cardinalities.size(); ++n)
 	{
 		cumprod_cards[n] = num_assig;
 		num_assig *= m_cardinalities[n];
 	}
 
 	SGVector<float64_t> etable(num_assig);
-	for (int32_t ei = 0; ei < num_assig; ++ei)
+	for (index_t ei = 0; ei < num_assig; ++ei)
 	{
 		SGVector<int32_t> assig(m_cardinalities.size());
-		for (int32_t vi = 0; vi < m_cardinalities.size(); ++vi)
+		for (index_t vi = 0; vi < m_cardinalities.size(); ++vi)
 			assig[vi] = (ei / cumprod_cards[vi]) % m_cardinalities[vi];
 
 		etable[ei] = evaluate_energy(assig);
 
-		for (int32_t vi = 0; vi < m_cardinalities.size(); ++vi)
+		for (index_t vi = 0; vi < m_cardinalities.size(); ++vi)
 			SG_SPRINT("%d ", assig[vi]);
 
 		SG_SPRINT("| %f\n", etable[ei]);
@@ -216,13 +216,13 @@ void CFactorGraph::connect_components()
 	m_dset->make_sets();
 	bool flag = false;
 
-	for (int32_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
 	{
 		CFactor* fac = dynamic_cast<CFactor*>(m_factors->get_element(fi));
 		SGVector<int32_t> vars = fac->get_variables();
 
 		int32_t r0 = m_dset->find_set(vars[0]);
-		for (int32_t vi = 1; vi < vars.size(); vi++)
+		for (index_t vi = 1; vi < vars.size(); vi++)
 		{
 			// for two nodes in a factor, should be an edge between them
 			// but this time link() isn't performed, if they are linked already
@@ -281,11 +281,11 @@ void CFactorGraph::loss_augmentation(SGVector<int32_t> states_gt, SGVector<float
 	// augment loss to incorrect states in the first factor containing the variable
 	// since += L_i for each variable if it takes wrong state ever
 	// TODO: augment unary factors
-	for (int32_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
+	for (index_t fi = 0; fi < m_factors->get_num_elements(); ++fi)
 	{
 		CFactor* fac = dynamic_cast<CFactor*>(m_factors->get_element(fi));
 		SGVector<int32_t> vars = fac->get_variables();
-		for (int32_t vi = 0; vi < vars.size(); vi++)
+		for (index_t vi = 0; vi < vars.size(); vi++)
 		{
 			int32_t vv = vars[vi];
 			ASSERT(vv < num_vars);
@@ -293,7 +293,7 @@ void CFactorGraph::loss_augmentation(SGVector<int32_t> states_gt, SGVector<float
 				continue;
 
 			SGVector<float64_t> energies = fac->get_energies();
-			for (int32_t ei = 0; ei < energies.size(); ei++)
+			for (index_t ei = 0; ei < energies.size(); ei++)
 			{
 				CTableFactorType* ftype = fac->get_factor_type();
 				int32_t vstate = ftype->state_from_index(ei, vi);

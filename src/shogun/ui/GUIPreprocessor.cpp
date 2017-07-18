@@ -227,7 +227,7 @@ bool CGUIPreprocessor::preprocess_features(CFeatures* trainfeat, CFeatures* test
 
 			if (trainfeat->get_num_preprocessors() && (trainfeat->get_num_preprocessors() > testfeat->get_num_preprocessors()))
 			{
-				for (int32_t i=0; i<trainfeat->get_num_preprocessors();  i++)
+				for (index_t i=0; i<trainfeat->get_num_preprocessors();  i++)
 				{
 					CPreprocessor* preproc = trainfeat->get_preprocessor(i);
 					preproc->init(trainfeat);

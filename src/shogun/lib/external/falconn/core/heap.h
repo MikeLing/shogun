@@ -55,7 +55,7 @@ class HeapBase {
 
   void heapify() {
     int_fast32_t rightmost = parent(num_elements_ - 1);
-    for (int_fast32_t cur_loc = rightmost; cur_loc >= 0; --cur_loc) {
+    for (index_t_fast32_t cur_loc = rightmost; cur_loc >= 0; --cur_loc) {
       heap_down(cur_loc);
     }
   }

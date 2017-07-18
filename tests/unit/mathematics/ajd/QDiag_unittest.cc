@@ -28,12 +28,12 @@ TEST(CQDiag, diagonalize)
 
 	CMath::init_random(17);
 
-	for (int i = 0; i < C_dims[2]; i++)
+	for (index_t i = 0; i < C_dims[2]; i++)
 	{
 		Eigen::Map<EMatrix> tmp(C.get_matrix(i),C_dims[0], C_dims[1]);
 		tmp.setIdentity();
 
-		for (int j = 0; j < C_dims[0]; j++)
+		for (index_t j = 0; j < C_dims[0]; j++)
 			tmp(j,j) *= CMath::abs(CMath::random(1,5));
 
 	}
@@ -43,7 +43,7 @@ TEST(CQDiag, diagonalize)
 	B.setRandom();
 	EMatrix A = B.inverse();
 
-	for (int i = 0; i < C_dims[2]; i++)
+	for (index_t i = 0; i < C_dims[2]; i++)
 	{
 		Eigen::Map<EMatrix> Ci(C.get_matrix(i),C_dims[0], C_dims[1]);
 		Ci = A * Ci * A.transpose();

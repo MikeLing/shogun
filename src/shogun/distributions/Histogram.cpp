@@ -38,9 +38,9 @@ CHistogram::~CHistogram()
 
 bool CHistogram::train(CFeatures* data)
 {
-	int32_t vec;
-	int32_t feat;
-	int32_t i;
+	index_t vec;
+	index_t feat;
+	index_t i;
 
 	if (data)
 	{
@@ -56,12 +56,12 @@ bool CHistogram::train(CFeatures* data)
 	ASSERT(features->get_feature_class()==C_STRING)
 	ASSERT(features->get_feature_type()==F_WORD)
 
-	for (i=0; i< (int32_t) (1<<16); i++)
+	for (i=0; i< (index_t) (1<<16); i++)
 		hist[i]=0;
 
 	for (vec=0; vec<features->get_num_vectors(); vec++)
 	{
-		int32_t len;
+		index_t len;
 		bool free_vec;
 
 		uint16_t* vector=((CStringFeatures<uint16_t>*) features)->
@@ -80,20 +80,20 @@ bool CHistogram::train(CFeatures* data)
 	return true;
 }
 
-float64_t CHistogram::get_log_likelihood_example(int32_t num_example)
+float64_t CHistogram::get_log_likelihood_example(index_t num_example)
 {
 	ASSERT(features)
 	ASSERT(features->get_feature_class()==C_STRING)
 	ASSERT(features->get_feature_type()==F_WORD)
 
-	int32_t len;
+	index_t len;
 	bool free_vec;
 	float64_t loglik=0;
 
 	uint16_t* vector=((CStringFeatures<uint16_t>*) features)->
 		get_feature_vector(num_example, len, free_vec);
 
-	for (int32_t i=0; i<len; i++)
+	for (index_t i=0; i<len; i++)
 		loglik+=hist[vector[i]];
 
 	((CStringFeatures<uint16_t>*) features)->
@@ -102,7 +102,7 @@ float64_t CHistogram::get_log_likelihood_example(int32_t num_example)
 	return loglik;
 }
 
-float64_t CHistogram::get_log_derivative(int32_t num_param, int32_t num_example)
+float64_t CHistogram::get_log_derivative(index_t num_param, index_t num_example)
 {
 	if (hist[num_param] < CMath::ALMOST_NEG_INFTY)
 		return -CMath::INFTY;
@@ -112,7 +112,7 @@ float64_t CHistogram::get_log_derivative(int32_t num_param, int32_t num_example)
 		ASSERT(features->get_feature_class()==C_STRING)
 		ASSERT(features->get_feature_type()==F_WORD)
 
-		int32_t len;
+		index_t len;
 		bool free_vec;
 		float64_t deriv=0;
 
@@ -121,7 +121,7 @@ float64_t CHistogram::get_log_derivative(int32_t num_param, int32_t num_example)
 
 		int32_t num_occurences=0;
 
-		for (int32_t i=0; i<len; i++)
+		for (index_t i=0; i<len; i++)
 		{
 			deriv+=hist[vector[i]];
 
@@ -141,7 +141,7 @@ float64_t CHistogram::get_log_derivative(int32_t num_param, int32_t num_example)
 	}
 }
 
-float64_t CHistogram::get_log_model_parameter(int32_t num_param)
+float64_t CHistogram::get_log_model_parameter(index_t num_param)
 {
 	return hist[num_param];
 }
@@ -152,7 +152,7 @@ bool CHistogram::set_histogram(const SGVector<float64_t> histogram)
 
 	SG_FREE(hist);
 	hist=SG_MALLOC(float64_t, histogram.vlen);
-	for (int32_t i=0; i<histogram.vlen; i++)
+	for (index_t i=0; i<histogram.vlen; i++)
 		hist[i]=histogram.vector[i];
 
 	return true;

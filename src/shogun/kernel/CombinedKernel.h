@@ -405,7 +405,7 @@ class CCombinedKernel : public CKernel
 		 * @param y y
 		 * @return computed kernel function
 		 */
-		virtual float64_t compute(int32_t x, int32_t y);
+		virtual float64_t compute(index_t x, index_t y);
 
 		/** adjust the variables num_lhs, num_rhs and initialized
 		 * based on the kernel to be appended/inserted
@@ -458,7 +458,7 @@ class CCombinedKernel : public CKernel
 		/** list of kernels */
 		CDynamicObjectArray* kernel_array;
 		/** support vector count */
-		int32_t   sv_count;
+		index_t   sv_count;
 		/** support vector index */
 		int32_t*  sv_idx;
 		/** support vector weights */

@@ -96,7 +96,7 @@ int main(int, char*[])
 	// find the average difference between the data and the reconstructions
 	float64_t avg_diff = 0;
 	int32_t N = X.num_rows*X.num_cols;
-	for (int32_t i=0; i<N; i++)
+	for (index_t i=0; i<N; i++)
 		avg_diff += CMath::abs(X[i]-X_reconstructed[i])/CMath::abs(X[i]);
 	avg_diff /= N;
 

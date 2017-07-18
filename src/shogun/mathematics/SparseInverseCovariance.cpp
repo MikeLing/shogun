@@ -45,7 +45,7 @@ SGMatrix<float64_t> CSparseInverseCovariance::estimate(SGMatrix<float64_t> S, fl
 
 	int32_t n = S.num_cols;
 	float64_t sum_S = 0.0;
-	for (int32_t i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 		sum_S += S(i,i);
 
 	float64_t* Theta = SG_CALLOC(float64_t, n*n);

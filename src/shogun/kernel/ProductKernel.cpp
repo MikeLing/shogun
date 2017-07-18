@@ -189,7 +189,7 @@ void CProductKernel::list_kernels()
 }
 
 //Adapted from CCombinedKernel
-float64_t CProductKernel::compute(int32_t x, int32_t y)
+float64_t CProductKernel::compute(index_t x, index_t y)
 {
 	float64_t result=1;
 	for (index_t k_idx=0; k_idx<get_num_subkernels(); k_idx++)
@@ -249,7 +249,7 @@ SGMatrix<float64_t> CProductKernel::get_parameter_gradient(
 
 	for (index_t g=0; g<temp_kernel.num_rows; g++)
 	{
-		for (int h=0; h<temp_kernel.num_cols; h++)
+		for (index_t h=0; h<temp_kernel.num_cols; h++)
 			temp_kernel(g,h)=1.0;
 	}
 

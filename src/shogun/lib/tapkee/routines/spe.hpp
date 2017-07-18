@@ -70,7 +70,7 @@ DenseMatrix spe_embedding(RandomAccessIterator begin, RandomAccessIterator end,
 	ScalarType lambda = 1.0;
 	// Vector of indices used for shuffling
 	Indices indices(N);
-	for (int i=0; i<N; ++i)
+	for (index_t i=0; i<N; ++i)
 		indices[i] = i;
 	// Vector with distances in the original space of the points to update
 	DenseVector Rt(nupdates);
@@ -133,7 +133,7 @@ DenseMatrix spe_embedding(RandomAccessIterator begin, RandomAccessIterator end,
 
 		ind1 = indices.begin();
 		ind2 = indices.begin()+nupdates;
-		for (int j=0; j<nupdates; ++j)
+		for (index_t j=0; j<nupdates; ++j)
 			Rt[j] *= callback.distance(*(begin + *ind1++), *(begin + *ind2++));
 
 		// Compute some terms for update
@@ -145,7 +145,7 @@ DenseMatrix spe_embedding(RandomAccessIterator begin, RandomAccessIterator end,
 		ind1 = indices.begin();
 		ind2 = indices.begin()+nupdates;
 		// Difference matrix
-		for (int j=0; j<nupdates; ++j)
+		for (index_t j=0; j<nupdates; ++j)
 		{
 			Yd.col(j).noalias() = Y.col(*ind1) - Y.col(*ind2);
 
@@ -155,7 +155,7 @@ DenseMatrix spe_embedding(RandomAccessIterator begin, RandomAccessIterator end,
 		ind1 = indices.begin();
 		ind2 = indices.begin()+nupdates;
 		// Update the location of the vectors in the embedded space
-		for (int j=0; j<nupdates; ++j)
+		for (index_t j=0; j<nupdates; ++j)
 		{
 			Y.col(*ind1) += lambda / 2 * scale[j] * Yd.col(j);
 			Y.col(*ind2) -= lambda / 2 * scale[j] * Yd.col(j);

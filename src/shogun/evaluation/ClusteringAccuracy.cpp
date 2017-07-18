@@ -21,7 +21,7 @@ float64_t CClusteringAccuracy::evaluate(CLabels* predicted, CLabels* ground_trut
 	SGVector<int32_t> predicted_ilabels=((CMulticlassLabels*) predicted)->get_int_labels();
 	SGVector<int32_t> groundtruth_ilabels=((CMulticlassLabels*) ground_truth)->get_int_labels();
 	int32_t correct=0;
-	for (int32_t i=0; i < predicted_ilabels.vlen; ++i)
+	for (index_t i=0; i < predicted_ilabels.vlen; ++i)
 	{
 		if (predicted_ilabels[i] == groundtruth_ilabels[i])
 			correct++;

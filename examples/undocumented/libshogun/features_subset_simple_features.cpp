@@ -20,15 +20,15 @@ void print_message(FILE* target, const char* str)
 	fprintf(target, "%s", str);
 }
 
-void check_transposed(CDenseFeatures<int32_t>* features)
+void check_transposed(CDenseFeatures<index_t>* features)
 {
-	CDenseFeatures<int32_t>* transposed=features->get_transposed();
-	CDenseFeatures<int32_t>* double_transposed=transposed->get_transposed();
+	CDenseFeatures<index_t>* transposed=features->get_transposed();
+	CDenseFeatures<index_t>* double_transposed=transposed->get_transposed();
 
 	for (index_t i=0; i<features->get_num_vectors(); ++i)
 	{
-		SGVector<int32_t> orig_vec=features->get_feature_vector(i);
-		SGVector<int32_t> new_vec=double_transposed->get_feature_vector(i);
+		SGVector<index_t> orig_vec=features->get_feature_vector(i);
+		SGVector<index_t> new_vec=double_transposed->get_feature_vector(i);
 
 		ASSERT(orig_vec.vlen==new_vec.vlen);
 
@@ -44,15 +44,15 @@ void check_transposed(CDenseFeatures<int32_t>* features)
 	SG_UNREF(double_transposed);
 }
 
-const int32_t num_vectors=6;
-const int32_t dim_features=6;
+const index_t num_vectors=6;
+const index_t dim_features=6;
 
 void test()
 {
-	const int32_t num_subset_idx=CMath::random(1, num_vectors);
+	const index_t num_subset_idx=CMath::random(1, num_vectors);
 
 	/* create feature data matrix */
-	SGMatrix<int32_t> data(dim_features, num_vectors);
+	SGMatrix<index_t> data(dim_features, num_vectors);
 
 	/* fill matrix with random data */
 	for (index_t i=0; i<num_vectors; ++i)
@@ -95,9 +95,9 @@ void test()
 
 	for (index_t i=0; i<features->get_num_vectors(); ++i)
 	{
-		SGVector<int32_t> vec=features->get_feature_vector(i);
+		SGVector<index_t> vec=features->get_feature_vector(i);
 		SG_SPRINT("vector %d: ", i);
-		SGVector<int32_t>::display_vector(vec.vector, vec.vlen);
+		SGVector<index_t>::display_vector(vec.vector, vec.vlen);
 
 		for (index_t j=0; j<dim_features; ++j)
 			ASSERT(vec.vector[j]==data.matrix[subset_idx.vector[i]*num_vectors+j]);
@@ -123,9 +123,9 @@ void test()
 
 	for (index_t i=0; i<features->get_num_vectors(); ++i)
 	{
-		SGVector<int32_t> vec=features->get_feature_vector(i);
+		SGVector<index_t> vec=features->get_feature_vector(i);
 		SG_SPRINT("vector %d: ", i);
-		SGVector<int32_t>::display_vector(vec.vector, vec.vlen);
+		SGVector<index_t>::display_vector(vec.vector, vec.vlen);
 
 		for (index_t j=0; j<dim_features; ++j)
 			ASSERT(vec.vector[j]==data.matrix[i*num_vectors+j]);

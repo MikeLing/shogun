@@ -13,7 +13,7 @@ TEST(GEMPLP, find_intersections_index)
 	SGVector<int32_t> clique_A(3);
 	SGVector<int32_t> clique_B(3);
 
-	for (int32_t i = 0; i < 3; i++)
+	for (index_t i = 0; i < 3; i++)
 	{
 		clique_A[i] = i;
 		clique_B[i] = i + 3;
@@ -170,7 +170,7 @@ TEST(GEMPLP, random_chain)
 
 	EXPECT_EQ(assignment.size(), assignment_expected.size());
 
-	for (int32_t i = 0; i < assignment.size(); i++)
+	for (index_t i = 0; i < assignment.size(); i++)
 		EXPECT_EQ(assignment[i], assignment_expected[i]);
 
 	EXPECT_NEAR(min_energy_expected, infer_met.get_energy(), 1E-10);

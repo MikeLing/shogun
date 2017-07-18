@@ -68,9 +68,9 @@ SGVector<int32_t> CMulticlassLibLinear::get_support_vectors() const
 	v_array<int32_t> nz_idxs;
 	nz_idxs.reserve(num_vectors);
 
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 	{
-		for (int32_t y=0; y<num_classes; y++)
+		for (index_t y=0; y<num_classes; y++)
 		{
 			if (CMath::abs(m_train_state->alpha[i*num_classes+y])>1e-6)
 			{
@@ -106,7 +106,7 @@ bool CMulticlassLibLinear::train_machine(CFeatures* data)
 	mc_problem.l = num_vectors;
 	mc_problem.n = m_features->get_dim_feature_space() + bias_n;
 	mc_problem.y = SG_MALLOC(float64_t, mc_problem.l);
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 		mc_problem.y[i] = ((CMulticlassLabels*) m_labels)->get_int_label(i);
 
 	mc_problem.x = m_features;
@@ -118,7 +118,7 @@ bool CMulticlassLibLinear::train_machine(CFeatures* data)
 		m_train_state = new mcsvm_state();
 
 	float64_t* C = SG_MALLOC(float64_t, num_vectors);
-	for (int32_t i=0; i<num_vectors; i++)
+	for (index_t i=0; i<num_vectors; i++)
 		C[i] = m_C;
 
 	CSignal::clear_cancel();
@@ -128,12 +128,12 @@ bool CMulticlassLibLinear::train_machine(CFeatures* data)
 	solver.solve();
 
 	m_machines->reset_array();
-	for (int32_t i=0; i<num_classes; i++)
+	for (index_t i=0; i<num_classes; i++)
 	{
 		CLinearMachine* machine = new CLinearMachine();
 		SGVector<float64_t> cw(mc_problem.n-bias_n);
 
-		for (int32_t j=0; j<mc_problem.n-bias_n; j++)
+		for (index_t j=0; j<mc_problem.n-bias_n; j++)
 			cw[j] = m_train_state->w[j*num_classes+i];
 
 		machine->set_w(cw);

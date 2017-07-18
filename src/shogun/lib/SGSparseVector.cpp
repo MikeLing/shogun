@@ -62,7 +62,7 @@ T SGSparseVector<T>::dense_dot(T alpha, T * vec, int32_t dim, T b)
 
 	if (features)
 	{
-		for (int32_t i = 0; i < num_feat_entries; i++)
+		for (index_t i = 0; i < num_feat_entries; i++)
 		{
 			if (features[i].feat_index < dim)
 			{
@@ -81,14 +81,14 @@ void SGSparseVector<T>::add_to_dense(T alpha, T * vec, int32_t dim, bool abs_val
 
 	if (abs_val)
 	{
-		for (int32_t i = 0; i < num_feat_entries; i++)
+		for (index_t i = 0; i < num_feat_entries; i++)
 		{
 			vec[features[i].feat_index] += alpha*CMath::abs(features[i].entry);
 		}
 	}
 	else
 	{
-		for (int32_t i = 0; i < num_feat_entries; i++)
+		for (index_t i = 0; i < num_feat_entries; i++)
 		{
 			vec[features[i].feat_index] += alpha*features[i].entry;
 		}
@@ -104,7 +104,7 @@ T SGSparseVector<T>::dense_dot(SGVector<ST> vec)
 
 	if (features)
 	{
-		for (int32_t i = 0; i < num_feat_entries; i++)
+		for (index_t i = 0; i < num_feat_entries; i++)
 		{
 			if (features[i].feat_index < vec.vlen)
 				result += static_cast<T>(vec[features[i].feat_index])
@@ -439,7 +439,7 @@ void SGSparseVector<bool>::display_vector(const char * name, const char * prefix
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%d", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry ? 1 : 0);
 	}
@@ -452,7 +452,7 @@ void SGSparseVector<char>::display_vector(const char * name, const char * prefix
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%c", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -465,7 +465,7 @@ void SGSparseVector<int8_t>::display_vector(const char * name, const char * pref
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%d", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -478,7 +478,7 @@ void SGSparseVector<uint8_t>::display_vector(const char * name, const char * pre
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%u", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -491,7 +491,7 @@ void SGSparseVector<int16_t>::display_vector(const char * name, const char * pre
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%d", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -504,7 +504,7 @@ void SGSparseVector<uint16_t>::display_vector(const char * name, const char * pr
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%u", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -517,7 +517,7 @@ void SGSparseVector<int32_t>::display_vector(const char * name, const char * pre
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%d", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -530,7 +530,7 @@ void SGSparseVector<uint32_t>::display_vector(const char * name, const char * pr
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%u", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -543,7 +543,7 @@ void SGSparseVector<int64_t>::display_vector(const char * name, const char * pre
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%lld", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -556,7 +556,7 @@ void SGSparseVector<uint64_t>::display_vector(const char * name, const char * pr
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%llu ", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -569,7 +569,7 @@ void SGSparseVector<float32_t>::display_vector(const char * name, const char * p
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%g", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -582,7 +582,7 @@ void SGSparseVector<float64_t>::display_vector(const char * name, const char * p
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%.18g", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -595,7 +595,7 @@ void SGSparseVector<floatmax_t>::display_vector(const char * name, const char * 
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 	{
 		SG_SPRINT("%s%s%d:%.36Lg", prefix, i == 0 ? "" : " ", features[i].feat_index, features[i].entry);
 	}
@@ -608,7 +608,7 @@ void SGSparseVector<complex128_t>::display_vector(const char * name, const char 
 {
 	SG_SPRINT("%s%s=[", prefix, name);
 
-	for (int32_t i = 0; i < num_feat_entries; i++)
+	for (index_t i = 0; i < num_feat_entries; i++)
 		SG_SPRINT("%s%s%d:(%.18lg+i%.18lg)", prefix, i == 0 ? "" : " ", features[i].feat_index,
 		          features[i].entry.real(), features[i].entry.imag());
 

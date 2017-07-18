@@ -80,9 +80,9 @@ protected:
      * @param idx_b index b
      * @return computed kernel function at indices a,b
      */
-    virtual float64_t compute(int32_t idx_a, int32_t idx_b)
+    virtual float64_t compute(index_t idx_a, index_t idx_b)
     {
-        int32_t alen, blen;
+        index_t alen, blen;
         bool afree, bfree;
 
         float64_t* avec=
@@ -93,7 +93,7 @@ protected:
         ASSERT(alen==blen);
 
         float64_t result=0;
-        for (int32_t i=0; i<alen; i++)
+        for (index_t i=0; i<alen; i++)
             result+=avec[i]*bvec[alen-i-1];
 
         ((CDenseFeatures<float64_t>*) lhs)->free_feature_vector(avec, idx_a, afree);
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
     // create some data
     SGMatrix<float64_t> matrix(2,3);
-    for (int32_t i=0; i<6; i++)
+    for (index_t i=0; i<6; i++)
         matrix.matrix[i]=i;
 
     // create three 2-dimensional vectors
@@ -127,9 +127,9 @@ int main(int argc, char** argv)
     kernel->init(features,features);
 
     // print kernel matrix
-    for (int32_t i=0; i<3; i++)
+    for (index_t i=0; i<3; i++)
     {
-        for (int32_t j=0; j<3; j++)
+        for (index_t j=0; j<3; j++)
             SG_SPRINT("%f ", kernel->kernel(i,j));
 
         SG_SPRINT("\n");

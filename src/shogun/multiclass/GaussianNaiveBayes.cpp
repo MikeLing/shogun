@@ -187,7 +187,7 @@ CMulticlassLabels* CGaussianNaiveBayes::apply_multiclass(CFeatures* data)
 
 	// classify each example of data
 	SG_PROGRESS(0, 0, num_vectors)
-	for (int i = 0; i < num_vectors; i++)
+	for (index_t i = 0; i < num_vectors; i++)
 	{
 		result->set_label(i,apply_one(i));
 		SG_PROGRESS(i + 1, 0, num_vectors)
@@ -196,7 +196,7 @@ CMulticlassLabels* CGaussianNaiveBayes::apply_multiclass(CFeatures* data)
 	return result;
 };
 
-float64_t CGaussianNaiveBayes::apply_one(int32_t idx)
+float64_t CGaussianNaiveBayes::apply_one(index_t idx)
 {
 	// get [idx] feature vector
 	SGVector<float64_t> feature_vector = m_features->get_computed_dot_feature_vector(idx);

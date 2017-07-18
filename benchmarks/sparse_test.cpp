@@ -37,7 +37,7 @@ int32_t get_nnz(SGSparseMatrix<float64_t> m)
 	int32_t nnz=0;
 	int32_t n=m.num_vectors;
 
-	for (int i=0; i<n; i++)
+	for (index_t i=0; i<n; i++)
 	{
 		nnz+=m[i].num_feat_entries;
 	}
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
 			// the first col
 			rest[i]=SG_MALLOC(Entry, num);
 
-			for (int j=0; j<i && j<num; j++)
+			for (index_t j=0; j<i && j<num; j++)
 			{
 				rest[i][j].feat_index=j;
 				rest[i][j].entry=0.01+j;

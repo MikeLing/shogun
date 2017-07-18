@@ -23,7 +23,7 @@ float64_t CMeanSquaredError::evaluate(CLabels* predicted, CLabels* ground_truth)
 	ASSERT(ground_truth->get_label_type() == LT_REGRESSION)
 	int32_t length = predicted->get_num_labels();
 	float64_t mse = 0.0;
-	for (int32_t i=0; i<length; i++)
+	for (index_t i=0; i<length; i++)
 		mse += CMath::sq(((CRegressionLabels*) predicted)->get_label(i) - ((CRegressionLabels*) ground_truth)->get_label(i));
 	mse /= length;
 	return mse;

@@ -217,7 +217,7 @@ public:
 	 *
 	 * @return 1 if current_vector exists, else 0.
 	 */
-	virtual int32_t get_num_vectors() const;
+	virtual index_t get_num_vectors() const;
 
 	/**
 	 * Return the number of features in the current vector.
@@ -264,7 +264,7 @@ protected:
 	T* current_string;
 
 	/// The length of the current string
-	int32_t current_length;
+	index_t current_length;
 
 	/// The label of the current example, if applicable
 	float64_t current_label;

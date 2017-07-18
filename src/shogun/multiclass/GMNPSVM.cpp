@@ -74,7 +74,7 @@ bool CGMNPSVM::train_machine(CFeatures* data)
 	SG_INFO("%d trainlabels, %d classes\n", num_data, num_classes)
 
 	float64_t* vector_y = SG_MALLOC(float64_t, num_data);
-	for (int32_t i=0; i<num_data; i++)
+	for (index_t i=0; i<num_data; i++)
 	{
 		vector_y[i] = ((CMulticlassLabels*) m_labels)->get_label(i)+1;
 
@@ -113,9 +113,9 @@ bool CGMNPSVM::train_machine(CFeatures* data)
 	memset(all_bs,0,num_classes*sizeof(float64_t));
 
 	/* compute alpha/b from virt_data */
-	for(int32_t i=0; i < num_classes; i++ )
+	for(index_t i=0; i < num_classes; i++ )
 	{
-		for(int32_t j=0; j < num_virtual_data; j++ )
+		for(index_t j=0; j < num_virtual_data; j++ )
 		{
 			int32_t inx1=0;
 			int32_t inx2=0;
@@ -130,10 +130,10 @@ bool CGMNPSVM::train_machine(CFeatures* data)
 
 	create_multiclass_svm(num_classes);
 
-	for (int32_t i=0; i<num_classes; i++)
+	for (index_t i=0; i<num_classes; i++)
 	{
 		int32_t num_sv=0;
-		for (int32_t j=0; j<num_data; j++)
+		for (index_t j=0; j<num_data; j++)
 		{
 			if (all_alphas[j*num_classes+i] != 0)
 				num_sv++;
@@ -144,7 +144,7 @@ bool CGMNPSVM::train_machine(CFeatures* data)
 		CSVM* svm=new CSVM(num_sv);
 
 		int32_t k=0;
-		for (int32_t j=0; j<num_data; j++)
+		for (index_t j=0; j<num_data; j++)
 		{
 			if (all_alphas[j*num_classes+i] != 0)
 			{

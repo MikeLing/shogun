@@ -62,7 +62,7 @@ public:
 	/** destructor */
 	virtual ~CTreeMachineNode()
 	{
-		for(int32_t i=0;i<m_children->get_num_elements();i++)
+		for(index_t i=0;i<m_children->get_num_elements();i++)
 		{
 			CTreeMachineNode* child=(CTreeMachineNode*) m_children->get_element(i);
 			child->parent(NULL);
@@ -114,7 +114,7 @@ public:
 	virtual void set_children(CDynamicObjectArray* children)
 	{
 		m_children->reset_array();
-		for (int32_t i=0; i<children->get_num_elements(); i++)
+		for (index_t i=0; i<children->get_num_elements(); i++)
 		{
 			CTreeMachineNode* child=(CTreeMachineNode*) children->get_element(i);
 			add_child(child);
@@ -160,13 +160,13 @@ protected:
 	static void debug_print_impl(data_print_func_t data_print_func,
 				CTreeMachineNode<T>* node, int32_t depth)
 	{
-		for (int32_t i=0;i<depth;++i)
+		for (index_t i=0;i<depth;++i)
 			SG_SPRINT("  ");
 
 		data_print_func(node->data);
 
 		CDynamicObjectArray* children_vector=node->get_children();
-		for (int32_t j=0;j<children_vector->get_num_elements();j++)
+		for (index_t j=0;j<children_vector->get_num_elements();j++)
 		{
 			CTreeMachineNode<T>* child=(CTreeMachineNode<T>*)
 						children_vector->get_element(j);
